@@ -1,0 +1,8 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+address1:
+  street: MyString
+  town: MyString
+  zipcode: MyString
+  parish: MyString
+  country: MyString

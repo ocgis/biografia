@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140307203835) do
+ActiveRecord::Schema.define(version: 20140307205720) do
+
+  create_table "addresses", force: true do |t|
+    t.string   "street",     limit: 80
+    t.string   "town",       limit: 80
+    t.string   "zipcode",    limit: 20
+    t.string   "parish",     limit: 80
+    t.string   "country",    limit: 80
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "addresses_references", id: false, force: true do |t|
+    t.integer "address_id"
+    t.integer "reference_id"
+  end
 
   create_table "notes", force: true do |t|
     t.string   "title"

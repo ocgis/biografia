@@ -7,3 +7,7 @@ reference1:
 reference2:
   name: Reference 2
   notes: note1
+
+reference3:
+  name: Reference 3
+  addresses: address1
