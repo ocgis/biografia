@@ -3,3 +3,9 @@ person1:
   calling_name: Christer
   surname: Gustavsson
   sex: m
+
+person2:
+  given_name: Reference Two
+  calling_name: Two
+  surname: Person
+  sex: m
