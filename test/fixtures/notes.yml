@@ -1,0 +1,6 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+note1:
+  title: Note 1
+  note: Note 1
+  references: reference2

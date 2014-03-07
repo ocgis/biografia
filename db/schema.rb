@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140307172609) do
+ActiveRecord::Schema.define(version: 20140307203835) do
+
+  create_table "notes", force: true do |t|
+    t.string   "title"
+    t.text     "note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "notes_references", id: false, force: true do |t|
+    t.integer "note_id"
+    t.integer "reference_id"
+  end
 
   create_table "people", force: true do |t|
     t.string   "given_name",   limit: 80

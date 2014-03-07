@@ -3,3 +3,7 @@
 reference1:
   name: Reference 1
   people: person2
+
+reference2:
+  name: Reference 2
+  notes: note1
