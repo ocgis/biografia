@@ -11,3 +11,7 @@ reference2:
 reference3:
   name: Reference 3
   addresses: address1
+
+reference4:
+  name: Reference 4
+  events: event1

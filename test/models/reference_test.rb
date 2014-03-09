@@ -8,6 +8,13 @@ class ReferenceTest < ActiveSupport::TestCase
     assert address1 == reference3.addresses[0], 'Association from address to reference does not work'
   end
 
+  test "event reference" do
+    reference4 = Reference.find(references(:reference4).id)
+    event1 = Event.find(events(:event1).id)
+    assert reference4 == event1.references[0], 'Association from reference to event does not work'
+    assert event1 == reference4.events[0], 'Association from event to reference does not work'
+  end
+
   test "note reference" do
     reference2 = Reference.find(references(:reference2).id)
     note1 = Note.find(notes(:note1).id)
