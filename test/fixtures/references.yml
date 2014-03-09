@@ -15,3 +15,7 @@ reference3:
 reference4:
   name: Reference 4
   events: event1
+
+reference5:
+  name: Reference 5
+  event_dates: event_date1
