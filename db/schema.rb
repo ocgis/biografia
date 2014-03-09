@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140309192052) do
+ActiveRecord::Schema.define(version: 20140309194308) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -78,6 +78,13 @@ ActiveRecord::Schema.define(version: 20140309192052) do
 
   create_table "references", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transfers", force: true do |t|
+    t.string   "file_name",    null: false
+    t.string   "content_type", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
