@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140309194308) do
+ActiveRecord::Schema.define(version: 20140309210123) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -78,6 +78,17 @@ ActiveRecord::Schema.define(version: 20140309194308) do
 
   create_table "references", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "references_relationships", id: false, force: true do |t|
+    t.integer "reference_id"
+    t.integer "relationship_id"
+  end
+
+  create_table "relationships", force: true do |t|
+    t.text     "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

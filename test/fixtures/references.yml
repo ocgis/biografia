@@ -19,3 +19,7 @@ reference4:
 reference5:
   name: Reference 5
   event_dates: event_date1
+
+reference6:
+  name: Reference 6
+  relationships: relationship1

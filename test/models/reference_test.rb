@@ -35,4 +35,11 @@ class ReferenceTest < ActiveSupport::TestCase
     assert reference1 == person2.references[0], 'Association from reference to person does not work'
     assert person2 == reference1.people[0], 'Association from person to reference does not work'
   end
+
+  test "relationship reference" do
+    reference6 = Reference.find(references(:reference6).id)
+    relationship1 = Relationship.find(relationships(:relationship1).id)
+    assert reference6 == relationship1.references[0], 'Association from reference to relationship does not work'
+    assert relationship1 == reference6.relationships[0], 'Association from relationship to reference does not work'
+  end
 end
