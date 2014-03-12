@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title><%=h yield(:title) %></title>
+    <!-- Additional header tags here -->
+    <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'prototype' %>
+    <%= javascript_include_tag 'prototype_ujs' %>
+    <%= csrf_meta_tag %>
+    
+    <style>
+	 .cgmenu {
+	    color: white;
+	    font-family: Tahoma;
+	    font-size: 8pt;
+	    font-weight: bold;
+	    border-right: 1px solid white;
+	    text-decoration: none;
+	    background-color: #313031;
+	    padding: 5px;
+	}
+	
+	.cgmenu:hover {
+	    background-color: #5A8EC6;
+	}
+	
+	.cgtoolbar {
+	    background-color: #313031;
+	    padding: 5px 0px 5px 0px;
+	}
+    </style>
+  </head>
+  <body>
+    <% if true or user_signed_in? %>
+    
+      <table>
+      <tr>
+      <td>
+        <table>
+        <tr>
+        <td>Person</td>
+        <td>Media</td>
+        </tr>
+        <tr>
+        <td><%= link_to "Lista alla", :controller => "people", :action => "index" %></td>
+        <td><%= link_to "Lista alla", :controller => "media", :action => "index" %></td>
+        </tr>
+        <tr>
+        <td><%= link_to "Lägg till", :controller => "people", :action => "new" %></td>
+        <td><%= link_to "Lägg till", :controller => "media", :action => "new" %></td>
+        </tr>
+        <tr>
+        <td>
+        <%= link_to "Sök", :controller => "people", :action => "index" %>
+        </td>
+        </tr>
+        </table>
+      </td>
+      </tr>
+      </table>
+      <%= yield %>
+    <% else %>
+      <p>
+      Du har inte loggat in.
+      </p>
+    <% end %>
+
+    <%-#= render :partial => 'users/user_bar' -%>
+  </body> 
+</html>
+  

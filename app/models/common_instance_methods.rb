@@ -7,6 +7,8 @@ module CommonInstanceMethods
     reference = Reference.create(:name => options[:role])
     self.references << reference
     referenced_object.references << reference
+
+    return reference
   end
 
   def related_objects
@@ -21,15 +23,21 @@ module CommonInstanceMethods
                :unhandled_types => [] }
 
     self.references.each do |reference|
-      retval[:addresses] = retval[:addresses] + reference.addresses
-      retval[:event_dates] = retval[:event_dates] + reference.event_dates
-      retval[:events] = retval[:events] + reference.events
-      retval[:notes] = retval[:notes] + reference.notes
-      retval[:people] = retval[:people] + reference.people
-      retval[:relationships] = retval[:relationships] + reference.relationships
-#FIXME:      retval[:media] = retval[:media] + reference.media
+      ['addresses', 'event_dates', 'events', 'notes', 'people', 'relationships' ].each do |obj_type| # FIXME: Add media
+        retval[obj_type.to_sym] = retval[obj_type.to_sym] + (reference.send(obj_type).map do |elem|
+          if elem != self
+            { :object => elem, :referenceId => reference.id }
+          else
+            nil
+          end
+        end).compact
+      end
     end
 
     return retval
+  end
+
+  def object_name
+    return "#{self.class.name}:#{id}"
   end
 end

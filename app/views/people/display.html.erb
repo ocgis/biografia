@@ -1,0 +1,12 @@
+  <%=h content_for(:title, 'Personinformation för ' + @person.short_name) %>
+	<%= render :partial => "people/show",
+		:object => { :object => @person },
+		:locals =>
+      {
+        :showFull => true,
+				:enclosedById => true,
+				:showModifier => true
+			}
+  %>
+
+	<a href="clickme" data_hover='hover me'>Bah</a>

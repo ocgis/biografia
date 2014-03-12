@@ -1,0 +1,140 @@
+<%=
+  name = modifier[:object].object_name
+  menuId = name + "_menu"
+  newId = name + "_new"
+ 
+  link_to_function ">", update_page { |page| page[menuId].toggle }
+%>
+
+<span id="<%= menuId %>" style="display:none">
+
+<%=
+  if (defined? showAddEvent) && showAddEvent
+    showNewId = true
+    options =
+      {
+        :controller       => "events",
+        :action           => "new",
+        :parentId         => modifier[:object].object_name,
+        :newElem          => newId,
+        :hideElem         => menuId
+		  }
+    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+    options[:grandParentId] = parent[:object].object_name if defined? parent
+    link_to "lägg till händelse", options, { :remote => true }
+  end
+%>
+
+<%=
+  if (defined? showAddNote) && showAddNote
+    showNewId = true
+    options =
+      {
+        :controller       => "notes",
+        :action           => "new",
+        :parentId         => modifier[:object].object_name,
+        :newElem          => newId,
+        :hideElem         => menuId
+		  }
+    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+    options[:grandParentId] = parent[:object].object_name if defined? parent
+    link_to "kommentera", options, { :remote => true }
+  end
+%>
+
+<%=
+  if (defined? showAddDate) && showAddDate
+    showNewId = true
+    options =
+      {
+        :controller       => "event_dates",
+        :action           => "new",
+        :parentId         => modifier[:object].object_name,
+        :newElem          => newId,
+        :hideElem         => menuId
+		  }
+    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+    options[:grandParentId] = parent[:object].object_name if defined? parent
+    link_to "lägg till datum", options, { :remote => true }
+  end
+%>
+
+<%=
+  if (defined? showAddAddress) && showAddAddress
+    showNewId = true
+    options =
+      {
+        :controller       => "addresses",
+        :action           => "new",
+        :parentId         => modifier[:object].object_name,
+        :newElem          => newId,
+        :hideElem         => menuId
+		  }
+    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+    options[:grandParentId] = parent[:object].object_name if defined? parent
+    link_to "lägg till adress", options, { :remote => true }
+  end
+%>
+
+<%=
+  options = 
+    {
+		  :controller => controller_name(modifier[:object].class.name),
+		  :action     => "edit",
+		  :id         => modifier[:object].id,
+    }
+  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  link_to "ändra", options, { :remote => true }
+%>
+
+<%=
+  options =
+    {
+		  :controller => 'references',
+		  :action     => "connection_choose",
+		  :id         => modifier[:object].object_name
+    }	
+  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  options[:showFull] = showFull if defined? showFull
+  link_to "referera till", options, { :remote => true }
+%>
+
+<%=
+  if modifier[:referenceId] != nil
+    options = 
+      {
+		    :controller          => 'references',
+		    :action              => "delete",
+		    :id                  => modifier[:object].object_name,
+		    :referenceId          => modifier[:referenceId],
+		    :removeReferenceOnly => true
+      }
+    if defined? parent
+      options[:parentId] = parent[:object].object_name
+      options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
+    end
+   link_to "ta bort referens", options, { :remote => true }
+  end
+%>
+
+<%=
+  options = {
+  		:controller          => 'references',
+		  :action              => "delete",
+		  :id                  => modifier[:object].object_name,
+		  :removeReferenceOnly => false
+  }
+  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  if defined? parent
+    options[:parentId] = parent[:object].object_name
+    options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
+  end
+
+  link_to "radera", options, { :remote => true }
+%>
+
+</span>
+
+<% if defined? showNewId %>
+	<span id="<%= newId %>"></span>
+<% end %>

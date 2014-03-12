@@ -1,0 +1,53 @@
+<%= @file_type %>
+<% if enclosedById %>
+<span id="<%= show[:object].common_id.object_name %>">
+<% end %>
+
+<% if defined? showFull %>
+  <% if defined? mode and mode == 'tag' %>
+	  <div>
+    <%= image_tag '/' + show[:object].file_name, :data_tagable => 'true', :id => 'hoolabaloo' %>
+		</div>
+    <br />
+    <%= link_to "avbryt taggning", { :id => show[:object].id, :controller => show[:object].common_id.controller, :action => 'display' } %>
+    <br />
+
+    <%= render :partial => "common_ids/connchoose", :object => show, :locals => { } %>
+
+  <% else %>
+    <div>
+    <%= image_tag '/' + show[:object].file_name, :id => 'hoolabaloo' %>
+    <% show[:object].common_id.positions_in_object.each do |position| %>
+      <span style="position:absolute;top:<%= position[:position].y.to_i %>px;left:<%= position[:position].x.to_i %>px;width:<%= position[:position].width.to_i %>px;height:<%= position[:position].height.to_i %>px;background-color:transparent" data_hover="true">
+      <span style="position:absolute;bottom:0px;left:0px;width:<%= position[:position].width.to_i %>px;background-color:blue;display:none"><%= position[:object].name %></span>
+      </span>
+    <% end %>
+    </div>
+		<br />
+    <%= link_to "tagga bild", { :id => show[:object].id, :controller => show[:object].common_id.controller, :action => 'display', :mode => 'tag' } %>
+    <br />
+	<% end %>
+<% else %>
+  <%= link_to show[:object].file_name, :controller => 'common_ids', :action => 'display', :id => show[:object].common_id_id %>
+<% end %>
+
+<%=
+  if showModifier
+    locals = { }
+    locals[:parent] = parent if defined? parent
+    locals[:relation] = show[:relation] if show[:relation] != nil
+    locals[:showFull] = showFull if defined? showFull
+    render :partial => 'application/modifier', :object => show, :locals => locals
+  end
+%>
+<br />
+
+<%=
+  if defined? showFull and showFull
+    render :partial => "common_ids/related", :object => show, :locals => { }
+  end
+%>
+
+<% if enclosedById %>
+</span>
+<% end %>

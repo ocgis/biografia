@@ -1,0 +1,15 @@
+<%= form_tag({ :action => "create" }) do %>
+F&ouml;rnamn:
+<%= text_field "person", "given_name", "size" => 20 %><br/>
+
+Tilltalsnamn:
+<%= text_field "person", "calling_name", "size" => 20 %><br/>
+
+Efternamn:
+<%= text_field "person", "surname", "maxlength" => 20 %><br/>
+
+K&ouml;n:
+<%= text_field "person", "sex", "maxlength" => 20 %><br/>
+
+<input type="submit" value="Save">
+<% end %>

@@ -1,0 +1,4 @@
+    <%=h content_for(:title, 'Index över personer') %>
+	<%= render :partial => "people/listone",
+		:collection => @people,
+		:locals => { :enclosedById => true, :showModifier => true, :parentId => 1 } %>

@@ -6,6 +6,10 @@ class Address < ActiveRecord::Base
 
    has_and_belongs_to_many :references
 
+   def controller
+     return 'addresses'
+   end
+
    # FIXME: add test
    def one_line
        address = ""

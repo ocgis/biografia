@@ -1,0 +1,9 @@
+Vill du verkligen ta bort den här?
+<%= link_to 'Ja',
+	{ :controller => 'references', :action => 'destroy', :id => delete.object_name, :referenceId => referenceId, :parentId => parentId, :parentReferenceId => parentReferenceId, :removeReferenceOnly => removeReferenceOnly },
+	{ :remote => true } %>
+<%= link_to 'Nej',
+	{ :controller => delete.controller, :action => 'show', :id => delete.id, :referenceId => referenceId, :parentId => parentId, :parentReferenceId => parentReferenceId },
+	{ :remote => true } %>
+<br />
+<%= render :partial => delete.controller + '/show', :object => { :object => delete }, :locals => { :enclosedById => false, :showModifier => false, :updateName => updateName, :parentId => parentId } %>

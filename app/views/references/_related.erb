@@ -1,0 +1,24 @@
+<% related_objs = related[:object].related_objects %>
+
+<h3>Personer</h3>
+<%= render :partial => "people/show", :collection => related_objs[:people], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+
+<h3>Händelser</h3>
+<%= render :partial => "events/show", :collection => related_objs[:events], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+
+<% for type in related_objs[:unhandled_types] %>
+  <%= "Warning: unhandled type " %>
+  <%= type %>
+  <%= "<br />" %>
+<% end %>
+
+<h3>Adresser</h3>
+<%= render :partial => "addresses/show",
+  :collection => related_objs[:addresses],
+  :locals => { :obj_class => 'person_address', :enclosedById => true, :showModifier => true, :parent => related } %>
+
+<h3>Kommentarer</h3>
+<%= render :partial => "notes/show", :collection => related_objs[:notes], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+
+<h3>Media</h3>
+<%= render :partial => "media/show", :collection => related_objs[:medias], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>

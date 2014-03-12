@@ -1,0 +1,12 @@
+<%= form_tag({ :action => 'update', :id => edit[:object].id }, { :remote => true }) do %>
+
+<%= hidden_field 'form', 'referenceId', :value => edit[:referenceId] if defined? edit[:referenceId] %>
+<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
+
+<table>
+<tr><td>Rubrik</td><td><%= text_field "note", "title" %></td></tr>
+<tr><td>Kommentar</td><td><%= text_field "note", "note" %></td></tr>
+</table>
+
+<input type="submit" value="Save">
+<% end %>

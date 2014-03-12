@@ -1,5 +1,47 @@
 Biografia::Application.routes.draw do
-  get "imports/new"
+  post "addresses/create"
+  get  "addresses/edit"
+  get  "addresses/new"
+  get  "addresses/show"
+  post "addresses/update"
+
+  post "event_dates/create"
+  get  "event_dates/edit"
+  get  "event_dates/new"
+  get  "event_dates/show"
+  post "event_dates/update"
+
+  post "events/create"
+  get  "events/edit"
+  get  "events/new"
+  get  "events/show"
+  post "events/update"
+
+  get  "imports/new"
+
+  get  "media/index"
+  get  "media/new"
+
+  post "notes/create"
+  get  "notes/edit"
+  get  "notes/new"
+  get  "notes/show"
+  post "notes/update"
+
+  get  "people/ancestry"
+  post "people/create"
+  get  "people/destroy"
+  get  "people/display"
+  get  "people/edit"
+  get  "people/index"
+  get  "people/new"
+  get  "people/show"
+  post "people/update"
+
+  get  "references/connection_choose"
+  get  "references/delete"
+  get  "references/destroy"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -54,4 +96,6 @@ Biografia::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  root :to => "people#index"
 end
