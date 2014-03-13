@@ -42,7 +42,9 @@ Biografia::Application.routes.draw do
   get  "people/show"
   post "people/update"
 
+  post "references/connection_add"
   get  "references/connection_choose"
+  post "references/connection_list"
   get  "references/delete"
   get  "references/destroy"
 

@@ -19,11 +19,11 @@ module CommonInstanceMethods
                :notes => [],
                :event_dates => [],
                :relationships => [],
-               :medias => [],
+               :media => [],
                :unhandled_types => [] }
 
     self.references.each do |reference|
-      ['addresses', 'event_dates', 'events', 'notes', 'people', 'relationships' ].each do |obj_type| # FIXME: Add media
+      ['addresses', 'event_dates', 'events', 'media', 'notes', 'people', 'relationships' ].each do |obj_type| # FIXME: Add media
         retval[obj_type.to_sym] = retval[obj_type.to_sym] + (reference.send(obj_type).map do |elem|
           if elem != self
             { :object => elem, :referenceId => reference.id }

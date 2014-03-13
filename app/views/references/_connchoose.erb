@@ -1,0 +1,44 @@
+<% updateListName = connchoose[:object].object_name + '_list' %>
+
+<%= form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do %>
+
+<%= hidden_field 'form', 'updateListName', :value => updateListName %>
+
+<%=
+  if defined? showFull
+    hidden_field 'form', 'showFull', :value => showFull
+  end
+%>
+
+<table>
+<%= text_field 'filter', 'filter', :data_submit_form => "yes" %><br/>
+</table>
+
+<% end %>
+
+<%= form_tag({ :controller => 'references', :action => "connection_add" }, { :remote => true, :id => 'yes' }) do %>
+  <%= hidden_field 'form', 'x', :value => 0 %>
+  <%= hidden_field 'form', 'y', :value => 0 %>
+  <%= hidden_field 'form', 'w', :value => 0 %>
+  <%= hidden_field 'form', 'h', :value => 0 %>
+  <%= hidden_field 'form', 'connect1Id', :value => connchoose[:object].object_name %>
+  <%=
+    if defined? showFull
+      hidden_field 'form', 'showFull', :value => showFull
+    end
+  %>
+
+  <div id="<%= updateListName %>"></div>
+	
+	<%= submit_tag %>
+<% end %>
+
+<%=
+  locals =
+    {
+      :enclosedById => false,
+      :showModifier => false
+    }
+  locals[:showFull] = showFull if defined? showFull
+  render :partial => connchoose[:object].controller + '/show', :object => connchoose, :locals => locals
+%>
