@@ -79,7 +79,7 @@
 <%=
   options = 
     {
-		  :controller => controller_name(modifier[:object].class.name),
+		  :controller => modifier[:object].controller,
 		  :action     => "edit",
 		  :id         => modifier[:object].id,
     }

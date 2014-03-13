@@ -23,3 +23,7 @@ reference5:
 reference6:
   name: Reference 6
   relationships: relationship1
+
+reference7:
+  name: Reference 7
+  media: medium1

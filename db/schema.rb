@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140309210123) do
+ActiveRecord::Schema.define(version: 20140313144126) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -50,6 +50,17 @@ ActiveRecord::Schema.define(version: 20140309210123) do
     t.integer "reference_id"
   end
 
+  create_table "media", force: true do |t|
+    t.text     "file_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "media_references", id: false, force: true do |t|
+    t.integer "medium_id"
+    t.integer "reference_id"
+  end
+
   create_table "notes", force: true do |t|
     t.string   "title"
     t.text     "note"
@@ -74,6 +85,16 @@ ActiveRecord::Schema.define(version: 20140309210123) do
   create_table "people_references", id: false, force: true do |t|
     t.integer "person_id"
     t.integer "reference_id"
+  end
+
+  create_table "position_in_pictures", force: true do |t|
+    t.float    "x"
+    t.float    "y"
+    t.float    "width"
+    t.float    "height"
+    t.integer  "reference_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "references", force: true do |t|

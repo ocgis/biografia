@@ -22,6 +22,13 @@ class ReferenceTest < ActiveSupport::TestCase
     assert event_date1 == reference5.event_dates[0], 'Association from event date to reference does not work'
   end
 
+  test "medium reference" do
+    reference7 = Reference.find(references(:reference7).id)
+    medium1 = Medium.find(media(:medium1).id)
+    assert reference7 == medium1.references[0], 'Association from reference to medium does not work'
+    assert medium1 == reference7.media[0], 'Association from medium to reference does not work'
+  end
+
   test "note reference" do
     reference2 = Reference.find(references(:reference2).id)
     note1 = Note.find(notes(:note1).id)

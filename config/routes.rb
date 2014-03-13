@@ -19,8 +19,12 @@ Biografia::Application.routes.draw do
 
   get  "imports/new"
 
+  post "media/create"
+  get  "media/display"
+  get  "media/edit"
   get  "media/index"
   get  "media/new"
+  get  "media/show"
 
   post "notes/create"
   get  "notes/edit"

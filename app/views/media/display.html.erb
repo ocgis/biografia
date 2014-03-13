@@ -1,0 +1,13 @@
+  <% locals =
+      {
+        :showFull => true,
+        :enclosedById => true,
+        :showModifier => true,
+        :mode => @mode
+      }
+  %>
+  <%=h content_for(:title, 'Media: ' + @media.file_name) %>
+	<%= render :partial => "media/show",
+		:object => { :object => @media },
+		:locals => locals
+  %>

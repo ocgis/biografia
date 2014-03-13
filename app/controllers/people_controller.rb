@@ -101,4 +101,5 @@ class PeopleController < ApplicationController
   def person_params(params)
     params.permit(:given_name, :calling_name, :surname, :sex)
   end
+
 end

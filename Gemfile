@@ -47,4 +47,4 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'calendar_date_select'
+gem 'mime-types', :require => 'mime/types'
