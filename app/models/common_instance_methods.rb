@@ -38,7 +38,7 @@ module CommonInstanceMethods
   end
 
   def object_name
-    return "#{self.class.name}:#{id}"
+    return "#{self.class.name}_#{id}"
   end
 
   def positions_in_object

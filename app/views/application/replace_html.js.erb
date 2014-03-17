@@ -1,0 +1,4 @@
+<% if !(defined? hideElem).nil? %>
+$('#<%= hideElem %>').hide();
+<% end %>
+$('#<%= replaceElem %>').html('<%= escape_javascript render(:partial => partial, :object => object, :locals => locals)%>');

@@ -4,11 +4,11 @@
 <%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 
 <table>
-<tr><td>Gata</td><td><%= text_field "address", "street" %></td></tr>
-<tr><td>Postort</td><td><%= text_field "address", "town" %></td></tr>
-<tr><td>Postnummer</td><td><%= text_field "address", "zipcode" %></td></tr>
-<tr><td>Församling</td><td><%= text_field "address", "parish" %></td></tr>
-<tr><td>Land</td><td><%= text_field "address", "country" %></td></tr>
+<tr><td>Gata</td><td><%= text_field "edited", "street" %></td></tr>
+<tr><td>Postort</td><td><%= text_field "edited", "town" %></td></tr>
+<tr><td>Postnummer</td><td><%= text_field "edited", "zipcode" %></td></tr>
+<tr><td>Församling</td><td><%= text_field "edited", "parish" %></td></tr>
+<tr><td>Land</td><td><%= text_field "edited", "country" %></td></tr>
 </table>
 
 <input type="submit" value="Save">

@@ -6,10 +6,8 @@ class ReferencesController < ApplicationController
     locals = {}
     locals[:showFull] = params[:showFull] if params[:showFull] != nil
     
-    render :update do |page|
-	    page.replace_html object[:object].object_name,
-            :partial => 'references/connchoose', :object => object,
-            :locals => locals
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connchoose', :object => object, :replaceElem => object[:object].object_name } }
     end
   end
 
@@ -21,11 +19,9 @@ class ReferencesController < ApplicationController
         :connect1Id => params[:form][:connect1Id]
       }
     locals[:showFull] = params[:form][:showFull] if params[:form][:showFull] != nil
-    render :update do |page|
-	    page.replace_html params[:form][:updateListName],
-            :partial => 'references/connlist',
-            :locals => locals
-    end    
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => params[:form][:updateListName] } }
+    end
   end
 
   def connection_add
@@ -54,11 +50,8 @@ class ReferencesController < ApplicationController
         :mode => 'tag'     # FIXME
       }
     locals[:showFull] = params[:showFull] if params[:form][:showFull] != nil
-    render :update do |page|
-#	    page.replace_html object[:object].common_id.object_name,
-#            :partial => object[:object].common_id.controller + '/show', :object => object,
-#            :locals => locals
-      page.reload
+    respond_to do |format|
+      format.js { render "reload_page" }
     end
   end
 
@@ -72,10 +65,8 @@ class ReferencesController < ApplicationController
         :removeReferenceOnly => params[:removeReferenceOnly]
       }
     locals[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
-    render :update do |page|
-	    page.replace_html obj.object_name,
-            :partial => 'references/delete', :object => obj,
-            :locals => locals
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
     end
   end
 
@@ -92,9 +83,8 @@ class ReferencesController < ApplicationController
       object.destroy
     end
 
-    render :update do |page|
-#      page.replace_html object_name, :text => ''
-      page.reload
+    respond_to do |format|
+      format.js { render "reload_page" }
     end
   end
 

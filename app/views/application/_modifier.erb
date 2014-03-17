@@ -3,7 +3,7 @@
   menuId = name + "_menu"
   newId = name + "_new"
  
-  link_to_function ">", update_page { |page| page[menuId].toggle }
+  link_to ">", "#", :class => "toggler", :"data-toggle-id" => menuId
 %>
 
 <span id="<%= menuId %>" style="display:none">
