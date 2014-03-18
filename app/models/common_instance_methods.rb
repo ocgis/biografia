@@ -42,22 +42,17 @@ module CommonInstanceMethods
   end
 
   def positions_in_object
-    positions = []
-# FIXME: Implement
-#    references.each do |reference|
-#      position = reference.position_in_pictures
+   positions = []
+   references.each do |reference|
+     position = reference.position_in_pictures
       
-#      if !reference.position_in_pictures
-#        if relation.id1 == id
-#          obj = CommonId.find(relation.id2).object
-#        else
-#          obj = CommonId.find(relation.id1).object
-#        end
-        
-#        positions.push( { :object => obj, :position => position[0] } )
-#      end
-#    end
-    positions  
+     if !position.nil?
+       puts "%%%%%%%%%%%%%%%%%%%%%%%"
+       obj = reference.other_object(self)        
+       positions.push( { :object => obj, :position => position[0] } )
+     end
+   end
+   return positions  
   end
 
 end

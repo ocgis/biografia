@@ -21,6 +21,9 @@ gem 'coffee-rails', '~> 4.0.0'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+# Use Jcrop for jquery
+gem 'jcrop-rails', github: 'bukalapak/jcrop-rails', ref: '77bce10f6d0'
+
 # Use prototype as the JavaScript library
 # gem "prototype-rails", "~> 4.0.0"
 

@@ -15,7 +15,7 @@
     <%= render :partial => "references/connchoose", :object => show, :locals => { } %>
 
   <% else %>
-    <div>
+    <div style="position:relative">
     <%= image_tag '/' + show[:object].file_name, :id => 'hoolabaloo' %>
     <% show[:object].positions_in_object.each do |position| %>
       <span style="position:absolute;top:<%= position[:position].y.to_i %>px;left:<%= position[:position].x.to_i %>px;width:<%= position[:position].width.to_i %>px;height:<%= position[:position].height.to_i %>px;background-color:transparent" data_hover="true">
