@@ -1,0 +1,9 @@
+    <h2><%=h content_for(:title, 'Antavla för ' + @ancestry[:person].short_name) %></h2>
+
+    <table>
+    <%= ancestry_table @ancestry, :depth => 4 %>
+    </table>
+    <p>
+    <%= link_to "Personinformation", :action => "show",
+                                     :id => @ancestry[:person].id %>
+    </p>

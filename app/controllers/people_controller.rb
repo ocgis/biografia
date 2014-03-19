@@ -32,9 +32,12 @@ class PeopleController < ApplicationController
   end
 
   def destroy
+    Person.find(params["id"]).destroy
+    redirect_to :action => "index" 
   end
 
   def ancestry
+    @ancestry = ancestry_help(params["id"], 4)
   end
 
   protected
@@ -53,6 +56,31 @@ class PeopleController < ApplicationController
 
   def person_params(params)
     params.permit(:given_name, :calling_name, :surname, :sex)
+  end
+
+  def ancestry_help(id, depth)
+    person=Person.find(id)
+
+    if person == nil
+       a = nil
+    else
+       a = { :person => person }
+
+       if depth > 1
+         parents=person.find_parents
+
+         for parent in parents
+           if parent.kon == "m"
+              a[:father] = ancestry_help(parent.id, depth - 1)
+           end
+           if parent.kon == "k"
+              a[:mother] = ancestry_help(parent.id, depth - 1)
+           end
+         end
+       end
+    end
+
+    return a
   end
 
 end
