@@ -1,0 +1,6 @@
+<%= form_for :transfers, :url => {:action=>:create}, :html=>{:multipart=>true} do |f| %>
+	Filnamn:
+  <%= file_field 'upload', 'file_name', { :id => 'ul_file_name' } %>
+	<br />
+  <%= f.submit 'Lägg till' %>
+<% end %>

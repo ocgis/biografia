@@ -48,6 +48,10 @@ Biografia::Application.routes.draw do
   get  "references/delete"
   get  "references/destroy"
 
+  post "transfers/create"
+  get  "transfers/new"
+  get  "transfers/show"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

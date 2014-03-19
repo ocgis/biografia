@@ -1,3 +1,5 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
 transfer1:
   content_type: 'text/plain'
   file_name: MyFileName
