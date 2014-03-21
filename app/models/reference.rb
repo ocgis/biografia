@@ -20,7 +20,6 @@ class Reference < ActiveRecord::Base
     else
       other = objects[0]
     end
-    puts "objects: #{objects.inspect}"
     return other
   end
 end

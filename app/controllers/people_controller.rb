@@ -70,10 +70,10 @@ class PeopleController < ApplicationController
          parents=person.find_parents
 
          for parent in parents
-           if parent.kon == "m"
+           if parent.sex == "M"
               a[:father] = ancestry_help(parent.id, depth - 1)
            end
-           if parent.kon == "k"
+           if parent.sex == "F"
               a[:mother] = ancestry_help(parent.id, depth - 1)
            end
          end
