@@ -1,8 +1,5 @@
 class PeopleController < ApplicationController
 
-  def new
-  end
-
   def create
      @person = Person.new(person_params(params[:person]))
      if @person.save
@@ -10,10 +7,6 @@ class PeopleController < ApplicationController
      else
        render :action => 'new'
      end
-  end
-
-  def index
-    @people = Person.all
   end
 
   def search_ajax
@@ -50,6 +43,10 @@ class PeopleController < ApplicationController
     object = Person.find(params[:id])
     object.attributes = person_params(params[:edited])
     return object
+  end
+
+  def all_objects
+    Person.all
   end
 
   private

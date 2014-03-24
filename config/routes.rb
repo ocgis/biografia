@@ -1,19 +1,19 @@
 Biografia::Application.routes.draw do
-  post "addresses/create"
+  post "addresses/createp"
   get  "addresses/edit"
-  get  "addresses/new"
+  get  "addresses/newp"
   get  "addresses/show"
   post "addresses/update"
 
-  post "event_dates/create"
+  post "event_dates/createp"
   get  "event_dates/edit"
-  get  "event_dates/new"
+  get  "event_dates/newp"
   get  "event_dates/show"
   post "event_dates/update"
 
-  post "events/create"
+  post "events/createp"
   get  "events/edit"
-  get  "events/new"
+  get  "events/newp"
   get  "events/show"
   post "events/update"
 
@@ -26,9 +26,9 @@ Biografia::Application.routes.draw do
   get  "media/new"
   get  "media/show"
 
-  post "notes/create"
+  post "notes/createp"
   get  "notes/edit"
-  get  "notes/new"
+  get  "notes/newp"
   get  "notes/show"
   post "notes/update"
 

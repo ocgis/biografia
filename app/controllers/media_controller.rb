@@ -24,10 +24,6 @@ class MediaController < ApplicationController
     end
   end
 
-  def index
-    @medias = Medium.find(:all)
-  end
-
   def display
     @media = Medium.find(params[:id])
     @mode = params[:mode]
@@ -41,6 +37,13 @@ class MediaController < ApplicationController
   def show
     #FIXME: Implement
   end
+
+  protected
+
+  def all_objects
+    Medium.all
+  end
+
 
   private
 

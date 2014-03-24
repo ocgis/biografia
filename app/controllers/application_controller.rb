@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def new
+  end
+
+  def newp
     locals = { }
     if params[:parentId] != nil
       locals[:parentId] = params[:parentId]
@@ -11,11 +14,11 @@ class ApplicationController < ActionController::Base
     end
     locals[:grandParentId] = params[:grandParentId] if params[:grandParentId] != nil
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'new', :replaceElem => params[:newElem], :hideElem => params[:hideElem] } }
+      format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'newp', :replaceElem => params[:newElem], :hideElem => params[:hideElem] } }
     end
   end
 
-  def create
+  def createp
      newObj = create_object
      saved = newObj.save
      
@@ -38,6 +41,10 @@ class ApplicationController < ActionController::Base
      else
         render :action => 'new'
      end
+  end
+
+  def index
+    @objects = all_objects
   end
 
   def show
