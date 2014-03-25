@@ -1,0 +1,4 @@
+    <%=h content_for(:title, @index_title) %>
+	<%= render :partial => "listone",
+		:collection => @objects,
+		:locals => { :enclosedById => true, :showModifier => true, :parentId => 1 } %>

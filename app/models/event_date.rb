@@ -8,4 +8,8 @@ class EventDate < ActiveRecord::Base
     return "event_dates"
   end
 
+  def one_line
+    return date
+  end
+
 end

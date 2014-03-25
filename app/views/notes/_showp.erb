@@ -1,0 +1,31 @@
+<% object = showp[:object] %>
+
+<% if enclosedById %>
+   <span id="<%= object.object_name %>" class="event_note">
+<% end %>
+
+<%=
+  if defined?  showFull and showFull
+    object.title
+  else
+    link_to object.title, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
+  end
+%>
+
+<%=
+  if showModifier
+    locals = { }
+    locals[:parent] = parent if defined? parent
+    render :partial => 'application/modifier', :object => showp, :locals => locals
+  end
+%>
+
+<pre><%= object.note %></pre>
+
+<% if defined? showFull and showFull %>	
+    <%= render :partial => "references/related", :object => showp, :locals => { } %>
+<% end %>
+
+<% if enclosedById %>
+   </span>
+<% end %>

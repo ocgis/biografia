@@ -8,4 +8,8 @@ class Event < ActiveRecord::Base
     return "events"
   end
 
+  def one_line
+    return name
+  end
+
 end

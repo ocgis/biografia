@@ -8,17 +8,15 @@ class NotesControllerTest < ActionController::TestCase
 #    assert_response :success
 #  end
 
-# FIXME
-#  test "should get index" do
-#    get :index
-#    assert_response :success
-#  end
+  test "should get index" do
+    get :index
+    assert_response :success
+  end
 
-# FIXME
-#  test "should get show" do
-#    get :show, {:id => notes(:note1).id }
-#    assert_response :success
-#  end
+  test "should get show" do
+    get :show, {:id => notes(:note1).id }
+    assert_response :success
+  end
 
 # FIXME
 #  test "should get edit" do

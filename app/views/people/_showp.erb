@@ -1,0 +1,77 @@
+<% name = showp[:object].object_name %>
+<% children = showp[:object].find_children %>
+<% parents = showp[:object].find_parents %>
+<% relationships = showp[:object].find_spouses %>
+
+<% if enclosedById %>
+<span id="<%= name %>">
+<% end %>
+
+<p>
+<%=
+  if defined?  showFull and showFull
+    showp[:object].long_name
+  else
+    link_to showp[:object].long_name, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
+  end
+%>
+<%= showp[:object].sex %>
+
+<%=
+  if showModifier
+    locals = {
+      :showAddEvent => true,
+      :showAddNote => true,
+      :showAddDate => false,
+      :showAddAddress => true
+    }
+    locals[:parent] = parent if defined? parent
+    locals[:relation] = showp[:relation] if showp[:relation] != nil
+    render :partial => 'application/modifier', :object => showp, :locals => locals
+  end
+%>
+<br />
+</p>
+
+<% if defined? showFull and showFull %>
+	
+    <%= render :partial => "references/related", :object => showp, :locals => { } %>
+
+    <h3>Föräldrar</h3>
+    <p>
+    <% for parent in parents %>
+    <%= link_to parent.short_name, :action => "show", :id => parent.id %>
+    <br />
+    <% end %>
+    </p>
+
+    <h3>Förhållanden</h3>
+    <p>
+    <% for relationship in relationships %>
+    <%= relationship[:name] %>
+    <% for member in relationship[:members] %>
+    <%= link_to member.short_name, :action => "show", :id => member.id %>
+    <% end %>
+    <br />
+    <% end %>
+    </p>
+
+    <h3>Barn</h3>
+    <p>
+    <% for child in children %>
+    <%= link_to child.short_name, :action => "show", :id => child.id %>
+    <br />
+    <% end %>
+    </p>
+
+    <h3>Övrigt</h3>
+    <p>
+    <%= link_to "Antavla", :action => "ancestry",
+                           :id => showp[:object].id %>
+    </p>
+		
+  <% end %>
+		
+<% if enclosedById %>
+</span>
+<% end %>

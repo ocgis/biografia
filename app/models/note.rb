@@ -8,4 +8,8 @@ class Note < ActiveRecord::Base
     return "notes"
   end
 
+  def one_line
+    return title
+  end
+
 end

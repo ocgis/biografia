@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MediaController < ApplicationController
 
   def new
@@ -24,7 +25,7 @@ class MediaController < ApplicationController
     end
   end
 
-  def display
+  def show
     @media = Medium.find(params[:id])
     @mode = params[:mode]
     @file_type = MIME::Types.type_for(@media.file_name)
@@ -34,16 +35,15 @@ class MediaController < ApplicationController
     #FIXME: Implement
   end
 
-  def show
-    #FIXME: Implement
-  end
-
   protected
 
   def all_objects
     Medium.all
   end
 
+  def index_title
+    return "Index över mediafiler"
+  end
 
   private
 

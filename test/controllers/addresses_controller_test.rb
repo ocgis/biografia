@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class AddressesControllerTest < ActionController::TestCase
+
+  test "should get show" do
+    get :show, {'id' => addresses(:address1).id }
+    assert_response :success
+  end
+
+  test "should get index" do
+    get :index
+    assert_response :success
+  end
+
 # FIXME
 #  test "should get create" do
 #    get :create

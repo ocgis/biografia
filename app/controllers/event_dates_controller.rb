@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class EventDatesController < ApplicationController
 
   protected
@@ -16,6 +17,14 @@ class EventDatesController < ApplicationController
     p = ActionController::Parameters.new(:date => params[:date].to_s)
     object.attributes = event_date_params(p)
     return object
+  end
+
+  def all_objects
+    return EventDate.all
+  end
+
+  def index_title
+    return "Index över datum"
   end
 
   private

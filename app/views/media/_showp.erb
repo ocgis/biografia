@@ -1,0 +1,53 @@
+<%= @file_type %>
+<% if enclosedById %>
+<span id="<%= showp[:object].object_name %>">
+<% end %>
+
+<% if defined? showFull %>
+  <% if defined? mode and mode == 'tag' %>
+	  <div>
+    <%= image_tag '/' + showp[:object].file_name, :data_tagable => 'true', :id => 'hoolabaloo' %>
+		</div>
+    <br />
+    <%= link_to "avbryt taggning", { :id => showp[:object].id, :controller => showp[:object].controller, :action => 'show' } %>
+    <br />
+
+    <%= render :partial => "references/connchoose", :object => showp, :locals => { } %>
+
+  <% else %>
+    <div style="position:relative">
+    <%= image_tag '/' + showp[:object].file_name, :id => 'hoolabaloo' %>
+    <% showp[:object].positions_in_object.each do |position| %>
+      <span style="position:absolute;top:<%= position[:position].y.to_i %>px;left:<%= position[:position].x.to_i %>px;width:<%= position[:position].width.to_i %>px;height:<%= position[:position].height.to_i %>px;background-color:transparent" data_hover="true">
+      <span style="position:absolute;bottom:0px;left:0px;width:<%= position[:position].width.to_i %>px;background-color:blue;display:none"><%= position[:object].name %></span>
+      </span>
+    <% end %>
+    </div>
+		<br />
+    <%= link_to "tagga bild", { :id => showp[:object].id, :controller => showp[:object].controller, :action => 'show', :mode => 'tag' } %>
+    <br />
+	<% end %>
+<% else %>
+  <%= link_to showp[:object].file_name, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id %>
+<% end %>
+
+<%=
+  if showModifier
+    locals = { }
+    locals[:parent] = parent if defined? parent
+    locals[:relation] = showp[:relation] if showp[:relation] != nil
+    locals[:showFull] = showFull if defined? showFull
+    render :partial => 'application/modifier', :object => showp, :locals => locals
+  end
+%>
+<br />
+
+<%=
+  if defined? showFull and showFull
+    render :partial => "references/related", :object => showp, :locals => { }
+  end
+%>
+
+<% if enclosedById %>
+</span>
+<% end %>

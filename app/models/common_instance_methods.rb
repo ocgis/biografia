@@ -23,7 +23,7 @@ module CommonInstanceMethods
                :unhandled_types => [] }
 
     self.references.each do |reference|
-      ['addresses', 'event_dates', 'events', 'media', 'notes', 'people', 'relationships' ].each do |obj_type| # FIXME: Add media
+      ['addresses', 'event_dates', 'events', 'media', 'notes', 'people', 'relationships' ].each do |obj_type|
         retval[obj_type.to_sym] = retval[obj_type.to_sym] + (reference.send(obj_type).map do |elem|
           if elem != self
             { :object => elem, :referenceId => reference.id }
@@ -47,7 +47,6 @@ module CommonInstanceMethods
      position = reference.position_in_pictures
       
      if !position.nil?
-       puts "%%%%%%%%%%%%%%%%%%%%%%%"
        obj = reference.other_object(self)        
        positions.push( { :object => obj, :position => position[0] } )
      end

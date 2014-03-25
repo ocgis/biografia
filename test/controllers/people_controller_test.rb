@@ -2,6 +2,11 @@ require 'test_helper'
 
 class PeopleControllerTest < ActionController::TestCase
 
+  test "should get show" do
+    get :show, {'id' => people(:person1).id }
+    assert_response :success
+  end
+
   test "should get index" do
     get :index
     assert_response :success

@@ -45,9 +45,15 @@ class ApplicationController < ActionController::Base
 
   def index
     @objects = all_objects
+    @title = index_title
   end
 
   def show
+    @object = find_object
+    @related=@object.related_objects
+  end
+
+  def showp
     object = { :object => find_object }
     object[:referenceId] = params[:referenceId] if params[:referenceId] != nil
     locals = 
@@ -60,7 +66,7 @@ class ApplicationController < ActionController::Base
       locals[:parent][:referenceId] = params[:parentReferenceId] if params[:parentReferenceId] != nil
     end
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'show', :object => object, :replaceElem => object[:object].object_name } }
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'showp', :object => object, :replaceElem => object[:object].object_name } }
     end
   end
 
@@ -92,7 +98,7 @@ class ApplicationController < ActionController::Base
         }
       locals[:parentId] = params[:form][:parentId] if defined? params[:form][:parentId]
       respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/show', :object => object, :replaceElem => object[:object].object_name } }
+        format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/showp', :object => object, :replaceElem => object[:object].object_name } }
       end
     else
       render controller + '/edit' 

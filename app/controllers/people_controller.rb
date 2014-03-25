@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class PeopleController < ApplicationController
 
   def create
@@ -15,11 +16,11 @@ class PeopleController < ApplicationController
   def display
     @base_id = params[:id]
 
-    @person=Person.find(params[:id])
-    @related=@person.related_objects
-    @relationships=@person.find_spouses
-    @parents=@person.find_parents
-    @children=@person.find_children
+    @object=find_object
+    @related=@object.related_objects
+    @relationships=@object.find_spouses
+    @parents=@object.find_parents
+    @children=@object.find_children
 
     render layout: true
   end
@@ -47,6 +48,10 @@ class PeopleController < ApplicationController
 
   def all_objects
     Person.all
+  end
+
+  def index_title
+    return "Index över personer"
   end
 
   private

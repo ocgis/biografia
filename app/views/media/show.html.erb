@@ -7,7 +7,7 @@
       }
   %>
   <%=h content_for(:title, 'Media: ' + @media.file_name) %>
-	<%= render :partial => "media/show",
+	<%= render :partial => "media/showp",
 		:object => { :object => @media },
 		:locals => locals
   %>

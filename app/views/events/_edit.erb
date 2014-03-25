@@ -13,7 +13,7 @@
 		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
 <%= render :partial => 'addresses/show',
 		:collection => related_objects[:addresses],
-		:locals => { :obj_class => 'event_address', :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
+		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
 <%= render :partial => 'notes/show',
 		:collection => related_objects[:notes],
 		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>

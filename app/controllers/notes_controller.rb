@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class NotesController < ApplicationController
 
   protected
@@ -14,6 +15,14 @@ class NotesController < ApplicationController
     object = Note.find(params[:id])
     object.attributes = note_params(params[:edited])
     return object
+  end
+
+  def all_objects
+    return Note.all
+  end
+
+  def index_title
+    return "Index över kommentarer"
   end
 
   private

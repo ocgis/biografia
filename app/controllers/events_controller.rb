@@ -18,6 +18,14 @@ class EventsController < ApplicationController
     return object
   end
 
+  def all_objects
+    return Event.all
+  end
+
+  def index_title
+    return "Index över händelser"
+  end
+
   private
 
   def event_params(params)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class AddressesController < ApplicationController
 
   protected
@@ -10,6 +11,14 @@ class AddressesController < ApplicationController
     object = Address.find(params[:id])
     object.attributes = address_params(params[:edited])
     return object
+  end
+
+  def all_objects
+    return Address.all
+  end
+
+  def index_title
+    return "Index över adresser"
   end
 
   def create_object
