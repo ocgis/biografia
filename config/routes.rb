@@ -57,8 +57,13 @@ Biografia::Application.routes.draw do
   get  "references/delete"
   get  "references/destroy"
 
+  post "relationships/createp"
   get  "relationships/edit"
+  get  "relationships/index"
+  get  "relationships/newp"
   get  "relationships/show"
+  get  "relationships/showp"
+  post "relationships/update"
 
   post "transfers/create"
   get  "transfers/new"

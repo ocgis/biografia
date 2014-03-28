@@ -1,0 +1,21 @@
+<%= form_tag({ :action => 'update', :id => edit[:object].id }, { :remote => true }) do %>
+
+<%= hidden_field 'form', 'referenceId', :value => edit[:referenceId] if defined? edit[:referenceId] %>
+<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
+
+<%= text_field 'edited', 'name' %><br/>
+
+<input type="submit" value="Save">
+
+<% related_objects = edit[:object].related_objects %>
+<%= render :partial => 'event_dates/showp',
+		:collection => related_objects[:event_dates],
+		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
+<%= render :partial => 'addresses/showp',
+		:collection => related_objects[:addresses],
+		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
+<%= render :partial => 'notes/showp',
+		:collection => related_objects[:notes],
+		:locals => { :enclosedById => true, :showModifier => false, :parentId => edit[:object].object_name } %>
+
+<% end %>
