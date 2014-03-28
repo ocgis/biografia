@@ -33,4 +33,6 @@ Biografia::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer', 'test')
 end

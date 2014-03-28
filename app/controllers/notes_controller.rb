@@ -4,16 +4,16 @@ class NotesController < ApplicationController
   protected
 
   def create_object
-    return Note.new(note_params(params[:note]))
+    return Note.new(note_params(params.require(:note)))
   end
 
   def find_object
-    return Note.find(params[:id])
+    return Note.find(params.require(:id))
   end
 
   def find_object_and_update_attrs
-    object = Note.find(params[:id])
-    object.attributes = note_params(params[:edited])
+    object = Note.find(params.require(:id))
+    object.attributes = note_params(params.require(:edited))
     return object
   end
 

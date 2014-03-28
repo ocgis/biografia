@@ -31,7 +31,7 @@ Biografia::Application.routes.draw do
   get  "media/index"
   get  "media/new"
   get  "media/show"
-  get  "media/showp"
+#  get  "media/showp"
 
   post "notes/createp"
   get  "notes/edit"
@@ -56,6 +56,9 @@ Biografia::Application.routes.draw do
   post "references/connection_list"
   get  "references/delete"
   get  "references/destroy"
+
+  get  "relationships/edit"
+  get  "relationships/show"
 
   post "transfers/create"
   get  "transfers/new"

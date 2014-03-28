@@ -1,0 +1,50 @@
+<% related_objects = showp[:object].related_objects %>
+<% if enclosedById %>
+  <span id="<%= showp[:object].object_name %>">
+<% end %>
+
+<span class="event">
+<%=
+  if defined?  showFull and showFull
+    showp[:object].object_name
+  else
+    link_to showp[:object].object_name, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
+  end
+%>
+
+<%=
+  if showModifier
+	  locals = {
+	    :showAddNote => true,
+	    :showAddDate => true,
+	    :showAddAddress => true
+	  }
+	  locals[:parent] = parent if defined? parent
+    render :partial => 'application/modifier', :object => showp, :locals => locals
+  end
+%>
+		<br />
+	</span>
+
+	<%= render :partial => 'people/showp',
+		:collection => related_objects[:people],
+		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+	<%= render :partial => 'event_dates/showp',
+		:collection => related_objects[:event_dates],
+		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+	<%= render :partial => 'addresses/showp',
+		:collection => related_objects[:addresses],
+		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+	<%= render :partial => 'notes/showp',
+		:collection => related_objects[:notes],
+		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+
+  <% if defined? showFull and showFull %>
+	
+	<%= render :partial => "references/related", :object => showp, :locals => { } %>
+
+  <% end %>
+
+<% if enclosedById %>
+</span>
+<% end %>

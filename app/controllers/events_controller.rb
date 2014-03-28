@@ -5,16 +5,16 @@ class EventsController < ApplicationController
   protected
 
   def create_object
-    return Event.new(event_params(params[:event]))
+    return Event.new(event_params(params.require(:event)))
   end
 
   def find_object
-    return Event.find(params[:id])
+    return Event.find(params.require(:id))
   end
 
   def find_object_and_update_attrs
-    object = Event.find(params[:id])
-    object.attributes = event_params(params[:edited])
+    object = Event.find(params.require(:id))
+    object.attributes = event_params(params.require(:edited))
     return object
   end
 

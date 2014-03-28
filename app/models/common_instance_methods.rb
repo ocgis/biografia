@@ -26,7 +26,7 @@ module CommonInstanceMethods
       ['addresses', 'event_dates', 'events', 'media', 'notes', 'people', 'relationships' ].each do |obj_type|
         retval[obj_type.to_sym] = retval[obj_type.to_sym] + (reference.send(obj_type).map do |elem|
           if elem != self
-            { :object => elem, :referenceId => reference.id }
+            { :object => elem, :reference => reference.id }
           else
             nil
           end

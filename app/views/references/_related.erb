@@ -3,6 +3,10 @@
 <h3>Personer</h3>
 <%= render :partial => "people/showp", :collection => related_objs[:people], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
 
+<h3>Förhållanden</h3>
+<%= render :partial => "relationships/showp", :collection => related_objs[:relationships], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+
+
 <h3>Händelser</h3>
 <%= render :partial => "events/showp", :collection => related_objs[:events], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
 

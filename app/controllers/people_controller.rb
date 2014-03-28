@@ -2,9 +2,9 @@
 class PeopleController < ApplicationController
 
   def create
-     @person = Person.new(person_params(params[:person]))
+     @person = Person.new(person_params(params.require(:person)))
      if @person.save
-       redirect_to :action => 'display', :id => @person.id
+       redirect_to :action => 'show', :id => @person.id
      else
        render :action => 'new'
      end
@@ -14,7 +14,7 @@ class PeopleController < ApplicationController
   end
 
   def display
-    @base_id = params[:id]
+    @base_id = params.require(:id)
 
     @object=find_object
     @related=@object.related_objects
@@ -26,23 +26,23 @@ class PeopleController < ApplicationController
   end
 
   def destroy
-    Person.find(params["id"]).destroy
+    Person.find(params.require(:id)).destroy
     redirect_to :action => "index" 
   end
 
   def ancestry
-    @ancestry = ancestry_help(params["id"], 4)
+    @ancestry = ancestry_help(params.require(:id), 4)
   end
 
   protected
 
   def find_object
-    return Person.find(params[:id])
+    return Person.find(params.require(:id))
   end
 
   def find_object_and_update_attrs
-    object = Person.find(params[:id])
-    object.attributes = person_params(params[:edited])
+    object = Person.find(params.require(:id))
+    object.attributes = person_params(params.require(:edited))
     return object
   end
 

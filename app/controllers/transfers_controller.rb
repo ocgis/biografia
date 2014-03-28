@@ -1,8 +1,9 @@
 class TransfersController < ApplicationController
 
   def create
-    file_param = params[:upload][:file_name]
-    
+    upload = params.require(:upload)
+    file_param = upload.require(:file_name)
+
     transfer_obj = Transfer.new()
     transfer_obj.file_name = file_param.original_filename
     transfer_obj.content_type = file_param.content_type

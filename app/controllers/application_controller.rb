@@ -19,28 +19,25 @@ class ApplicationController < ActionController::Base
   end
 
   def createp
-     newObj = create_object
-     saved = newObj.save
+    parentId = params.require(:form).require(:parentId)
+
+    newObj = create_object
+    saved = newObj.save
      
-     if saved
-        if defined? params[:form][:parentId]
-          parent_obj = find_by_object_name(params[:form][:parentId])
-          parent_obj.add_reference(newObj)
-          controller = parent_obj.controller
-          object = { :object => parent_obj }
-          object[:referenceId] = params[:form][:parentReferenceId] if defined? params[:form][:parentReferenceId]
-          locals = { :enclosedById => false, :showModifier => true }
-          locals[:parent] = { :object => find_by_object_name(params[:form][:grandParentId]) } if params[:form][:grandParentId] != nil
-          respond_to do |format|
-            format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/show', :object => object, :replaceElem => parent_obj.object_name } }
-          end
-        else
-          Rails::logger.error("ERROR: Could not save: #{newObj}")
-          raise StandardError
-        end
-     else
-        render :action => 'new'
-     end
+    if saved
+      parent_obj = find_by_object_name(parentId)
+      parent_obj.add_reference(newObj)
+      controller = parent_obj.controller
+      object = { :object => parent_obj }
+      object[:referenceId] = params[:form][:parentReferenceId] if defined? params[:form][:parentReferenceId]
+      locals = { :enclosedById => false, :showModifier => true }
+      locals[:parent] = { :object => find_by_object_name(params[:form][:grandParentId]) } if params[:form][:grandParentId] != nil
+      respond_to do |format|
+        format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/showp', :object => object, :replaceElem => parent_obj.object_name } }
+      end
+    else
+      render :action => 'new'
+    end
   end
 
   def index
@@ -110,7 +107,7 @@ class ApplicationController < ActionController::Base
   def find_by_object_name(object_name)
     a = object_name.split('_')
     if a.length != 2
-      raise StandardError
+      raise StandardError, "Not a valid object name: #{object_name}."
     end
     return Kernel.const_get(a[0]).find(a[1].to_i)
   end

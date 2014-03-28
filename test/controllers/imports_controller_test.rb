@@ -16,7 +16,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -56,7 +55,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -108,7 +106,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -158,7 +155,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -206,7 +202,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -259,7 +254,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -302,7 +296,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -345,7 +338,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -388,7 +380,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -431,7 +422,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -475,7 +465,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -519,7 +508,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_indi_with_headers(:name => name,
                                          :given_name => given_name,
                                          :surname => surname,
@@ -572,7 +560,6 @@ class ImportsControllerTest < ActionController::TestCase
     saved = transfer_obj.save
     if saved
       Dir.mkdir(transfer_obj.path)
-      @created_dirs.append(transfer_obj.path)
       file_data = make_fam_with_headers(:families => [family])
 
       # write the file
@@ -609,7 +596,6 @@ class ImportsControllerTest < ActionController::TestCase
       saved = transfer_obj.save
       if saved
         Dir.mkdir(transfer_obj.path)
-        @created_dirs.append(transfer_obj.path)
         infile = File.new("/home/cg/documents/Genealogi/Christer/Holger/GAGJO/gagjo.ged", "r")
         file_data = infile.read()
   
@@ -630,13 +616,12 @@ class ImportsControllerTest < ActionController::TestCase
   end
 
   def setup
-    @created_dirs = []
+    FileUtils.rm_rf(Biografia::Application.config.transfer_path)
+    Dir.mkdir(Biografia::Application.config.transfer_path)
   end
   
   def teardown
-    @created_dirs.each do |dir|
-      FileUtils.rm_rf(dir)
-    end  
+    FileUtils.rm_rf(Biografia::Application.config.transfer_path)
   end
   
   private

@@ -1,6 +1,8 @@
 class ReferencesController < ApplicationController
   def connection_choose
-    object = { :object => find_by_object_name(params[:id]) }
+    id = params.require(:id)
+
+    object = { :object => find_by_object_name(id) }
     object[:relationId] = params[:relationId] if defined? params[:relationId]
 
     locals = {}
@@ -12,31 +14,43 @@ class ReferencesController < ApplicationController
   end
 
   def connection_list
-    @people = Person.where("given_name LIKE \"%#{params[:filter][:filter]}%\"").first(20)
-    @events = Event.where("name LIKE \"%#{params[:filter][:filter]}%\"").first(20)
+    filter = params.require(:filter).require(:filter)
+    form = params.require(:form)
+    connect1Id = form.require(:connect1Id)
+    updateListName = form.require(:updateListName)
+
+    @people = Person.where("given_name LIKE \"%#{filter}%\"").first(20)
+    @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
     locals =
       {
-        :connect1Id => params[:form][:connect1Id]
+        :connect1Id => connect1Id
       }
-    locals[:showFull] = params[:form][:showFull] if params[:form][:showFull] != nil
+    locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => params[:form][:updateListName] } }
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => updateListName } }
     end
   end
 
   def connection_add
-    params.require(:form)
-    obj1 = find_by_object_name(params[:form][:connect1Id])
-    obj2 = find_by_object_name(params[:form][:connect2Id])
+    form = params.require(:form)
+    connect1Id = form.require(:connect1Id)
+    connect2Id = form.require(:connect2Id)
+    form_x = form.require(:x)
+    form_y = form.require(:y)
+    form_w = form.require(:w)
+    form_h = form.require(:h)
+
+    obj1 = find_by_object_name(connect1Id)
+    obj2 = find_by_object_name(connect2Id)
     reference = obj1.add_reference(obj2)
 
-    if(params[:form][:x].to_i >= 0)
+    if(form_x.to_i >= 0)
       pictureWidth = 1; # FIXME
       pictureHeight = 1; # FIXME
-      x = params[:form][:x].to_f / pictureWidth;
-      y = params[:form][:y].to_f / pictureHeight;
-      width = params[:form][:w].to_f / pictureWidth;
-      height = params[:form][:h].to_f / pictureHeight;
+      x = form_x.to_f / pictureWidth;
+      y = form_y.to_f / pictureHeight;
+      width = form_w.to_f / pictureWidth;
+      height = form_h.to_f / pictureHeight;
       reference.position_in_pictures.create( :x => x, :y => y, :width => width, :height => height )
     end
     
@@ -56,13 +70,19 @@ class ReferencesController < ApplicationController
   end
 
   def delete
-    obj = find_by_object_name(params[:id])
+    id = params.require(:id)
+    referenceId = params.require(:referenceId)
+    parentId = params.require(:parentId)
+    updateName = params.require(:updateName)
+    removeReferenceOnly = params.require(:removeReferenceOnly)
+
+    obj = find_by_object_name(id)
     locals = 
       {
-        :referenceId => params[:referenceId],
-        :parentId => params[:parentId],
-        :updateName => params[:updateName],
-        :removeReferenceOnly => params[:removeReferenceOnly]
+        :referenceId => referenceId,
+        :parentId => parentId,
+        :updateName => updateName,
+        :removeReferenceOnly => removeReferenceOnly
       }
     locals[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
     respond_to do |format|
@@ -71,14 +91,16 @@ class ReferencesController < ApplicationController
   end
 
   def destroy
+    removeReferenceOnly = params.require(:removeReferenceOnly)
+
     if !params[:referenceId].nil?
       reference = Reference.find(params[:referenceId])
       reference.position_in_pictures.destroy_all
       reference.destroy
     end
     
-    if !(params[:removeReferenceOnly]=="true")
-      object = find_by_object_name(params[:id])
+    if !(removeReferenceOnly=="true")
+      object = find_by_object_name(params.require(:id))
       object.references.destroy_all
       object.destroy
     end

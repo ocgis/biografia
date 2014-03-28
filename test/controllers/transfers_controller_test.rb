@@ -1,18 +1,14 @@
 require 'test_helper'
 
 class TransfersControllerTest < ActionController::TestCase
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
 
   test "should get create" do
+    get :create, { :upload => { :file_name => fixture_file_upload('transfer_upload_test.txt', 'text/plain') } }
+    assert_response :redirect
+  end
 
-    class dummy_file_name
-      @original_filename = 'test'
-    end
-
-    get :create, { :upload => { :file_name => { dummy_file_name.new } }
+  test "should get new" do
+    get :new
     assert_response :success
   end
 
@@ -20,4 +16,14 @@ class TransfersControllerTest < ActionController::TestCase
     get :show, {'id' => transfers(:transfer1).id }
     assert_response :success
   end
+
+  def setup
+    FileUtils.rm_rf(Biografia::Application.config.transfer_path)
+    Dir.mkdir(Biografia::Application.config.transfer_path)
+  end
+
+  def teardown
+    FileUtils.rm_rf(Biografia::Application.config.transfer_path)
+  end  
+
 end

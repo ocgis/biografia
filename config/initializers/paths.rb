@@ -1,5 +1,7 @@
-root = Pathname.new(::Rails.root).realpath.to_s
-public = File.join(root, 'public')
-transfer = File.join(public, 'transfer')
+if !defined? Biografia::Application.config.transfer_path
+  root = Pathname.new(::Rails.root).realpath.to_s
+  public = File.join(root, 'public')
+  transfer = File.join(public, 'transfer')
 
-Biografia::Application.config.transfer_path = transfer
+  Biografia::Application.config.transfer_path = transfer
+end
