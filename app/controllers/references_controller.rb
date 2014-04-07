@@ -16,15 +16,13 @@ class ReferencesController < ApplicationController
   def connection_list
     filter = params.require(:filter).require(:filter)
     form = params.require(:form)
-    connect1Id = form.require(:connect1Id)
     updateListName = form.require(:updateListName)
 
     @people = Person.where("given_name LIKE \"%#{filter}%\"").first(20)
     @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
-    locals =
-      {
-        :connect1Id => connect1Id
-      }
+    @objects = @people.collect {|p| [ p.long_name, p.object_name ] }
+    @objects = @objects + @events.collect {|e| [ e.one_line, e.object_name ] }
+    locals = {}
     locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => updateListName } }

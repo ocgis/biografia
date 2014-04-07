@@ -3,7 +3,6 @@
 <span id="<%= showp[:object].object_name %>">
 <% end %>
 
-	<span class="event">
 <%=
   if defined?  showFull and showFull
     showp[:object].name
@@ -23,18 +22,21 @@
     render :partial => 'application/modifier', :object => showp, :locals => locals
   end
 %>
-		<br />
-	</span>
 
+        <ul>
 	<%= render :partial => 'event_dates/showp',
 		:collection => related_objects[:event_dates],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
 	<%= render :partial => 'addresses/showp',
 		:collection => related_objects[:addresses],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
 	<%= render :partial => 'notes/showp',
 		:collection => related_objects[:notes],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+        </ul>
 
   <% if defined? showFull and showFull %>
 	

@@ -9,7 +9,7 @@ Händelser
 </tr>
 <tr>
 <td>
-<%= select('form', 'connect2Id', @people.collect {|p| [ p.long_name, p.object_name ] }, {:include_blank => 'None'}, {:size => 10 }) %>
+<%= select('form', 'connect2Id', @objects, {:include_blank => 'None'}, {:size => 10 }) %>
 </td>
 <td>
 <% @events.each do |event| %>
@@ -18,7 +18,6 @@ Händelser
 	  {
 	    :controller => 'references',
 	    :action => 'connection_add',
-	    :connect1Id => connect1Id,
 	    :connect2Id => event.object_name
 	  }
   options[:showFull] = showFull if defined? showFull

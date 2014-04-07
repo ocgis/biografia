@@ -1,14 +1,19 @@
 <% related_objs = related[:object].related_objects %>
 
 <h3>Personer</h3>
-<%= render :partial => "people/showp", :collection => related_objs[:people], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<ul>
+<%= render :partial => "people/showp", :layout => "li", :collection => related_objs[:people], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>
 
 <h3>Förhållanden</h3>
-<%= render :partial => "relationships/showp", :collection => related_objs[:relationships], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
-
+<ul>
+<%= render :partial => "relationships/showp", :layout => "li", :collection => related_objs[:relationships], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>
 
 <h3>Händelser</h3>
-<%= render :partial => "events/showp", :collection => related_objs[:events], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<ul>
+<%= render :partial => "events/showp", :layout => "li", :collection => related_objs[:events], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>
 
 <% for type in related_objs[:unhandled_types] %>
   <%= "Warning: unhandled type " %>
@@ -17,12 +22,19 @@
 <% end %>
 
 <h3>Adresser</h3>
+<ul>
 <%= render :partial => "addresses/showp",
+  :layout => "li",
   :collection => related_objs[:addresses],
   :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>
 
 <h3>Kommentarer</h3>
-<%= render :partial => "notes/showp", :collection => related_objs[:notes], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<ul>
+<%= render :partial => "notes/showp", :layout => "li", :collection => related_objs[:notes], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>
 
 <h3>Media</h3>
-<%= render :partial => "media/showp", :collection => related_objs[:media], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<ul>
+<%= render :partial => "media/showp", :collection => related_objs[:media], :layout => "li", :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+</ul>

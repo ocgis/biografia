@@ -51,6 +51,7 @@ Biografia::Application.routes.draw do
   get  "people/showp"
   post "people/update"
 
+  get  "references/connection_add"
   post "references/connection_add"
   get  "references/connection_choose"
   post "references/connection_list"

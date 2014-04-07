@@ -25,19 +25,25 @@
 %>
 		<br />
 	</span>
-
+        
+        <ul>
 	<%= render :partial => 'people/showp',
 		:collection => related_objects[:people],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
 	<%= render :partial => 'event_dates/showp',
 		:collection => related_objects[:event_dates],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
 	<%= render :partial => 'addresses/showp',
 		:collection => related_objects[:addresses],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
 	<%= render :partial => 'notes/showp',
 		:collection => related_objects[:notes],
+                :layout => 'li',
 		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+        </ul>
 
   <% if defined? showFull and showFull %>
 	

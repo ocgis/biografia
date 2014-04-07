@@ -70,7 +70,7 @@
         :newElem          => newId,
         :hideElem         => menuId
 		  }
-    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+    options[:parentReferenceId] = modifier[:reference].id if !modifier[:reference].nil?
     options[:grandParentId] = parent[:object].object_name if defined? parent
     link_to "lägg till adress", options, { :remote => true }
   end
@@ -83,7 +83,7 @@
 		  :action     => "edit",
 		  :id         => modifier[:object].id,
     }
-  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
   link_to "ändra", options, { :remote => true }
 %>
 
@@ -94,23 +94,24 @@
 		  :action     => "connection_choose",
 		  :id         => modifier[:object].object_name
     }	
-  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
   options[:showFull] = showFull if defined? showFull
   link_to "referera till", options, { :remote => true }
 %>
 
 <%=
-  if modifier[:referenceId] != nil
+  if !modifier[:reference].nil?
     options = 
       {
 		    :controller          => 'references',
 		    :action              => "delete",
 		    :id                  => modifier[:object].object_name,
-		    :referenceId          => modifier[:referenceId],
+		    :referenceId         => modifier[:reference].id,
 		    :removeReferenceOnly => true
       }
     if defined? parent
       options[:parentId] = parent[:object].object_name
+      options[:updateName] = parent[:object].object_name
       options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
     end
    link_to "ta bort referens", options, { :remote => true }
@@ -124,8 +125,9 @@
 		  :id                  => modifier[:object].object_name,
 		  :removeReferenceOnly => false
   }
-  options[:referenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
   if defined? parent
+    options[:updateName] = parent[:object].object_name
     options[:parentId] = parent[:object].object_name
     options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
   end
