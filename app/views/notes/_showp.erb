@@ -1,29 +1,3 @@
-<% object = showp[:object] %>
-
-<% if options[:enclosedById] %>
-   <span id="<%= object.object_name %>">
-<% end %>
-
-<%=
-  if options[:showFull]
-    object.title
-  else
-    link_to object.title, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
-  end
-%>
-
-<%=
-  if options[:showModifier]
-    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
-  end
-%>
-
-<pre><%= object.note %></pre>
-
-<% if options[:showFull] %>	
-    <%= render :partial => "references/related", :object => showp, :locals => { } %>
-<% end %>
-
-<% if options[:enclosedById] %>
-   </span>
-<% end %>
+<%= render :partial => 'application/showp',
+           :object => showp,
+           :locals => { :options => options } %>

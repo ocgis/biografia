@@ -1,0 +1,30 @@
+<% related_objects = showp[:object].related_objects %>
+<% if options[:enclosedById] %>
+<span id="<%= showp[:object].object_name %>">
+<% end %>
+
+<%=
+  if options[:showFull]
+    render :partial => showp[:object].controller + '/showfullp', :object => showp
+  else
+    render :partial => showp[:object].controller + '/showlimitedp', :object => showp
+  end
+%>
+
+<%=
+  if options[:showModifier]
+    render :partial => showp[:object].controller + '/modifier', :object => showp
+  end
+%>
+
+  <%= render :partial => showp[:object].controller + '/showcontentp', :object => showp, :locals => { :options => options, :related_objects => related_objects } %>
+
+  <% if options[:showFull] %>
+	
+	<%= render :partial => "references/related", :object => showp, :locals => { } %>
+
+  <% end %>
+
+<% if options[:enclosedById] %>
+</span>
+<% end %>
