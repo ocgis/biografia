@@ -6,3 +6,10 @@ address1:
   zipcode: MyString
   parish: MyString
   country: MyString
+
+references:
+  street: MyString
+  town: MyString
+  zipcode: MyString
+  parish: MyString
+  country: MyString

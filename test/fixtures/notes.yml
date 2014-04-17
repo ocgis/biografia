@@ -4,3 +4,8 @@ note1:
   title: Note 1
   note: Note 1
   references: reference2
+
+references:
+  title: Note 1
+  note: Note 1
+  references: reference2

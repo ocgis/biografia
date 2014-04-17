@@ -3,7 +3,7 @@
 <% parents = showp[:object].find_parents %>
 <% relationships = showp[:object].find_spouses %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 <span id="<%= name %>">
 <% end %>
 
@@ -18,22 +18,19 @@
 <%= showp[:object].sex %>
 
 <%=
-  if showModifier
-    locals = {
-      :showAddEvent => true,
-      :showAddNote => true,
-      :showAddDate => false,
-      :showAddAddress => true
-    }
-    locals[:parent] = parent if defined? parent
-    locals[:relation] = showp[:relation] if showp[:relation] != nil
-    render :partial => 'application/modifier', :object => showp, :locals => locals
+  if options[:showModifier]
+    mod_options = options.merge({ :showAddEvent => true,
+                                  :showAddNote => true,
+                                  :showAddDate => false,
+                                  :showAddAddress => true })
+    mod_options[:relation] = showp[:relation] if showp[:relation] != nil
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => mod_options }
   end
 %>
 <br />
 </p>
 
-<% if defined? showFull and showFull %>
+<% if options[:showFull] %>
 	
     <%= render :partial => "references/related", :object => showp, :locals => { } %>
 
@@ -67,11 +64,12 @@
     <h3>Övrigt</h3>
     <p>
     <%= link_to "Antavla", :action => "ancestry",
-                           :id => showp[:object].id %>
+                           :id => showp[:object].id,
+                           :controller => showp[:object].controller %>
     </p>
 		
   <% end %>
 		
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 </span>
 <% end %>

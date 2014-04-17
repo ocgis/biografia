@@ -2,3 +2,6 @@
 
 event1:
   name: MyString
+
+references:
+  name: References

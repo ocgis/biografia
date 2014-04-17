@@ -1,2 +1,5 @@
 relationship1:
   name: MyText
+
+references:
+  name: MyText

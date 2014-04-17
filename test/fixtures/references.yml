@@ -27,3 +27,28 @@ reference6:
 reference7:
   name: Reference 7
   media: medium1
+
+reference8:
+  name: Reference8
+  people: references
+  relationships: references
+
+reference9:
+  name: Reference9
+  events: references
+  people: references
+
+reference10:
+  name: Reference10
+  addresses: references
+  people: references
+
+reference11:
+  name: Reference11
+  notes: references
+  people: references
+
+reference12:
+  name: Reference12
+  media: references
+  people: references

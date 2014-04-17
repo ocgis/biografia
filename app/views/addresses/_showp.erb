@@ -1,31 +1,29 @@
 <% object = showp[:object] %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 <span id="<%= object.object_name %>">
 <% end %>
 
-<% if defined? showFull and showFull %>
+<% if options[:showFull] %>
 <%= object.one_line %>
 <% else %>
 <%= link_to object.one_line, :controller => object.controller, :action => 'show', :id => object.id %>
 <% end %>
 
 <%=
-  if showModifier
-    locals = { }
-    locals[:parent] = parent if defined? parent
-    render :partial => 'application/modifier', :object => showp, :locals => locals
+  if options[:showModifier]
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
   end
 %>
 
   <br />
 
-  <% if defined? showFull and showFull %>
+  <% if options[:showFull] %>
 	
 	<%= render :partial => "references/related", :object => showp, :locals => { } %>
 
   <% end %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 </span>
 <% end %>

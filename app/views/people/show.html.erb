@@ -1,10 +1,7 @@
   <%=h content_for(:title, 'Personinformation för ' + @object.short_name) %>
 	<%= render :partial => "showp",
 		:object => { :object => @object },
-		:locals =>
-      {
-        :showFull => true,
-				:enclosedById => true,
-				:showModifier => true
-			}
+		:locals => { :options => { :showFull => true,
+	                                   :enclosedById => true,
+				           :showModifier => true } }
   %>

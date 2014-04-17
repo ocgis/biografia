@@ -1,10 +1,10 @@
 <% related_objects = showp[:object].related_objects %>
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 <span id="<%= showp[:object].object_name %>">
 <% end %>
 
 <%=
-  if defined?  showFull and showFull
+  if options[:showFull]
     showp[:object].name
   else
     link_to showp[:object].name, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
@@ -12,38 +12,37 @@
 %>
 
 <%=
-  if showModifier
-	  locals = {
-	    :showAddNote => true,
-	    :showAddDate => true,
-	    :showAddAddress => true
-	  }
-	  locals[:parent] = parent if defined? parent
-    render :partial => 'application/modifier', :object => showp, :locals => locals
+  if options[:showModifier]
+    mod_options = options.merge({ :showAddNote => true,
+                	          :showAddDate => true,
+	                          :showAddAddress => true })
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => mod_options }
   end
 %>
 
         <ul>
+        <% new_options = options.merge({ :enclosedById => true,
+                                         :parent => showp }) %>
 	<%= render :partial => 'event_dates/showp',
 		:collection => related_objects[:event_dates],
                 :layout => 'li',
-		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+		:locals => { :options => new_options } %>
 	<%= render :partial => 'addresses/showp',
 		:collection => related_objects[:addresses],
                 :layout => 'li',
-		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+		:locals => { :options => new_options } %>
 	<%= render :partial => 'notes/showp',
 		:collection => related_objects[:notes],
                 :layout => 'li',
-		:locals => { :enclosedById => true, :showModifier => showModifier, :parent => showp } %>
+		:locals => { :options => new_options } %>
         </ul>
 
-  <% if defined? showFull and showFull %>
+  <% if options[:showFull] %>
 	
 	<%= render :partial => "references/related", :object => showp, :locals => { } %>
 
   <% end %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 </span>
 <% end %>

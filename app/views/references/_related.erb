@@ -2,17 +2,32 @@
 
 <h3>Personer</h3>
 <ul>
-<%= render :partial => "people/showp", :layout => "li", :collection => related_objs[:people], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<%= render :partial => "people/showp",
+           :layout => "li",
+           :collection => related_objs[:people],
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>
 
 <h3>Förhållanden</h3>
 <ul>
-<%= render :partial => "relationships/showp", :layout => "li", :collection => related_objs[:relationships], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<%= render :partial => "relationships/showp",
+           :layout => "li",
+           :collection => related_objs[:relationships],
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>
 
 <h3>Händelser</h3>
 <ul>
-<%= render :partial => "events/showp", :layout => "li", :collection => related_objs[:events], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<%= render :partial => "events/showp",
+           :layout => "li",
+           :collection => related_objs[:events],
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>
 
 <% for type in related_objs[:unhandled_types] %>
@@ -24,17 +39,29 @@
 <h3>Adresser</h3>
 <ul>
 <%= render :partial => "addresses/showp",
-  :layout => "li",
-  :collection => related_objs[:addresses],
-  :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+           :layout => "li",
+           :collection => related_objs[:addresses],
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>
 
 <h3>Kommentarer</h3>
 <ul>
-<%= render :partial => "notes/showp", :layout => "li", :collection => related_objs[:notes], :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<%= render :partial => "notes/showp",
+           :layout => "li",
+           :collection => related_objs[:notes],
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>
 
 <h3>Media</h3>
 <ul>
-<%= render :partial => "media/showp", :collection => related_objs[:media], :layout => "li", :locals => { :enclosedById => true, :showModifier => true, :parent => related } %>
+<%= render :partial => "media/showp",
+           :collection => related_objs[:media],
+           :layout => "li",
+           :locals => { :options => { :enclosedById => true,
+                                      :showModifier => true,
+                                      :parent => related } } %>
 </ul>

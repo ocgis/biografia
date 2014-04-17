@@ -1,10 +1,10 @@
 <%= @file_type %>
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 <span id="<%= showp[:object].object_name %>">
 <% end %>
 
-<% if defined? showFull %>
-  <% if defined? mode and mode == 'tag' %>
+<% if options[:showFull] %>
+  <% if options[:mode] == 'tag' %>
 	  <div>
     <%= image_tag '/' + showp[:object].file_name, :data_tagable => 'true', :id => 'hoolabaloo' %>
 		</div>
@@ -12,7 +12,7 @@
     <%= link_to "avbryt taggning", { :id => showp[:object].id, :controller => showp[:object].controller, :action => 'show' } %>
     <br />
 
-    <%= render :partial => "references/connchoose", :object => showp, :locals => { } %>
+    <%= render :partial => "references/connchoose", :object => showp, :locals => { :options => {} } %>
 
   <% else %>
     <div style="position:relative">
@@ -32,22 +32,18 @@
 <% end %>
 
 <%=
-  if showModifier
-    locals = { }
-    locals[:parent] = parent if defined? parent
-    locals[:relation] = showp[:relation] if showp[:relation] != nil
-    locals[:showFull] = showFull if defined? showFull
-    render :partial => 'application/modifier', :object => showp, :locals => locals
+  if options[:showModifier]
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
   end
 %>
 <br />
 
 <%=
-  if defined? showFull and showFull
+  if options[:showFull]
     render :partial => "references/related", :object => showp, :locals => { }
   end
 %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 </span>
 <% end %>

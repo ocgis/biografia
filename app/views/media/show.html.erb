@@ -1,4 +1,4 @@
-  <% locals =
+  <% options =
       {
         :showFull => true,
         :enclosedById => true,
@@ -9,5 +9,5 @@
   <%=h content_for(:title, 'Media: ' + @media.file_name) %>
 	<%= render :partial => "media/showp",
 		:object => { :object => @media },
-		:locals => locals
+		:locals => { :options => options }
   %>

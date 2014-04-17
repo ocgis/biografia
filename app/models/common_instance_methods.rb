@@ -46,7 +46,7 @@ module CommonInstanceMethods
    references.each do |reference|
      position = reference.position_in_pictures
       
-     if !position.nil?
+     if position.length > 0
        obj = reference.other_object(self)        
        positions.push( { :object => obj, :position => position[0] } )
      end

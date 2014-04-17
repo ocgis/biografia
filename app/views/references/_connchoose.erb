@@ -5,8 +5,8 @@
 <%= hidden_field 'form', 'updateListName', :value => updateListName %>
 
 <%=
-  if defined? showFull
-    hidden_field 'form', 'showFull', :value => showFull
+  if not options[:showFull].nil?
+    hidden_field 'form', 'showFull', :value => options[:showFull]
   end
 %>
 
@@ -23,8 +23,8 @@
   <%= hidden_field 'form', 'h', :value => 0 %>
   <%= hidden_field 'form', 'connect1Id', :value => connchoose[:object].object_name %>
   <%=
-    if defined? showFull
-      hidden_field 'form', 'showFull', :value => showFull
+    if not options[:showFull].nil?
+      hidden_field 'form', 'showFull', :value => options[:showFull]
     end
   %>
 
@@ -34,11 +34,7 @@
 <% end %>
 
 <%=
-  locals =
-    {
-      :enclosedById => false,
-      :showModifier => false
-    }
-  locals[:showFull] = showFull if defined? showFull
-  render :partial => connchoose[:object].controller + '/showp', :object => connchoose, :locals => locals
+  new_options = options.merge({ :enclosedById => false,
+                                :showModifier => false })
+  render :partial => connchoose[:object].controller + '/showp', :object => connchoose, :locals => { :options => new_options }
 %>

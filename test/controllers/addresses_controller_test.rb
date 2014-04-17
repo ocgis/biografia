@@ -26,7 +26,7 @@ class AddressesControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, {'id' => addresses(:address1).id }
+    get :show, {'id' => addresses(:references).id }
     assert_response :success
   end
 

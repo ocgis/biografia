@@ -5,11 +5,11 @@ class ReferencesController < ApplicationController
     object = { :object => find_by_object_name(id) }
     object[:relationId] = params[:relationId] if defined? params[:relationId]
 
-    locals = {}
-    locals[:showFull] = params[:showFull] if params[:showFull] != nil
+    options = {}
+    options[:showFull] = params[:showFull] if params[:showFull] != nil
     
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connchoose', :object => object, :replaceElem => object[:object].object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'connchoose', :object => object, :replaceElem => object[:object].object_name } }
     end
   end
 
@@ -70,21 +70,19 @@ class ReferencesController < ApplicationController
   def delete
     id = params.require(:id)
     referenceId = params.require(:referenceId)
-    parentId = params.require(:parentId)
-    updateName = params.require(:updateName)
     removeReferenceOnly = params.require(:removeReferenceOnly)
 
     obj = find_by_object_name(id)
-    locals = 
+    options = 
       {
         :referenceId => referenceId,
-        :parentId => parentId,
-        :updateName => updateName,
         :removeReferenceOnly => removeReferenceOnly
       }
-    locals[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
+    options[:parentId] = params[:parentId] if defined? params[:parentId]  
+    options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
+    options[:updateName] = params[:updateName] if defined? params[:updateName]  
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
     end
   end
 

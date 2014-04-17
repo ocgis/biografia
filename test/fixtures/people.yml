@@ -9,3 +9,9 @@ person2:
   calling_name: Two
   surname: Person
   sex: m
+
+references:
+  given_name: Reference Three
+  calling_name: Three
+  surname: Person
+  sex: m

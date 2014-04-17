@@ -1,9 +1,9 @@
-<% if enclosedById %>
-<span id="<%= showp[:object].object_name %>" class="event_date">
+<% if options[:enclosedById] %>
+<span id="<%= showp[:object].object_name %>">
 <% end %>
 
 <%=
-  if defined?  showFull and showFull
+  if options[:showFull]
     showp[:object].date
   else
     link_to showp[:object].date, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
@@ -11,20 +11,17 @@
 %>
 
 <%=
-  if showModifier
-    locals = {
-    }
-    locals[:parent] = parent if defined? parent
-    render :partial => 'application/modifier', :object => showp, :locals => locals
+  if options[:showModifier]
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
   end
 %>
 
 <br />
 
-<% if defined? showFull and showFull %>	
+<% if options[:showFull] %>	
   <%= render :partial => "references/related", :object => showp, :locals => { } %>
 <% end %>
 
-<% if enclosedById %>
+<% if options[:enclosedById] %>
 </span>
 <% end %>

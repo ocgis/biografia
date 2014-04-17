@@ -30,10 +30,10 @@ class ApplicationController < ActionController::Base
       controller = parent_obj.controller
       object = { :object => parent_obj }
       object[:referenceId] = params[:form][:parentReferenceId] if defined? params[:form][:parentReferenceId]
-      locals = { :enclosedById => false, :showModifier => true }
-      locals[:parent] = { :object => find_by_object_name(params[:form][:grandParentId]) } if params[:form][:grandParentId] != nil
+      options = { :enclosedById => false, :showModifier => true }
+      options[:parent] = { :object => find_by_object_name(params[:form][:grandParentId]) } if params[:form][:grandParentId] != nil
       respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/showp', :object => object, :replaceElem => parent_obj.object_name } }
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => controller + '/showp', :object => object, :replaceElem => parent_obj.object_name } }
       end
     else
       render :action => 'new'
@@ -53,17 +53,17 @@ class ApplicationController < ActionController::Base
   def showp
     object = { :object => find_object }
     object[:referenceId] = params[:referenceId] if params[:referenceId] != nil
-    locals = 
+    options = 
       {
         :enclosedById => false,
         :showModifier => true
       }
     if params[:parentId] != nil
-      locals[:parent] = { :object => find_by_object_name(params[:parentId]) }
-      locals[:parent][:referenceId] = params[:parentReferenceId] if params[:parentReferenceId] != nil
+      options[:parent] = { :object => find_by_object_name(params[:parentId]) }
+      options[:parent][:referenceId] = params[:parentReferenceId] if params[:parentReferenceId] != nil
     end
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'showp', :object => object, :replaceElem => object[:object].object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'showp', :object => object, :replaceElem => object[:object].object_name } }
     end
   end
 
@@ -88,14 +88,14 @@ class ApplicationController < ActionController::Base
     
     if object[:object].save
       object[:referenceId] = params[:form][:referenceId] if defined? params[:form][:referenceId]
-      locals =
+      options =
         {
           :enclosedById => false,
           :showModifier => true,
         }
-      locals[:parentId] = params[:form][:parentId] if defined? params[:form][:parentId]
+      options[:parentId] = params[:form][:parentId] if defined? params[:form][:parentId]
       respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => locals, :partial => controller + '/showp', :object => object, :replaceElem => object[:object].object_name } }
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => controller + '/showp', :object => object, :replaceElem => object[:object].object_name } }
       end
     else
       render controller + '/edit' 

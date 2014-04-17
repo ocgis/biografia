@@ -19,7 +19,7 @@ class MediaControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, { :id => media(:medium2).id }
+    get :show, { :id => media(:references).id }
     assert_response :success
   end
 

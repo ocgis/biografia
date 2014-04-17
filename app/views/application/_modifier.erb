@@ -2,6 +2,10 @@
   name = modifier[:object].object_name
   menuId = name + "_menu"
   newId = name + "_new"
+
+  common_options = {}
+  common_options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
+  common_options[:grandParentId] = options[:parent][:object].object_name if not options[:parent].nil?
  
   link_to ">", "#", :class => "toggler", :"data-toggle-id" => menuId
 %>
@@ -9,99 +13,76 @@
 <span id="<%= menuId %>" style="display:none">
 
 <%=
-  if (defined? showAddEvent) && showAddEvent
+  if options[:showAddEvent]
     showNewId = true
-    options =
-      {
-        :controller       => "events",
-        :action           => "newp",
-        :parentId         => modifier[:object].object_name,
-        :newElem          => newId,
-        :hideElem         => menuId
-		  }
-    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
-    options[:grandParentId] = parent[:object].object_name if defined? parent
-    link_to "lägg till händelse", options, { :remote => true }
+    ae_options = common_options.merge({ :controller       => "events",
+                                        :action           => "newp",
+                                        :parentId         => modifier[:object].object_name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId})
+    link_to "lägg till händelse", ae_options, { :remote => true }
   end
 %>
 
 <%=
-  if (defined? showAddNote) && showAddNote
+  if options[:showAddNote]
     showNewId = true
-    options =
-      {
-        :controller       => "notes",
-        :action           => "newp",
-        :parentId         => modifier[:object].object_name,
-        :newElem          => newId,
-        :hideElem         => menuId
-		  }
-    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
-    options[:grandParentId] = parent[:object].object_name if defined? parent
-    link_to "kommentera", options, { :remote => true }
+    an_options = common_options.merge({ :controller       => "notes",
+                                        :action           => "newp",
+                                        :parentId         => modifier[:object].object_name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "kommentera", an_options, { :remote => true }
   end
 %>
 
 <%=
-  if (defined? showAddDate) && showAddDate
+  if options[:showAddDate]
     showNewId = true
-    options =
-      {
-        :controller       => "event_dates",
-        :action           => "newp",
-        :parentId         => modifier[:object].object_name,
-        :newElem          => newId,
-        :hideElem         => menuId
-		  }
-    options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
-    options[:grandParentId] = parent[:object].object_name if defined? parent
-    link_to "lägg till datum", options, { :remote => true }
+    ad_options = common_options.merge({ :controller       => "event_dates",
+                                        :action           => "newp",
+                                        :parentId         => modifier[:object].object_name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "lägg till datum", ad_options, { :remote => true }
   end
 %>
 
 <%=
-  if (defined? showAddAddress) && showAddAddress
+  if options[:showAddAddress]
     showNewId = true
-    options =
-      {
-        :controller       => "addresses",
-        :action           => "newp",
-        :parentId         => modifier[:object].object_name,
-        :newElem          => newId,
-        :hideElem         => menuId
-		  }
-    options[:parentReferenceId] = modifier[:reference].id if !modifier[:reference].nil?
-    options[:grandParentId] = parent[:object].object_name if defined? parent
-    link_to "lägg till adress", options, { :remote => true }
+    aa_options = common_options.merge({ :controller       => "addresses",
+                                        :action           => "newp",
+                                        :parentId         => modifier[:object].object_name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "lägg till adress", aa_options, { :remote => true }
   end
 %>
 
 <%=
-  options = 
-    {
-		  :controller => modifier[:object].controller,
-		  :action     => "edit",
-		  :id         => modifier[:object].id,
-    }
-  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
-  link_to "ändra", options, { :remote => true }
+  ch_options = { :controller => modifier[:object].controller,
+  		 :action     => "edit",
+		 :id         => modifier[:object].id }
+  ch_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  link_to "ändra", ch_options, { :remote => true }
 %>
 
 <%=
-  options =
+  rt_options =
     {
 		  :controller => 'references',
 		  :action     => "connection_choose",
 		  :id         => modifier[:object].object_name
     }	
-  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
-  options[:showFull] = showFull if defined? showFull
-  link_to "referera till", options, { :remote => true }
+  rt_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
+  link_to "referera till", rt_options, { :remote => true }
 %>
 
 <%=
-  if !modifier[:reference].nil?
-    options = 
+  if not modifier[:reference].nil?
+    rr_options = 
       {
 		    :controller          => 'references',
 		    :action              => "delete",
@@ -109,30 +90,30 @@
 		    :referenceId         => modifier[:reference].id,
 		    :removeReferenceOnly => true
       }
-    if defined? parent
-      options[:parentId] = parent[:object].object_name
-      options[:updateName] = parent[:object].object_name
-      options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
+    if not options[:parent].nil?
+      rr_options[:parentId] = options[:parent][:object].object_name
+      rr_options[:updateName] = options[:parent][:object].object_name
+      rr_options[:parentReferenceId] = options[:parent][:referenceId] if not options[:parent][:referenceId].nil?
     end
-   link_to "ta bort referens", options, { :remote => true }
+   link_to "ta bort referens", rr_options, { :remote => true }
   end
 %>
 
 <%=
-  options = {
+  de_options = {
   		:controller          => 'references',
 		  :action              => "delete",
 		  :id                  => modifier[:object].object_name,
 		  :removeReferenceOnly => false
   }
-  options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
-  if defined? parent
-    options[:updateName] = parent[:object].object_name
-    options[:parentId] = parent[:object].object_name
-    options[:parentReferenceId] = parent[:referenceId] if parent[:referenceId] != nil
+  de_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  if not options[:parent].nil?
+    de_options[:updateName] = options[:parent][:object].object_name
+    de_options[:parentId] = options[:parent][:object].object_name
+    de_options[:parentReferenceId] = options[:parent][:referenceId] if not options[:parent][:referenceId].nil?
   end
 
-  link_to "radera", options, { :remote => true }
+  link_to "radera", de_options, { :remote => true }
 %>
 
 </span>

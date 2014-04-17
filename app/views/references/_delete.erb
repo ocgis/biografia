@@ -1,9 +1,21 @@
 Vill du verkligen ta bort den här?
-<%= link_to 'Ja',
-	{ :controller => 'references', :action => 'destroy', :id => delete.object_name, :referenceId => referenceId, :parentId => parentId, :parentReferenceId => parentReferenceId, :removeReferenceOnly => removeReferenceOnly },
-	{ :remote => true } %>
-<%= link_to 'Nej',
-	{ :controller => delete.controller, :action => 'showp', :id => delete.id, :referenceId => referenceId, :parentId => parentId, :parentReferenceId => parentReferenceId },
-	{ :remote => true } %>
+<%= link_to 'Ja', { :controller => 'references',
+                    :action => 'destroy',
+                    :id => delete.object_name,
+                    :referenceId => options[:referenceId],
+                    :parentId => options[:parentId],
+                    :parentReferenceId => options[:parentReferenceId],
+                    :removeReferenceOnly => options[:removeReferenceOnly] },
+	          { :remote => true } %>
+<%= link_to 'Nej', { :controller => delete.controller,
+                     :action => 'showp',
+                     :id => delete.id,
+                     :referenceId => options[:referenceId],
+                     :parentId => options[:parentId],
+                     :parentReferenceId => options[:parentReferenceId] },
+	           { :remote => true } %>
 <br />
-<%= render :partial => delete.controller + '/showp', :object => { :object => delete }, :locals => { :enclosedById => false, :showModifier => false, :updateName => updateName, :parentId => parentId } %>
+<%= render :partial => delete.controller + '/showp',
+           :object => { :object => delete },
+           :locals => { :options => options.merge({ :enclosedById => false,
+                                                    :showModifier => false }) } %>
