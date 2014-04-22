@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "addresses_references", ["address_id"], name: "address_id_ix", using: :btree
-  add_index "addresses_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "addresses_references", ["address_id"], name: "index_addresses_references_on_address_id", using: :btree
+  add_index "addresses_references", ["reference_id"], name: "index_addresses_references_on_reference_id", using: :btree
 
   create_table "event_dates", force: true do |t|
     t.string   "date"
@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "event_dates_references", ["event_date_id"], name: "event_date_id_ix", using: :btree
-  add_index "event_dates_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "event_dates_references", ["event_date_id"], name: "index_event_dates_references_on_event_date_id", using: :btree
+  add_index "event_dates_references", ["reference_id"], name: "index_event_dates_references_on_reference_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "name"
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "events_references", ["event_id"], name: "event_id_ix", using: :btree
-  add_index "events_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "events_references", ["event_id"], name: "index_events_references_on_event_id", using: :btree
+  add_index "events_references", ["reference_id"], name: "index_events_references_on_reference_id", using: :btree
 
   create_table "gagjoa", id: false, force: true do |t|
     t.float  "p",        limit: 255
@@ -194,8 +194,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "media_references", ["medium_id"], name: "medium_id_ix", using: :btree
-  add_index "media_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "media_references", ["medium_id"], name: "index_media_references_on_medium_id", using: :btree
+  add_index "media_references", ["reference_id"], name: "index_media_references_on_reference_id", using: :btree
 
   create_table "notes", force: true do |t|
     t.string   "title"
@@ -209,8 +209,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "notes_references", ["note_id"], name: "note_id_ix", using: :btree
-  add_index "notes_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "notes_references", ["note_id"], name: "index_notes_references_on_note_id", using: :btree
+  add_index "notes_references", ["reference_id"], name: "index_notes_references_on_reference_id", using: :btree
 
   create_table "people", force: true do |t|
     t.string   "given_name",   limit: 80
@@ -226,8 +226,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "reference_id"
   end
 
-  add_index "people_references", ["person_id"], name: "person_id_ix", using: :btree
-  add_index "people_references", ["reference_id"], name: "reference_id_ix", using: :btree
+  add_index "people_references", ["person_id"], name: "index_people_references_on_person_id", using: :btree
+  add_index "people_references", ["reference_id"], name: "index_people_references_on_reference_id", using: :btree
 
   create_table "position_in_pictures", force: true do |t|
     t.float    "x"
@@ -250,8 +250,8 @@ ActiveRecord::Schema.define(version: 20140421194027) do
     t.integer "relationship_id"
   end
 
-  add_index "references_relationships", ["reference_id"], name: "reference_id_ix", using: :btree
-  add_index "references_relationships", ["relationship_id"], name: "relationship_id_ix", using: :btree
+  add_index "references_relationships", ["reference_id"], name: "index_references_relationships_on_reference_id", using: :btree
+  add_index "references_relationships", ["relationship_id"], name: "index_references_relationships_on_relationship_id", using: :btree
 
   create_table "relationships", force: true do |t|
     t.text     "name"
