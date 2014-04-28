@@ -1,4 +1,3 @@
-<% related_objects = showp[:object].related_objects %>
 <% if options[:enclosedById] %>
 <span id="<%= showp[:object].object_name %>">
 <% end %>
@@ -17,7 +16,7 @@
   end
 %>
 
-  <%= render :partial => showp[:object].controller + '/showcontentp', :object => showp, :locals => { :options => options, :related_objects => related_objects } %>
+  <%= render :partial => showp[:object].controller + '/showcontentp', :object => showp, :locals => { :options => options, :related_objects => showp[:related_objects] } %>
 
   <% if options[:showFull] %>
 	

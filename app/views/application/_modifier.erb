@@ -17,7 +17,7 @@
     showNewId = true
     ae_options = common_options.merge({ :controller       => "events",
                                         :action           => "newp",
-                                        :parentId         => modifier[:object].object_name,
+                                        :parentId         => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId})
     link_to "lägg till händelse", ae_options, { :remote => true }
@@ -29,7 +29,7 @@
     showNewId = true
     an_options = common_options.merge({ :controller       => "notes",
                                         :action           => "newp",
-                                        :parentId         => modifier[:object].object_name,
+                                        :parentId         => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "kommentera", an_options, { :remote => true }
@@ -41,7 +41,7 @@
     showNewId = true
     ad_options = common_options.merge({ :controller       => "event_dates",
                                         :action           => "newp",
-                                        :parentId         => modifier[:object].object_name,
+                                        :parentId         => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till datum", ad_options, { :remote => true }
@@ -53,7 +53,7 @@
     showNewId = true
     aa_options = common_options.merge({ :controller       => "addresses",
                                         :action           => "newp",
-                                        :parentId         => modifier[:object].object_name,
+                                        :parentId         => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till adress", aa_options, { :remote => true }
@@ -73,7 +73,7 @@
     {
 		  :controller => 'references',
 		  :action     => "connection_choose",
-		  :id         => modifier[:object].object_name
+		  :id         => name
     }	
   rt_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
   rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
@@ -86,7 +86,7 @@
       {
 		    :controller          => 'references',
 		    :action              => "delete",
-		    :id                  => modifier[:object].object_name,
+		    :id                  => name,
 		    :referenceId         => modifier[:reference].id,
 		    :removeReferenceOnly => true
       }
@@ -103,7 +103,7 @@
   de_options = {
   		:controller          => 'references',
 		  :action              => "delete",
-		  :id                  => modifier[:object].object_name,
+		  :id                  => name,
 		  :removeReferenceOnly => false
   }
   de_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?

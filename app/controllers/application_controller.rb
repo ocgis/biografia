@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
       parent_obj.add_reference(newObj)
       controller = parent_obj.controller
       object = { :object => parent_obj }
+      object[:related_objects] = object[:object].related_objects
       object[:referenceId] = params[:form][:parentReferenceId] if defined? params[:form][:parentReferenceId]
       options = { :enclosedById => false, :showModifier => true }
       options[:parent] = { :object => find_by_object_name(params[:form][:grandParentId]) } if params[:form][:grandParentId] != nil
@@ -48,10 +49,17 @@ class ApplicationController < ActionController::Base
   def show
     @object = find_object
     @related=@object.related_objects
+    @related[:events].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
+    @related[:relationships].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
   end
 
   def showp
     object = { :object => find_object }
+    object[:related_objects] = object[:object].related_objects
     object[:referenceId] = params[:referenceId] if params[:referenceId] != nil
     options = 
       {
@@ -83,6 +91,7 @@ class ApplicationController < ActionController::Base
 
   def update
     object = { :object => find_object_and_update_attrs }
+    object[:related_objects] = object[:object].related_objects
     
     controller = object[:object].controller
     

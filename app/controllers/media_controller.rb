@@ -27,9 +27,16 @@ class MediaController < ApplicationController
   end
 
   def show
-    @media = Medium.find(params.require(:id))
+    @object = Medium.find(params.require(:id))
     @mode = params[:mode]
-    @file_type = MIME::Types.type_for(@media.file_name)
+    @file_type = MIME::Types.type_for(@object.file_name)
+    @related=@object.related_objects
+    @related[:events].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
+    @related[:relationships].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
   end
 
   protected

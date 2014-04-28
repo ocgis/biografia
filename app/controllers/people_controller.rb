@@ -13,18 +13,6 @@ class PeopleController < ApplicationController
   def search_ajax
   end
 
-  def display
-    @base_id = params.require(:id)
-
-    @object=find_object
-    @related=@object.related_objects
-    @relationships=@object.find_spouses
-    @parents=@object.find_parents
-    @children=@object.find_children
-
-    render layout: true
-  end
-
   def destroy
     Person.find(params.require(:id)).destroy
     redirect_to :action => "index" 
