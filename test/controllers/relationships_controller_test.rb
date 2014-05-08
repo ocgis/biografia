@@ -26,7 +26,7 @@ class RelationshipsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, { :id => relationships(:references).id }
+    get :show, { :id => relationships(:relationships_references).id }
     assert_response :success
   end
 

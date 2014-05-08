@@ -34,7 +34,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, { :id => people(:references).id }
+    get :show, { :id => people(:people_references).id }
     assert_response :success
   end
 

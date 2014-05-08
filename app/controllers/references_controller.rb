@@ -97,7 +97,7 @@ class ReferencesController < ApplicationController
     
     if !(removeReferenceOnly=="true")
       object = find_by_object_name(params.require(:id))
-      object.references.destroy_all
+# FIXME      object.references.destroy_all
       object.destroy
     end
 

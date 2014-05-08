@@ -4,9 +4,11 @@ module CommonInstanceMethods
       :role => nil,
     }
     options = defaults.merge(options)
-    reference = Reference.create(:name => options[:role])
-    self.references << reference
-    referenced_object.references << reference
+    reference = Reference.create(:name  => options[:role],
+                                 :type1 => referenced_object.class.name,
+                                 :id1   => referenced_object.id,
+                                 :type2 => self.class.name,
+                                 :id2   => self.id)
 
     return reference
   end
@@ -22,16 +24,9 @@ module CommonInstanceMethods
                :media => [],
                :unhandled_types => [] }
 
-    self.references.each do |reference|
-      ['addresses', 'event_dates', 'events', 'media', 'notes', 'people', 'relationships' ].each do |obj_type|
-        retval[obj_type.to_sym] = retval[obj_type.to_sym] + (reference.send(obj_type).map do |elem|
-          if elem != self
-            { :object => elem, :reference => reference }
-          else
-            nil
-          end
-        end).compact
-      end
+    self.get_references.each do |reference|
+      object = reference.other_object(self)
+      retval[object.controller.to_sym].append({:object => object, :reference => reference })
     end
 
     return retval
@@ -42,16 +37,19 @@ module CommonInstanceMethods
   end
 
   def positions_in_object
-   positions = []
-   references.each do |reference|
-     position = reference.position_in_pictures
+    positions = []
+    get_references.each do |reference|
+      position = reference.position_in_pictures
       
-     if position.length > 0
-       obj = reference.other_object(self)        
-       positions.push( { :object => obj, :position => position[0] } )
-     end
-   end
-   return positions  
+      if position.length > 0
+        obj = reference.other_object(self)        
+        positions.push( { :object => obj, :position => position[0] } )
+      end
+    end
+    return positions  
   end
 
+  def get_references
+    return Reference.where("(type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)", self.class.name, self.id, self.class.name, self.id)
+  end
 end

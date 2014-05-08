@@ -3,5 +3,5 @@
 event1:
   name: MyString
 
-references:
+events_references:
   name: References

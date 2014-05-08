@@ -26,7 +26,7 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, { :id => events(:references).id }
+    get :show, { :id => events(:events_references).id }
     assert_response :success
   end
 

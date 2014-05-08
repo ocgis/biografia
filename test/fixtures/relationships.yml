@@ -1,5 +1,5 @@
 relationship1:
   name: MyText
 
-references:
+relationships_references:
   name: MyText

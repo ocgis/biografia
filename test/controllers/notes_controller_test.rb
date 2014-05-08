@@ -26,7 +26,7 @@ class NotesControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    get :show, { :id => notes(:references).id }
+    get :show, { :id => notes(:notes_references).id }
     assert_response :success
   end
 

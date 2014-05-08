@@ -1,54 +1,73 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 reference1:
-  name: Reference 1
-  people: person2
+  type1: "Person"
+  id1: <%= ActiveRecord::FixtureSet.identify(:person2) %>
+  type2: "Note"
+  id2: <%= ActiveRecord::FixtureSet.identify(:note1) %>
 
 reference2:
-  name: Reference 2
-  notes: note1
+  type1: "Note"
+  id1: <%= ActiveRecord::FixtureSet.identify(:note1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference3:
-  name: Reference 3
-  addresses: address1
+  type1: "Address"
+  id1: <%= ActiveRecord::FixtureSet.identify(:address1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference4:
-  name: Reference 4
-  events: event1
+  type1: "Event"
+  id1: <%= ActiveRecord::FixtureSet.identify(:event1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference5:
-  name: Reference 5
-  event_dates: event_date1
+  type1: "EventDate"
+  id1: <%= ActiveRecord::FixtureSet.identify(:event_date1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference6:
-  name: Reference 6
-  relationships: relationship1
+  type1: "Relationship"
+  id1: <%= ActiveRecord::FixtureSet.identify(:relationship1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference7:
-  name: Reference 7
-  media: medium1
+  type1: "Medium"
+  id1: <%= ActiveRecord::FixtureSet.identify(:medium1) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:person2) %>
 
 reference8:
-  name: Reference8
-  people: references
-  relationships: references
+  type1: "Person"
+  id1: <%= ActiveRecord::FixtureSet.identify(:people_references) %>
+  type2: "Relationship"
+  id2: <%= ActiveRecord::FixtureSet.identify(:relationships_references) %>
 
 reference9:
-  name: Reference9
-  events: references
-  people: references
+  type1: "Event"
+  id1: <%= ActiveRecord::FixtureSet.identify(:events_references) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:people_references) %>
 
 reference10:
-  name: Reference10
-  addresses: references
-  people: references
+  type1: "Address"
+  id1: <%= ActiveRecord::FixtureSet.identify(:addresses_references) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:people_references) %>
 
 reference11:
-  name: Reference11
-  notes: references
-  people: references
+  type1: "Note"
+  id1: <%= ActiveRecord::FixtureSet.identify(:notes_references) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:people_references) %>
 
 reference12:
-  name: Reference12
-  media: references
-  people: references
+  type1: "Medium"
+  id1: <%= ActiveRecord::FixtureSet.identify(:media_references) %>
+  type2: "Person"
+  id2: <%= ActiveRecord::FixtureSet.identify(:people_references) %>

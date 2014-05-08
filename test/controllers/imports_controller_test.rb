@@ -578,7 +578,6 @@ class ImportsControllerTest < ActionController::TestCase
 
     person_related = persons[0].related_objects
     relationships = person_related[:relationships]
-    puts relationships.inspect
     assert relationships.length == 1, "Got #{relationships.length} relationships in database, expected 1."
 #    puts persons[0][:object].children.inspect
 #    assert notes[0][:object][:note] == title, "Got title #{notes[0][:object][:note]}, expected #{title}."    

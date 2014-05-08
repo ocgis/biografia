@@ -1,5 +1,3 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
 address1:
   street: MyString
   town: MyString
@@ -7,7 +5,7 @@ address1:
   parish: MyString
   country: MyString
 
-references:
+addresses_references:
   street: MyString
   town: MyString
   zipcode: MyString

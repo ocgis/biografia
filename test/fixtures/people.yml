@@ -10,7 +10,7 @@ person2:
   surname: Person
   sex: m
 
-references:
+people_references:
   given_name: Reference Three
   calling_name: Three
   surname: Person

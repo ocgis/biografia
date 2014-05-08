@@ -3,9 +3,8 @@
 note1:
   title: Note 1
   note: Note 1
-  references: reference2
 
-references:
+notes_references:
   title: Note 1
   note: Note 1
-  references: reference2
+# FIXME:  references: reference2
