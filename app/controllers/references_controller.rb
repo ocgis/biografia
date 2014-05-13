@@ -3,6 +3,14 @@ class ReferencesController < ApplicationController
     id = params.require(:id)
 
     object = { :object => find_by_object_name(id) }
+    object[:related_objects] = object[:object].related_objects
+    object[:related_objects][:events].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
+    object[:related_objects][:relationships].each do |r|
+      r[:related_objects] = r[:object].related_objects
+    end
+
     object[:relationId] = params[:relationId] if defined? params[:relationId]
 
     options = {}

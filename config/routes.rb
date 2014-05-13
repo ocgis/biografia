@@ -33,7 +33,7 @@ Biografia::Application.routes.draw do
   get  "media/register"
   get  "media/search"
   get  "media/show"
-#  get  "media/showp"
+  get  "media/showp"
 
   post "notes/createp"
   get  "notes/edit"
