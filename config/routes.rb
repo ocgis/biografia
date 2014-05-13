@@ -30,6 +30,8 @@ Biografia::Application.routes.draw do
   get  "media/edit"
   get  "media/index"
   get  "media/new"
+  get  "media/register"
+  get  "media/search"
   get  "media/show"
 #  get  "media/showp"
 

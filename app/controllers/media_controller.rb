@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+require 'find'
+
 class MediaController < ApplicationController
 
   def new
@@ -26,6 +29,15 @@ class MediaController < ApplicationController
     end
   end
 
+  def register
+    media = Medium.new(:file_name => params.require(:file_name))
+    if media.save
+      redirect_to :action => 'show', :id => media.id
+    else
+      render :action => 'new'
+    end
+  end
+  
   def show
     @object = Medium.find(params.require(:id))
     @mode = params[:mode]
@@ -37,6 +49,16 @@ class MediaController < ApplicationController
     @related[:relationships].each do |r|
       r[:related_objects] = r[:object].related_objects
     end
+  end
+  
+  def search
+    old_dir = Dir.pwd
+    Dir.chdir('/mnt/Data/home/cg/eclipseprojects/biografia4/public/')
+    file_media = Medium.where('file_name LIKE "files/%"').pluck("file_name")
+    @files = search_dir("files") - file_media
+
+    @files = @files[0..50]    
+    Dir.chdir(old_dir)
   end
 
   protected
@@ -55,4 +77,37 @@ class MediaController < ApplicationController
     return params.permit(:file_name)
   end
 
+  def search_dir(path)
+    old_dir = Dir.pwd
+    Dir.chdir(path)
+    files = []
+    Find.find('.') { |file|
+      re = /^#{Regexp.escape('./')}+/
+      file.gsub!(re, '')
+      if File.symlink?(file)
+        realfile = File.readlink(file)
+        if File.directory?(realfile)
+          old_dir_2 = Dir.pwd
+          Dir.chdir(realfile)
+          search_dir('.').each do |sfile|
+            sfile.gsub!(re, '')
+            files.append(file+'/'+sfile)
+          end
+          Dir.chdir(old_dir_2)
+        else
+          files.append(file)
+        end
+      elsif File.file?(file)
+        files.append(file)
+      end
+    }
+    Dir.chdir(old_dir)
+    
+    out_files = []
+    files.each do |file|
+      out_files.append(path+'/'+file)  
+    end
+    
+    return out_files
+  end
 end

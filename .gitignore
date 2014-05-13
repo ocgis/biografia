@@ -20,3 +20,12 @@
 
 # Ignore all transfer files
 /public/transfer/*
+
+# Ignore eclipse project
+/.project
+
+# Ignore cache directory
+/public/cache
+
+# Ignore links under files directory
+/public/files/*

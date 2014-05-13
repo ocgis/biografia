@@ -1,0 +1,5 @@
+<% @files.each do |file| %>
+<% thumbnail = image_tag "/" + Medium.get_thumbnail_for(file) %>
+<%=  link_to thumbnail, :action => 'register', :file_name => file %>
+<br/>
+<% end %>

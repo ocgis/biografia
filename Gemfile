@@ -54,3 +54,5 @@ end
 # gem 'debugger', group: [:development, :test]
 
 gem 'mime-types', :require => 'mime/types'
+
+gem 'rmagick'
