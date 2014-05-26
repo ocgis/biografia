@@ -4,7 +4,7 @@ class EventDatesController < ApplicationController
   protected
 
   def create_object
-    p = ActionController::Parameters.new(:date => params.require(:date).to_s)
+    p = ActionController::Parameters.new(params.require(:event_date))
     return EventDate.new(event_date_params(p))
   end
 
@@ -14,7 +14,7 @@ class EventDatesController < ApplicationController
 
   def find_object_and_update_attrs
     object = EventDate.find(params.require(:id))
-    p = ActionController::Parameters.new(:date => params.require(:date).to_s)
+    p = ActionController::Parameters.new(params.require(:event_date))
     object.attributes = event_date_params(p)
     return object
   end

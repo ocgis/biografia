@@ -4,7 +4,7 @@ class EventDatesControllerTest < ActionController::TestCase
 
   test "should post createp" do
     @request.accept = "text/javascript"
-    post :createp, { :date => 'FIXME', :form => { :parentId => events(:event1).object_name } }
+    post :createp, { :event_date => { :date => 'FIXME' }, :form => { :parentId => events(:event1).object_name } }
     assert_response :success
   end
 
@@ -38,7 +38,7 @@ class EventDatesControllerTest < ActionController::TestCase
 
   test "should post update" do
     @request.accept = "text/javascript"
-    post :update, { :id => event_dates(:event_date1).id, :date => 'FIXME' }
+    post :update, { :id => event_dates(:event_date1).id, :event_date => { :date => 'FIXME' } }
     assert_response :success
   end
 

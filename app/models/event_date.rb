@@ -7,7 +7,7 @@ class EventDate < ActiveRecord::Base
   end
 
   def one_line
-    return date
+    return date.to_s
   end
 
 end

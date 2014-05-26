@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(version: 20140313144126) do
   end
 
   create_table "event_dates", force: true do |t|
-    t.string   "date"
+    t.datetime "date"
+    t.string   "mask"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

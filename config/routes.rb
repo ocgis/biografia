@@ -1,47 +1,61 @@
 Biografia::Application.routes.draw do
 
-  post "addresses/createp"
-  get  "addresses/edit"
-  get  "addresses/index"
-  get  "addresses/newp"
-  get  "addresses/show"
-  get  "addresses/showp"
-  post "addresses/update"
+  resources :addresses, :except => [:create, :new, :destroy] do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
+  
+  resources :event_dates, :except => [:create, :new, :destroy] do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
+  
+  resources :events, :except => [:create, :new, :destroy] do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
 
-  post "event_dates/createp"
-  get  "event_dates/edit"
-  get  "event_dates/index"
-  get  "event_dates/newp"
-  get  "event_dates/show"
-  get  "event_dates/showp"
-  post "event_dates/update"
+  resources :imports, :only => [:new]
 
-  post "events/createp"
-  get  "events/edit"
-  get  "events/index"
-  get  "events/newp"
-  get  "events/show"
-  get  "events/showp"
-  post "events/update"
+  resources :media, :except => [:destroy, :update] do
+    collection do
+      get 'register'
+      get 'search'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
 
-  get  "imports/new"
-
-  post "media/create"
-  get  "media/edit"
-  get  "media/index"
-  get  "media/new"
-  get  "media/register"
-  get  "media/search"
-  get  "media/show"
-  get  "media/showp"
-
-  post "notes/createp"
-  get  "notes/edit"
-  get  "notes/index"
-  get  "notes/newp"
-  get  "notes/show"
-  get  "notes/showp"
-  post "notes/update"
+  resources :notes, :except => [:create, :new, :destroy] do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
 
   get  "people/ancestry"
   post "people/create"
@@ -60,17 +74,18 @@ Biografia::Application.routes.draw do
   get  "references/delete"
   get  "references/destroy"
 
-  post "relationships/createp"
-  get  "relationships/edit"
-  get  "relationships/index"
-  get  "relationships/newp"
-  get  "relationships/show"
-  get  "relationships/showp"
-  post "relationships/update"
+  resources :relationships, :except => [:create, :new, :destroy] do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'showp'
+    end
+  end
 
-  post "transfers/create"
-  get  "transfers/new"
-  get  "transfers/show"
+  resources :transfers, :only => [:create, :new, :show]  
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
