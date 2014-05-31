@@ -1,1 +1,22 @@
 <%= link_to showlimitedp[:object].name, :controller => showlimitedp[:object].controller, :action => 'show', :id => showlimitedp[:object].id %>
+<%  if options[:showModifier] %>
+<%=   render :partial => showlimitedp[:object].controller + '/modifier', :object => showlimitedp %>
+<%  end %>
+<ul>
+<%  new_options = options.merge({ :enclosedById => true,
+                                  :parent => showlimitedp,
+                                  :showFull => false }) %>
+<%  related_objects = showlimitedp[:related_objects] %>
+<%= render :partial => 'event_dates/showp',
+           :collection => related_objects[:event_dates],
+           :layout => 'li',
+           :locals => { :options => new_options } %>
+<%= render :partial => 'addresses/showp',
+           :collection => related_objects[:addresses],
+           :layout => 'li',
+           :locals => { :options => new_options } %>
+<%= render :partial => 'notes/showp',
+           :collection => related_objects[:notes],
+           :layout => 'li',
+           :locals => { :options => new_options } %>
+</ul>

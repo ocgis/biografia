@@ -1,1 +1,4 @@
 <%= showfullp[:object].date %>
+<%  if options[:showModifier] %>
+<%=   render :partial => showfullp[:object].controller + '/modifier', :object => showfullp %>
+<%  end %>
