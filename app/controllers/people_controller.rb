@@ -24,6 +24,10 @@ class PeopleController < ApplicationController
 
   protected
 
+  def create_object
+    return Person.new(person_params(params.require(:person)))
+  end
+
   def find_object
     return Person.find(params.require(:id))
   end

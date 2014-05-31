@@ -61,6 +61,30 @@
 %>
 
 <%=
+  if options[:showAddRelationship]
+    showNewId = true
+    ar_options = common_options.merge({ :controller       => "relationships",
+                                        :action           => "newp",
+                                        :parentId         => name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "lägg till förhållande", ar_options, { :remote => true }
+  end
+%>
+
+<%=
+  if options[:showAddPerson]
+    showNewId = true
+    ap_options = common_options.merge({ :controller       => "people",
+                                        :action           => "newp",
+                                        :parentId         => name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "lägg till person", ap_options, { :remote => true }
+  end
+%>
+
+<%=
   ch_options = { :controller => modifier[:object].controller,
   		 :action     => "edit",
 		 :id         => modifier[:object].id }

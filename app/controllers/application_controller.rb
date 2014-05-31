@@ -26,7 +26,11 @@ class ApplicationController < ActionController::Base
      
     if saved
       parent_obj = find_by_object_name(parentId)
-      parent_obj.add_reference(newObj)
+      if params[:reference].nil?
+        parent_obj.add_reference(newObj)
+      else
+        parent_obj.add_reference(newObj, :role => params.require(:reference).require(:name))
+      end
       controller = parent_obj.controller
       object = { :object => parent_obj }
       object[:related_objects] = object[:object].related_objects
@@ -77,7 +81,7 @@ class ApplicationController < ActionController::Base
 
   def edit
     object = { :object => find_object }
-    object[:referenceId] = params[:referenceId] if defined? params[:referenceId]
+    object[:reference] = Reference.find(params[:referenceId]) if not params[:referenceId].nil?
     locals = {}
     if params[:parentId] != nil
       locals[:parentId] = params[:parentId]
@@ -96,7 +100,12 @@ class ApplicationController < ActionController::Base
     controller = object[:object].controller
     
     if object[:object].save
-      object[:referenceId] = params[:form][:referenceId] if defined? params[:form][:referenceId]
+      if defined? params[:form][:referenceId]
+        object[:reference] = Reference.find(params[:form][:referenceId])
+        if not object[:reference].update(params[:reference].permit(:name))
+          raise StandardException, "Failed to update reference"
+        end
+      end
       options =
         {
           :enclosedById => false,

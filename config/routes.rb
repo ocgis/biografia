@@ -57,16 +57,18 @@ Biografia::Application.routes.draw do
     end
   end
 
-  get  "people/ancestry"
-  post "people/create"
-  get  "people/destroy"
-  get  "people/edit"
-  get  "people/index"
-  get  "people/new"
-  get  "people/show"
-  get  "people/showp"
-  post "people/update"
-
+  resources :people do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+    
+    member do
+      get 'ancestry'
+      get 'showp'
+    end
+  end
+  
   get  "references/connection_add"
   post "references/connection_add"
   get  "references/connection_choose"
