@@ -16,6 +16,6 @@ Vill du verkligen ta bort den här?
 	           { :remote => true } %>
 <br />
 <%= render :partial => delete.controller + '/showp',
-           :object => { :object => delete },
+           :object => delete,
            :locals => { :options => options.merge({ :enclosedById => false,
                                                     :showModifier => false }) } %>

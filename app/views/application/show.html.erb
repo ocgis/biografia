@@ -1,8 +1,7 @@
   <%=h content_for(:title, 'Information om ' + @object.one_line) %>
 	<%= render :partial => "showp",
-		:object => { :object => @object,
-                             :related_objects => @related },
+		:object => @object,
 		:locals => { :options => { :showFull => true,
-	                                   :enclosedById => true,
-				           :showModifier => true } }
+	                             :enclosedById => true,
+				                       :showModifier => true } }
   %>

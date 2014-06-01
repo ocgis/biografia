@@ -1,4 +1,4 @@
-<% name = showp[:object].object_name %>
+<% name = showp.object_name %>
 
 <% if options[:enclosedById] %>
 <span id="<%= name %>">
@@ -7,15 +7,15 @@
 <p>
 <%=
   if defined?  showFull and showFull
-    showp[:object].long_name
+    showp.long_name
   else
-    link_to showp[:object].long_name, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id
+    link_to showp.long_name, :controller => showp.controller, :action => 'show', :id => showp.id
   end
 %>
-<%= showp[:object].sex %>
-<% if not showp[:reference].nil? %>
-<%   if not showp[:reference].name.nil? %>
-<%=    showp[:reference].name %>
+<%= showp.sex %>
+<% if not showp.get_extra(:reference).nil? %>
+<%   if not showp.get_extra(:reference).name.nil? %>
+<%=    showp.get_extra(:reference).name %>
 <%   end %>
 <% end %>
 
@@ -26,7 +26,7 @@
                                   :showAddDate => false,
                                   :showAddAddress => true,
                                   :showAddRelationship => true })
-    mod_options[:relation] = showp[:relation] if showp[:relation] != nil
+    mod_options[:relation] = showp.get_extra(:relation) if showp.get_extra(:relation) != nil
     render :partial => 'application/modifier', :object => showp, :locals => { :options => mod_options }
   end
 %>
@@ -40,8 +40,8 @@
     <h3>Övrigt</h3>
     <p>
     <%= link_to "Antavla", :action => "ancestry",
-                           :id => showp[:object].id,
-                           :controller => showp[:object].controller %>
+                           :id => showp.id,
+                           :controller => showp.controller %>
     </p>
 		
   <% end %>

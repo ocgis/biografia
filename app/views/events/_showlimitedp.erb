@@ -1,12 +1,12 @@
-<%= link_to showlimitedp[:object].name, :controller => showlimitedp[:object].controller, :action => 'show', :id => showlimitedp[:object].id %>
+<%= link_to showlimitedp.name, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showlimitedp[:object].controller + '/modifier', :object => showlimitedp %>
+<%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp %>
 <%  end %>
 <ul>
 <%  new_options = options.merge({ :enclosedById => true,
                                   :parent => showlimitedp,
                                   :showFull => false }) %>
-<%  related_objects = showlimitedp[:related_objects] %>
+<%  related_objects = showlimitedp.get_extra(:related_objects) %>
 <%= render :partial => 'event_dates/showp',
            :collection => related_objects[:event_dates],
            :layout => 'li',

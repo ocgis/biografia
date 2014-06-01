@@ -26,7 +26,8 @@ module CommonInstanceMethods
 
     self.get_references.each do |reference|
       object = reference.other_object(self)
-      retval[object.controller.to_sym].append({:object => object, :reference => reference })
+      object.set_extra(:reference, reference)
+      retval[object.controller.to_sym].append(object)
     end
 
     return retval
@@ -42,8 +43,9 @@ module CommonInstanceMethods
       position = reference.position_in_pictures
       
       if position.length > 0
-        obj = reference.other_object(self)        
-        positions.push( { :object => obj, :position => position[0] } )
+        obj = reference.other_object(self)
+        obj.set_extra(:position, position[0])        
+        positions.push(obj)
       end
     end
     return positions  
@@ -51,5 +53,18 @@ module CommonInstanceMethods
 
   def get_references
     return Reference.where("(type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)", self.class.name, self.id, self.class.name, self.id)
+  end
+  
+  def set_extra(k, v)
+    @extras = {} if @extras.nil?
+    @extras[k] = v
+  end
+  
+  def get_extra(key)
+    if @extras.nil?
+      return nil
+    else
+      return @extras[key]
+    end
   end
 end

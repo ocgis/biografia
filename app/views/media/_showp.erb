@@ -1,35 +1,35 @@
 <%= @file_type %>
 <% if options[:enclosedById] %>
-<span id="<%= showp[:object].object_name %>">
+<span id="<%= showp.object_name %>">
 <% end %>
 
 <% if options[:showFull] %>
   <% if options[:mode] == 'tag' %>
 	  <div>
-    <%= image_tag '/' + showp[:object].get_fullsize, :data_tagable => 'true', :id => 'hoolabaloo' %>
+    <%= image_tag '/' + showp.get_fullsize, :data_tagable => 'true', :id => 'hoolabaloo' %>
 		</div>
     <br />
-    <%= link_to "avbryt taggning", { :id => showp[:object].id, :controller => showp[:object].controller, :action => 'show' } %>
+    <%= link_to "avbryt taggning", { :id => showp.id, :controller => showp.controller, :action => 'show' } %>
     <br />
 
     <%= render :partial => "references/connchoose", :object => showp, :locals => { :options => {} } %>
 
   <% else %>
     <div style="position:relative">
-    <%= image_tag '/' + showp[:object].get_fullsize, :id => 'hoolabaloo' %>
-    <% showp[:object].positions_in_object.each do |position| %>
+    <%= image_tag '/' + showp.get_fullsize, :id => 'hoolabaloo' %>
+    <% showp.positions_in_object.each do |position| %>
       <span style="position:absolute;top:<%= position[:position].y.to_i %>px;left:<%= position[:position].x.to_i %>px;width:<%= position[:position].width.to_i %>px;height:<%= position[:position].height.to_i %>px;background-color:transparent" data_hover="true">
       <span style="position:absolute;bottom:0px;left:0px;width:<%= position[:position].width.to_i %>px;background-color:blue;display:none"><%= position[:object].name %></span>
       </span>
     <% end %>
     </div>
 		<br />
-    <%= link_to "tagga bild", { :id => showp[:object].id, :controller => showp[:object].controller, :action => 'show', :mode => 'tag' } %>
+    <%= link_to "tagga bild", { :id => showp.id, :controller => showp.controller, :action => 'show', :mode => 'tag' } %>
     <br />
 	<% end %>
 <% else %>
-  <% thumbnail = image_tag '/' + showp[:object].get_thumbnail %>
-  <%= link_to thumbnail, :controller => showp[:object].controller, :action => 'show', :id => showp[:object].id %>
+  <% thumbnail = image_tag '/' + showp.get_thumbnail %>
+  <%= link_to thumbnail, :controller => showp.controller, :action => 'show', :id => showp.id %>
 <% end %>
 
 <%=

@@ -1,11 +1,11 @@
 <%=
-  name = modifier[:object].object_name
+  name = modifier.object_name
   menuId = name + "_menu"
   newId = name + "_new"
 
   common_options = {}
-  common_options[:parentReferenceId] = modifier[:referenceId] if modifier[:referenceId] != nil
-  common_options[:grandParentId] = options[:parent][:object].object_name if not options[:parent].nil?
+  common_options[:parentReferenceId] = modifier.get_extra(:referenceId) if not modifier.get_extra(:referenceId).nil?
+  common_options[:grandParentId] = options[:parent].object_name if not options[:parent].nil?
  
   link_to ">", "#", :class => "toggler", :"data-toggle-id" => menuId
 %>
@@ -85,10 +85,10 @@
 %>
 
 <%=
-  ch_options = { :controller => modifier[:object].controller,
-  		 :action     => "edit",
-		 :id         => modifier[:object].id }
-  ch_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  ch_options = { :controller => modifier.controller,
+  	             :action     => "edit",
+		             :id         => modifier.id }
+  ch_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   link_to "ändra", ch_options, { :remote => true }
 %>
 
@@ -99,25 +99,25 @@
 		  :action     => "connection_choose",
 		  :id         => name
     }	
-  rt_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  rt_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
   link_to "referera till", rt_options, { :remote => true }
 %>
 
 <%=
-  if not modifier[:reference].nil?
+  if not modifier.get_extra(:reference).nil?
     rr_options = 
       {
 		    :controller          => 'references',
 		    :action              => "delete",
 		    :id                  => name,
-		    :referenceId         => modifier[:reference].id,
+		    :referenceId         => modifier.get_extra(:reference).id,
 		    :removeReferenceOnly => true
       }
     if not options[:parent].nil?
-      rr_options[:parentId] = options[:parent][:object].object_name
-      rr_options[:updateName] = options[:parent][:object].object_name
-      rr_options[:parentReferenceId] = options[:parent][:referenceId] if not options[:parent][:referenceId].nil?
+      rr_options[:parentId] = options[:parent].object_name
+      rr_options[:updateName] = options[:parent].object_name
+      rr_options[:parentReferenceId] = options[:parent].get_extra(:referenceId) if not options[:parent].get_extra(:referenceId).nil?
     end
    link_to "ta bort referens", rr_options, { :remote => true }
   end
@@ -130,11 +130,11 @@
 		  :id                  => name,
 		  :removeReferenceOnly => false
   }
-  de_options[:referenceId] = modifier[:reference].id if !modifier[:reference].nil?
+  de_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   if not options[:parent].nil?
-    de_options[:updateName] = options[:parent][:object].object_name
-    de_options[:parentId] = options[:parent][:object].object_name
-    de_options[:parentReferenceId] = options[:parent][:referenceId] if not options[:parent][:referenceId].nil?
+    de_options[:updateName] = options[:parent].object_name
+    de_options[:parentId] = options[:parent].object_name
+    de_options[:parentReferenceId] = options[:parent].get_extra(:referenceId) if not options[:parent].get_extra(:referenceId).nil?
   end
 
   link_to "radera", de_options, { :remote => true }

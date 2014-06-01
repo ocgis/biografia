@@ -1,4 +1,4 @@
-<% updateListName = connchoose[:object].object_name + '_list' %>
+<% updateListName = connchoose.object_name + '_list' %>
 
 <%= form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do %>
 
@@ -21,7 +21,7 @@
   <%= hidden_field 'form', 'y', :value => 0 %>
   <%= hidden_field 'form', 'w', :value => 0 %>
   <%= hidden_field 'form', 'h', :value => 0 %>
-  <%= hidden_field 'form', 'connect1Id', :value => connchoose[:object].object_name %>
+  <%= hidden_field 'form', 'connect1Id', :value => connchoose.object_name %>
   <%=
     if not options[:showFull].nil?
       hidden_field 'form', 'showFull', :value => options[:showFull]
@@ -36,5 +36,5 @@
 <%=
   new_options = options.merge({ :enclosedById => false,
                                 :showModifier => false })
-  render :partial => connchoose[:object].controller + '/showp', :object => connchoose, :locals => { :options => new_options }
+  render :partial => connchoose.controller + '/showp', :object => connchoose, :locals => { :options => new_options }
 %>

@@ -42,13 +42,14 @@ class MediaController < ApplicationController
     @object = Medium.find(params.require(:id))
     @mode = params[:mode]
     @file_type = MIME::Types.type_for(@object.file_name)
-    @related=@object.related_objects
-    @related[:events].each do |r|
-      r[:related_objects] = r[:object].related_objects
+    related=@object.related_objects
+    related[:events].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
     end
-    @related[:relationships].each do |r|
-      r[:related_objects] = r[:object].related_objects
+    related[:relationships].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
     end
+    @object.set_extra(:related_objects, related)
   end
   
   def search

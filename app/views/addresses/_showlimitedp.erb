@@ -1,4 +1,4 @@
-<%= link_to showlimitedp[:object].one_line, :controller => showlimitedp[:object].controller, :action => 'show', :id => showlimitedp[:object].id %>
+<%= link_to showlimitedp.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showlimitedp[:object].controller + '/modifier', :object => showlimitedp %>
+<%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp %>
 <%  end %>

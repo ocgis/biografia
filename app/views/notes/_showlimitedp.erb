@@ -1,5 +1,5 @@
-<%= link_to showlimitedp[:object].title, :controller => showlimitedp[:object].controller, :action => 'show', :id => showlimitedp[:object].id %>
+<%= link_to showlimitedp.title, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showlimitedp[:object].controller + '/modifier', :object => showlimitedp %>
+<%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp %>
 <%  end %>
-<pre><%= showlimitedp[:object].note %></pre>
+<pre><%= showlimitedp.note %></pre>

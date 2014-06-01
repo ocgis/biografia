@@ -1,11 +1,11 @@
 <% if options[:enclosedById] %>
-<span id="<%= showp[:object].object_name %>">
+<span id="<%= showp.object_name %>">
 <% end %>
 
 <% if options[:showFull] %>
-<%=  render :partial => showp[:object].controller + '/showfullp', :object => showp, :locals => { :options => options } %>
+<%=  render :partial => showp.controller + '/showfullp', :object => showp, :locals => { :options => options } %>
 <% else %>
-<%=  render :partial => showp[:object].controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
+<%=  render :partial => showp.controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
 <% end %>
 
 <% if options[:showFull] %>

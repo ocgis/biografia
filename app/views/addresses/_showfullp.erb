@@ -1,4 +1,4 @@
-<%= showfullp[:object].one_line %>
+<%= showfullp.one_line %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showfullp[:object].controller + '/modifier', :object => showfullp %>
+<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp %>
 <%  end %>

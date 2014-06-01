@@ -1,6 +1,6 @@
-<%= form_tag({ :action => "update", :id => edit[:object].id }, { :remote => true, :method => :patch }) do %>
+<%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
-<%= hidden_field 'form', 'referenceId', :value => edit[:reference].id if not edit[:reference].nil? %>
+<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
 <%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 
 Förnamn:
@@ -14,7 +14,7 @@ Kön:
 
 <% if not edit[:reference].nil? %>
 Roll:
-<%= text_field "reference", "name", :value => edit[:reference].name %><br/>
+<%= text_field "reference", "name", :value => edit.get_extra(:reference).name %><br/>
 <% end %>
 <input type="submit" value="Save">
 <% end %>

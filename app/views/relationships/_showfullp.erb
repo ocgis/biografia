@@ -1,12 +1,12 @@
-<%= showfullp[:object].object_name %>
+<%= showfullp.object_name %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showfullp[:object].controller + '/modifier', :object => showfullp %>
+<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp %>
 <%  end %>
 <ul>
 <%  new_options = options.merge({ :enclosedById => true,
                                   :parent => showfullp,
                                   :showFull => false }) %>
-<%  related_objects = showfullp[:related_objects] %>
+<%  related_objects = showfullp.get_extra(:related_objects) %>
 <%= render :partial => 'people/showp',
            :collection => related_objects[:people],
            :layout => 'li',

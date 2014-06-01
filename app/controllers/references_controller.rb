@@ -2,22 +2,22 @@ class ReferencesController < ApplicationController
   def connection_choose
     id = params.require(:id)
 
-    object = { :object => find_by_object_name(id) }
-    object[:related_objects] = object[:object].related_objects
-    object[:related_objects][:events].each do |r|
-      r[:related_objects] = r[:object].related_objects
+    object = find_by_object_name(id)
+    related=object.related_objects
+    related[:events].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
     end
-    object[:related_objects][:relationships].each do |r|
-      r[:related_objects] = r[:object].related_objects
+    related[:relationships].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
     end
-
-    object[:relationId] = params[:relationId] if defined? params[:relationId]
+    object.set_extra(:related_objects, related)
+    object.set_extra(:relationId, params[:relationId]) if defined? params[:relationId]
 
     options = {}
     options[:showFull] = params[:showFull] if params[:showFull] != nil
     
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'connchoose', :object => object, :replaceElem => object[:object].object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'connchoose', :object => object, :replaceElem => object.object_name } }
     end
   end
 
@@ -81,6 +81,7 @@ class ReferencesController < ApplicationController
     removeReferenceOnly = params.require(:removeReferenceOnly)
 
     obj = find_by_object_name(id)
+    obj.set_extra(:related_objects, obj.related_objects)
     options = 
       {
         :referenceId => referenceId,
