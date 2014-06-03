@@ -18,8 +18,8 @@
     <div style="position:relative">
     <%= image_tag '/' + showp.get_fullsize, :id => 'hoolabaloo' %>
     <% showp.positions_in_object.each do |position| %>
-      <span style="position:absolute;top:<%= position[:position].y.to_i %>px;left:<%= position[:position].x.to_i %>px;width:<%= position[:position].width.to_i %>px;height:<%= position[:position].height.to_i %>px;background-color:transparent" data_hover="true">
-      <span style="position:absolute;bottom:0px;left:0px;width:<%= position[:position].width.to_i %>px;background-color:blue;display:none"><%= position[:object].name %></span>
+      <span style="position:absolute;top:<%= position.get_extra(:position).y.to_i %>px;left:<%= position.get_extra(:position).x.to_i %>px;width:<%= position.get_extra(:position).width.to_i %>px;height:<%= position.get_extra(:position).height.to_i %>px;background-color:transparent" data_hover="true">
+      <span style="position:absolute;bottom:0px;left:0px;width:<%= position.get_extra(:position).width.to_i %>px;background-color:blue;display:none"><%= position.name %></span>
       </span>
     <% end %>
     </div>
