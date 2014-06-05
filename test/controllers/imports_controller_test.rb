@@ -531,7 +531,6 @@ class ImportsControllerTest < ActionController::TestCase
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
-    puts "¤¤¤¤¤¤¤¤¤¤¤¤¤ #{person_related.inspect}"
     notes = person_related[:notes]
     assert notes.length == 1, "Got #{notes.length} notes in database, expected 1."
     actual = notes[0][:note]

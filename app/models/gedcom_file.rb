@@ -191,7 +191,16 @@ class GedcomFile < Gedcom
       when 'DATE'
         datetime = parse_date(child)
         if !datetime.nil?
-          event_date = EventDate.create_save(:date => datetime.to_s)
+          event_date = EventDate.new()
+          if datetime.class == Date
+            event_date.set_date(datetime.strftime("%Y-%m-%d"))
+          else
+            event_date.set_date(datetime.strftime("%Y-%m-%d %H:%M"))
+          end
+          if !event_date.save
+            Rails::logger.error("ERROR: #{event_date.class.name} could not be saved: #{event_date.inspect}")
+            raise StandardException
+          end
           event.add_reference(event_date)
         end
       when 'HDV'
