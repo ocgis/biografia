@@ -8,6 +8,62 @@
 </head>
 <body>
 
+<table>
+<tr>
+<td>
+<b>Överföringar</b>
+</td>
+<td>
+<%= link_to "Lägg till", :controller => "transfers", :action => "new" %>
+</td>
+</tr>
+
+<tr>
+<td>
+<b>Personer</b>
+</td>
+<td>
+<%= link_to "Lista alla", :controller => "people", :action => "index" %>
+<%= link_to "Lägg till", :controller => "people", :action => "new" %>
+<%= link_to "Sök", :controller => "people", :action => "index" %>
+</td>
+</tr>      
+
+<tr>
+<td>
+<b>Händelser</b>
+</td>
+<td>
+<%= link_to "Lista alla", :controller => "events", :action => "index" %>
+<%= link_to "Lägg till", :controller => "events", :action => "new" %>
+<%= link_to "Sök", :controller => "events", :action => "index" %>
+</td>
+</tr>      
+
+<tr>
+<td>
+<b>Media</b>
+</td>
+<td>
+<%= link_to "Lista alla", :controller => "media", :action => "index" %>
+<%= link_to "Lägg till", :controller => "media", :action => "new" %>
+<%= link_to "Sök lokalt", :controller => "media", :action => "search" %>
+</td>
+</tr>
+
+<tr>
+<td>
+<b>Adresser</b>
+</td>
+<td>
+<%= link_to "Lista alla", :controller => "addresses", :action => "index" %>
+<%= link_to "Lägg till", :controller => "addresses", :action => "new" %>
+<%= link_to "Sök", :controller => "addresses", :action => "index" %>
+</td>
+</tr>      
+
+</table>
+
 <%= yield %>
 
     <p class="notice"><%= notice %></p>

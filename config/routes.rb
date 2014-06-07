@@ -1,6 +1,6 @@
 Biografia::Application.routes.draw do
 
-  resources :addresses, :except => [:create, :new, :destroy] do
+  resources :addresses, :except => [:create, :destroy] do
     collection do
       post 'createp'
       get 'newp'
@@ -22,7 +22,7 @@ Biografia::Application.routes.draw do
     end
   end
   
-  resources :events, :except => [:create, :new, :destroy] do
+  resources :events, :except => [:create, :destroy] do
     collection do
       post 'createp'
       get 'newp'
