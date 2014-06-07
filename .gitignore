@@ -29,3 +29,6 @@
 
 # Ignore links under files directory
 /public/files/*
+
+# Ignore all .old files
+*.old
