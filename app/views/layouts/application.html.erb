@@ -8,6 +8,15 @@
 </head>
 <body>
 
+<div id="user-widget">
+  <% if current_user %>
+    Inloggad som <strong><%= current_user.name %></strong>.
+    <%= link_to "Logga ut", signout_path, id: "sign_out" %>
+  <% else %>
+    <%= link_to "Logga in med Facebook", "/auth/facebook", id: "sign_in" %>
+  <% end %>
+</div>
+
 <table>
 <tr>
 <td>

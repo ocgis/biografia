@@ -56,3 +56,7 @@ end
 gem 'mime-types', :require => 'mime/types'
 
 gem 'rmagick'
+
+# Used for authentication
+gem 'omniauth'
+gem 'omniauth-facebook', '1.4.0'

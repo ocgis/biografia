@@ -139,4 +139,11 @@ class ApplicationController < ActionController::Base
     return Kernel.const_get(a[0]).find(a[1].to_i)
   end
 
+  private
+  
+  def current_user
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+  helper_method :current_user
+
 end

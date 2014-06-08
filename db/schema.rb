@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140313144126) do
+ActiveRecord::Schema.define(version: 20140607193835) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -90,6 +90,16 @@ ActiveRecord::Schema.define(version: 20140313144126) do
   create_table "transfers", force: true do |t|
     t.string   "file_name",    null: false
     t.string   "content_type", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
