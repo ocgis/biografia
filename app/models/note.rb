@@ -1,4 +1,6 @@
 class Note < ActiveRecord::Base
+  has_paper_trail
+
   extend CommonClassMethods
   include CommonInstanceMethods
 

@@ -1,4 +1,6 @@
 class Reference < ActiveRecord::Base
+  has_paper_trail
+
   has_many :position_in_pictures
 
   def other_object(object)

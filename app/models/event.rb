@@ -1,4 +1,6 @@
 class Event < ActiveRecord::Base
+  has_paper_trail
+
   extend CommonClassMethods
   include CommonInstanceMethods
 

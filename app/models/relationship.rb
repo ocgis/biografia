@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 class Relationship < ActiveRecord::Base
+  has_paper_trail
+
   extend CommonClassMethods
   include CommonInstanceMethods
 

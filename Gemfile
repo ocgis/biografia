@@ -60,3 +60,6 @@ gem 'rmagick'
 # Used for authentication
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
+
+# Used for versioning
+gem 'paper_trail'

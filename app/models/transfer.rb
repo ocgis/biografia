@@ -1,4 +1,6 @@
 class Transfer < ActiveRecord::Base
+  has_paper_trail
+
   validates_presence_of :content_type, :file_name
    
   def path

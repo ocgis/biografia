@@ -1,6 +1,8 @@
 # coding: utf-8
 
 class Address < ActiveRecord::Base
+   has_paper_trail
+   
    extend CommonClassMethods
    include CommonInstanceMethods
 
