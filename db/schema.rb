@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20140609183936) do
   end
 
   create_table "notes", force: true do |t|
+    t.string   "category"
     t.string   "title"
     t.text     "note"
     t.datetime "created_at"

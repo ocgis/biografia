@@ -1,4 +1,4 @@
-<%= link_to showlimitedp.title, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id %>
+<%= link_to showlimitedp.title, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id if not showlimitedp.title.nil? %>
 <%  if options[:showModifier] %>
 <%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp %>
 <%  end %>

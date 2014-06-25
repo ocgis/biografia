@@ -186,7 +186,7 @@ class GedcomFile < Gedcom
     detail[:children].each do |child|
       case child[:root][:field]
       when 'CAUS'
-        note = Note.create_save(:title => 'Orsak', :note => parse_cause(child))
+        note = Note.create_save(:category => 'cause', :title => 'Orsak', :note => parse_cause(child))
         event.add_reference(note)
       when 'DATE'
         datetime = parse_date(child)
@@ -204,14 +204,14 @@ class GedcomFile < Gedcom
           event.add_reference(event_date)
         end
       when 'HDV'
-        note = Note.create_save(:title => 'Holger HDV', :note => parse_hdv(child))
+        note = Note.create_save(:category => 'holger hdv', :note => parse_hdv(child))
         event.add_reference(note)
       when 'PARI'
         address = extend_address(address, 'parish', parse_parish(child))
       when 'PLAC'
         address = extend_address(address, 'street', parse_place(child))
       when 'TYPE'
-        note = Note.create_save(:title => 'Gedcom TYPE', :note => parse_type(child))
+        note = Note.create_save(:category => 'type', :note => parse_type(child))
         event.add_reference(note)
       else
         Rails::logger.error("ERROR: Field #{child[:root][:field]} with value #{child[:root][:value]} and children #{child[:children].inspect} could not be handled")
@@ -329,15 +329,15 @@ class GedcomFile < Gedcom
           person.add_reference(relationship, :role => "Spouse")
 
         when 'HDP'
-          note = Note.create_save(:title => 'Gedcom HDP', :note => parse_hdp(detail))
+          note = Note.create_save(:category => 'gedcom hdp', :note => parse_hdp(detail))
           person.add_reference(note)
 
         when 'INFO'
-          note = Note.create_save(:title => 'Gedcom INFO', :note => parse_info(detail))
+          note = Note.create_save(:category => 'info', :note => parse_info(detail))
           person.add_reference(note)
 
         when 'MISC'
-          note = Note.create_save(:title => 'Gedcom MISC', :note => parse_misc(detail))
+          note = Note.create_save(:category => 'misc', :note => parse_misc(detail))
           person.add_reference(note)
 
         when 'NAME'
@@ -367,11 +367,11 @@ class GedcomFile < Gedcom
           end
 
         when 'NOTE'
-          note = Note.create_save(:title => 'Gedcom NOTE', :note => parse_note(detail))
+          note = Note.create_save(:category => 'note', :note => parse_note(detail))
           person.add_reference(note)
 
         when 'REMA'
-          note = Note.create_save(:title => 'Gedcom REMA', :note => parse_remark(detail))
+          note = Note.create_save(:category => 'remark', :note => parse_remark(detail))
           person.add_reference(note)
 
         when 'RESI'
@@ -380,7 +380,7 @@ class GedcomFile < Gedcom
         when 'SEX'
           person.sex = detail[:root][:value]
         when 'TITL'
-          note = Note.create_save(:title => 'Titel', :note => parse_title(detail))
+          note = Note.create_save(:category => 'title', :title => 'Titel', :note => parse_title(detail))
           person.add_reference(note)
         else
           Rails::logger.error("ERROR: Field #{detail[:root][:field]} with value [#{detail[:root][:value]}] and children #{detail[:children].inspect} could not be handled")
