@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+<% if current_user %>
   <title><%=h yield(:title) %></title>
+<% else %>
+  <title>Inte inloggad</title>
+<% end %>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tag %>
 </head>
 <body>
 
+<% if current_user %>
+
 <div id="user-widget">
-  <% if current_user %>
-    Inloggad som <strong><%= current_user.name %></strong>.
-    <%= link_to "Logga ut", signout_path, id: "sign_out" %>
-  <% else %>
-    <%= link_to "Logga in med Facebook", "/auth/facebook", id: "sign_in" %>
-  <% end %>
+  Inloggad som <strong><%= current_user.name %></strong>.
+  <%= link_to "Logga ut", signout_path, id: "sign_out" %>
 </div>
 
 <table>
@@ -74,6 +76,10 @@
 </table>
 
 <%= yield %>
+
+<% else %>
+  Inte inloggad. Gå <%= link_to "hit", :controller => "sessions", :action => "new" %> för att logga in.
+<% end %>
 
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>

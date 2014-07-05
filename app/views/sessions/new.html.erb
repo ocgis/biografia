@@ -1,0 +1,22 @@
+<% if current_user %>
+Inloggad som <%= current_user.name %>
+<% else %>
+<%= link_to "Logga in med Facebook", "/auth/facebook", id: "sign_in" %>
+<br />
+<p>
+  <strong>Använder du inte de tjänsterna?</strong>
+  <%= link_to "Skapa ett konto", "/auth/identity/register" %> eller logga in nedanför.
+</p>
+  
+<%= form_tag "/auth/identity/callback" do %>
+  <div class="field">
+    <%= label_tag :auth_key, "Email" %><br>
+    <%= text_field_tag :auth_key %>
+  </div>
+  <div class="field">
+    <%= label_tag :password %><br>
+    <%= password_field_tag :password %>
+  </div>
+  <div class="actions"><%= submit_tag "Logga in" %></div>
+<% end %>
+<% end %>

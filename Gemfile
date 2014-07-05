@@ -58,8 +58,12 @@ gem 'mime-types', :require => 'mime/types'
 gem 'rmagick'
 
 # Used for authentication
+# To use ActiveModel has_secure_password
+gem 'bcrypt-ruby', '~> 3.0.0'
+
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
+gem 'omniauth-identity'
 
 # Used for versioning
 gem 'paper_trail'

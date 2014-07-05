@@ -91,6 +91,7 @@ Biografia::Application.routes.draw do
     end
   end
 
+  resources :sessions, :only => [:new]
   resources :transfers, :only => [:create, :new, :show]  
 
   # The priority is based upon order of creation: first created -> highest priority.
