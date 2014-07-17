@@ -1,0 +1,23 @@
+<%=h content_for(:title, 'Information om ' + @user.name) %>
+
+<%= form_for @user do |f| %>
+<table>
+<tr><td><b>Användarid:</b></td><td><%= @user.uid %></td></tr>
+<tr><td><b>Namn:</b></td><td><%= @user.name %></td></tr>
+<tr><td><b>Roller:</b></td><td>
+<table>
+<% User.valid_roles.each do |role| %>
+<tr><td><b><%= role.to_s %></b></td><td>
+<%= if @user.has_role? role
+      'Ja'
+    else
+      'Nej'
+    end %>
+</td></tr>
+<% end %>
+</table>
+</td></tr>
+</table>
+<% end %>
+<br />
+<%= link_to "Ändra", :action => :edit, :id => @user.id %>

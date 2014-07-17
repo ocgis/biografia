@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 class PeopleController < ApplicationController
 
+  load_and_authorize_resource
+
   def create
      @person = Person.new(person_params(params.require(:person)))
      if @person.save

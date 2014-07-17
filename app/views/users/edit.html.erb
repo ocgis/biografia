@@ -1,0 +1,19 @@
+<%=h content_for(:title, 'Ändra ' + @user.name) %>
+
+<%= form_for @user do |f| %>
+<table>
+<tr><td><b>Användarid:</b></td><td><%= @user.uid %></td></tr>
+<tr><td><b>Namn:</b></td><td><%= f.text_field :name %></td></tr>
+<tr><td><b>Roller:</b></td><td>
+<table>
+<% User.valid_roles.each do |role| %>
+<tr><td><b><%= role.to_s %></b></td><td><%= f.check_box :roles, {multiple: true, checked: (@user.has_role? role)}, role, nil %></td></tr>
+<% end %>
+</table>
+</td></tr>
+</table>
+<br />
+  
+  <%= f.submit "Uppdatera" %>
+  
+<% end %>

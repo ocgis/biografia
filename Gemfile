@@ -65,5 +65,9 @@ gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
 gem 'omniauth-identity'
 
+# Used for permissions
+gem 'cancancan'
+gem 'role_model'
+
 # Used for versioning
 gem 'paper_trail'
