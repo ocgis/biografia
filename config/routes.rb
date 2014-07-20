@@ -150,5 +150,5 @@ Biografia::Application.routes.draw do
   #     resources :products
   #   end
 
-  root :to => "people#index"
+  root :to => "public#home"
 end

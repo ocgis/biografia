@@ -1,8 +1,8 @@
 Vill du verkligen ta bort den här?
 <%= link_to 'Ja', { :controller => 'references',
                     :action => 'destroy',
-                    :id => delete.object_name,
-                    :referenceId => options[:referenceId],
+                    :referencedId => delete.object_name,
+                    :id => options[:referenceId],
                     :parentId => options[:parentId],
                     :parentReferenceId => options[:parentReferenceId],
                     :removeReferenceOnly => options[:removeReferenceOnly] },

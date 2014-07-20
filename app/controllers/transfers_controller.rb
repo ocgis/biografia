@@ -1,5 +1,7 @@
 class TransfersController < ApplicationController
 
+  load_and_authorize_resource
+
   def create
     upload = params.require(:upload)
     file_param = upload.require(:file_name)

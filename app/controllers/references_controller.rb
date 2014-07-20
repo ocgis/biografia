@@ -1,4 +1,7 @@
 class ReferencesController < ApplicationController
+
+  load_and_authorize_resource
+
   def connection_choose
     id = params.require(:id)
 
@@ -77,14 +80,14 @@ class ReferencesController < ApplicationController
 
   def delete
     id = params.require(:id)
-    referenceId = params.require(:referenceId)
+    referencedId = params.require(:referencedId)
     removeReferenceOnly = params.require(:removeReferenceOnly)
 
-    obj = find_by_object_name(id)
+    obj = find_by_object_name(referencedId)
     obj.set_extra(:related_objects, obj.related_objects)
     options = 
       {
-        :referenceId => referenceId,
+        :referenceId => id,
         :removeReferenceOnly => removeReferenceOnly
       }
     options[:parentId] = params[:parentId] if defined? params[:parentId]  
@@ -98,14 +101,14 @@ class ReferencesController < ApplicationController
   def destroy
     removeReferenceOnly = params.require(:removeReferenceOnly)
 
-    if !params[:referenceId].nil?
-      reference = Reference.find(params[:referenceId])
+    if !params[:id].nil?
+      reference = Reference.find(params[:id])
       reference.position_in_pictures.destroy_all
       reference.destroy
     end
     
     if !(removeReferenceOnly=="true")
-      object = find_by_object_name(params.require(:id))
+      object = find_by_object_name(params.require(:referencedId))
 # FIXME      object.references.destroy_all
       object.destroy
     end

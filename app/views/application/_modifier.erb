@@ -110,8 +110,8 @@
       {
 		    :controller          => 'references',
 		    :action              => "delete",
-		    :id                  => name,
-		    :referenceId         => modifier.get_extra(:reference).id,
+		    :referencedId        => name,
+		    :id                  => modifier.get_extra(:reference).id,
 		    :removeReferenceOnly => true
       }
     if not options[:parent].nil?
@@ -127,10 +127,10 @@
   de_options = {
   		:controller          => 'references',
 		  :action              => "delete",
-		  :id                  => name,
+		  :referencedId        => name,
 		  :removeReferenceOnly => false
   }
-  de_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  de_options[:id] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   if not options[:parent].nil?
     de_options[:updateName] = options[:parent].object_name
     de_options[:parentId] = options[:parent].object_name

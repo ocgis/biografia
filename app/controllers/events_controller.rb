@@ -2,6 +2,8 @@
 
 class EventsController < ApplicationController
 
+  load_and_authorize_resource
+
   protected
 
   def create_object

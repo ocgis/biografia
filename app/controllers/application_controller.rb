@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
   def showp
     object = find_object
     object.set_extra(:related_objects, object.related_objects)
-    object.set_extra(:referenceId, params[:referenceId]) if params[:referenceId] != nil
+    object.set_extra(:reference, Reference.find(params[:referenceId])) if not params[:referenceId].nil?
     options = 
       {
         :enclosedById => false,
@@ -115,8 +115,10 @@ class ApplicationController < ActionController::Base
     if object.save
       if defined? params[:form][:referenceId]
         object.set_extra(:reference, Reference.find(params[:form][:referenceId]))
-        if not object.get_extra(:reference).update(params[:reference].permit(:name))
-          raise StandardException, "Failed to update reference"
+        if not params[:reference].nil?
+          if not object.get_extra(:reference).update(params[:reference].permit(:name))
+            raise StandardException, "Failed to update reference"
+          end
         end
       end
       options =

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 class AddressesController < ApplicationController
 
+  load_and_authorize_resource
+
   protected
 
   def find_object

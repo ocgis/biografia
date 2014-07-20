@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 class RelationshipsController < ApplicationController
 
+  load_and_authorize_resource
+
   protected
 
   def create_object

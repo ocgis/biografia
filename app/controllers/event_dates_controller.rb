@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 class EventDatesController < ApplicationController
 
+  load_and_authorize_resource
+
   protected
 
   def create_object

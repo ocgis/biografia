@@ -1,6 +1,6 @@
-<%= form_tag({ :action => 'update', :id => edit.id }, { :remote => true }) do %>
+<%= form_tag({ :action => 'update', :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:referenceId) if defined? edit.get_extra(:referenceId) %>
+<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
 <%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 
 <%= text_field 'edited', 'name' %><br/>
