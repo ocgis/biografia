@@ -4,7 +4,7 @@ class PeopleController < ApplicationController
   load_and_authorize_resource
 
   def create
-     @person = Person.new(person_params(params.require(:person)))
+     @person = Person.new(person_params)
      if @person.save
        redirect_to :action => 'show', :id => @person.id
      else
@@ -27,7 +27,7 @@ class PeopleController < ApplicationController
   protected
 
   def create_object
-    return Person.new(person_params(params.require(:person)))
+    return Person.new(person_params)
   end
 
   def find_object
@@ -36,7 +36,7 @@ class PeopleController < ApplicationController
 
   def find_object_and_update_attrs
     object = Person.find(params.require(:id))
-    object.attributes = person_params(params.require(:edited))
+    object.attributes = person_params
     return object
   end
 
@@ -50,8 +50,8 @@ class PeopleController < ApplicationController
 
   private
 
-  def person_params(params)
-    params.permit(:given_name, :calling_name, :surname, :sex)
+  def person_params
+    params.require(:person).permit(:given_name, :calling_name, :surname, :sex)
   end
 
   def ancestry_help(id, depth)

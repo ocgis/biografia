@@ -8,10 +8,16 @@ class Ability
     end
     if user.has_role? :editor
       can [:newp, :createp, :edit, :update], [Address, Event, EventDate, Note, Person, Relationship]
-      can [:delete, :destroy], Reference
+      can [:delete, :destroy, :connection_choose, :connection_add, :connection_list], Reference
+      can [:create, :new], Transfer
+      can [:destroy, :new, :create], Person
+      can [:new, :create], Medium
     end
     if user.has_role? :watcher
-      can [:show, :showp], [Address, Event, EventDate, Note, Person, Relationship]
+      can [:index, :show, :showp], [Address, Event, EventDate, Note, Person, Relationship]
+      can :show, Transfer
+      can :ancestry, Person
+      can [:index, :show], Medium
     end
   end
 end

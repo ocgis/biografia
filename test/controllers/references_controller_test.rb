@@ -4,6 +4,7 @@ require 'test_helper'
 class ReferencesControllerTest < ActionController::TestCase
 
   test "should post connection_add" do
+    make_user(:editor)
     @request.accept = "text/javascript"
     post :connection_add, { :form => { :connect1Id => people(:person1).object_name,
                                       :connect2Id => media(:medium1).object_name,
@@ -15,12 +16,14 @@ class ReferencesControllerTest < ActionController::TestCase
   end
 
   test "should get connection_choose" do
+    make_user(:editor)
     @request.accept = "text/javascript"
-    get :connection_choose, { :id => people(:person1).object_name }
+    get :connection_choose, { :name => people(:person1).object_name }
     assert_response :success
   end
 
   test "should post connection_list" do
+    make_user(:editor)
     @request.accept = "text/javascript"
     post :connection_list, { :filter => { :filter => 'hej' },
                              :form => { :connect1Id => people(:person1).object_name,
@@ -29,9 +32,10 @@ class ReferencesControllerTest < ActionController::TestCase
   end
 
   test "should get delete" do
+    make_user(:editor)
     @request.accept = "text/javascript"
-    get :delete, { :id => people(:person2).object_name,
-                   :referenceId => references(:reference1).id,
+    get :delete, { :referencedId => people(:person2).object_name,
+                   :id => references(:reference1).id,
                    :parentId => 'Parent ID',
                    :updateName => 'Update name',
                    :removeReferenceOnly => 'Remove reference only' }
@@ -39,8 +43,9 @@ class ReferencesControllerTest < ActionController::TestCase
   end
 
   test "should post destroy" do
+    make_user(:editor)
     @request.accept = "text/javascript"
-    post :destroy, { :id => people(:person2).object_name, :referenceId => references(:reference1).id, :removeReferenceOnly => 'false' }
+    post :destroy, { :referencedId => people(:person2).object_name, :id => references(:reference1).id, :removeReferenceOnly => 'false' }
     assert_response :success
   end
 

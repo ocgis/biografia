@@ -4,13 +4,13 @@
 <%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 
 Förnamn:
-<%= text_field "edited", "given_name", "size" => 20 %><br/>
+<%= text_field "person", "given_name", "size" => 20 %><br/>
 
 Efternamn:
-<%= text_field "edited", "surname", "maxlength" => 20 %><br/>
+<%= text_field "person", "surname", "maxlength" => 20 %><br/>
 
 Kön:
-<%= text_field "edited", "sex", "maxlength" => 20 %><br/>
+<%= text_field "person", "sex", "maxlength" => 20 %><br/>
 
 <% if not edit[:reference].nil? %>
 Roll:

@@ -14,4 +14,12 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  def make_user(role)
+    user = User.create!()
+    user.roles << role
+    user.save
+    session[:user_id] = user.id
+  end
+
 end

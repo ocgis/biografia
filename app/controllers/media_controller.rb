@@ -23,7 +23,7 @@ class MediaController < ApplicationController
       File.open(path, "wb") { |f| f.write(filedata) }      
     end
     
-    media = Medium.new(medium_params(params.require(:media)))
+    media = Medium.new(medium_params)
     if media.save
       redirect_to :action => 'show', :id => media.id
     else
@@ -76,8 +76,8 @@ class MediaController < ApplicationController
 
   private
 
-  def medium_params(params)
-    return params.permit(:file_name)
+  def medium_params
+    return params.require(:media).permit(:file_name)
   end
 
   def search_dir(path)

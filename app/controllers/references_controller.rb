@@ -3,9 +3,9 @@ class ReferencesController < ApplicationController
   load_and_authorize_resource
 
   def connection_choose
-    id = params.require(:id)
+    name = params.require(:name)
 
-    object = find_by_object_name(id)
+    object = find_by_object_name(name)
     related=object.related_objects
     related[:events].each do |r|
       r.set_extra(:related_objects, r.related_objects)
