@@ -69,6 +69,8 @@ Biografia::Application.routes.draw do
     
     member do
       get 'ancestry'
+      get 'delete'
+      get 'destroy'
       get 'showp'
     end
   end

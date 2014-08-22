@@ -1,0 +1,20 @@
+Vill du verkligen ta bort den här?
+<%= link_to 'Ja', { :controller => delete.controller,
+                    :action => 'destroy',
+                    :id => delete.id,
+                    :referenceId => options[:referenceId],
+                    :parentId => options[:parentId],
+                    :parentReferenceId => options[:parentReferenceId] },
+	          { :remote => true } %>
+<%= link_to 'Nej', { :controller => delete.controller,
+                     :action => 'showp',
+                     :id => delete.id,
+                     :referenceId => options[:referenceId],
+                     :parentId => options[:parentId],
+                     :parentReferenceId => options[:parentReferenceId] },
+	           { :remote => true } %>
+<br />
+<%= render :partial => delete.controller + '/showp',
+           :object => delete,
+           :locals => { :options => options.merge({ :enclosedById => false,
+                                                    :showModifier => false }) } %>

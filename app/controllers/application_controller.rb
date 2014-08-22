@@ -135,6 +135,34 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def delete
+    id = params.require(:id)
+
+    obj = find_object
+    obj.set_extra(:related_objects, obj.related_objects)
+    options = {}
+    options[:referenceId] = params[:referenceId] if defined? params[:referenceId]  
+    options[:parentId] = params[:parentId] if defined? params[:parentId]  
+    options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
+    options[:updateName] = params[:updateName] if defined? params[:updateName]  
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'delete', :object => obj, :replaceElem => obj.object_name } }
+    end
+  end
+
+  def destroy
+    object = find_object
+    object.get_references.each do |reference|
+      reference.destroy
+    end
+    object.destroy
+
+    respond_to do |format|
+      format.js { render "reload_page" }
+      format.html { redirect_to :action => "index" }
+    end
+  end
+
   protected
 
   def find_by_object_name(object_name)

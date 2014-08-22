@@ -15,11 +15,6 @@ class PeopleController < ApplicationController
   def search_ajax
   end
 
-  def destroy
-    Person.find(params.require(:id)).destroy
-    redirect_to :action => "index" 
-  end
-
   def ancestry
     @ancestry = ancestry_help(params.require(:id), 4)
   end

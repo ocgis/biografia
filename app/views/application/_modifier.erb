@@ -125,12 +125,11 @@
 
 <%=
   de_options = {
-  		:controller          => 'references',
+  		:controller          => modifier.controller,
 		  :action              => "delete",
-		  :referencedId        => name,
-		  :removeReferenceOnly => false
+		  :id                  => modifier.id
   }
-  de_options[:id] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  de_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   if not options[:parent].nil?
     de_options[:updateName] = options[:parent].object_name
     de_options[:parentId] = options[:parent].object_name

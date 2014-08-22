@@ -14,12 +14,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test "should get destroy" do
-    make_user(:editor)
-    get :destroy, { :id => people(:person1).id }
-    assert_redirected_to(:action => "index")
-  end
-
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
@@ -56,6 +50,24 @@ class PeopleControllerTest < ActionController::TestCase
     make_user(:editor)
     @request.accept = "text/javascript"
     post :update, { :id => people(:person1).id, :person => { :given_name => 'Given Name', :calling_name => 'Calling name', :surname => 'Surname', :sex => 'Sex' } }
+    assert_response :success
+  end
+
+  test "should get delete" do
+    make_user(:editor)
+    @request.accept = "text/javascript"
+    get :delete, { :id => people(:person2).id,
+                   :referenceId => references(:reference1).id,
+                   :parentId => 'Parent ID',
+                   :updateName => 'Update name' }
+    assert_response :success
+  end
+
+  test "should post destroy" do
+    make_user(:editor)
+    @request.accept = "text/javascript"
+    post :destroy, { :id => people(:person2).id,
+                     :referenceId => references(:reference1).id }
     assert_response :success
   end
 
