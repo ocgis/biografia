@@ -73,12 +73,18 @@ Biografia::Application.routes.draw do
     end
   end
   
-  get  "references/connection_add"
-  post "references/connection_add"
-  get  "references/connection_choose"
-  post "references/connection_list"
-  get  "references/delete"
-  get  "references/destroy"
+  resources :references, :only => [:destroy] do
+    collection do
+      get  "connection_add"
+      post "connection_add"
+      get  "connection_choose"
+      post "connection_list"
+    end
+    
+    member do
+      get  "delete"
+    end
+  end
 
   resources :relationships, :except => [:create, :new] do
     collection do

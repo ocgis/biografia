@@ -100,7 +100,7 @@
     {
 		  :controller => 'references',
 		  :action     => "connection_choose",
-		  :id         => name
+		  :name       => name
     }	
   rt_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
