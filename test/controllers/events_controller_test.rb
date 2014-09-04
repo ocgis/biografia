@@ -5,14 +5,14 @@ class EventsControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :event => { :name => 'Test name' }, :form => { :parentId => people(:person1).object_name } }
+    post :createp, { :event => { :name => 'Test name' }, :form => { :parentId => people(:person1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :edit, { :id => events(:event1).id }
+    get :edit, { :id => events(:event1).id, :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -25,7 +25,7 @@ class EventsControllerTest < ActionController::TestCase
   test "should get newp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :newp
+    get :newp, { :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -35,17 +35,17 @@ class EventsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get showp" do
+  test "should get show limited" do
     make_user(:watcher)
     @request.accept = "text/javascript"
-    get :showp, { :id => events(:event1).id }
+    get :show, { :id => events(:event1).id, :parentId => people(:person1).object_name }
     assert_response :success
   end
 
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => events(:event1).id, :edited => { :name => 'Test name' } }
+    post :update, { :id => events(:event1).id, :edited => { :name => 'Test name' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

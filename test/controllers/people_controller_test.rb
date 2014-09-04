@@ -17,7 +17,7 @@ class PeopleControllerTest < ActionController::TestCase
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :edit, { :id => people(:person1).id }
+    get :edit, { :id => people(:person1).id, :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -39,17 +39,17 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get showp" do
+  test "should get show limited" do
     make_user(:watcher)
     @request.accept = "text/javascript"
-    get :showp, { :id => people(:person1).id }
+    get :show, { :id => people(:person1).id, :parentId => people(:person2).object_name }
     assert_response :success
   end
 
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => people(:person1).id, :person => { :given_name => 'Given Name', :calling_name => 'Calling name', :surname => 'Surname', :sex => 'Sex' } }
+    post :update, { :id => people(:person1).id, :person => { :given_name => 'Given Name', :calling_name => 'Calling name', :surname => 'Surname', :sex => 'Sex' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 
@@ -59,7 +59,8 @@ class PeopleControllerTest < ActionController::TestCase
     get :delete, { :id => people(:person2).id,
                    :referenceId => references(:reference1).id,
                    :parentId => 'Parent ID',
-                   :updateName => 'Update name' }
+                   :updateName => 'Update name',
+                   :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -67,7 +68,8 @@ class PeopleControllerTest < ActionController::TestCase
     make_user(:editor)
     @request.accept = "text/javascript"
     post :destroy, { :id => people(:person2).id,
-                     :referenceId => references(:reference1).id }
+                     :referenceId => references(:reference1).id,
+                     :topName => people(:person1).object_name }
     assert_response :success
   end
 

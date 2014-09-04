@@ -93,6 +93,7 @@ class ReferencesController < ApplicationController
     options[:parentId] = params[:parentId] if defined? params[:parentId]  
     options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
     options[:updateName] = params[:updateName] if defined? params[:updateName]  
+    options[:topName] = params.require(:topName)  
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
     end
@@ -100,6 +101,7 @@ class ReferencesController < ApplicationController
 
   def destroy
     removeReferenceOnly = params.require(:removeReferenceOnly)
+    topName = params.require(:topName)
 
     if !params[:id].nil?
       reference = Reference.find(params[:id])
@@ -113,8 +115,23 @@ class ReferencesController < ApplicationController
       object.destroy
     end
 
+    options = { :topName => topName,
+                :showFull => true,
+                :enclosedById => false,
+                :showModifier => true }
+
+    topObject = find_by_object_name(topName)
+    related=topObject.related_objects
+    related[:events].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
+    end
+    related[:relationships].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
+    end
+    topObject.set_extra(:related_objects, related)
+    
     respond_to do |format|
-      format.js { render "reload_page" }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
     end
   end
 

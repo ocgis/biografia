@@ -1,5 +1,5 @@
 <%= showfullp.title %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp %>
+<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp, :locals => { :options => options } %>
 <%  end %>
 <pre><%= showfullp.note %></pre>

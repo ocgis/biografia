@@ -5,14 +5,14 @@ class AddressesControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :address => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :parentId => people(:person1).object_name } }
+    post :createp, { :address => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :parentId => people(:person1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :edit, { :id => addresses(:address1).id }
+    get :edit, { :id => addresses(:address1).id, :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -25,7 +25,7 @@ class AddressesControllerTest < ActionController::TestCase
   test "should get newp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :newp
+    get :newp, { :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -35,17 +35,17 @@ class AddressesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get showp" do
+  test "should get show limited" do
     make_user(:watcher)
     @request.accept = "text/javascript"
-    get :showp, { :id => addresses(:address1).id }
+    get :show, { :id => addresses(:address1).id, :parentId => people(:person1).object_name }
     assert_response :success
   end
 
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => addresses(:address1).id, :edited => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' } }
+    post :update, { :id => addresses(:address1).id, :edited => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

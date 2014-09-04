@@ -4,36 +4,36 @@ Biografia::Application.routes.draw do
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 
-  resources :addresses, :except => [:create, :destroy] do
+  resources :addresses, :except => [:create] do
     collection do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
-      get 'showp'
+      get 'delete'
     end
   end
   
-  resources :event_dates, :except => [:create, :new, :destroy] do
+  resources :event_dates, :except => [:create, :new] do
     collection do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
-      get 'showp'
+      get 'delete'
     end
   end
   
-  resources :events, :except => [:create, :destroy] do
+  resources :events, :except => [:create] do
     collection do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
-      get 'showp'
+      get 'delete'
     end
   end
 
@@ -50,14 +50,14 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :notes, :except => [:create, :new, :destroy] do
+  resources :notes, :except => [:create, :new] do
     collection do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
-      get 'showp'
+      get 'delete'
     end
   end
 
@@ -70,8 +70,6 @@ Biografia::Application.routes.draw do
     member do
       get 'ancestry'
       get 'delete'
-      get 'destroy'
-      get 'showp'
     end
   end
   
@@ -82,14 +80,14 @@ Biografia::Application.routes.draw do
   get  "references/delete"
   get  "references/destroy"
 
-  resources :relationships, :except => [:create, :new, :destroy] do
+  resources :relationships, :except => [:create, :new] do
     collection do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
-      get 'showp'
+      get 'delete'
     end
   end
 

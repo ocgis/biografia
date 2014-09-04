@@ -4,6 +4,8 @@
   newId = name + "_new"
 
   common_options = {}
+  common_options[:topName] = options[:topName]
+  common_options[:topName] ||= "Undefined in modifier for #{name}"
   common_options[:parentReferenceId] = modifier.get_extra(:referenceId) if not modifier.get_extra(:referenceId).nil?
   common_options[:grandParentId] = options[:parent].object_name if not options[:parent].nil?
  
@@ -89,6 +91,7 @@
   	             :action     => "edit",
 		             :id         => modifier.id }
   ch_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  ch_options[:topName] = options[:topName]
   link_to "ändra", ch_options, { :remote => true }
 %>
 
@@ -114,6 +117,7 @@
 		    :id                  => modifier.get_extra(:reference).id,
 		    :removeReferenceOnly => true
       }
+    rr_options[:topName] = options[:topName]
     if not options[:parent].nil?
       rr_options[:parentId] = options[:parent].object_name
       rr_options[:updateName] = options[:parent].object_name
@@ -130,6 +134,7 @@
 		  :id                  => modifier.id
   }
   de_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  de_options[:topName] = options[:topName]
   if not options[:parent].nil?
     de_options[:updateName] = options[:parent].object_name
     de_options[:parentId] = options[:parent].object_name

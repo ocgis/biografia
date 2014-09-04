@@ -5,14 +5,14 @@ class RelationshipsControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :relationship => { :name => 'Test name' }, :form => { :parentId => people(:person1).object_name } }
+    post :createp, { :relationship => { :name => 'Test name' }, :form => { :parentId => people(:person1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :edit, { :id => relationships(:relationship1).id }
+    get :edit, { :id => relationships(:relationship1).id, :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -25,7 +25,7 @@ class RelationshipsControllerTest < ActionController::TestCase
   test "should get newp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :newp
+    get :newp, { :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -35,17 +35,17 @@ class RelationshipsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get showp" do
+  test "should get show limited" do
     make_user(:watcher)
     @request.accept = "text/javascript"
-    get :showp, { :id => relationships(:relationship1).id }
+    get :show, { :id => relationships(:relationship1).id, :parentId => people(:person1).object_name }
     assert_response :success
   end
 
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => relationships(:relationship1).id, :edited => { :name => 'Test name' } }
+    post :update, { :id => relationships(:relationship1).id, :edited => { :name => 'Test name' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

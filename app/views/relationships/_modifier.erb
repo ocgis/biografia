@@ -1,6 +1,7 @@
 <%= render :partial => 'application/modifier',
            :object => modifier,
-           :locals => { :options => { :showAddNote => true,
+           :locals => { :options => { :topName => options[:topName],
+                                      :showAddNote => true,
                 	                    :showAddEvent => true,
 	                                    :showAddAddress => true,
 	                                    :showAddPerson => true } } %>

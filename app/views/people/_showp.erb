@@ -35,7 +35,7 @@
 
 <% if options[:showFull] %>
 	
-    <%= render :partial => "references/related", :object => showp, :locals => { } %>
+    <%= render :partial => "references/related", :object => showp, :locals => { :options => { :topName => options[:topName] } } %>
 
     <h3>Övrigt</h3>
     <p>

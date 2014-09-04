@@ -1,6 +1,6 @@
 <%= link_to showlimitedp.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id %>
 <%  if options[:showModifier] %>
-<%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp %>
+<%=   render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp, :locals => { :options => options } %>
 <%  end %>
 <ul>
 <%  new_options = options.merge({ :enclosedById => true,

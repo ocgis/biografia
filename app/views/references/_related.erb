@@ -1,13 +1,16 @@
 <% related_objs = related.get_extra(:related_objects) %>
 
+<% common_options = { :topName => options[:topName],
+                      :enclosedById => true,
+                      :showModifier => true,
+                      :parent => related } %>
+
 <h3>Personer</h3>
 <ul>
 <%= render :partial => "people/showp",
            :layout => "li",
            :collection => related_objs[:people],
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>
 
 <h3>Förhållanden</h3>
@@ -15,19 +18,16 @@
 <%= render :partial => "relationships/showp",
            :layout => "li",
            :collection => related_objs[:relationships],
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>
 
 <h3>Händelser</h3>
 <ul>
+  
 <%= render :partial => "events/showp",
            :layout => "li",
            :collection => related_objs[:events],
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>
 
 <% for type in related_objs[:unhandled_types] %>
@@ -41,9 +41,7 @@
 <%= render :partial => "addresses/showp",
            :layout => "li",
            :collection => related_objs[:addresses],
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>
 
 <h3>Kommentarer</h3>
@@ -51,9 +49,7 @@
 <%= render :partial => "notes/showp",
            :layout => "li",
            :collection => related_objs[:notes],
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>
 
 <h3>Media</h3>
@@ -61,7 +57,5 @@
 <%= render :partial => "media/showp",
            :collection => related_objs[:media],
            :layout => "li",
-           :locals => { :options => { :enclosedById => true,
-                                      :showModifier => true,
-                                      :parent => related } } %>
+           :locals => { :options => common_options } %>
 </ul>

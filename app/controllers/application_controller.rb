@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def newp
-    locals = { }
+    locals = { :topName => params.require(:topName) }
     if params[:parentId] != nil
       locals[:parentId] = params[:parentId]
       locals[:parentReferenceId] = params[:parentReferenceId] if params[:parentReferenceId] != nil
@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
 
   def createp
     parentId = params.require(:form).require(:parentId)
+    topName = params.require(:form).require(:topName)
 
     newObj = create_object
     saved = newObj.save
@@ -35,14 +36,24 @@ class ApplicationController < ActionController::Base
       else
         parent_obj.add_reference(newObj, :role => params.require(:reference).require(:name))
       end
-      controller = parent_obj.controller
-      object = parent_obj
-      object.set_extra(:related_objects, object.related_objects)
-      object.set_extra(:referenceId, params[:form][:parentReferenceId]) if defined? params[:form][:parentReferenceId]
-      options = { :enclosedById => false, :showModifier => true }
-      options[:parent] = find_by_object_name(params[:form][:grandParentId]) if params[:form][:grandParentId] != nil
+
+      options = { :topName => topName,
+                  :showFull => true,
+                  :enclosedById => false,
+                  :showModifier => true }
+  
+      topObject = find_by_object_name(topName)
+      related=topObject.related_objects
+      related[:events].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      related[:relationships].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      topObject.set_extra(:related_objects, related)
+      
       respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => controller + '/showp', :object => object, :replaceElem => object.object_name } }
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
       end
     else
       render :action => 'new'
@@ -55,6 +66,12 @@ class ApplicationController < ActionController::Base
   end
 
   def show
+    if params[:parentId].nil?
+      renderFull = true
+    else
+      renderFull = false
+    end
+    
     @object = find_object
     related=@object.related_objects
     related[:events].each do |r|
@@ -64,27 +81,36 @@ class ApplicationController < ActionController::Base
       r.set_extra(:related_objects, r.related_objects)
     end
     @object.set_extra(:related_objects, related)
-  end
 
-  def showp
-    object = find_object
-    object.set_extra(:related_objects, object.related_objects)
-    object.set_extra(:reference, Reference.find(params[:referenceId])) if not params[:referenceId].nil?
-    options = 
-      {
-        :enclosedById => false,
-        :showModifier => true
-      }
-    if params[:parentId] != nil
-      options[:parent] = find_by_object_name(params[:parentId])
-      options[:parent].set_extra(:referenceId, params[:parentReferenceId]) if not params[:parentReferenceId].nil?
-    end
-    respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'showp', :object => object, :replaceElem => object.object_name } }
+    if renderFull
+      options = { :topName => @object.object_name,
+                  :showFull => true,
+                  :enclosedById => false,
+                  :showModifier => true }
+      respond_to do |format|
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => "showp", :object => @object, :replaceElem => @object.object_name } }
+        format.html { render }
+      end
+    else
+      @object.set_extra(:reference, Reference.find(params[:referenceId])) if not params[:referenceId].nil?
+      options = 
+        {
+          :enclosedById => false,
+          :showModifier => true
+        }
+      if params[:parentId] != nil
+        options[:parent] = find_by_object_name(params[:parentId])
+        options[:parent].set_extra(:referenceId, params[:parentReferenceId]) if not params[:parentReferenceId].nil?
+      end
+
+      respond_to do |format|
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => "showp", :object => @object, :replaceElem => @object.object_name } }
+      end
     end
   end
 
   def edit
+    locals = { :topName => params.require(:topName) }
     object = find_object
     object.set_extra(:reference, Reference.find(params[:referenceId])) if not params[:referenceId].nil?
     related=object.related_objects
@@ -95,7 +121,6 @@ class ApplicationController < ActionController::Base
       r.set_extra(:related_objects, r.related_objects)
     end
     object.set_extra(:related_objects, related)
-    locals = {}
     if params[:parentId] != nil
       locals[:parentId] = params[:parentId]
       locals[:parentReferenceId] = params[:parentReferenceId] if params[:parentReferenceId != nil]
@@ -107,13 +132,14 @@ class ApplicationController < ActionController::Base
   end
 
   def update
+    topName = params.require(:form).require(:topName)
     object = find_object_and_update_attrs
     object.set_extra(:related_objects, object.related_objects)
     
     controller = object.controller
     
     if object.save
-      if defined? params[:form][:referenceId]
+      if not params[:form][:referenceId].nil?
         object.set_extra(:reference, Reference.find(params[:form][:referenceId]))
         if not params[:reference].nil?
           if not object.get_extra(:reference).update(params[:reference].permit(:name))
@@ -121,14 +147,24 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      options =
-        {
-          :enclosedById => false,
-          :showModifier => true,
-        }
-      options[:parentId] = params[:form][:parentId] if defined? params[:form][:parentId]
+
+      options = { :topName => topName,
+                  :showFull => true,
+                  :enclosedById => false,
+                  :showModifier => true }
+  
+      topObject = find_by_object_name(topName)
+      related=topObject.related_objects
+      related[:events].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      related[:relationships].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      topObject.set_extra(:related_objects, related)
+      
       respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => controller + '/showp', :object => object, :replaceElem => object.object_name } }
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
       end
     else
       render controller + '/edit' 
@@ -140,11 +176,12 @@ class ApplicationController < ActionController::Base
 
     obj = find_object
     obj.set_extra(:related_objects, obj.related_objects)
-    options = {}
+    options = { }
     options[:referenceId] = params[:referenceId] if defined? params[:referenceId]  
     options[:parentId] = params[:parentId] if defined? params[:parentId]  
     options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
     options[:updateName] = params[:updateName] if defined? params[:updateName]  
+    options[:topName] = params.require(:topName)  
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'delete', :object => obj, :replaceElem => obj.object_name } }
     end
@@ -152,14 +189,29 @@ class ApplicationController < ActionController::Base
 
   def destroy
     object = find_object
+    topName = params.require(:topName)
     object.get_references.each do |reference|
       reference.destroy
     end
     object.destroy
 
+    options = { :topName => topName,
+                :showFull => true,
+                :enclosedById => false,
+                :showModifier => true }
+
+    topObject = find_by_object_name(topName)
+    related=topObject.related_objects
+    related[:events].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
+    end
+    related[:relationships].each do |r|
+      r.set_extra(:related_objects, r.related_objects)
+    end
+    topObject.set_extra(:related_objects, related)
+    
     respond_to do |format|
-      format.js { render "reload_page" }
-      format.html { redirect_to :action => "index" }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
     end
   end
 

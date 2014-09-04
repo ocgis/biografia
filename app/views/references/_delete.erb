@@ -5,15 +5,13 @@ Vill du verkligen ta bort den här?
                     :id => options[:referenceId],
                     :parentId => options[:parentId],
                     :parentReferenceId => options[:parentReferenceId],
-                    :removeReferenceOnly => options[:removeReferenceOnly] },
+                    :removeReferenceOnly => options[:removeReferenceOnly],
+                    :topName => options[:topName] },
+	          { :remote => true,
+	            :method => :delete } %>
+<%= link_to_object_name 'Nej',
+            options[:topName],
 	          { :remote => true } %>
-<%= link_to 'Nej', { :controller => delete.controller,
-                     :action => 'showp',
-                     :id => delete.id,
-                     :referenceId => options[:referenceId],
-                     :parentId => options[:parentId],
-                     :parentReferenceId => options[:parentReferenceId] },
-	           { :remote => true } %>
 <br />
 <%= render :partial => delete.controller + '/showp',
            :object => delete,
