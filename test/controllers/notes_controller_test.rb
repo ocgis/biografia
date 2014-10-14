@@ -45,7 +45,7 @@ class NotesControllerTest < ActionController::TestCase
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :edited => { :title => 'Title', :note => 'Note' }, :id => notes(:note1).id, :form => { :topName => people(:person1).object_name } }
+    post :update, { :note => { :title => 'Title', :note => 'Note' }, :id => notes(:note1).id, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

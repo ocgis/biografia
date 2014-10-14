@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   protected
 
   def create_object
-    return Event.new(event_params(params.require(:event)))
+    return Event.new(event_params)
   end
 
   def find_object
@@ -16,7 +16,7 @@ class EventsController < ApplicationController
 
   def find_object_and_update_attrs
     object = Event.find(params.require(:id))
-    object.attributes = event_params(params.require(:edited))
+    object.attributes = event_params
     return object
   end
 
@@ -30,8 +30,8 @@ class EventsController < ApplicationController
 
   private
 
-  def event_params(params)
-    params.permit(:name)
+  def event_params
+    params.require(:event).permit(:name)
   end
 
 end

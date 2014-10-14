@@ -1,9 +1,6 @@
-<%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
+<%= form_tag({ :action => "create" }) do %>
 
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
+Adress:
 <table>
 <tr><td>Gata</td><td><%= text_field "address", "street" %></td></tr>
 <tr><td>Postort</td><td><%= text_field "address", "town" %></td></tr>

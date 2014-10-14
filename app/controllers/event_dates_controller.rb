@@ -6,7 +6,7 @@ class EventDatesController < ApplicationController
   protected
 
   def create_object
-    p = ActionController::Parameters.new(params.require(:event_date))
+    p = ActionController::Parameters.new(event_date_params)
     object = EventDate.new()
     object.set_date(p[:date])
     return object
@@ -18,7 +18,7 @@ class EventDatesController < ApplicationController
 
   def find_object_and_update_attrs
     object = EventDate.find(params.require(:id))
-    p = ActionController::Parameters.new(params.require(:event_date))
+    p = ActionController::Parameters.new(event_date_params)
     object.set_date(p[:date])
     return object
   end
@@ -33,8 +33,8 @@ class EventDatesController < ApplicationController
 
   private
 
-  def event_date_params(params)
-    params.permit(:date)
+  def event_date_params
+    params.require(:event_date).permit(:date)
   end
 
 end

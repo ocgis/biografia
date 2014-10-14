@@ -10,7 +10,7 @@ class Ability
       can [:delete, :destroy, :newp, :createp, :edit, :update], [Address, Event, EventDate, Note, Person, Relationship]
       can [:delete, :destroy, :connection_choose, :connection_add, :connection_list], Reference
       can [:create, :new], Transfer
-      can [:new, :create], Person
+      can [:new, :create], [ Address, Event, Person]
       can [:new, :create], Medium
     end
     if user.has_role? :watcher

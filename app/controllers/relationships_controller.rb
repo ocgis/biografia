@@ -6,9 +6,7 @@ class RelationshipsController < ApplicationController
   protected
 
   def create_object
-    relationship = params.require(:relationship)
-
-    return Relationship.new(object_params(relationship))
+    return Relationship.new(object_params)
   end
 
   def find_object
@@ -19,10 +17,9 @@ class RelationshipsController < ApplicationController
 
   def find_object_and_update_attrs
     id = params.require(:id)
-    edited = params.require(:edited)
 
     object = Relationship.find(id)
-    object.attributes = object_params(edited)
+    object.attributes = object_params
     return object
   end
 
@@ -36,8 +33,8 @@ class RelationshipsController < ApplicationController
 
   private
 
-  def object_params(params)
-    params.permit(:name)
+  def object_params
+    params.require(:relationship).permit(:name)
   end
 
 end

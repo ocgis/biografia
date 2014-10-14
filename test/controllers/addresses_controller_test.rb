@@ -45,7 +45,7 @@ class AddressesControllerTest < ActionController::TestCase
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => addresses(:address1).id, :edited => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :topName => people(:person1).object_name } }
+    post :update, { :id => addresses(:address1).id, :address => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

@@ -3,7 +3,7 @@
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
 <%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 
-<%= text_field 'edited', 'name' %><br/>
+<%= text_field 'relationship', 'name' %><br/>
 
 <input type="submit" value="Save">
 

@@ -11,7 +11,7 @@ class AddressesController < ApplicationController
 
   def find_object_and_update_attrs
     object = Address.find(params.require(:id))
-    object.attributes = address_params(params.require(:edited))
+    object.attributes = address_params
     return object
   end
 
@@ -24,13 +24,13 @@ class AddressesController < ApplicationController
   end
 
   def create_object
-    return Address.new(address_params(params.require(:address)))
+    return Address.new(address_params)
   end
 
   private
 
-  def address_params(params)
-    params.permit(:street, :town, :zipcode, :parish, :country)
+  def address_params
+    params.require(:address).permit(:street, :town, :zipcode, :parish, :country)
   end
 
 end

@@ -45,7 +45,7 @@ class EventsControllerTest < ActionController::TestCase
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :update, { :id => events(:event1).id, :edited => { :name => 'Test name' }, :form => { :topName => people(:person1).object_name } }
+    post :update, { :id => events(:event1).id, :event => { :name => 'Test name' }, :form => { :topName => people(:person1).object_name } }
     assert_response :success
   end
 

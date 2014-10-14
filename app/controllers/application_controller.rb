@@ -22,6 +22,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def create
+     object = create_object
+     if object.save
+       redirect_to :action => 'show', :id => object.id
+     else
+       render :action => 'new'
+     end
+  end
+
   def createp
     parentId = params.require(:form).require(:parentId)
     topName = params.require(:form).require(:topName)
@@ -190,28 +199,38 @@ class ApplicationController < ActionController::Base
   def destroy
     object = find_object
     topName = params.require(:topName)
+    if topName == object.object_name
+      objectController = object.controller
+    end
     object.get_references.each do |reference|
       reference.destroy
     end
     object.destroy
 
-    options = { :topName => topName,
-                :showFull => true,
-                :enclosedById => false,
-                :showModifier => true }
-
-    topObject = find_by_object_name(topName)
-    related=topObject.related_objects
-    related[:events].each do |r|
-      r.set_extra(:related_objects, r.related_objects)
-    end
-    related[:relationships].each do |r|
-      r.set_extra(:related_objects, r.related_objects)
-    end
-    topObject.set_extra(:related_objects, related)
-    
-    respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
+    if objectController.nil?
+      options = { :topName => topName,
+                  :showFull => true,
+                  :enclosedById => false,
+                  :showModifier => true }
+  
+      topObject = find_by_object_name(topName)
+      related=topObject.related_objects
+      related[:events].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      related[:relationships].each do |r|
+        r.set_extra(:related_objects, r.related_objects)
+      end
+      topObject.set_extra(:related_objects, related)
+      
+      respond_to do |format|
+        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => topObject.controller + "/showp", :object => topObject, :replaceElem => topName } }
+      end
+    else
+      respond_to do |format|
+        path = url_for(:controller => objectController, :action => 'index')
+        format.js { render :js => "window.location = #{path.to_json}" }
+      end
     end
   end
 

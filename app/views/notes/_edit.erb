@@ -5,8 +5,8 @@
 <%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
 
 <table>
-<tr><td>Rubrik</td><td><%= text_field "edited", "title" %></td></tr>
-<tr><td>Kommentar</td><td><%= text_field "edited", "note" %></td></tr>
+<tr><td>Rubrik</td><td><%= text_field "note", "title" %></td></tr>
+<tr><td>Kommentar</td><td><%= text_field "note", "note" %></td></tr>
 </table>
 
 <input type="submit" value="Save">

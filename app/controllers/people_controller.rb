@@ -3,15 +3,6 @@ class PeopleController < ApplicationController
 
   load_and_authorize_resource
 
-  def create
-     @person = Person.new(person_params)
-     if @person.save
-       redirect_to :action => 'show', :id => @person.id
-     else
-       render :action => 'new'
-     end
-  end
-
   def search_ajax
   end
 

@@ -4,7 +4,7 @@ Biografia::Application.routes.draw do
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 
-  resources :addresses, :except => [:create] do
+  resources :addresses do
     collection do
       post 'createp'
       get 'newp'
@@ -26,7 +26,7 @@ Biografia::Application.routes.draw do
     end
   end
   
-  resources :events, :except => [:create] do
+  resources :events do
     collection do
       post 'createp'
       get 'newp'
