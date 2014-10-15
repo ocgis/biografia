@@ -79,4 +79,6 @@ Biografia::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer')
+
+  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'export')
 end

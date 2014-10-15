@@ -21,6 +21,9 @@
 /log/*.log
 /tmp
 
+# Ignore all export files
+/public/export/*
+
 # Ignore all transfer files
 /public/transfer/*
 

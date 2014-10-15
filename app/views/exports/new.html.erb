@@ -1,0 +1,9 @@
+<%= form_tag({ :action => "create" }) do %>
+Filnamn:
+<%= text_field "export", "file_name", "size" => 20 %><br/>
+
+Innehåll:
+<%= text_field "export", "content_type", "size" => 20 %><br/>
+
+<input type="submit" value="Save">
+<% end %>

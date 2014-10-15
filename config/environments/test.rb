@@ -35,4 +35,6 @@ Biografia::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer', 'test')
+
+  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'export', 'test')
 end

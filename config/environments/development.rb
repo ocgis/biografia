@@ -28,4 +28,6 @@ Biografia::Application.configure do
   config.assets.debug = true
 
   config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer', 'debug')
+
+  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'export', 'debug')
 end

@@ -37,6 +37,8 @@ Biografia::Application.routes.draw do
     end
   end
 
+  resources :exports, :only => [:index, :new, :create, :show]
+
   resources :imports, :only => [:new]
 
   resources :media, :except => [:destroy, :update] do
