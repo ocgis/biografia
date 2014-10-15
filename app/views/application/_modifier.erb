@@ -6,8 +6,6 @@
   common_options = {}
   common_options[:topName] = options[:topName]
   common_options[:topName] ||= "Undefined in modifier for #{name}"
-  common_options[:parentReferenceId] = modifier.get_extra(:referenceId) if not modifier.get_extra(:referenceId).nil?
-  common_options[:grandParentId] = options[:parent].object_name if not options[:parent].nil?
  
   link_to ">", "#", :class => "toggler", :"data-toggle-id" => menuId
 %>
@@ -19,7 +17,7 @@
     showNewId = true
     ae_options = common_options.merge({ :controller       => "events",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId})
     link_to "lägg till händelse", ae_options, { :remote => true }
@@ -31,7 +29,7 @@
     showNewId = true
     an_options = common_options.merge({ :controller       => "notes",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "kommentera", an_options, { :remote => true }
@@ -43,7 +41,7 @@
     showNewId = true
     ad_options = common_options.merge({ :controller       => "event_dates",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till datum", ad_options, { :remote => true }
@@ -55,7 +53,7 @@
     showNewId = true
     aa_options = common_options.merge({ :controller       => "addresses",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till adress", aa_options, { :remote => true }
@@ -67,7 +65,7 @@
     showNewId = true
     ar_options = common_options.merge({ :controller       => "relationships",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till förhållande", ar_options, { :remote => true }
@@ -79,7 +77,7 @@
     showNewId = true
     ap_options = common_options.merge({ :controller       => "people",
                                         :action           => "newp",
-                                        :parentId         => name,
+                                        :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till person", ap_options, { :remote => true }
@@ -114,16 +112,10 @@
 		    :controller          => 'references',
 		    :action              => "delete",
 		    :referencedId        => name,
-		    :id                  => modifier.get_extra(:reference).id,
-		    :removeReferenceOnly => true
+		    :id                  => modifier.get_extra(:reference).id
       }
     rr_options[:topName] = options[:topName]
-    if not options[:parent].nil?
-      rr_options[:parentId] = options[:parent].object_name
-      rr_options[:updateName] = options[:parent].object_name
-      rr_options[:parentReferenceId] = options[:parent].get_extra(:referenceId) if not options[:parent].get_extra(:referenceId).nil?
-    end
-   link_to "ta bort referens", rr_options, { :remote => true }
+    link_to "ta bort referens", rr_options, { :remote => true }
   end
 %>
 
@@ -133,13 +125,7 @@
 		  :action              => "delete",
 		  :id                  => modifier.id
   }
-  de_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   de_options[:topName] = options[:topName]
-  if not options[:parent].nil?
-    de_options[:updateName] = options[:parent].object_name
-    de_options[:parentId] = options[:parent].object_name
-    de_options[:parentReferenceId] = options[:parent].get_extra(:referenceId) if not options[:parent].get_extra(:referenceId).nil?
-  end
 
   link_to "radera", de_options, { :remote => true }
 %>

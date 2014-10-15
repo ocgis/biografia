@@ -2,9 +2,6 @@ Vill du verkligen ta bort den här?
 <%= link_to 'Ja', { :controller => delete.controller,
                     :action => 'destroy',
                     :id => delete.id,
-                    :referenceId => options[:referenceId],
-                    :parentId => options[:parentId],
-                    :parentReferenceId => options[:parentReferenceId],
                     :topName => options[:topName] },
 	          { :remote => true,
 	            :method => :delete } %>

@@ -5,7 +5,7 @@ class EventsControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :event => { :name => 'Test name' }, :form => { :parentId => people(:person1).object_name, :topName => people(:person1).object_name } }
+    post :createp, { :event => { :name => 'Test name' }, :form => { :parentName => people(:person1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 

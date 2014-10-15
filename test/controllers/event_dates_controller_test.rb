@@ -5,7 +5,7 @@ class EventDatesControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :event_date => { :date => '2013-12-22 10:23' }, :form => { :parentId => events(:event1).object_name, :topName => people(:person1).object_name } }
+    post :createp, { :event_date => { :date => '2013-12-22 10:23' }, :form => { :parentName => events(:event1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 

@@ -5,7 +5,7 @@ class AddressesControllerTest < ActionController::TestCase
   test "should post createp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :createp, { :address => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :parentId => people(:person1).object_name, :topName => people(:person1).object_name } }
+    post :createp, { :address => { :street => 'Street', :town => 'Town', :zipcode => '12345', :parish => 'Parish', :country => 'Country' }, :form => { :parentName => people(:person1).object_name, :topName => people(:person1).object_name } }
     assert_response :success
   end
 

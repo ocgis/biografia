@@ -81,18 +81,13 @@ class ReferencesController < ApplicationController
   def delete
     id = params.require(:id)
     referencedId = params.require(:referencedId)
-    removeReferenceOnly = params.require(:removeReferenceOnly)
-
+    
     obj = find_by_object_name(referencedId)
     obj.set_extra(:related_objects, obj.related_objects)
     options = 
       {
-        :referenceId => id,
-        :removeReferenceOnly => removeReferenceOnly
+        :referenceId => id
       }
-    options[:parentId] = params[:parentId] if defined? params[:parentId]  
-    options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
-    options[:updateName] = params[:updateName] if defined? params[:updateName]  
     options[:topName] = params.require(:topName)  
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
@@ -100,19 +95,12 @@ class ReferencesController < ApplicationController
   end
 
   def destroy
-    removeReferenceOnly = params.require(:removeReferenceOnly)
     topName = params.require(:topName)
 
     if !params[:id].nil?
       reference = Reference.find(params[:id])
       reference.position_in_pictures.destroy_all
       reference.destroy
-    end
-    
-    if !(removeReferenceOnly=="true")
-      object = find_by_object_name(params.require(:referencedId))
-# FIXME      object.references.destroy_all
-      object.destroy
     end
 
     options = { :topName => topName,

@@ -12,11 +12,9 @@ class ApplicationController < ActionController::Base
 
   def newp
     locals = { :topName => params.require(:topName) }
-    if params[:parentId] != nil
-      locals[:parentId] = params[:parentId]
-      locals[:parentReferenceId] = params[:parentReferenceId] if params[:parentReferenceId] != nil
+    if not params[:parentName].nil?
+      locals[:parentName] = params[:parentName]
     end
-    locals[:grandParentId] = params[:grandParentId] if params[:grandParentId] != nil
     respond_to do |format|
       format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'newp', :replaceElem => params[:newElem], :hideElem => params[:hideElem] } }
     end
@@ -32,14 +30,14 @@ class ApplicationController < ActionController::Base
   end
 
   def createp
-    parentId = params.require(:form).require(:parentId)
+    parentName = params.require(:form).require(:parentName)
     topName = params.require(:form).require(:topName)
 
     newObj = create_object
     saved = newObj.save
      
     if saved
-      parent_obj = find_by_object_name(parentId)
+      parent_obj = find_by_object_name(parentName)
       if params[:reference].nil?
         parent_obj.add_reference(newObj)
       else
@@ -186,10 +184,6 @@ class ApplicationController < ActionController::Base
     obj = find_object
     obj.set_extra(:related_objects, obj.related_objects)
     options = { }
-    options[:referenceId] = params[:referenceId] if defined? params[:referenceId]  
-    options[:parentId] = params[:parentId] if defined? params[:parentId]  
-    options[:parentReferenceId] = params[:parentReferenceId] if defined? params[:parentReferenceId]  
-    options[:updateName] = params[:updateName] if defined? params[:updateName]  
     options[:topName] = params.require(:topName)  
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'delete', :object => obj, :replaceElem => obj.object_name } }
