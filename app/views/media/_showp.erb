@@ -3,18 +3,27 @@
 <span id="<%= showp.object_name %>">
 <% end %>
 
+<%=
+  if options[:showModifier]
+    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
+  end
+%>
+
 <% if options[:showFull] %>
   <% if options[:mode] == 'tag' %>
-	  <div>
-    <%= image_tag '/' + showp.get_fullsize, :data_tagable => 'true', :id => 'hoolabaloo' %>
-		</div>
     <br />
     <%= link_to "avbryt taggning", { :id => showp.id, :controller => showp.controller, :action => 'show' } %>
     <br />
-
     <%= render :partial => "references/connchoose", :object => showp, :locals => { :options => {} } %>
 
+	  <div>
+    <%= image_tag '/' + showp.get_fullsize, :data_tagable => 'true', :id => 'hoolabaloo' %>
+		</div>
+
   <% else %>
+    <br />
+    <%= link_to "tagga bild", { :id => showp.id, :controller => showp.controller, :action => 'show', :mode => 'tag' } %>
+    <br />
     <div style="position:relative">
     <%= image_tag '/' + showp.get_fullsize, :id => 'hoolabaloo' %>
     <% showp.positions_in_object.each do |position| %>
@@ -23,20 +32,12 @@
       </span>
     <% end %>
     </div>
-		<br />
-    <%= link_to "tagga bild", { :id => showp.id, :controller => showp.controller, :action => 'show', :mode => 'tag' } %>
-    <br />
 	<% end %>
 <% else %>
   <% thumbnail = image_tag '/' + showp.get_thumbnail %>
   <%= link_to thumbnail, :controller => showp.controller, :action => 'show', :id => showp.id %>
 <% end %>
 
-<%=
-  if options[:showModifier]
-    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
-  end
-%>
 <br />
 
 <%=
