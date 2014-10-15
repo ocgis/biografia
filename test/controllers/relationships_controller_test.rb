@@ -35,13 +35,6 @@ class RelationshipsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get show limited" do
-    make_user(:watcher)
-    @request.accept = "text/javascript"
-    get :show, { :id => relationships(:relationship1).id, :parentId => people(:person1).object_name }
-    assert_response :success
-  end
-
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"

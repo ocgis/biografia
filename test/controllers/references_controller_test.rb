@@ -36,9 +36,6 @@ class ReferencesControllerTest < ActionController::TestCase
     @request.accept = "text/javascript"
     get :delete, { :referencedId => people(:person2).object_name,
                    :id => references(:reference1).id,
-                   :parentId => 'Parent ID',
-                   :updateName => 'Update name',
-                   :removeReferenceOnly => 'Remove reference only',
                    :topName => people(:person1).object_name }
     assert_response :success
   end
@@ -46,9 +43,7 @@ class ReferencesControllerTest < ActionController::TestCase
   test "should post destroy" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    post :destroy, { :referencedId => people(:person2).object_name,
-                     :id => references(:reference1).id,
-                     :removeReferenceOnly => 'false',
+    post :destroy, { :id => references(:reference1).id,
                      :topName => people(:person1).object_name }
     assert_response :success
   end

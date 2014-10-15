@@ -1,4 +1,4 @@
     <%=h content_for(:title, 'Index över mediafiler') %>
 	<%= render :partial => "media/listone",
 		:collection => @objects,
-		:locals => { :enclosedById => true, :showModifier => true, :parentId => 1 } %>
+		:locals => { :enclosedById => true, :showModifier => true } %>

@@ -1,7 +1,6 @@
 <%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 <%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
 
 Förnamn:

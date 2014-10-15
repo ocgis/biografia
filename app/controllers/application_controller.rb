@@ -73,12 +73,6 @@ class ApplicationController < ActionController::Base
   end
 
   def show
-    if params[:parentId].nil?
-      renderFull = true
-    else
-      renderFull = false
-    end
-    
     @object = find_object
     related=@object.related_objects
     related[:events].each do |r|
@@ -89,30 +83,13 @@ class ApplicationController < ActionController::Base
     end
     @object.set_extra(:related_objects, related)
 
-    if renderFull
-      options = { :topName => @object.object_name,
-                  :showFull => true,
-                  :enclosedById => false,
-                  :showModifier => true }
-      respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => "showp", :object => @object, :replaceElem => @object.object_name } }
-        format.html { render }
-      end
-    else
-      @object.set_extra(:reference, Reference.find(params[:referenceId])) if not params[:referenceId].nil?
-      options = 
-        {
-          :enclosedById => false,
-          :showModifier => true
-        }
-      if params[:parentId] != nil
-        options[:parent] = find_by_object_name(params[:parentId])
-        options[:parent].set_extra(:referenceId, params[:parentReferenceId]) if not params[:parentReferenceId].nil?
-      end
-
-      respond_to do |format|
-        format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => "showp", :object => @object, :replaceElem => @object.object_name } }
-      end
+    options = { :topName => @object.object_name,
+                :showFull => true,
+                :enclosedById => false,
+                :showModifier => true }
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => "showp", :object => @object, :replaceElem => @object.object_name } }
+      format.html { render }
     end
   end
 
@@ -128,10 +105,6 @@ class ApplicationController < ActionController::Base
       r.set_extra(:related_objects, r.related_objects)
     end
     object.set_extra(:related_objects, related)
-    if params[:parentId] != nil
-      locals[:parentId] = params[:parentId]
-      locals[:parentReferenceId] = params[:parentReferenceId] if params[:parentReferenceId != nil]
-    end
     @edited = object
     respond_to do |format|
       format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edit', :object => object, :replaceElem => object.object_name } }

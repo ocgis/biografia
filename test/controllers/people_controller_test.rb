@@ -39,13 +39,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get show limited" do
-    make_user(:watcher)
-    @request.accept = "text/javascript"
-    get :show, { :id => people(:person1).id, :parentId => people(:person2).object_name }
-    assert_response :success
-  end
-
   test "should post update" do
     make_user(:editor)
     @request.accept = "text/javascript"
@@ -57,9 +50,6 @@ class PeopleControllerTest < ActionController::TestCase
     make_user(:editor)
     @request.accept = "text/javascript"
     get :delete, { :id => people(:person2).id,
-                   :referenceId => references(:reference1).id,
-                   :parentId => 'Parent ID',
-                   :updateName => 'Update name',
                    :topName => people(:person1).object_name }
     assert_response :success
   end

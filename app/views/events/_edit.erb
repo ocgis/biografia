@@ -1,7 +1,6 @@
 <%= form_tag({ :action => 'update', :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 <%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
 
 <%= text_field 'event', 'name' %><br/>
@@ -11,12 +10,12 @@
 <% related_objects = edit.get_extra(:related_objects) %>
 <%= render :partial => 'event_dates/showp',
 		:collection => related_objects[:event_dates],
-		:locals => { :options => { :enclosedById => true, :showModifier => false, :parentId => edit.object_name, :topName => topName } } %>
+		:locals => { :options => { :enclosedById => true, :showModifier => false, :topName => topName } } %>
 <%= render :partial => 'addresses/showp',
 		:collection => related_objects[:addresses],
-		:locals => { :options => { :enclosedById => true, :showModifier => false, :parentId => edit.object_name, :topName => topName } } %>
+		:locals => { :options => { :enclosedById => true, :showModifier => false, :topName => topName } } %>
 <%= render :partial => 'notes/showp',
 		:collection => related_objects[:notes],
-		:locals => { :options => { :enclosedById => true, :showModifier => false, :parentId => edit.object_name, :topName => topName } } %>
+		:locals => { :options => { :enclosedById => true, :showModifier => false, :topName => topName } } %>
 
 <% end %>

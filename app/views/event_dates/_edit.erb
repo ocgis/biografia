@@ -1,6 +1,5 @@
 <%= form_for(@edited, action: 'update', remote: true, method: :patch) do |f| %>
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'parentId', :value => parentId if defined? parentId %>
 <%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
 <table>
 <tr><td>Datum</td><td><%= f.text_field "date", value: @edited.get_date %></td></tr>
