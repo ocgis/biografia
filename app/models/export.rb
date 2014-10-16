@@ -12,24 +12,21 @@ class Export < ActiveRecord::Base
   end
   
   def make_export   
-    doc = Nokogiri.XML('')
-    doc.encoding = 'utf-8'
-    biografia = Nokogiri::XML::Node.new("biografia", doc)
-    doc << biografia
+    f = File.open(full_file_name, "w")
+    f.puts('<?xml version="1.0" encoding="utf-8"?>')
+    f.puts('<biografia>')
+
     for c in [ Person, Event, EventDate, Note, Address, Relationship, Medium, Reference ]
-      c.all.each do |person|
-        pnode = Nokogiri::XML::Node.new(person.class.name, doc)
-        
-        person.attributes.each do |key,value|
-          anode = Nokogiri::XML::Node.new(key, doc)
-          anode.content = value
-          pnode << anode
+      c.all.each do |o|
+        f.puts("<#{o.class.name}>")
+        o.attributes.each do |key,value|
+          f.puts("<#{key}>#{value}</#{key}>")
         end
-  
-        
-        biografia << pnode
+        f.puts("</#{o.class.name}>")
       end
     end
-    File.open(full_file_name, "wb") { |f| f.write(doc.to_xml) }
+
+    f.puts('</biografia>')
+    f.close()
   end
 end

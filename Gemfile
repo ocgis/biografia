@@ -71,6 +71,3 @@ gem 'role_model'
 
 # Used for versioning
 gem 'paper_trail'
-
-# Used for XML exports/imports
-gem 'nokogiri'
