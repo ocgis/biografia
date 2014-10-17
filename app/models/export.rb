@@ -18,11 +18,16 @@ class Export < ActiveRecord::Base
 
     for c in [ Person, Event, EventDate, Note, Address, Relationship, Medium, Reference ]
       c.all.each do |o|
-        f.puts("<#{o.class.name}>")
-        o.attributes.each do |key,value|
-          f.puts("<#{key}>#{value}</#{key}>")
+        while not o.nil?
+          f.puts("<#{o.class.name}>")
+          o.attributes.each do |key,value|
+            f.puts("<#{key}>#{value}</#{key}>")
+          end
+          author = User.find(o.originator)
+          f.puts("<author>#{o.originator} (#{author.name})</author>")
+          f.puts("</#{o.class.name}>")
+          o = o.previous_version
         end
-        f.puts("</#{o.class.name}>")
       end
     end
 
