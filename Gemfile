@@ -71,3 +71,7 @@ gem 'role_model'
 
 # Used for versioning
 gem 'paper_trail'
+
+
+gem 'pry'
+gem 'pry-doc'
