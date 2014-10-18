@@ -7,6 +7,10 @@ class Export < ActiveRecord::Base
     File.join(Biografia::Application.config.export_path, id.to_s)    
   end
   
+  def relative_file_name
+    File.join(Biografia::Application.config.export_relative_path, id.to_s, file_name)    
+  end
+  
   def full_file_name
     File.join(path, file_name)
   end

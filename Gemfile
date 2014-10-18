@@ -72,6 +72,9 @@ gem 'role_model'
 # Used for versioning
 gem 'paper_trail'
 
+# Used for asynchronous processes
+gem 'spawnling'
 
+# Make emacs robe happy
 gem 'pry'
 gem 'pry-doc'

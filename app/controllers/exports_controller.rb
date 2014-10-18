@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class ExportsController < ApplicationController
 
   load_and_authorize_resource
@@ -10,14 +11,18 @@ class ExportsController < ApplicationController
   def create
     object = create_object
     if object.save
-      Dir.mkdir(object.path)
-      object.make_export
+      Spawnling.new do 
+        Dir.mkdir(object.path)
+        object.make_export
+      end
+      redirect_to :action => 'show', :id => object.id
     else
       raise StandardException
     end
   end
 
   def show
+    @export = Export.find(params.require(:id))
   end
   
   protected

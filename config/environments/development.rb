@@ -29,5 +29,6 @@ Biografia::Application.configure do
 
   config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer', 'debug')
 
-  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'export', 'debug')
+  config.export_relative_path = File.join('export', 'debug')
+  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', config.export_relative_path)
 end
