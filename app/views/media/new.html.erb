@@ -1,7 +1,7 @@
 <%= form_for :media, :url => {:action=>:create}, :html=>{:multipart=>true} do |f| %>
-	<%= radio_button_tag 'location', 'server', false, { :data_hide_element => 'ul_file_name' } %> redan på server
+	<%= radio_button_tag 'location', 'server', false, { :data => { :hideelement => 'ul_file_name' } } %> redan på server
 	<br />
-	<%= radio_button_tag 'location', 'upload', true, { :data_show_element => 'ul_file_name' } %> ladda upp <%= file_field 'upload', 'file_name', { :id => 'ul_file_name' } %>
+	<%= radio_button_tag 'location', 'upload', true, { :data => { :showelement => 'ul_file_name' } } %> ladda upp <%= file_field 'upload', 'file_name', { :id => 'ul_file_name' } %>
 	<br />
 	
 	Filnamn:
