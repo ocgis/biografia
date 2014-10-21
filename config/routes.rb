@@ -48,6 +48,7 @@ Biografia::Application.routes.draw do
     end
     
     member do
+      get 'delete'
       get 'showp'
     end
   end
