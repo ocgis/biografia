@@ -1,2 +1,5 @@
+<div data-eventsource="<%= url_for :action=>'status', :id=>@export.id %>"></div>
 <h1><%= @export.file_name %></h1>
 <a href="/<%= @export.relative_file_name %>"><%= @export.file_name %></a>
+<div id="status">
+</div>

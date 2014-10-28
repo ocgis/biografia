@@ -22,6 +22,8 @@ class Export < ActiveRecord::Base
 
     for c in [ Person, Event, EventDate, Note, Address, Relationship, Medium, Reference ]
       c.all.each do |o|
+        self.status = 'PROCESSING ' + c.name + ' objects'
+        self.save
         while not o.nil?
           f.puts("<#{o.class.name}>")
           o.attributes.each do |key,value|
@@ -37,5 +39,8 @@ class Export < ActiveRecord::Base
 
     f.puts('</biografia>')
     f.close()
+
+    self.status = 'DONE'
+    self.save
   end
 end

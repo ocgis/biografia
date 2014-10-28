@@ -12,7 +12,7 @@ class Ability
       can [:create, :new], Transfer
       can [:new, :create], [ Address, Event, Person]
       can [:new, :create, :search, :register], Medium
-      can [:create, :index, :new, :show], Export
+      can [:create, :index, :new, :show, :status], Export
     end
     if user.has_role? :watcher
       can [:index, :show], [Address, Event, EventDate, Note, Person, Relationship]

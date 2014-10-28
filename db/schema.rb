@@ -37,8 +37,9 @@ ActiveRecord::Schema.define(version: 20141015183308) do
   end
 
   create_table "exports", force: true do |t|
-    t.string   "file_name",    null: false
-    t.string   "content_type", null: false
+    t.string   "file_name",                     null: false
+    t.string   "content_type",                  null: false
+    t.string   "status",       default: "INIT"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -75,10 +76,10 @@ ActiveRecord::Schema.define(version: 20141015183308) do
   end
 
   create_table "position_in_pictures", force: true do |t|
-    t.float    "x"
-    t.float    "y"
-    t.float    "width"
-    t.float    "height"
+    t.float    "x",            limit: 24
+    t.float    "y",            limit: 24
+    t.float    "width",        limit: 24
+    t.float    "height",       limit: 24
     t.integer  "reference_id"
     t.datetime "created_at"
     t.datetime "updated_at"

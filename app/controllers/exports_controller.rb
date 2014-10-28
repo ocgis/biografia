@@ -24,6 +24,28 @@ class ExportsController < ApplicationController
   def show
     @export = Export.find(params.require(:id))
   end
+
+  include ActionController::Live
+
+  def status
+    response.headers['Content-Type'] = 'text/event-stream'
+    sse = SSE.new(response.stream, event: "update")
+    i = 0
+    while true do
+      Export.uncached do
+        export = Export.find(params.require(:id))
+        sse.write({ status: { replace: export.status } })
+      end
+      i = i + 1
+      sleep(0.5)
+    end
+
+  rescue IOError
+    # Just exit
+
+  ensure
+    sse.close
+  end
   
   protected
   

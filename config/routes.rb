@@ -37,7 +37,11 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :exports, :only => [:index, :new, :create, :show]
+  resources :exports, :only => [:index, :new, :create, :show] do
+    member do
+      get 'status'
+    end
+  end
 
   resources :imports, :only => [:new]
 

@@ -44,5 +44,32 @@ $(function() {
             $(elements[i]).hover(showTree, hideTree);
         }
     }
+
+    function handleEvent(e) {
+        var data = JSON.parse(e.data);
+
+        for(var elem in data) {
+            if(data.hasOwnProperty(elem)) {
+                edata = data[elem];
+                if(edata.hasOwnProperty('append')) {
+	            $("#" + elem).append(edata['append']);
+                }
+                if(edata.hasOwnProperty('replace')) {
+	            $("#" + elem).text(edata['replace']);
+                }
+            }
+        }
+    }
+
+    {
+        var elements = $('*[data-eventsource]');
+
+        for(i=0; i<elements.length; i++) {
+            var url = $(elements[i]).attr('data-eventsource');
+            var source = new EventSource(url);
+
+            source.addEventListener('update', handleEvent);
+        }
+    }
 });
 

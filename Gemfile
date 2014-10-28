@@ -9,6 +9,9 @@ gem 'sqlite3'
 # Use mysql2 as the database for Active Record
 gem 'mysql2'
 
+# Use puma to get web server threads
+gem 'puma'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
