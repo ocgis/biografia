@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class TransfersController < ApplicationController
 
   load_and_authorize_resource
@@ -28,6 +29,16 @@ class TransfersController < ApplicationController
 
   def show
     @transfer_obj = Transfer.find(params[:id])
+  end
+
+  protected
+
+  def all_objects
+    Transfer.all
+  end
+
+  def index_title
+    return "Index över överföringar"
   end
 
 end

@@ -10,4 +10,9 @@ class Transfer < ActiveRecord::Base
   def full_file_name
     File.join(path, file_name)
   end
+
+  def one_line
+    return file_name
+  end
+
 end

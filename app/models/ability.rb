@@ -16,7 +16,7 @@ class Ability
     end
     if user.has_role? :watcher
       can [:index, :show], [Address, Event, EventDate, Note, Person, Relationship]
-      can :show, Transfer
+      can [:index, :show], Transfer
       can :ancestry, Person
       can [:index, :show], Medium
     end
