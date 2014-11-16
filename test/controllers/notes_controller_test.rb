@@ -12,7 +12,7 @@ class NotesControllerTest < ActionController::TestCase
   test "should get edit" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :edit, { :id => notes(:note1).id, :topName => people(:person1).object_name }
+    xhr :get, :edit, { :id => notes(:note1).id, :topName => people(:person1).object_name }
     assert_response :success
   end
 
@@ -25,7 +25,7 @@ class NotesControllerTest < ActionController::TestCase
   test "should get newp" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :newp, { :topName => people(:person1).object_name }
+    xhr :get, :newp, { :topName => people(:person1).object_name }
     assert_response :success
   end
 

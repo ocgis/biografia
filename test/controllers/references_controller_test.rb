@@ -18,7 +18,7 @@ class ReferencesControllerTest < ActionController::TestCase
   test "should get connection_choose" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :connection_choose, { :name => people(:person1).object_name }
+    xhr :get, :connection_choose, { :name => people(:person1).object_name }
     assert_response :success
   end
 
@@ -34,9 +34,9 @@ class ReferencesControllerTest < ActionController::TestCase
   test "should get delete" do
     make_user(:editor)
     @request.accept = "text/javascript"
-    get :delete, { :referencedId => people(:person2).object_name,
-                   :id => references(:reference1).id,
-                   :topName => people(:person1).object_name }
+    xhr :get, :delete, { :referencedId => people(:person2).object_name,
+                         :id => references(:reference1).id,
+                         :topName => people(:person1).object_name }
     assert_response :success
   end
 

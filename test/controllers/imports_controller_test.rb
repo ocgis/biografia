@@ -11,7 +11,7 @@ class ImportsControllerTest < ActionController::TestCase
     sex = "M"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -50,7 +50,7 @@ class ImportsControllerTest < ActionController::TestCase
               :parish => "Parish" }
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -101,7 +101,7 @@ class ImportsControllerTest < ActionController::TestCase
                :parish => "Parish" }
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -150,7 +150,7 @@ class ImportsControllerTest < ActionController::TestCase
     date_iso = "1971-11-19"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -197,7 +197,7 @@ class ImportsControllerTest < ActionController::TestCase
               :cause  => "Cause" }
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -249,7 +249,7 @@ class ImportsControllerTest < ActionController::TestCase
     hdp = "Hdp"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -291,7 +291,7 @@ class ImportsControllerTest < ActionController::TestCase
     info = "Info"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -333,7 +333,7 @@ class ImportsControllerTest < ActionController::TestCase
     misc = "Misc"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -375,7 +375,7 @@ class ImportsControllerTest < ActionController::TestCase
     note = "Note"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -417,7 +417,7 @@ class ImportsControllerTest < ActionController::TestCase
     remark = "Remark"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -460,7 +460,7 @@ class ImportsControllerTest < ActionController::TestCase
                   :parish => "Parish" }
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -503,7 +503,7 @@ class ImportsControllerTest < ActionController::TestCase
     title = "Title"
     
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -555,7 +555,7 @@ class ImportsControllerTest < ActionController::TestCase
                                :surname => 'Test',
                                :sex => 'M' }]}
     transfer_obj = Transfer.new()
-    transfer_obj.content_type = "text/plain"
+    transfer_obj.content_type = "application/x-gedcom"
     transfer_obj.file_name = "gedcom_indi.ged"
     saved = transfer_obj.save
     if saved
@@ -590,7 +590,7 @@ class ImportsControllerTest < ActionController::TestCase
       sex = "M"
       
       transfer_obj = Transfer.new()
-      transfer_obj.content_type = "text/plain"
+      transfer_obj.content_type = "application/x-gedcom"
       transfer_obj.file_name = "gedcom_indi.ged"
       saved = transfer_obj.save
       if saved
