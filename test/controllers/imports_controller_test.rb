@@ -514,7 +514,7 @@ class ImportsControllerTest < ActionController::TestCase
                                          :forename => forename,
                                          :sex => sex,
                                          :title => title)
-      puts file_data
+      # puts file_data
       # write the file
       File.open(transfer_obj.full_file_name, "wb") { |f| f.write(file_data) }
     else

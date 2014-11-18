@@ -415,10 +415,10 @@ class GedcomFile < Gedcom
         end
       end
     else
-      puts "SECTION: #{section.gid}"
-      section.details.each do |detail|
-        puts "-- #{detail[:field]}: #{detail[:value]}"
-      end
+#      puts "SECTION: #{section.gid}"
+#      section.details.each do |detail|
+#        puts "-- #{detail[:field]}: #{detail[:value]}"
+#      end
     end
   end
 
