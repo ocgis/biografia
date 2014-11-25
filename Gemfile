@@ -44,9 +44,6 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
 # Use unicorn as the app server
 # gem 'unicorn'
 
@@ -64,11 +61,14 @@ gem 'capistrano-rbenv', github: "capistrano/rbenv"
 
 gem 'mime-types', :require => 'mime/types'
 
+# Used for xml parsing
+gem 'nokogiri'
+
 gem 'rmagick'
 
 # Used for authentication
 # To use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt-ruby', '~> 3.1.2'
 
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'

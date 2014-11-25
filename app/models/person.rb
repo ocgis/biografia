@@ -70,4 +70,5 @@ class Person < ActiveRecord::Base
     end
     return children
   end
+
 end

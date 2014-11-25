@@ -35,4 +35,19 @@ class Relationship < ActiveRecord::Base
     return retstr
   end
 
+  def self.find_by_spouses(spouses)
+    found = []
+    rel_refs = spouses[0].get_references(model: Relationship)
+    rel_refs.each do |rel_ref|
+      rel = rel_ref.other_object(spouses[0])
+      rel_spouse_refs = rel.get_references({:role => 'Spouse', :model => Person})
+      rel_spouse_ids = rel_spouse_refs.collect{|ref| ref.other_object(rel).id}
+      spouse_ids = spouses.collect{|spouse| spouse.id}
+      if rel_spouse_ids.sort == spouse_ids.sort
+        found.append(rel)
+      end
+    end
+    return found
+  end
+
 end
