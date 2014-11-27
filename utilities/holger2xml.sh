@@ -30,8 +30,8 @@ shift $((OPTIND-1))
 
 mkdir "$db"
 
-edb='db'
-emb='mb'
+edb='DB'
+emb='MB'
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
@@ -52,4 +52,4 @@ IFS=$SAVEIFS
 
 cp -p $db.{hol,ho7,bas,eve,spa} "$db"
 
-(cd "$db"; made_at=`grep timestamp *.xml | cut -d '>' -f 2- | cut -d '<' -f 1| sort | uniq| tail -n 1`; tar zcvf "../$db-$made_at.tar.gz" *)
+(cd "$db"; made_at=`grep timestamp *.xml | cut -d '>' -f 2- | cut -d '<' -f 1| sort | uniq| tail -n 1`; zip "../$db-$made_at.zip" *)

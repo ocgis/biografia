@@ -14,6 +14,9 @@ class ImportsController < ApplicationController
     elsif transfer_obj.content_type == 'application/x-gedcom'
       g = GedcomFile.new(filename)
       g.import
+    elsif transfer_obj.content_type == 'application/zip'
+      a = ArchiveFile.new(filename, transfer_obj.content_type)
+      a.import
     else
       raise StandardError, "Can't import #{transfer_obj.content_type} file"
     end

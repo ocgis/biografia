@@ -84,6 +84,9 @@ gem 'paper_trail'
 # Used for asynchronous processes
 gem 'spawnling'
 
+# Used for extracting zip files
+gem 'rubyzip', '>= 1.0.0'
+
 # Make emacs robe happy
 gem 'pry'
 gem 'pry-doc'
