@@ -19,7 +19,7 @@ class Folder
     if ho7_files.length == 1
       basename = File.basename(ho7_files[0], '.ho7')
 
-      ['p'].each do |db_type|
+      ['p', 'v', 'a', 'c', 'k', 'm' ].each do |db_type|
         filename = File.join(@path, basename + db_type + '.xml')
         x = XmlFile.new(filename)
         x.import
