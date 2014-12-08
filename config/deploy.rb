@@ -1,7 +1,7 @@
 set :application, 'biografia'
 set :repo_url, 'git@github.com:ocgis/biografia.git'
 
-set :deploy_to, '/home/biografia/biografia'
+set :deploy_to, '/home/rails/biografia'
 
 set :linked_files, %w{config/database.yml config/initializers/facebook.rb}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
