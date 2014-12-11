@@ -21,20 +21,14 @@
 /log/*.log
 /tmp
 
-# Ignore all export files
-/public/export/*
-
-# Ignore all transfer files
-/public/transfer/*
+# Ignore all files in the protected directory
+/protected/*
 
 # Ignore eclipse project
 /.project
 
 # Ignore cache directory
 /public/cache
-
-# Ignore links under files directory
-/public/files/*
 
 # Ignore all .old files
 *.old

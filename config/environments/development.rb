@@ -27,8 +27,11 @@ Biografia::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  config.transfer_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', 'transfer', 'debug')
+  config.protected_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'protected')
+  config.cache_path = File.join(config.protected_path, 'cache')
+  config.files_path = File.join(config.protected_path, 'files')
+  config.transfer_path = File.join(config.protected_path, 'transfer', 'debug')
 
   config.export_relative_path = File.join('export', 'debug')
-  config.export_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public', config.export_relative_path)
+  config.export_path = File.join(config.protected_path, config.export_relative_path)
 end

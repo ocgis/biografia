@@ -15,9 +15,7 @@ class MediaController < ApplicationController
       file_param = params.require(:upload).require(:file_name)
       filedata = file_param.read
 
-      root = Pathname.new(::Rails.root).realpath.to_s
-      public = File.join(root, 'public')
-      path = File.join(public, params.require(:media).require(:file_name))
+      path = File.join(Biografia::Application.config.protected_path, params.require(:media).require(:file_name))
 
       # write the file
       File.open(path, "wb") { |f| f.write(filedata) }      
@@ -56,12 +54,27 @@ class MediaController < ApplicationController
   
   def search
     old_dir = Dir.pwd
-    Dir.chdir('/mnt/Data/home/cg/eclipseprojects/biografia4/public/')
+    Dir.chdir(Biografia::Application.config.protected_path)
     file_media = Medium.where('file_name LIKE "files/%"').pluck("file_name")
     @files = search_dir("files") - file_media
 
     @files = @files[0..50]    
     Dir.chdir(old_dir)
+  end
+
+  def image
+    medium = Medium.find(params.require(:id))
+    send_file(medium.get_fullsize)
+  end
+
+  def thumb
+    medium = Medium.find(params.require(:id))
+    send_file(medium.get_thumbnail)
+  end
+
+  def file_thumb
+    file_name = params.require(:file)
+    send_file(Medium.get_thumbnail_for(file_name))
   end
 
   protected

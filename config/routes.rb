@@ -49,11 +49,14 @@ Biografia::Application.routes.draw do
     collection do
       get 'register'
       get 'search'
+      get 'file_thumb'
     end
     
     member do
       get 'delete'
       get 'showp'
+      get 'image'
+      get 'thumb'
     end
   end
 
