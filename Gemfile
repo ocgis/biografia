@@ -61,6 +61,8 @@ gem 'capistrano-rbenv', github: "capistrano/rbenv"
 
 gem 'mime-types', :require => 'mime/types'
 
+gem 'acts_as_list'
+
 # Used for xml parsing
 gem 'nokogiri'
 

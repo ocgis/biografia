@@ -23,6 +23,9 @@ class AddressesController < ApplicationController
     return "Index över adresser"
   end
 
+  def new_object
+  end
+
   def create_object
     return Address.new(address_params)
   end

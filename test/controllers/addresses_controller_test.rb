@@ -22,6 +22,12 @@ class AddressesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get new" do
+    make_user(:editor)
+    get :new
+    assert_response :success
+  end
+
   test "should get newp" do
     make_user(:editor)
     @request.accept = "text/javascript"

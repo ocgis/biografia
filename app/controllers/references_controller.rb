@@ -29,7 +29,8 @@ class ReferencesController < ApplicationController
     form = params.require(:form)
     updateListName = form.require(:updateListName)
 
-    @people = Person.where("given_name LIKE \"%#{filter}%\"").first(20)
+    person_names = PersonName.where("given_name LIKE \"%#{filter}%\"").first(20)
+    @people = person_names.collect{|person_name| person_name.person}
     @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
     @objects = @people.collect {|p| [ p.long_name, p.object_name ] }
     @objects = @objects + @events.collect {|e| [ e.one_line, e.object_name ] }

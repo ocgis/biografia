@@ -1,6 +1,8 @@
 class Person < ActiveRecord::Base
   has_paper_trail
 
+  has_many :person_names, -> { order("position ASC") }
+
   extend CommonClassMethods
   include CommonInstanceMethods
 
@@ -9,15 +11,25 @@ class Person < ActiveRecord::Base
   end
 
   def short_name
-    names = [ self.calling_name, self.surname ]
-    names.compact!
-    return names.join(" ")
+    person_name = self.person_names.last
+    if not person_name.nil?
+      names = [ person_name.calling_name, person_name.surname ]
+      names.compact!
+      return names.join(" ")
+    else
+      return "!!!Error in DB: person name missing!!!"
+    end
   end
 
   def long_name
-    names = [ self.given_name, self.surname ]
-    names.compact!
-    return names.join(" ")
+    person_name = self.person_names.last
+    if not person_name.nil?
+      names = [ person_name.given_name, person_name.surname ]
+      names.compact!
+      return names.join(" ")
+    else
+      return "!!!Error in DB: person name missing!!!"
+    end
   end
   
   def name

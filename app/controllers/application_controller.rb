@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   end
   
   def new
+    new_object
   end
 
   def newp

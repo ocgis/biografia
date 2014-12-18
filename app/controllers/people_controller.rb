@@ -12,8 +12,25 @@ class PeopleController < ApplicationController
 
   protected
 
+  def new_object
+    @person = Person.new()
+    @person.person_names << PersonName.new()
+    puts @person.inspect
+    @person.person_names.each do |pn|
+      puts pn.inspect
+    end
+  end
+
   def create_object
-    return Person.new(person_params)
+    p = Person.new(person_params)
+    i = 0
+    while true do
+      person_name = params["person_name_#{i}"]
+      break if person_name.nil?
+      p.person_names << PersonName.new(person_name.permit(:given_name, :calling_name, :surname))
+      i = i + 1
+    end
+    return p
   end
 
   def find_object
@@ -23,6 +40,18 @@ class PeopleController < ApplicationController
   def find_object_and_update_attrs
     object = Person.find(params.require(:id))
     object.attributes = person_params
+    i = 0
+    while true do
+      person_name = params["person_name_#{i}"]
+      break if person_name.nil?
+      unless person_name[:id].nil?
+        pn = PersonName.find(person_name[:id])
+        pn.update(person_name.permit(:given_name, :calling_name, :surname))
+      else
+        # FIXME: Implement
+      end
+      i = i + 1
+    end
     return object
   end
 
@@ -37,7 +66,7 @@ class PeopleController < ApplicationController
   private
 
   def person_params
-    params.require(:person).permit(:given_name, :calling_name, :surname, :sex)
+    params.require(:person).permit(:sex)
   end
 
   def ancestry_help(id, depth)

@@ -342,11 +342,12 @@ class GedcomFile < Gedcom
 
         when 'NAME'
           name_array = detail[:root][:value].split("/")
+          person_name = {}
           if name_array.length > 1
-            person.given_name = name_array[0].strip
-            person.surname = name_array[1..-1].join('/')
+            person_name[:given_name] = name_array[0].strip
+            person_name[:surname] = name_array[1..-1].join('/')
           elsif name_array.length == 1
-            person.given_name = name_array[0].strip
+            person_name[:given_name] = name_array[0].strip
           else
             Rails::logger.error("ERROR: Field #{detail[:root][:field]} with value [#{detail[:root][:value].inspect}] could not be handled")
             raise StandardError
@@ -355,16 +356,17 @@ class GedcomFile < Gedcom
           detail[:children].each do |child|
             case child[:root][:field]
               when 'GIVN'
-                person.given_name = child[:root][:value]
+                person_name[:given_name] = child[:root][:value]
               when 'FORE'
-                person.calling_name = child[:root][:value]
+                person_name[:calling_name] = child[:root][:value]
               when 'SURN'
-                person.surname = child[:root][:value]
+                person_name[:surname] = child[:root][:value]
               else
                 Rails::logger.error("ERROR: Field #{child[:root][:field]} with value #{child[:root][:value]} and children #{child[:children].inspect} could not be handled")
                 raise StandardError
             end
           end
+          person.person_names << PersonName.create(person_name)
 
         when 'NOTE'
           note = Note.create_save(:category => 'note', :note => parse_note(detail))

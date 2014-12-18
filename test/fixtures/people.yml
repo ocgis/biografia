@@ -1,17 +1,8 @@
 person1:
-  given_name: Christer Per-Olof
-  calling_name: Christer
-  surname: Gustavsson
   sex: m
 
 person2:
-  given_name: Reference Two
-  calling_name: Two
-  surname: Person
   sex: m
 
 people_references:
-  given_name: Reference Three
-  calling_name: Three
-  surname: Person
   sex: m

@@ -142,10 +142,14 @@ class XmlFile
 
   def make_person(v)
     person = Person.new
+    person_name = PersonName.new
     person.id = v['p']
-    person.given_name = v['fornamn']
-    person.surname = v['efternamn']
-    person.calling_name = make_calling_name(v)
+    person_name.given_name = v['fornamn']
+    person_name.surname = v['efternamn']
+    person_name.calling_name = make_calling_name(v)
+    person_name.created_at = v['regtid']
+    person_name.updated_at = v['upptid']
+    person.person_names << person_name
     if v['kon'] == 'm'
       person.sex = 'M'
     else

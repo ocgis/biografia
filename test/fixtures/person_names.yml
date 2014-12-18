@@ -1,0 +1,18 @@
+person_name1:
+  position: 1
+  given_name: Christer Per-Olof
+  calling_name: Christer
+  surname: Gustavsson
+  person: person1
+
+person_name2:
+  given_name: Reference Two
+  calling_name: Two
+  surname: Person
+  person: person2
+
+person_name_references:
+  given_name: Reference Three
+  calling_name: Three
+  surname: Person
+  person: people_references

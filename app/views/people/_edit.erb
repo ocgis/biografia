@@ -1,20 +1,4 @@
-<%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
-
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-Förnamn:
-<%= text_field "person", "given_name", "size" => 20 %><br/>
-
-Efternamn:
-<%= text_field "person", "surname", "maxlength" => 20 %><br/>
-
-Kön:
-<%= text_field "person", "sex", "maxlength" => 20 %><br/>
-
-<% if not edit[:reference].nil? %>
-Roll:
-<%= text_field "reference", "name", :value => edit.get_extra(:reference).name %><br/>
-<% end %>
-<input type="submit" value="Save">
-<% end %>
+<% hidden_fields = {} %>
+<% hidden_fields['referenceId'] = edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
+<% hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: edit, locals: { options: { remote: true, method: :patch }, hidden_fields: hidden_fields } %>

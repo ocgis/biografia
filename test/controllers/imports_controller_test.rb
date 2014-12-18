@@ -31,10 +31,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
   end
 
@@ -71,10 +70,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     events = persons[0].related_objects[:events]
@@ -122,10 +120,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     events = persons[0].related_objects[:events]
@@ -171,10 +168,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     events = persons[0].related_objects[:events]
@@ -218,10 +214,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -270,10 +265,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -312,10 +306,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -354,10 +347,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -396,10 +388,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -438,10 +429,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -481,10 +471,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -524,10 +513,9 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => surname,
-                           :given_name => given_name,
-                           :calling_name => forename,
-                           :sex => sex)
+    persons = PersonName.where(:surname => surname,
+                               :given_name => given_name,
+                               :calling_name => forename).collect{|pn| pn.person}.select{|p| p.sex == sex}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
     
     person_related = persons[0].related_objects
@@ -571,9 +559,8 @@ class ImportsControllerTest < ActionController::TestCase
     get :new, transfer_id: transfer_obj.id
     assert_response :success
     
-    persons = Person.where(:surname => family[:wife][:surname],
-                           :given_name => family[:wife][:given_name],
-                           :sex => family[:wife][:sex])
+    persons = PersonName.where(:surname => family[:wife][:surname],
+                               :given_name => family[:wife][:given_name]).collect{|pn| pn.person}.select{|p| p.sex == family[:wife][:sex]}
     assert persons.length == 1, "Got #{persons.length} person in database, expected 1."
 
     person_related = persons[0].related_objects

@@ -6,6 +6,9 @@ class EventsController < ApplicationController
 
   protected
 
+  def new_object
+  end
+
   def create_object
     return Event.new(event_params)
   end
