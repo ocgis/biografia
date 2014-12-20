@@ -22,11 +22,13 @@ class Person < ActiveRecord::Base
   end
 
   def long_name
-    person_name = self.person_names.last
-    if not person_name.nil?
-      names = [ person_name.given_name, person_name.surname ]
-      names.compact!
-      return names.join(" ")
+    person_names = self.person_names.collect{|pn| [ pn.given_name, pn.surname ].compact.join(" ")}
+    if person_names.length == 1
+      return person_names[0]
+    elsif person_names.length > 1
+      main = person_names.pop
+      other = person_names.join(", ")
+      return "#{main} (#{other})"
     else
       return "!!!Error in DB: person name missing!!!"
     end

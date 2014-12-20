@@ -142,14 +142,21 @@ class XmlFile
 
   def make_person(v)
     person = Person.new
-    person_name = PersonName.new
     person.id = v['p']
-    person_name.given_name = v['fornamn']
-    person_name.surname = v['efternamn']
-    person_name.calling_name = make_calling_name(v)
-    person_name.created_at = v['regtid']
-    person_name.updated_at = v['upptid']
-    person.person_names << person_name
+    if v['efternamn'].nil?
+      surnames = [nil]
+    else
+      surnames = v['efternamn'].split(" f.").collect{|e| e.lstrip}
+    end
+    surnames.reverse_each do |surname|
+      person_name = PersonName.new
+      person_name.given_name = v['fornamn']
+      person_name.surname = surname
+      person_name.calling_name = make_calling_name(v)
+      person_name.created_at = v['regtid']
+      person_name.updated_at = v['upptid']
+      person.person_names << person_name
+    end
     if v['kon'] == 'm'
       person.sex = 'M'
     else
