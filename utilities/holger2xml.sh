@@ -50,6 +50,8 @@ do
 done
 IFS=$SAVEIFS
 
-cp -p $db.{hol,ho7,bas,eve,spa} "$db"
+cp -p $db.{hol,ho7,bas,eve,spa,HOL,HO7,BAS,EVE,SPA} "$db"
+
+(cd "$db"; for x in `ls`; do if [ ! -f $x ]; then continue; fi; lc=`echo $x  | tr '[A-Z]' '[a-z]'`; if [ $lc != $x ]; then mv -i $x $lc; fi; done)
 
 (cd "$db"; made_at=`grep timestamp *.xml | cut -d '>' -f 2- | cut -d '<' -f 1| sort | uniq| tail -n 1`; zip "../$db-$made_at.zip" *)
