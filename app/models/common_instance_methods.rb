@@ -3,6 +3,25 @@ module CommonInstanceMethods
     return Reference.add(self, referenced_object, options)
   end
 
+  def get_or_add_reference(referenced_object, options={})
+    references = get_references_to_object(referenced_object)
+    if references.length == 1
+      reference = references[0]
+    elsif references.length == 0
+      reference = Reference.add(self, referenced_object, options)
+    else
+      raise StandardError, "ERROR: More than one reference between objects! #{self.inspect} #{referenced_object.inspect}"
+    end
+    return reference
+  end
+
+  def destroy_with_references
+    self.get_references.each do |reference|
+      reference.destroy
+    end
+    self.destroy
+  end
+
   def related_objects
     retval = { :object => self,
                :people => [],

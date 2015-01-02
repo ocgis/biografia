@@ -21,7 +21,7 @@ class Folder
 
       ['p', 'v', 'a', 'c', 'k', 'm' ].each do |db_type|
         filename = File.join(@path, basename + db_type + '.xml')
-        x = XmlFile.new(filename)
+        x = XmlFile.new(filename, source: basename)
         x.import
       end
 

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 class XmlFile
 
-  def initialize(file)
+  def initialize(file, options = {})
+    defaults = { source: nil }
+    options = defaults.merge(options)
+
     @file = file
+    @source = options[:source]
     @maxloops = 20000
   end
 
@@ -140,60 +144,104 @@ class XmlFile
     return calling_name
   end
 
+  def find_by_source(model, source)
+    objects = model.where(source: source)
+    if objects.length == 1
+      object = objects[0]
+    elsif objects.length == 0
+      object = nil
+    else
+      raise StandardError, "Multiple #{model.controller} with same source: #{persons.inspect}"
+    end
+    return object
+  end
+
+  def find_by_source_or_new(model, source)
+    object = find_by_source(model, source)
+    if object.nil?
+      object = model.new
+      object[:source] = source
+    end
+    return object
+  end
+
+  def person_source(person_id, options={})
+    source = "#{@source} P#{person_id}"
+    source = source + " #{options[:field]}" unless options[:field].nil?
+    return source
+  end
+
+  def remark_source(person_id, remark_id, options={})
+    source = "#{@source} P#{person_id} R#{remark_id}"
+    source = source + " #{options[:field]}" unless options[:field].nil?
+    return source
+  end
+
+  def marriage_source(marriage_id, options={})
+    source = "#{@source} V#{marriage_id}"
+    source = source + " #{options[:field]}" unless options[:field].nil?
+    return source
+  end
+
   def make_person(v)
-    person = Person.new
-    person.id = v['p']
+    person = find_by_source_or_new(Person, person_source(v['p']))
     if v['efternamn'].nil?
       surnames = [nil]
     else
       surnames = v['efternamn'].split(" f.").collect{|e| e.lstrip}
     end
+    while surnames.length > person.person_names.length
+      person.person_names << PersonName.new
+    end
+    while surnames.length < person.person_names.length
+      person.person_names.last.destroy
+    end
+
+    i = 0
     surnames.reverse_each do |surname|
-      person_name = PersonName.new
+      person_name = person.person_names[i]
       person_name.given_name = v['fornamn']
       person_name.surname = surname
       person_name.calling_name = make_calling_name(v)
       person_name.created_at = v['regtid']
       person_name.updated_at = v['upptid']
-      person.person_names << person_name
+      person_name.save
+      i = i + 1
     end
     if v['kon'] == 'm'
       person.sex = 'M'
     else
       person.sex = 'F'
     end
-    person.created_at = v['regtid']
-    person.updated_at = v['upptid']
+    if person.changed?
+      person.created_at = v['regtid']
+      person.updated_at = v['upptid']
 
 #    puts person.inspect
 
-    if !person.save
-      Rails::logger.error("ERROR: Person could not be saved: #{person.inspect}")
-      raise StandardError
+      if !person.save
+        Rails::logger.error("ERROR: Person could not be saved: #{person.inspect}")
+        raise StandardError
+      end
     end
 
     return person
   end
 
-  def extend_address(address, field, value)
+  def extend_address(address, field, value, source)
     if address.nil?
-      address = Address.new(field => value)
-    else
-      if not address[field].nil?
-        Rails::logger.error("ERROR: #{field} not nil: #{address.inspect}")
-        raise StandardError
-      end
-      address[field] = value
+      address = find_by_source_or_new(Address, source)
     end
-    
+    address[field] = value
     return address
   end
   
-  def make_address(v, street, parish)
+  def make_address(v, street, parish, field_base)
+    source = person_source(v['p'], field: field_base)
     address = nil
-    address = extend_address(nil, 'parish', v[parish]) if not empty?(v[parish])
-    address = extend_address(address, 'street', v[street]) if not empty?(v[street])
-    if not address.nil?
+    address = extend_address(nil, 'parish', v[parish], source) if not empty?(v[parish])
+    address = extend_address(address, 'street', v[street], source) if not empty?(v[street])
+    if not address.nil? and address.changed?
       address.created_at = v['regtid']
       address.updated_at = v['upptid']
       if !address.save
@@ -206,16 +254,32 @@ class XmlFile
 
   def make_event_date(v, date)
     if empty?(v[date])
+      event_date = find_by_source(EventDate, person_source(v['p'], field: date))
+      unless event_date.nil?
+        event_date.destroy_with_references
+      else
+        event_date = find_by_source(Note, person_source(v['p'], field: date))
+        unless event_date.nil?
+          event_date.destroy_with_references
+        end
+      end
       event_date = nil
     else
+      event_date = find_by_source_or_new(EventDate, person_source(v['p'], field: date))
       begin
-        event_date = EventDate.new
         event_date.set_date(v[date].gsub('.', '-')) # Handle dates written 2014.11.29 as well as ISO
-        event_date.created_at = v['regtid']
-        event_date.updated_at = v['upptid']
+        if event_date.changed?
+          event_date.created_at = v['regtid']
+          event_date.updated_at = v['upptid']
+        end
+        note = find_by_source(Note, person_source(v['p'], field: date))
+        unless note.nil?
+          note.destroy_with_references
+        end
 
       rescue StandardError
         Rails::logger.error("ERROR: Could not set date [#{v[date]}]. Making note instead.")
+        event_date.destroy_with_references
         event_date = make_note(v, nil, date)
       end
 
@@ -227,88 +291,97 @@ class XmlFile
     return event_date
   end
 
-  def make_note(v, title, notefield)
-    note = Note.new(:title => title, :note => v[notefield]) if not empty?(v[notefield])
-    if not note.nil?
-      note.created_at = v['regtid']
-      note.updated_at = v['upptid']
-      if !note.save
-        Rails::logger.error("ERROR: Note could not be saved: #{note.inspect}")
-        raise StandardError
+  def make_note(v, title, notefield, source)
+    unless empty?(v[notefield])
+      note = find_by_source_or_new(Note, source)
+      note[:title] = title
+      note[:note] = v[notefield]
+      if note.changed?
+        note.created_at = v['regtid'] unless v['regtid'].nil?
+        note.updated_at = v['upptid'] unless v['upptid'].nil?
+        if !note.save
+          Rails::logger.error("ERROR: Note could not be saved: #{note.inspect}")
+          raise StandardError
+        end
+      end
+    else
+      note = find_by_source(Note, source)
+      unless note.nil?
+        note.destroy_with_references
+        note = nil
       end
     end
     return note
   end
 
-  def make_birth(v)
-    address = make_address(v, 'fodort', 'fodfs')
-    event_date = make_event_date(v, 'fodat')
-    if not (address.nil? and event_date.nil?)
-      birth = Event.create_save(:name => "Födelse")
-      birth.add_reference(address) if not address.nil?
-      birth.add_reference(event_date) if not event_date.nil?
+  def make_event(source, attributes, children)
+    unless children.all?{|child| child.nil?}
+      object = find_by_source_or_new(Event, source)
+      attributes.each do |k,v|
+        object[k] = v
+      end
+      unless object.save
+        raise StandardError, "Could not save #{model}: #{object}"
+      end
+      children.compact.each do |child|
+        object.get_or_add_reference(child)
+      end
     else
-      birth = nil
+      object = find_by_source(Event, source)
+      unless object.nil?
+        object.destroy_with_references
+        object = nil
+      end
     end
-    return birth
+    return object
+  end
+
+  def make_birth(v)
+    return make_event(person_source(v['p'], field: 'fod'),
+                      { name: 'Födelse' },
+                      [ make_address(v, 'fodort', 'fodfs', 'fod'),
+                        make_event_date(v, 'fodat') ])
   end
 
   def make_christening(v)
-    event_date = make_event_date(v, 'dopdat')
-    if not event_date.nil?
-      christening = Event.create_save(:name => "Dop")
-      christening.add_reference(event_date) if not event_date.nil?
-    else
-      christening = nil
-    end
-    return christening
+    return make_event(person_source(v['p'], field: 'dop'),
+                      { name: 'Dop' },
+                      [ make_event_date(v, 'dopdat') ])
   end
 
   def make_death(v)
-    address = make_address(v, 'dodort', 'dodfs')
-    event_date = make_event_date(v, 'dodat')
-    cause = make_note(v, 'Orsak', 'dodors')
-    if not (address.nil? and event_date.nil? and cause.nil?)
-      death = Event.create_save(:name => "Död")
-      death.add_reference(address) if not address.nil?
-      death.add_reference(event_date) if not event_date.nil?
-      death.add_reference(cause) if not cause.nil?
-    else
-      death = nil
-    end
-    return death
+    return make_event(person_source(v['p'], field: 'dod'),
+                      { name: 'Död' },
+                      [ make_address(v, 'dodort', 'dodfs', 'dod'),
+                        make_event_date(v, 'dodat'),
+                        make_note(v, 'Orsak', 'dodors', person_source(v['p'], field: 'dodors')) ])
   end
 
   def make_funeral(v)
-    event_date = make_event_date(v, 'begdat')
-    if not event_date.nil?
-      funeral = Event.create_save(:name => "Begravning")
-      funeral.add_reference(event_date) if not event_date.nil?
-    else
-      funeral = nil
-    end
-    return funeral
+    return make_event(person_source(v['p'], field: 'beg'),
+                      { name: 'Begravning' },
+                      [ make_event_date(v, 'begdat') ])
   end
 
   def handle_person(v)
     if check_person_params(v)
       person = make_person(v)
       birth = make_birth(v)
-      person.add_reference(birth) if not birth.nil?
+      person.get_or_add_reference(birth) if not birth.nil?
       christening = make_christening(v)
-      person.add_reference(christening) if not christening.nil?
+      person.get_or_add_reference(christening) if not christening.nil?
       death = make_death(v)
-      person.add_reference(death) if not death.nil?
+      person.get_or_add_reference(death) if not death.nil?
       funeral = make_funeral(v)
-      person.add_reference(funeral) if not funeral.nil?
-      address = make_address(v, 'hemort', 'hemfs')
-      person.add_reference(address) if not address.nil?
-      title = make_note(v, 'Titel', 'yrke')
-      person.add_reference(title) if not title.nil?
-      anm1 = make_note(v, 'Anmärkning 1', 'anm1')
-      person.add_reference(anm1) if not anm1.nil?
-      anm2 = make_note(v, 'Anmärkning 2', 'anm2')
-      person.add_reference(anm2) if not anm2.nil?
+      person.get_or_add_reference(funeral) if not funeral.nil?
+      address = make_address(v, 'hemort', 'hemfs', 'hem')
+      person.get_or_add_reference(address) if not address.nil?
+      title = make_note(v, 'Titel', 'yrke', person_source(v['p'], field: 'yrke'))
+      person.get_or_add_reference(title) if not title.nil?
+      anm1 = make_note(v, 'Anmärkning 1', 'anm1', person_source(v['p'], field: 'anm1'))
+      person.get_or_add_reference(anm1) if not anm1.nil?
+      anm2 = make_note(v, 'Anmärkning 2', 'anm2', person_source(v['p'], field: 'anm2'))
+      person.get_or_add_reference(anm2) if not anm2.nil?
       return true
     end
     return false
@@ -347,10 +420,10 @@ class XmlFile
 
   def get_family(v)
     family = nil
-    if not (v['f'].nil? and v['m'].nil?)
+    unless (v['f'].nil? and v['m'].nil?)
       family = { :child => v['p'] }
-      family[:father] = v['f'] if not v['f'].nil?
-      family[:mother] = v['m'] if not v['m'].nil?
+      family[:father] = v['f'] unless v['f'].nil?
+      family[:mother] = v['m'] unless v['m'].nil?
     end
     return family
   end
@@ -361,8 +434,8 @@ class XmlFile
     parent_ids.append(family[:mother]) unless family[:mother].nil? or (family[:mother] == 0)
 
     if parent_ids.length > 0
-      begin
-        parents = Person.find(parent_ids)
+      parents = parent_ids.collect{|parent_id| find_by_source(Person, person_source(parent_id))}
+      if parents.all?{|parent| not parent.nil?}
         rels = Relationship.find_by_spouses(parents)
         if rels.length == 1
           rel = rels[0]
@@ -370,9 +443,9 @@ class XmlFile
           if rels.length == 0
             # Not found: OK
             rel = Relationship.create_save()
-
+          
             for parent in parents
-              parent.add_reference(rel, role: 'Spouse')
+              parent.get_or_add_reference(rel, role: 'Spouse')
             end
           else
             raise StandardError, "Found #{rels.length} relationships for #{parents}, <=1 expected"
@@ -380,11 +453,10 @@ class XmlFile
         end
 
         if not family[:child].nil?
-          child = Person.find(family[:child])
-          child.add_reference(rel, role: 'Child')
+          child = find_by_source(Person, person_source(family[:child]))
+          child.get_or_add_reference(rel, role: 'Child')
         end
-
-      rescue ActiveRecord::RecordNotFound
+      else
         Rails::logger.error("ERROR: Could not find parents in db: #{parent_ids}")
       end
     end
@@ -468,20 +540,19 @@ class XmlFile
 
   def make_marriage(v)
     spouse_ids = [v['f'], v['m']]
-    begin
-      spouses = Person.find(spouse_ids)
+    spouses = spouse_ids.collect{|spouse_id| find_by_source(Person, person_source(spouse_id))}
+    if spouses.all?{|spouse| not spouse.nil?}
       rels = Relationship.find_by_spouses(spouses)
-        if rels.length == 1
-          rel = rels[0]
+      if rels.length == 1
+        rel = rels[0]
+      else
+        if rels.length == 0
+          # Not found: OK
         else
-          if rels.length == 0
-            # Not found: OK
-          else
-            raise StandardError, "Found #{rels.length} relationships for #{parents}, <=1 expected"
-          end
+          raise StandardError, "Found #{rels.length} relationships for #{parents}, <=1 expected"
         end
-
-    rescue ActiveRecord::RecordNotFound
+      end
+    else
       Rails::logger.error("ERROR: Could not find spouses in db: #{spouse_ids}")
       spouses = []
     end
@@ -490,22 +561,22 @@ class XmlFile
       rel = Relationship.create_save()
 
       for spouse in spouses
-        spouse.add_reference(rel, role: 'Spouse')
+        spouse.get_or_add_reference(rel, role: 'Spouse')
       end
     end
 
     if not rel.nil?
       wedding = make_wedding(v)
-      rel.add_reference(wedding)
+      rel.get_or_add_reference(wedding)
     end
 
     return rel
   end
 
   def make_wedding(v)
-    address = make_address(v, 'vigort', 'vigfs')
+    address = make_address(v, 'vigort', 'vigfs', 'vig')
     event_date = make_event_date(v, 'vigdat')
-    note = make_note(v, 'Anmärkning', 'anm')
+    note = make_note(v, 'Anmärkning', 'anm', marriage_source(v['v'], field: 'anm'))
     if v['typ'] == '1'
       name = "Äktenskap"
     elsif v['typ'] == '2'
@@ -526,10 +597,14 @@ class XmlFile
       name = "Typ #{v['typ']}"
       Rails::logger.error("ERROR: Unknown relationship type: #{v}")
     end
-    wedding = Event.create_save(:name => name)
-    wedding.add_reference(address) if not address.nil?
-    wedding.add_reference(event_date) if not event_date.nil?
-    wedding.add_reference(note) if not note.nil?
+    wedding = find_by_source_or_new(Event, marriage_source(v['v']))
+    wedding[:name] = name
+    unless wedding.save
+      raise StandardError, "Could not save wedding: #{wedding.inspect}"
+    end
+    wedding.get_or_add_reference(address) if not address.nil?
+    wedding.get_or_add_reference(event_date) if not event_date.nil?
+    wedding.get_or_add_reference(note) if not note.nil?
     return wedding
   end
 
@@ -588,14 +663,13 @@ class XmlFile
   end
 
   def make_remark(v)
-    begin
-      remark = make_note(v, "Anmärkning #{v['r']}", 'anmtext')
+    person = find_by_source(Person, person_source(v['p']))
+    unless person.nil?
+      remark = make_note(v, "Anmärkning #{v['r']}", 'anmtext', remark_source(v['p'], v['r'], field: 'anmtext'))
       if not remark.nil?
-        person = Person.find(v['p'])
-        person.add_reference(remark)
+        person.get_or_add_reference(remark)
       end
-
-    rescue ActiveRecord::RecordNotFound
+    else
       Rails::logger.error("ERROR: Could not find person in db: #{v['p']}")
     end
   end

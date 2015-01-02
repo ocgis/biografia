@@ -10,15 +10,16 @@ class PeopleController < ApplicationController
     @ancestry = ancestry_help(params.require(:id), 4)
   end
 
+  def examine
+    person = find_object
+    @object = [person] + person.person_names
+  end
+
   protected
 
   def new_object
     @person = Person.new()
     @person.person_names << PersonName.new()
-    puts @person.inspect
-    @person.person_names.each do |pn|
-      puts pn.inspect
-    end
   end
 
   def create_object

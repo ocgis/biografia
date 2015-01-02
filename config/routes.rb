@@ -12,6 +12,7 @@ Biografia::Application.routes.draw do
 
     member do
       get 'delete'
+      get 'examine'
     end
   end
   
@@ -23,6 +24,7 @@ Biografia::Application.routes.draw do
 
     member do
       get 'delete'
+      get 'examine'
     end
   end
   
@@ -34,6 +36,7 @@ Biografia::Application.routes.draw do
 
     member do
       get 'delete'
+      get 'examine'
     end
   end
 
@@ -68,6 +71,7 @@ Biografia::Application.routes.draw do
 
     member do
       get 'delete'
+      get 'examine'
     end
   end
 
@@ -80,6 +84,7 @@ Biografia::Application.routes.draw do
     member do
       get 'ancestry'
       get 'delete'
+      get 'examine'
     end
   end
   
@@ -104,6 +109,7 @@ Biografia::Application.routes.draw do
 
     member do
       get 'delete'
+      get 'examine'
     end
   end
 

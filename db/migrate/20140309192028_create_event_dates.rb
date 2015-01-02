@@ -4,6 +4,8 @@ class CreateEventDates < ActiveRecord::Migration
       t.datetime :date
       t.string   :mask
 
+      t.string   :source
+
       t.timestamps
     end
   end

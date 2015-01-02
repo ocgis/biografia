@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20141211192155) do
     t.string   "zipcode",    limit: 20
     t.string   "parish",     limit: 80
     t.string   "country",    limit: 80
+    t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -26,12 +27,14 @@ ActiveRecord::Schema.define(version: 20141211192155) do
   create_table "event_dates", force: true do |t|
     t.datetime "date"
     t.string   "mask"
+    t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "events", force: true do |t|
     t.string   "name"
+    t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -62,12 +65,14 @@ ActiveRecord::Schema.define(version: 20141211192155) do
     t.string   "category"
     t.string   "title"
     t.text     "note"
+    t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "people", force: true do |t|
     t.string   "sex",        limit: 1
+    t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

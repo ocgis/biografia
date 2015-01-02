@@ -5,6 +5,8 @@ class CreateNotes < ActiveRecord::Migration
       t.string :title
       t.text :note
 
+      t.string :source
+
       t.timestamps
     end
   end

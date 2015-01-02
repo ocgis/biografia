@@ -94,6 +94,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def examine
+    @object = find_object
+  end
+
   def edit
     locals = { :topName => params.require(:topName) }
     object = find_object
@@ -170,10 +174,7 @@ class ApplicationController < ActionController::Base
     if topName == object.object_name
       objectController = object.controller
     end
-    object.get_references.each do |reference|
-      reference.destroy
-    end
-    object.destroy
+    object.destroy_with_references
 
     if objectController.nil?
       options = { :topName => topName,

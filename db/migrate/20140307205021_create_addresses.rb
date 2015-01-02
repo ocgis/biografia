@@ -7,6 +7,8 @@ class CreateAddresses < ActiveRecord::Migration
       t.string :parish,   :limit => 80
       t.string :country,  :limit => 80
 
+      t.string :source
+
       t.timestamps
     end
   end
