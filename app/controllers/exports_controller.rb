@@ -11,9 +11,14 @@ class ExportsController < ApplicationController
   def create
     object = create_object
     if object.save
-      Spawnling.new do 
-        Dir.mkdir(object.path)
-        object.make_export
+      Spawnling.new do
+        begin
+          Dir.mkdir(object.path)
+          object.make_export
+        rescue
+          object.status = 'ERROR'
+          object.save
+        end
       end
       redirect_to :action => 'show', :id => object.id
     else
@@ -23,6 +28,11 @@ class ExportsController < ApplicationController
 
   def show
     @export = Export.find(params.require(:id))
+  end
+
+  def file
+    export = Export.find(params.require(:id))
+    send_file(export.full_file_name, type: export.content_type)
   end
 
   include ActionController::Live

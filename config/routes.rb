@@ -43,6 +43,7 @@ Biografia::Application.routes.draw do
   resources :exports, :only => [:index, :new, :create, :show] do
     member do
       get 'status'
+      get 'file'
     end
   end
 
