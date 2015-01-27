@@ -2,8 +2,12 @@
 
 class Folder
 
-  def initialize(path)
+  def initialize(path, options = {})
+    defaults = { format: 'holger7' } # FIXME
+    options = defaults.merge(options)
+
     @path = path
+    @format = options[:format]
   end
 
   def import
@@ -30,4 +34,19 @@ class Folder
 
     return retval
   end
+
+  def export
+    if @format == 'holger7'
+      export_holger7
+    else
+      raise StandardError, "Can't export to format #{@format}"
+    end
+  end
+
+  def export_holger7
+    Dir.mkdir(@path)
+    x = XmlFile.new(@path + '/holgertest')
+    x.export
+  end
+
 end

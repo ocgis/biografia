@@ -225,6 +225,8 @@ class XmlFile
       end
     end
 
+    @@person_attributes[v['p']] = { 'regtid'=> v['regtid'], 'upptid' => v['upptid'] }
+
     return person
   end
 
@@ -297,8 +299,8 @@ class XmlFile
       note[:title] = title
       note[:note] = v[notefield]
       if note.changed?
-        note.created_at = v['regtid'] unless v['regtid'].nil?
-        note.updated_at = v['upptid'] unless v['upptid'].nil?
+        note.created_at = v['regtid']
+        note.updated_at = v['upptid']
         if !note.save
           Rails::logger.error("ERROR: Note could not be saved: #{note.inspect}")
           raise StandardError
@@ -314,17 +316,22 @@ class XmlFile
     return note
   end
 
-  def make_event(source, attributes, children)
-    unless children.all?{|child| child.nil?}
+  def make_event(v, source, attributes, children)
+    if children.any?{|role, child| not child.nil?}
       object = find_by_source_or_new(Event, source)
-      attributes.each do |k,v|
-        object[k] = v
+      attributes.each do |key,val|
+        object[key] = val
       end
-      unless object.save
-        raise StandardError, "Could not save #{model}: #{object}"
+      if object.changed?
+        object.created_at = v['regtid']
+        object.updated_at = v['upptid']
+        unless object.save
+          raise StandardError, "Could not save #{model}: #{object}"
+        end
       end
-      children.compact.each do |child|
-        object.get_or_add_reference(child)
+      children.each do |role, child|
+        puts "Role: #{role} Child: #{child.inspect}"
+        object.get_or_add_reference(child, role: role) unless child.nil?
       end
     else
       object = find_by_source(Event, source)
@@ -337,51 +344,51 @@ class XmlFile
   end
 
   def make_birth(v)
-    return make_event(person_source(v['p'], field: 'fod'),
+    return make_event(v, person_source(v['p'], field: 'fod'),
                       { name: 'Födelse' },
-                      [ make_address(v, 'fodort', 'fodfs', 'fod'),
-                        make_event_date(v, 'fodat') ])
+                      { 'Address' => make_address(v, 'fodort', 'fodfs', 'fod'),
+                        'Date'    => make_event_date(v, 'fodat') })
   end
 
   def make_christening(v)
-    return make_event(person_source(v['p'], field: 'dop'),
+    return make_event(v, person_source(v['p'], field: 'dop'),
                       { name: 'Dop' },
-                      [ make_event_date(v, 'dopdat') ])
+                      { 'Date' => make_event_date(v, 'dopdat') })
   end
 
   def make_death(v)
-    return make_event(person_source(v['p'], field: 'dod'),
+    return make_event(v, person_source(v['p'], field: 'dod'),
                       { name: 'Död' },
-                      [ make_address(v, 'dodort', 'dodfs', 'dod'),
-                        make_event_date(v, 'dodat'),
-                        make_note(v, 'Orsak', 'dodors', person_source(v['p'], field: 'dodors')) ])
+                      { 'Address' => make_address(v, 'dodort', 'dodfs', 'dod'),
+                        'Date' => make_event_date(v, 'dodat'),
+                        'Cause' => make_note(v, 'Orsak', 'dodors', person_source(v['p'], field: 'dodors')) })
   end
 
   def make_funeral(v)
-    return make_event(person_source(v['p'], field: 'beg'),
+    return make_event(v, person_source(v['p'], field: 'beg'),
                       { name: 'Begravning' },
-                      [ make_event_date(v, 'begdat') ])
+                      { 'Date' => make_event_date(v, 'begdat') })
   end
 
   def handle_person(v)
     if check_person_params(v)
       person = make_person(v)
       birth = make_birth(v)
-      person.get_or_add_reference(birth) if not birth.nil?
+      person.get_or_add_reference(birth, role: 'Born') if not birth.nil?
       christening = make_christening(v)
-      person.get_or_add_reference(christening) if not christening.nil?
+      person.get_or_add_reference(christening, role: 'Christened') if not christening.nil?
       death = make_death(v)
-      person.get_or_add_reference(death) if not death.nil?
+      person.get_or_add_reference(death, role: 'Died') if not death.nil?
       funeral = make_funeral(v)
-      person.get_or_add_reference(funeral) if not funeral.nil?
+      person.get_or_add_reference(funeral, role: 'Burried') if not funeral.nil?
       address = make_address(v, 'hemort', 'hemfs', 'hem')
-      person.get_or_add_reference(address) if not address.nil?
+      person.get_or_add_reference(address, role: 'Address') if not address.nil?
       title = make_note(v, 'Titel', 'yrke', person_source(v['p'], field: 'yrke'))
-      person.get_or_add_reference(title) if not title.nil?
+      person.get_or_add_reference(title, role: 'Profession') if not title.nil?
       anm1 = make_note(v, 'Anmärkning 1', 'anm1', person_source(v['p'], field: 'anm1'))
-      person.get_or_add_reference(anm1) if not anm1.nil?
+      person.get_or_add_reference(anm1, role: 'Holger:Anm1') if not anm1.nil?
       anm2 = make_note(v, 'Anmärkning 2', 'anm2', person_source(v['p'], field: 'anm2'))
-      person.get_or_add_reference(anm2) if not anm2.nil?
+      person.get_or_add_reference(anm2, role: 'Holger:Anm2') if not anm2.nil?
       return true
     end
     return false
@@ -390,6 +397,7 @@ class XmlFile
   def handle_persons(rows)
     if rows.length > 0
       if check_person_params(parse_row(rows[0]))
+        @@person_attributes = {}
         families = []
         i = 0
         rows.each do |row|
@@ -655,6 +663,8 @@ class XmlFile
 
   def handle_remark(v)
     if check_remark_params(v)
+      v['regtid'] = @@person_attributes[v['p']]['regtid']
+      v['upptid'] = @@person_attributes[v['p']]['upptid']
       make_remark(v)
 
       return true
@@ -667,10 +677,276 @@ class XmlFile
     unless person.nil?
       remark = make_note(v, "Anmärkning #{v['r']}", 'anmtext', remark_source(v['p'], v['r'], field: 'anmtext'))
       if not remark.nil?
-        person.get_or_add_reference(remark)
+        person.get_or_add_reference(remark, role: "Holger:Anm#{v['r']}")
       end
     else
       Rails::logger.error("ERROR: Could not find person in db: #{v['p']}")
+    end
+  end
+
+
+  def export
+    people = Person.all
+    File.open(@file, "w") do |fd|
+      fd.puts("<dump>")
+      i = 1
+      people.each do |person|
+        f = 0
+        m = 0
+        parents = person.find_parents
+        parents.each do |parent|
+          if parent.sex == "M"
+            f = parent.id
+          else
+            m = parent.id
+          end
+        end
+        fornamn = get_given_name(person)
+        patronym = ""
+        efternamn = get_surname(person)
+        if person.sex == 'M'
+          kon = 'm'
+        else
+          kon = 'k'
+        end
+        updated_at = person.updated_at
+        birth_refs = person.get_references.where(name: 'Born')
+        if birth_refs.length == 1
+          birth = birth_refs[0].other_object(person)
+          birth_dates = get_dates_of(birth)
+          fodat = dates_to_string(birth_dates)
+          updated_at = ([updated_at] + birth_dates.collect{|birth_date| birth_date.updated_at}).max
+          address = get_address_of(birth)
+          unless address.nil?
+            fodort = address.street
+            fodfs = address.parish
+            updated_at = [updated_at, address.updated_at].max
+          end
+          updated_at = [updated_at, birth.updated_at].max
+        elsif birth_refs.length > 1
+          raise StandardError, "More than one birth for person #{person.inspect}"
+        end
+
+        christening_refs = person.get_references.where(name: 'Christened')
+        if christening_refs.length == 1
+          christening = christening_refs[0].other_object(person)
+          updated_at = [updated_at, christening.updated_at].max
+          christening_dates = get_dates_of(christening)
+          updated_at = ([updated_at] + christening_dates.collect{|date| date.updated_at}).max
+          dopdat = dates_to_string(christening_dates)
+        elsif christening_refs.length > 1
+          raise StandardError, "More than one christening for person #{person.inspect}"
+        end
+
+        death_refs = person.get_references.where(name: 'Died')
+        if death_refs.length == 1
+          death = death_refs[0].other_object(person)
+          updated_at = [updated_at, death.updated_at].max
+          death_dates = get_dates_of(death)
+          updated_at = ([updated_at] + death_dates.collect{|date| date.updated_at}).max
+          dodat = dates_to_string(death_dates)
+          address = get_address_of(death)
+          unless address.nil?
+            updated_at = [updated_at, address.updated_at].max
+            dodort = address.street
+            dodfs = address.parish
+          end
+          cause = get_note_for(death, 'Cause')
+          unless cause.nil?
+            updated_at = [updated_at, cause.updated_at].max
+            dodors = cause.note
+          end
+        elsif death_refs.length > 1
+          raise StandardError, "More than one death for person #{person.inspect}"
+        end
+
+        burial_refs = person.get_references.where(name: 'Burried')
+        if burial_refs.length == 1
+          burial = burial_refs[0].other_object(person)
+          updated_at = [updated_at, burial.updated_at].max
+          burial_dates = get_dates_of(burial)
+          updated_at = ([updated_at] + burial_dates.collect{|date| date.updated_at}).max
+          begdat = dates_to_string(burial_dates)
+        elsif burial_refs.length > 1
+          raise StandardError, "More than one burial for person #{person.inspect}"
+        end
+
+        profession = get_note_for(person, 'Profession')
+        updated_at = [updated_at, profession.updated_at].max
+        yrke = profession.note
+
+        address = get_address_of(person)
+        unless address.nil?
+          updated_at = [updated_at, address.updated_at].max
+          hemort = address.street
+          hemfs = address.parish
+        end
+
+        note1 = get_note_for(person, "Holger:Anm1")
+        unless note1.nil?
+          updated_at = [updated_at, note1.updated_at].max
+          unless note1.note.include? "\n"
+            anm1 = note1.note
+          else
+            anm1 = ''
+          end
+        else
+          anm1 = ''
+        end
+        note2 = get_note_for(person, "Holger:Anm2")
+        unless note2.nil?
+          updated_at = [updated_at, note2.updated_at].max
+          unless note2.note.include? "\n"
+            anm2 = note2.note
+          else
+            anm2 = ''
+          end
+        else
+          anm2 = ''
+        end
+        ttnamn = get_calling_name_end_index(person)
+        eenamn = '0'
+        dopkod = ''
+        begkod = ''
+        konkod = ''
+        markering = 'A0000000000000000000000000000000000000000000000000000000000000000000000000000000'
+        sortfalt = '%10d' % i
+        regtid = person.created_at
+        upptid = updated_at
+        dbid = 0
+        regid = 0
+        uppid = 0
+        typ = 'P'
+        status = ''
+
+        fd.puts("  <row>")
+        fd.puts(make_number_tag("p", person.id))
+        fd.puts(make_number_tag("f", f))
+        fd.puts(make_number_tag("m", m))
+        fd.puts(make_alpha_tag("fornamn", fornamn))
+        fd.puts(make_alpha_tag("patronym", patronym))
+        fd.puts(make_alpha_tag("efternamn", efternamn))
+        fd.puts(make_alpha_tag("kon", kon))
+        fd.puts(make_alpha_tag("fodat", fodat))
+        fd.puts(make_alpha_tag("dopdat", dopdat))
+        fd.puts(make_alpha_tag("fodort", fodort))
+        fd.puts(make_alpha_tag("fodfs", fodfs))
+        fd.puts(make_alpha_tag("dodat", dodat))
+        fd.puts(make_alpha_tag("begdat", begdat))
+        fd.puts(make_alpha_tag("dodort", dodort))
+        fd.puts(make_alpha_tag("dodfs", dodfs))
+        fd.puts(make_alpha_tag("dodors", dodors))
+        fd.puts(make_alpha_tag("yrke", yrke))
+        fd.puts(make_alpha_tag("hemort", hemort))
+        fd.puts(make_alpha_tag("hemfs", hemfs))
+        fd.puts(make_alpha_tag("anm1", anm1))
+        fd.puts(make_alpha_tag("anm2", anm2))
+        fd.puts(make_alpha_tag("ttnamn", ttnamn))
+        fd.puts(make_alpha_tag("eenamn", eenamn))
+        fd.puts(make_alpha_tag("dopkod", dopkod))
+        fd.puts(make_alpha_tag("begkod", begkod))
+        fd.puts(make_alpha_tag("konkod", konkod))
+        fd.puts(make_alpha_tag("markering", markering))
+        fd.puts(make_alpha_tag("sortfalt", sortfalt))
+        fd.puts(make_timestamp_tag("regtid", regtid))
+        fd.puts(make_timestamp_tag("upptid", upptid))
+        fd.puts(make_number_tag("dbid", dbid))
+        fd.puts(make_number_tag("regid", regid))
+        fd.puts(make_number_tag("uppid", uppid))
+        fd.puts(make_alpha_tag("typ", typ))
+        fd.puts(make_alpha_tag("status", status))
+        fd.puts("  </row>")
+
+        i = i + 1
+      end
+      fd.puts("</dump>")
+    end
+  end
+
+  def make_tag(tag_type, name, value)
+    return "    <#{tag_type} name=\"#{name}\">#{value}</#{tag_type}>"
+  end
+
+  def make_alpha_tag(name, value)
+    return make_tag("alpha", name, value)
+  end
+
+  def make_number_tag(name, value)
+    return make_tag("number", name, "#{value}.000000")
+  end
+
+  def make_timestamp_tag(name, value)
+    return make_tag("timestamp", name, "#{value.strftime("%Y-%m-%d %H:%M:%S")}")
+  end
+
+  def get_given_name(person)
+    if person.person_names.length == 1
+      given_name = person.person_names.first.given_name
+    else
+      given_name = person.person_names.first.given_name
+      unless person.person_names.all? {|person_name| person_name.given_name == given_name}
+        raise StandardError, "Unhandled number of names #{person.person_names.length}"
+      end
+    end
+    return given_name
+  end
+
+  def get_surname(person)
+    if person.person_names.length == 1
+      surname = person.person_names.first.surname
+    elsif person.person_names.length == 2
+      surname = "#{person.person_names.last.surname} f.#{person.person_names.first.surname}"
+    else
+      raise StandardError, "Unhandled number of names #{person.person_names.length}"
+    end
+    return surname
+  end
+
+  def get_calling_name_end_index(person)
+    first = person.person_names.last.given_name.index(person.person_names.last.calling_name)
+    unless first.nil?
+      last = first + person.person_names.last.calling_name.length + 1
+    else
+      last = 0
+    end
+    return (last + '0'.ord).chr
+  end
+
+  def get_dates_of(event)
+    references = event.get_references.where(name: "Date")
+    if references.length > 0
+      return references.collect{|reference| reference.other_object(event)}
+    else
+      return nil
+    end
+  end
+
+  def dates_to_string(dates)
+    date_strings = dates.collect{|date| date.one_line}
+    return date_strings.join(', ')
+  end
+
+  def get_address_of(event)
+    references = event.get_references.where(name: "Address")
+    addresses = references.collect{|reference| reference.other_object(event)}
+    if addresses.length == 1
+      return addresses[0]
+    elsif addresses.length == 0
+      return nil
+    else
+      raise StandardError, "Event has more than one address: #{event.inspect} #{addresses.inspect}"
+    end
+  end
+
+  def get_note_for(object, role)
+    references = object.get_references.where(name: role)
+    notes = references.collect{|reference| reference.other_object(object)}
+    if notes.length == 1
+      return notes[0]
+    elsif notes.length == 0
+      return nil
+    else
+      raise StandardError, "Object has more than one note: #{object.inspect} #{notes.inspect}"
     end
   end
 
