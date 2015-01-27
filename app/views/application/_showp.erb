@@ -8,6 +8,12 @@
 <%=  render :partial => showp.controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
 <% end %>
 
+<% if not showp.get_extra(:reference).nil? %>
+<%   if not showp.get_extra(:reference).name.nil? %>
+<%=    showp.get_extra(:reference).name %>
+<%   end %>
+<% end %>
+
 <% if options[:showFull] %>
 <%=  render :partial => "references/related", :object => showp, :locals => { :options => options } %>
 <% end %>
