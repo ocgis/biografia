@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 class XmlFile
 
-  def initialize(file, options = {})
-    defaults = { source: nil }
-    options = defaults.merge(options)
-
-    @file = file
-    @source = options[:source]
+  def initialize
     @maxloops = 20000
   end
 
-  def import
-    f = File.open(@file)
+  def import(file, options = {})
+    defaults = { source: nil }
+    options = defaults.merge(options)
+
+    @source = options[:source]
+
+    f = File.open(file)
     doc = Nokogiri::XML(f, nil, 'UTF-8')
 
     rows = doc.xpath("dump/row")
@@ -685,182 +685,184 @@ class XmlFile
   end
 
 
-  def export
-    people = Person.all
-    File.open(@file, "w") do |fd|
+  def export(file, options = {})
+    defaults = { type: nil }
+    options = defaults.merge(options)
+
+    File.open(file, "w") do |fd|
       fd.puts("<dump>")
-      i = 1
-      people.each do |person|
-        f = 0
-        m = 0
-        parents = person.find_parents
-        parents.each do |parent|
-          if parent.sex == "M"
-            f = parent.id
-          else
-            m = parent.id
-          end
-        end
-        fornamn = get_given_name(person)
-        patronym = ""
-        efternamn = get_surname(person)
-        if person.sex == 'M'
-          kon = 'm'
-        else
-          kon = 'k'
-        end
-        updated_at = person.updated_at
-        birth_refs = person.get_references.where(name: 'Born')
-        if birth_refs.length == 1
-          birth = birth_refs[0].other_object(person)
-          birth_dates = get_dates_of(birth)
-          fodat = dates_to_string(birth_dates)
-          updated_at = ([updated_at] + birth_dates.collect{|birth_date| birth_date.updated_at}).max
-          address = get_address_of(birth)
-          unless address.nil?
-            fodort = address.street
-            fodfs = address.parish
-            updated_at = [updated_at, address.updated_at].max
-          end
-          updated_at = [updated_at, birth.updated_at].max
-        elsif birth_refs.length > 1
-          raise StandardError, "More than one birth for person #{person.inspect}"
-        end
-
-        christening_refs = person.get_references.where(name: 'Christened')
-        if christening_refs.length == 1
-          christening = christening_refs[0].other_object(person)
-          updated_at = [updated_at, christening.updated_at].max
-          christening_dates = get_dates_of(christening)
-          updated_at = ([updated_at] + christening_dates.collect{|date| date.updated_at}).max
-          dopdat = dates_to_string(christening_dates)
-        elsif christening_refs.length > 1
-          raise StandardError, "More than one christening for person #{person.inspect}"
-        end
-
-        death_refs = person.get_references.where(name: 'Died')
-        if death_refs.length == 1
-          death = death_refs[0].other_object(person)
-          updated_at = [updated_at, death.updated_at].max
-          death_dates = get_dates_of(death)
-          updated_at = ([updated_at] + death_dates.collect{|date| date.updated_at}).max
-          dodat = dates_to_string(death_dates)
-          address = get_address_of(death)
-          unless address.nil?
-            updated_at = [updated_at, address.updated_at].max
-            dodort = address.street
-            dodfs = address.parish
-          end
-          cause = get_note_for(death, 'Cause')
-          unless cause.nil?
-            updated_at = [updated_at, cause.updated_at].max
-            dodors = cause.note
-          end
-        elsif death_refs.length > 1
-          raise StandardError, "More than one death for person #{person.inspect}"
-        end
-
-        burial_refs = person.get_references.where(name: 'Burried')
-        if burial_refs.length == 1
-          burial = burial_refs[0].other_object(person)
-          updated_at = [updated_at, burial.updated_at].max
-          burial_dates = get_dates_of(burial)
-          updated_at = ([updated_at] + burial_dates.collect{|date| date.updated_at}).max
-          begdat = dates_to_string(burial_dates)
-        elsif burial_refs.length > 1
-          raise StandardError, "More than one burial for person #{person.inspect}"
-        end
-
-        profession = get_note_for(person, 'Profession')
-        updated_at = [updated_at, profession.updated_at].max
-        yrke = profession.note
-
-        address = get_address_of(person)
-        unless address.nil?
-          updated_at = [updated_at, address.updated_at].max
-          hemort = address.street
-          hemfs = address.parish
-        end
-
-        note1 = get_note_for(person, "Holger:Anm1")
-        unless note1.nil?
-          updated_at = [updated_at, note1.updated_at].max
-          unless note1.note.include? "\n"
-            anm1 = note1.note
-          else
-            anm1 = ''
-          end
-        else
-          anm1 = ''
-        end
-        note2 = get_note_for(person, "Holger:Anm2")
-        unless note2.nil?
-          updated_at = [updated_at, note2.updated_at].max
-          unless note2.note.include? "\n"
-            anm2 = note2.note
-          else
-            anm2 = ''
-          end
-        else
-          anm2 = ''
-        end
-        ttnamn = get_calling_name_end_index(person)
-        eenamn = '0'
-        dopkod = ''
-        begkod = ''
-        konkod = ''
-        markering = 'A0000000000000000000000000000000000000000000000000000000000000000000000000000000'
-        sortfalt = '%10d' % i
-        regtid = person.created_at
-        upptid = updated_at
-        dbid = 0
-        regid = 0
-        uppid = 0
-        typ = 'P'
-        status = ''
-
-        fd.puts("  <row>")
-        fd.puts(make_number_tag("p", person.id))
-        fd.puts(make_number_tag("f", f))
-        fd.puts(make_number_tag("m", m))
-        fd.puts(make_alpha_tag("fornamn", fornamn))
-        fd.puts(make_alpha_tag("patronym", patronym))
-        fd.puts(make_alpha_tag("efternamn", efternamn))
-        fd.puts(make_alpha_tag("kon", kon))
-        fd.puts(make_alpha_tag("fodat", fodat))
-        fd.puts(make_alpha_tag("dopdat", dopdat))
-        fd.puts(make_alpha_tag("fodort", fodort))
-        fd.puts(make_alpha_tag("fodfs", fodfs))
-        fd.puts(make_alpha_tag("dodat", dodat))
-        fd.puts(make_alpha_tag("begdat", begdat))
-        fd.puts(make_alpha_tag("dodort", dodort))
-        fd.puts(make_alpha_tag("dodfs", dodfs))
-        fd.puts(make_alpha_tag("dodors", dodors))
-        fd.puts(make_alpha_tag("yrke", yrke))
-        fd.puts(make_alpha_tag("hemort", hemort))
-        fd.puts(make_alpha_tag("hemfs", hemfs))
-        fd.puts(make_alpha_tag("anm1", anm1))
-        fd.puts(make_alpha_tag("anm2", anm2))
-        fd.puts(make_alpha_tag("ttnamn", ttnamn))
-        fd.puts(make_alpha_tag("eenamn", eenamn))
-        fd.puts(make_alpha_tag("dopkod", dopkod))
-        fd.puts(make_alpha_tag("begkod", begkod))
-        fd.puts(make_alpha_tag("konkod", konkod))
-        fd.puts(make_alpha_tag("markering", markering))
-        fd.puts(make_alpha_tag("sortfalt", sortfalt))
-        fd.puts(make_timestamp_tag("regtid", regtid))
-        fd.puts(make_timestamp_tag("upptid", upptid))
-        fd.puts(make_number_tag("dbid", dbid))
-        fd.puts(make_number_tag("regid", regid))
-        fd.puts(make_number_tag("uppid", uppid))
-        fd.puts(make_alpha_tag("typ", typ))
-        fd.puts(make_alpha_tag("status", status))
-        fd.puts("  </row>")
-
-        i = i + 1
-      end
+      export_p(fd)
       fd.puts("</dump>")
     end
+  end
+
+  def export_p(fd)
+    i = 1
+    people = Person.all
+    people.each do |person|
+      export_person(fd, person, i)
+      i = i + 1
+    end
+  end
+
+  def export_person(fd, person, i)
+    f = 0
+    m = 0
+    parents = person.find_parents
+    parents.each do |parent|
+      if parent.sex == "M"
+        f = parent.id
+      else
+        m = parent.id
+      end
+    end
+    fornamn = get_given_name(person)
+    patronym = ""
+    efternamn = get_surname(person)
+    if person.sex == 'M'
+      kon = 'm'
+    else
+      kon = 'k'
+    end
+    updated_at = person.updated_at
+    birth_refs = person.get_references.where(name: 'Born')
+    if birth_refs.length == 1
+      birth = birth_refs[0].other_object(person)
+      birth_dates = get_dates_of(birth)
+      fodat = dates_to_string(birth_dates)
+      updated_at = ([updated_at] + birth_dates.collect{|birth_date| birth_date.updated_at}).max
+      address = get_address_of(birth)
+      unless address.nil?
+        fodort = address.street
+        fodfs = address.parish
+        updated_at = [updated_at, address.updated_at].max
+      end
+      updated_at = [updated_at, birth.updated_at].max
+    elsif birth_refs.length > 1
+      raise StandardError, "More than one birth for person #{person.inspect}"
+    end
+      
+    christening_refs = person.get_references.where(name: 'Christened')
+    if christening_refs.length == 1
+      christening = christening_refs[0].other_object(person)
+      updated_at = [updated_at, christening.updated_at].max
+      christening_dates = get_dates_of(christening)
+      updated_at = ([updated_at] + christening_dates.collect{|date| date.updated_at}).max
+      dopdat = dates_to_string(christening_dates)
+    elsif christening_refs.length > 1
+      raise StandardError, "More than one christening for person #{person.inspect}"
+    end
+
+    death_refs = person.get_references.where(name: 'Died')
+    if death_refs.length == 1
+      death = death_refs[0].other_object(person)
+      updated_at = [updated_at, death.updated_at].max
+      death_dates = get_dates_of(death)
+      updated_at = ([updated_at] + death_dates.collect{|date| date.updated_at}).max
+      dodat = dates_to_string(death_dates)
+      address = get_address_of(death)
+      unless address.nil?
+        updated_at = [updated_at, address.updated_at].max
+        dodort = address.street
+        dodfs = address.parish
+      end
+      cause = get_note_for(death, 'Cause')
+      unless cause.nil?
+        updated_at = [updated_at, cause.updated_at].max
+        dodors = cause.note
+      end
+    elsif death_refs.length > 1
+      raise StandardError, "More than one death for person #{person.inspect}"
+    end
+
+    burial_refs = person.get_references.where(name: 'Burried')
+    if burial_refs.length == 1
+      burial = burial_refs[0].other_object(person)
+      updated_at = [updated_at, burial.updated_at].max
+      burial_dates = get_dates_of(burial)
+      updated_at = ([updated_at] + burial_dates.collect{|date| date.updated_at}).max
+      begdat = dates_to_string(burial_dates)
+    elsif burial_refs.length > 1
+      raise StandardError, "More than one burial for person #{person.inspect}"
+    end
+      
+    profession = get_note_for(person, 'Profession')
+    updated_at = [updated_at, profession.updated_at].max
+    yrke = profession.note
+      
+    address = get_address_of(person)
+    unless address.nil?
+      updated_at = [updated_at, address.updated_at].max
+      hemort = address.street
+      hemfs = address.parish
+    end
+
+    note1 = get_note_for(person, "Holger:Anm1")
+    unless note1.nil?
+      updated_at = [updated_at, note1.updated_at].max
+      unless note1.note.include? "\n"
+        anm1 = note1.note
+      end
+    end
+    note2 = get_note_for(person, "Holger:Anm2")
+    unless note2.nil?
+      updated_at = [updated_at, note2.updated_at].max
+      unless note2.note.include? "\n"
+        anm2 = note2.note
+      end
+    end
+    ttnamn = get_calling_name_end_index(person)
+    eenamn = '0'
+    dopkod = ''
+    begkod = ''
+    konkod = ''
+    markering = 'A0000000000000000000000000000000000000000000000000000000000000000000000000000000'
+    sortfalt = '%10d' % i
+    regtid = person.created_at
+    upptid = updated_at
+    dbid = 0
+    regid = 0
+    uppid = 0
+    typ = 'P'
+    status = ''
+
+    fd.puts("  <row>")
+    fd.puts(make_number_tag("p", person.id))
+    fd.puts(make_number_tag("f", f))
+    fd.puts(make_number_tag("m", m))
+    fd.puts(make_alpha_tag("fornamn", fornamn))
+    fd.puts(make_alpha_tag("patronym", patronym))
+    fd.puts(make_alpha_tag("efternamn", efternamn))
+    fd.puts(make_alpha_tag("kon", kon))
+    fd.puts(make_alpha_tag("fodat", fodat))
+    fd.puts(make_alpha_tag("dopdat", dopdat))
+    fd.puts(make_alpha_tag("fodort", fodort))
+    fd.puts(make_alpha_tag("fodfs", fodfs))
+    fd.puts(make_alpha_tag("dodat", dodat))
+    fd.puts(make_alpha_tag("begdat", begdat))
+    fd.puts(make_alpha_tag("dodort", dodort))
+    fd.puts(make_alpha_tag("dodfs", dodfs))
+    fd.puts(make_alpha_tag("dodors", dodors))
+    fd.puts(make_alpha_tag("yrke", yrke))
+    fd.puts(make_alpha_tag("hemort", hemort))
+    fd.puts(make_alpha_tag("hemfs", hemfs))
+    fd.puts(make_alpha_tag("anm1", anm1))
+    fd.puts(make_alpha_tag("anm2", anm2))
+    fd.puts(make_alpha_tag("ttnamn", ttnamn))
+    fd.puts(make_alpha_tag("eenamn", eenamn))
+    fd.puts(make_alpha_tag("dopkod", dopkod))
+    fd.puts(make_alpha_tag("begkod", begkod))
+    fd.puts(make_alpha_tag("konkod", konkod))
+    fd.puts(make_alpha_tag("markering", markering))
+    fd.puts(make_alpha_tag("sortfalt", sortfalt))
+    fd.puts(make_timestamp_tag("regtid", regtid))
+    fd.puts(make_timestamp_tag("upptid", upptid))
+    fd.puts(make_number_tag("dbid", dbid))
+    fd.puts(make_number_tag("regid", regid))
+    fd.puts(make_number_tag("uppid", uppid))
+    fd.puts(make_alpha_tag("typ", typ))
+    fd.puts(make_alpha_tag("status", status))
+    fd.puts("  </row>")
   end
 
   def make_tag(tag_type, name, value)

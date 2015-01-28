@@ -25,8 +25,8 @@ class Folder
 
       ['p', 'v', 'a', 'c', 'k', 'm' ].each do |db_type|
         filename = File.join(@path, basename + db_type + '.xml')
-        x = XmlFile.new(filename, source: basename)
-        x.import
+        x = XmlFile.new
+        x.import(filename, source: basename)
       end
 
       retval = true
@@ -45,8 +45,11 @@ class Folder
 
   def export_holger7
     Dir.mkdir(@path)
-    x = XmlFile.new(@path + '/holgertest')
-    x.export
+    x = XmlFile.new
+    ['p'].each do |type|
+      dbname = File.basename(@path).split('.')[0]
+      x.export(@path + "/#{dbname}#{type}.xml", type: type)
+    end
   end
 
 end

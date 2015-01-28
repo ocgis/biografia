@@ -9,8 +9,8 @@ class ImportsController < ApplicationController
     filename = transfer_obj.full_file_name
 
     if transfer_obj.content_type == 'text/xml'
-      x = XmlFile.new(filename)
-      x.import
+      x = XmlFile.new
+      x.import(filename)
     elsif transfer_obj.content_type == 'application/x-gedcom'
       g = GedcomFile.new(filename)
       g.import
