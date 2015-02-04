@@ -1,8 +1,50 @@
 # -*- coding: utf-8 -*-
 class XmlFile
 
+  ADDRESS_ROLE = "Address"
+  DATE_ROLE = "Date"
+
+  RELATIONSHIP_NAMES = {
+    '1' => "Äktenskap",
+    '2' => "Samvetsäktenskap",
+    '3' => "Sambo",
+    '4' => "Relation",
+    '5' => "Förlovad",
+    '6' => "Trolovad",
+    '7' => "Partner",
+    '8' => "Särbo"
+  }
+
+  RELATIONSHIP_ROLES = {
+    '1' => "Marriage",
+    '2' => "Common-law marriage",
+    '3' => "Cohabitation",
+    '4' => "Relationship",
+    '5' => "Engagement",
+    '6' => "Espousalment",
+    '7' => "Partnership",
+    '8' => "Live-apart"
+  }
+
+  KON2SEX = {
+    'm' => 'M',
+    'M' => 'M',
+    'k' => 'F',
+    'K' => 'F',
+    'o' => 'U',
+    'O' => 'U'
+  }
+
+  SEX2KON = {
+    'M' => 'm',
+    'F' => 'k',
+    'U' => 'o'
+  }
+
   def initialize
     @maxloops = 20000
+    @families = []
+    @person_attributes = {}
   end
 
   def import(file, options = {})
@@ -131,10 +173,13 @@ class XmlFile
   end
 
   def make_calling_name(v)
-    cn_end = v['ttnamn'][0].ord - '0'.ord
+    ttnamn = v['ttnamn']
+    ttnamn = '<' if ttnamn == "&lt;\n"
+    ttnamn = '>' if ttnamn == "&gt;\n"
+    cn_end = ttnamn[0].ord - '0'.ord
 
     if cn_end == 0
-      calling_name = v['fornamn']
+      calling_name = nil
 #      raise StandardError, "FIXME: Check if calling name correct: #{calling_name}"
     else
       calling_name = v['fornamn'][0..cn_end-1].rstrip.split(' ')[-1]
@@ -188,7 +233,13 @@ class XmlFile
     if v['efternamn'].nil?
       surnames = [nil]
     else
-      surnames = v['efternamn'].split(" f.").collect{|e| e.lstrip}
+      surnames = v['efternamn'].split(" f.", -1).collect do |e|
+        if empty?(e)
+          nil
+        else
+          e.lstrip
+        end
+      end
     end
     while surnames.length > person.person_names.length
       person.person_names << PersonName.new
@@ -200,7 +251,7 @@ class XmlFile
     i = 0
     surnames.reverse_each do |surname|
       person_name = person.person_names[i]
-      person_name.given_name = v['fornamn']
+      person_name.given_name = v['fornamn'] unless empty?(v['fornamn'])
       person_name.surname = surname
       person_name.calling_name = make_calling_name(v)
       person_name.created_at = v['regtid']
@@ -208,11 +259,7 @@ class XmlFile
       person_name.save
       i = i + 1
     end
-    if v['kon'] == 'm'
-      person.sex = 'M'
-    else
-      person.sex = 'F'
-    end
+    person.sex = KON2SEX[v['kon']]
     if person.changed?
       person.created_at = v['regtid']
       person.updated_at = v['upptid']
@@ -225,7 +272,7 @@ class XmlFile
       end
     end
 
-    @@person_attributes[v['p']] = { 'regtid'=> v['regtid'], 'upptid' => v['upptid'] }
+    @person_attributes[v['p']] = { 'regtid'=> v['regtid'], 'upptid' => v['upptid'] }
 
     return person
   end
@@ -238,8 +285,7 @@ class XmlFile
     return address
   end
   
-  def make_address(v, street, parish, field_base)
-    source = person_source(v['p'], field: field_base)
+  def make_address(v, street, parish, source)
     address = nil
     address = extend_address(nil, 'parish', v[parish], source) if not empty?(v[parish])
     address = extend_address(address, 'street', v[street], source) if not empty?(v[street])
@@ -254,27 +300,27 @@ class XmlFile
     return address
   end
 
-  def make_event_date(v, date)
+  def make_event_date(v, date, source)
     if empty?(v[date])
-      event_date = find_by_source(EventDate, person_source(v['p'], field: date))
+      event_date = find_by_source(EventDate, source)
       unless event_date.nil?
         event_date.destroy_with_references
       else
-        event_date = find_by_source(Note, person_source(v['p'], field: date))
+        event_date = find_by_source(Note, source)
         unless event_date.nil?
           event_date.destroy_with_references
         end
       end
       event_date = nil
     else
-      event_date = find_by_source_or_new(EventDate, person_source(v['p'], field: date))
+      event_date = find_by_source_or_new(EventDate, source)
       begin
         event_date.set_date(v[date].gsub('.', '-')) # Handle dates written 2014.11.29 as well as ISO
         if event_date.changed?
           event_date.created_at = v['regtid']
           event_date.updated_at = v['upptid']
         end
-        note = find_by_source(Note, person_source(v['p'], field: date))
+        note = find_by_source(Note, source)
         unless note.nil?
           note.destroy_with_references
         end
@@ -282,7 +328,7 @@ class XmlFile
       rescue StandardError
         Rails::logger.error("ERROR: Could not set date [#{v[date]}]. Making note instead.")
         event_date.destroy_with_references
-        event_date = make_note(v, nil, date)
+        event_date = make_note(v, nil, date, source)
       end
 
       if !event_date.save
@@ -346,28 +392,28 @@ class XmlFile
   def make_birth(v)
     return make_event(v, person_source(v['p'], field: 'fod'),
                       { name: 'Födelse' },
-                      { 'Address' => make_address(v, 'fodort', 'fodfs', 'fod'),
-                        'Date'    => make_event_date(v, 'fodat') })
+                      { ADDRESS_ROLE => make_address(v, 'fodort', 'fodfs', person_source(v['p'], field: "fod")),
+                        DATE_ROLE => make_event_date(v, 'fodat', person_source(v['p'], field: 'fodat')) })
   end
 
   def make_christening(v)
     return make_event(v, person_source(v['p'], field: 'dop'),
                       { name: 'Dop' },
-                      { 'Date' => make_event_date(v, 'dopdat') })
+                      { DATE_ROLE => make_event_date(v, 'dopdat', person_source(v['p'], field: 'dopdat')) })
   end
 
   def make_death(v)
     return make_event(v, person_source(v['p'], field: 'dod'),
                       { name: 'Död' },
-                      { 'Address' => make_address(v, 'dodort', 'dodfs', 'dod'),
-                        'Date' => make_event_date(v, 'dodat'),
+                      { ADDRESS_ROLE => make_address(v, 'dodort', 'dodfs', person_source(v['p'], field: 'dod')),
+                        DATE_ROLE => make_event_date(v, 'dodat', person_source(v['p'], field: 'dodat')),
                         'Cause' => make_note(v, 'Orsak', 'dodors', person_source(v['p'], field: 'dodors')) })
   end
 
   def make_funeral(v)
     return make_event(v, person_source(v['p'], field: 'beg'),
                       { name: 'Begravning' },
-                      { 'Date' => make_event_date(v, 'begdat') })
+                      { DATE_ROLE => make_event_date(v, 'begdat', person_source(v['p'], field: 'begdat')) })
   end
 
   def handle_person(v)
@@ -381,13 +427,13 @@ class XmlFile
       person.get_or_add_reference(death, role: 'Died') if not death.nil?
       funeral = make_funeral(v)
       person.get_or_add_reference(funeral, role: 'Burried') if not funeral.nil?
-      address = make_address(v, 'hemort', 'hemfs', 'hem')
-      person.get_or_add_reference(address, role: 'Address') if not address.nil?
+      address = make_address(v, 'hemort', 'hemfs', person_source(v['p'], field: 'hem'))
+      person.get_or_add_reference(address, role: ADDRESS_ROLE) if not address.nil?
       title = make_note(v, 'Titel', 'yrke', person_source(v['p'], field: 'yrke'))
       person.get_or_add_reference(title, role: 'Profession') if not title.nil?
-      anm1 = make_note(v, 'Anmärkning 1', 'anm1', person_source(v['p'], field: 'anm1'))
+      anm1 = make_note(v, nil, 'anm1', person_source(v['p'], field: 'anm1'))
       person.get_or_add_reference(anm1, role: 'Holger:Anm1') if not anm1.nil?
-      anm2 = make_note(v, 'Anmärkning 2', 'anm2', person_source(v['p'], field: 'anm2'))
+      anm2 = make_note(v, nil, 'anm2', person_source(v['p'], field: 'anm2'))
       person.get_or_add_reference(anm2, role: 'Holger:Anm2') if not anm2.nil?
       return true
     end
@@ -397,8 +443,6 @@ class XmlFile
   def handle_persons(rows)
     if rows.length > 0
       if check_person_params(parse_row(rows[0]))
-        @@person_attributes = {}
-        families = []
         i = 0
         rows.each do |row|
           v = parse_row(row)
@@ -406,16 +450,12 @@ class XmlFile
             raise StandardError, "handle_person could not handle #{v}"
           end
           family = get_family(v)
-          families.append(family) if not family.nil?
+          @families.append(family) if not family.nil?
 
           i = i + 1
           if i >= @maxloops
             break # FIXME: Remove
           end
-        end
-
-        families.each do |family|
-          make_family(family)
         end
 
         return true
@@ -489,13 +529,13 @@ class XmlFile
                 'f',         # make_marriage
                 'm',         # make_marriage
                 'p',         # check_marriage_params
-                'vigdat',    # make_wedding
-                'vigort',    # make_wedding
-                'vigfs',     # make_wedding
+                'vigdat',    # attach_wedding
+                'vigort',    # attach_wedding
+                'vigfs',     # attach_wedding
                 'slutdat',   # check_marriage_params
-                'anm',       # make_wedding
+                'anm',       # attach_wedding
                 'eventtyp',  # check_marriage_params
-                'typ',       # make_wedding
+                'typ',       # attach_wedding
                 'status'     # check_marriage_params
                ]
 
@@ -527,6 +567,10 @@ class XmlFile
           if i >= @maxloops
             break # FIXME: Remove
           end
+        end
+
+        @families.each do |family|
+          make_family(family)
         end
 
         return true
@@ -574,46 +618,32 @@ class XmlFile
     end
 
     if not rel.nil?
-      wedding = make_wedding(v)
-      rel.get_or_add_reference(wedding)
+      attach_wedding(v, rel)
     end
 
     return rel
   end
 
-  def make_wedding(v)
-    address = make_address(v, 'vigort', 'vigfs', 'vig')
-    event_date = make_event_date(v, 'vigdat')
-    note = make_note(v, 'Anmärkning', 'anm', marriage_source(v['v'], field: 'anm'))
-    if v['typ'] == '1'
-      name = "Äktenskap"
-    elsif v['typ'] == '2'
-      name = "Samvetsäktenskap"
-    elsif v['typ'] == '3'
-      name = "Sambo"
-    elsif v['typ'] == '4'
-      name = "Relation"
-    elsif v['typ'] == '5'
-      name = "Förlovad"
-    elsif v['typ'] == '6'
-      name = "Trolovad"
-    elsif v['typ'] == '7'
-      name = "Partner"
-    elsif v['typ'] == '8'
-      name = "Särbo"
-    else
-      name = "Typ #{v['typ']}"
-      Rails::logger.error("ERROR: Unknown relationship type: #{v}")
+  def attach_wedding(v, relationship)
+    address = make_address(v, 'vigort', 'vigfs', marriage_source(v['v'], field: 'vig'))
+    event_date = make_event_date(v, 'vigdat', marriage_source(v['v'], field: 'vigdat'))
+    note = make_note(v, nil, 'anm', marriage_source(v['v'], field: 'anm'))
+    begin
+      name = RELATIONSHIP_NAMES[v['typ']]
+      role = RELATIONSHIP_ROLES[v['typ']]
+    rescue
+      raise StandardError, "ERROR: Unknown relationship type: #{v}"
     end
     wedding = find_by_source_or_new(Event, marriage_source(v['v']))
     wedding[:name] = name
     unless wedding.save
       raise StandardError, "Could not save wedding: #{wedding.inspect}"
     end
-    wedding.get_or_add_reference(address) if not address.nil?
-    wedding.get_or_add_reference(event_date) if not event_date.nil?
+    wedding.get_or_add_reference(address, role: ADDRESS_ROLE) if not address.nil?
+    wedding.get_or_add_reference(event_date, role: DATE_ROLE) if not event_date.nil?
     wedding.get_or_add_reference(note) if not note.nil?
-    return wedding
+
+    relationship.get_or_add_reference(wedding, role: role)
   end
 
   def check_remark_params(v)
@@ -663,8 +693,10 @@ class XmlFile
 
   def handle_remark(v)
     if check_remark_params(v)
-      v['regtid'] = @@person_attributes[v['p']]['regtid']
-      v['upptid'] = @@person_attributes[v['p']]['upptid']
+      unless @person_attributes[v['p']].nil?
+        v['regtid'] = @person_attributes[v['p']]['regtid']
+        v['upptid'] = @person_attributes[v['p']]['upptid']
+      end
       make_remark(v)
 
       return true
@@ -675,9 +707,9 @@ class XmlFile
   def make_remark(v)
     person = find_by_source(Person, person_source(v['p']))
     unless person.nil?
-      remark = make_note(v, "Anmärkning #{v['r']}", 'anmtext', remark_source(v['p'], v['r'], field: 'anmtext'))
+      remark = make_note(v, nil, 'anmtext', remark_source(v['p'], v['r'], field: 'anmtext'))
       if not remark.nil?
-        person.get_or_add_reference(remark, role: "Holger:Anm#{v['r']}")
+        person.get_or_add_reference(remark, role: "Holger:Anmtext#{v['r']}")
       end
     else
       Rails::logger.error("ERROR: Could not find person in db: #{v['p']}")
@@ -691,7 +723,15 @@ class XmlFile
 
     File.open(file, "w") do |fd|
       fd.puts("<dump>")
-      export_p(fd)
+      if options[:type] == 'p'
+        export_p(fd)
+      elsif options[:type] == 'a'
+        export_a(fd)
+      elsif options[:type] == 'v'
+        export_v(fd)
+      else
+        raise StandardError, "File type #{options[:type].inspect} not known"
+      end
       fd.puts("</dump>")
     end
   end
@@ -705,32 +745,54 @@ class XmlFile
     end
   end
 
+  def export_a(fd)
+    i = 1
+    people = Person.all
+    people.each do |person|
+      export_person_remarks(fd, person, i)
+      i = i + 1
+    end
+  end
+
+  def export_v(fd)
+    relationships = Relationship.all
+    relationships.each do |relationship|
+      export_relationship(fd, relationship)
+    end
+  end
+
   def export_person(fd, person, i)
     f = 0
     m = 0
     parents = person.find_parents
     parents.each do |parent|
       if parent.sex == "M"
-        f = parent.id
+        if f == 0
+          f = parent.id
+        else
+          m = parent.id
+        end
       else
-        m = parent.id
+        if m == 0
+          m = parent.id
+        else
+          f = parent.id
+        end
       end
     end
     fornamn = get_given_name(person)
     patronym = ""
     efternamn = get_surname(person)
-    if person.sex == 'M'
-      kon = 'm'
-    else
-      kon = 'k'
-    end
+    kon = SEX2KON[person.sex]
     updated_at = person.updated_at
     birth_refs = person.get_references.where(name: 'Born')
     if birth_refs.length == 1
       birth = birth_refs[0].other_object(person)
       birth_dates = get_dates_of(birth)
-      fodat = dates_to_string(birth_dates)
-      updated_at = ([updated_at] + birth_dates.collect{|birth_date| birth_date.updated_at}).max
+      unless birth_dates.nil?
+        fodat = dates_to_string(birth_dates)
+        updated_at = ([updated_at] + birth_dates.collect{|birth_date| birth_date.updated_at}).max
+      end
       address = get_address_of(birth)
       unless address.nil?
         fodort = address.street
@@ -758,8 +820,10 @@ class XmlFile
       death = death_refs[0].other_object(person)
       updated_at = [updated_at, death.updated_at].max
       death_dates = get_dates_of(death)
-      updated_at = ([updated_at] + death_dates.collect{|date| date.updated_at}).max
-      dodat = dates_to_string(death_dates)
+      unless death_dates.nil?
+        updated_at = ([updated_at] + death_dates.collect{|date| date.updated_at}).max
+        dodat = dates_to_string(death_dates)
+      end
       address = get_address_of(death)
       unless address.nil?
         updated_at = [updated_at, address.updated_at].max
@@ -787,8 +851,10 @@ class XmlFile
     end
       
     profession = get_note_for(person, 'Profession')
-    updated_at = [updated_at, profession.updated_at].max
-    yrke = profession.note
+    unless profession.nil?
+      updated_at = [updated_at, profession.updated_at].max
+      yrke = profession.note
+    end
       
     address = get_address_of(person)
     unless address.nil?
@@ -800,16 +866,12 @@ class XmlFile
     note1 = get_note_for(person, "Holger:Anm1")
     unless note1.nil?
       updated_at = [updated_at, note1.updated_at].max
-      unless note1.note.include? "\n"
-        anm1 = note1.note
-      end
+      anm1 = note1.note
     end
     note2 = get_note_for(person, "Holger:Anm2")
     unless note2.nil?
       updated_at = [updated_at, note2.updated_at].max
-      unless note2.note.include? "\n"
-        anm2 = note2.note
-      end
+      anm2 = note2.note
     end
     ttnamn = get_calling_name_end_index(person)
     eenamn = '0'
@@ -865,12 +927,93 @@ class XmlFile
     fd.puts("  </row>")
   end
 
+  def export_person_remarks(fd, person, i)
+    fktabell = 'P'
+    typ = ''
+    for r in 1..2
+      note = get_note_for(person, "Holger:Anmtext#{r}")
+      unless note.nil?
+        anmtext = note.note
+        status = 'A'
+        fd.puts("  <row>")
+        fd.puts(make_number_tag("p", person.id))
+        fd.puts(make_alpha_tag("fktabell", fktabell))
+        fd.puts(make_number_tag("r", r))
+        fd.puts(make_memoblob_tag("anmtext", anmtext))
+        fd.puts(make_alpha_tag("typ", typ))
+        fd.puts(make_alpha_tag("status", status))
+        fd.puts("  </row>")
+      end
+    end
+  end
+
+  def export_relationship(fd, relationship)
+    v = relationship.id
+    spouse_references = relationship.get_references.where(name: "Spouse")
+    spouses = spouse_references.collect{|spouse_reference| spouse_reference.other_object(relationship)}
+    if spouses.length == 2 # Ignore families with less than 2 spouses
+      if spouses[0].sex == 'F'
+        m = spouses[0].id
+        f = spouses[1].id
+      else
+        f = spouses[0].id
+        m = spouses[1].id
+      end
+
+      p = 0
+
+      event = nil
+      typ = '0'
+      RELATIONSHIP_ROLES.each do |type, role|
+        event_references = relationship.get_references.where(name: role)
+        if event_references.length > 0
+          event = event_references[0].other_object(relationship)
+          typ = type
+          break
+        end
+      end
+      unless event.nil?
+        address = get_address_of(event)
+        unless address.nil?
+          vigort = address.street
+          vigfs = address.parish
+        end
+        dates = get_dates_of(event)
+        vigdat = dates_to_string(dates) unless dates.nil?
+      end
+
+      slutdat = '' # FIXME
+      anm = '' # FIXME
+      eventtyp = 0 # FIXME
+      status = ''
+
+      fd.puts("  <row>")
+      fd.puts(make_number_tag("v", v))
+      fd.puts(make_number_tag("f", f))
+      fd.puts(make_number_tag("m", m))
+      fd.puts(make_number_tag("p", p))
+      fd.puts(make_alpha_tag("vigdat", vigdat))
+      fd.puts(make_alpha_tag("vigort", vigort))
+      fd.puts(make_alpha_tag("vigfs", vigfs))
+      fd.puts(make_alpha_tag("slutdat", slutdat))
+      fd.puts(make_alpha_tag("anm", anm))
+      fd.puts(make_number_tag("eventtyp", eventtyp))
+      fd.puts(make_alpha_tag("typ", typ))
+      fd.puts(make_alpha_tag("status", status))
+      fd.puts("  </row>")
+    end
+  end
+
   def make_tag(tag_type, name, value)
     return "    <#{tag_type} name=\"#{name}\">#{value}</#{tag_type}>"
   end
 
   def make_alpha_tag(name, value)
     return make_tag("alpha", name, value)
+  end
+
+  def make_memoblob_tag(name, value)
+    return make_tag("memoblob", name, value)
   end
 
   def make_number_tag(name, value)
@@ -894,28 +1037,30 @@ class XmlFile
   end
 
   def get_surname(person)
-    if person.person_names.length == 1
-      surname = person.person_names.first.surname
-    elsif person.person_names.length == 2
-      surname = "#{person.person_names.last.surname} f.#{person.person_names.first.surname}"
-    else
-      raise StandardError, "Unhandled number of names #{person.person_names.length}"
-    end
+    surname = person.person_names.collect{|person_name| person_name.surname}.reverse.join(" f.")
     return surname
   end
 
   def get_calling_name_end_index(person)
-    first = person.person_names.last.given_name.index(person.person_names.last.calling_name)
-    unless first.nil?
-      last = first + person.person_names.last.calling_name.length + 1
-    else
-      last = 0
+    calling_name = person.person_names.last.calling_name
+    last = 0
+    unless calling_name.nil?
+      first = person.person_names.last.given_name.index(calling_name)
+      unless first.nil?
+        last = first + person.person_names.last.calling_name.length
+        if person.person_names.last.given_name[last].nil? or (person.person_names.last.given_name[last] == ' ')
+          last = last + 1
+        end
+      end
     end
-    return (last + '0'.ord).chr
+    end_index = (last + '0'.ord).chr
+    end_index = "&lt;\n" if end_index == "<"
+    end_index = "&gt;\n" if end_index == ">"
+    return end_index
   end
 
   def get_dates_of(event)
-    references = event.get_references.where(name: "Date")
+    references = event.get_references.where(name: DATE_ROLE)
     if references.length > 0
       return references.collect{|reference| reference.other_object(event)}
     else
@@ -929,7 +1074,7 @@ class XmlFile
   end
 
   def get_address_of(event)
-    references = event.get_references.where(name: "Address")
+    references = event.get_references.where(name: ADDRESS_ROLE)
     addresses = references.collect{|reference| reference.other_object(event)}
     if addresses.length == 1
       return addresses[0]

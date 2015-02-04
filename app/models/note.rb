@@ -9,7 +9,15 @@ class Note < ActiveRecord::Base
   end
 
   def one_line
-    return title
+    unless title.nil?
+      return title
+    else
+      if note.length > 0
+        return note.split("\n")[0]
+      else
+        return ''
+      end
+    end
   end
 
 end
