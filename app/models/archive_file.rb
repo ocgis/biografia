@@ -13,7 +13,7 @@ class ArchiveFile
     if @content_type == 'application/zip'
       extract_path = @filename + '.extract'
       FileUtils.rm_r(extract_path) if File.exists?(extract_path)
-      Dir.mkdir(extract_path)
+      Dir.mkdir_p(extract_path)
 
       Zip::File.open(@filename) do |zip_file|
         # Handle entries one by one
@@ -46,7 +46,7 @@ class ArchiveFile
           file = full_file.partition(extract_path+'/')[2]
           unless file == ''
             if File.directory?(full_file)
-              zip_file.mkdir(file)
+              zip_file.mkdir_p(file)
             else
               zip_file.add(file, full_file)
             end

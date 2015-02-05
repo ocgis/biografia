@@ -13,10 +13,10 @@ class ExportsController < ApplicationController
     if object.save
       Spawnling.new do
         begin
-          Dir.mkdir(object.path)
+          Dir.mkdir_p(object.path)
           object.make_export
-        rescue
-          object.status = 'ERROR'
+        rescue => e
+          object.status = "#{e.message}\n#{e.backtrace.inspect}"
           object.save
         end
       end

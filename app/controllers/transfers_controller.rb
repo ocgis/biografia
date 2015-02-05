@@ -13,7 +13,7 @@ class TransfersController < ApplicationController
     saved = transfer_obj.save
 
     if saved
-      Dir.mkdir(transfer_obj.path)
+      Dir.mkdir_p(transfer_obj.path)
       file_data = file_param.read
       # write the file
       File.open(transfer_obj.full_file_name, "wb") { |f| f.write(file_data) }

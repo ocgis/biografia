@@ -44,7 +44,7 @@ class Folder
   end
 
   def export_holger7
-    Dir.mkdir(@path)
+    Dir.mkdir_p(@path)
     x = XmlFile.new
     ['p', 'a', 'v'].each do |type|
       dbname = File.basename(@path).split('.')[0]
