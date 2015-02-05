@@ -429,7 +429,7 @@ class XmlFile
       person.get_or_add_reference(funeral, role: 'Burried') if not funeral.nil?
       address = make_address(v, 'hemort', 'hemfs', person_source(v['p'], field: 'hem'))
       person.get_or_add_reference(address, role: ADDRESS_ROLE) if not address.nil?
-      title = make_note(v, 'Titel', 'yrke', person_source(v['p'], field: 'yrke'))
+      title = make_note(v, 'Yrke', 'yrke', person_source(v['p'], field: 'yrke'))
       person.get_or_add_reference(title, role: 'Profession') if not title.nil?
       anm1 = make_note(v, nil, 'anm1', person_source(v['p'], field: 'anm1'))
       person.get_or_add_reference(anm1, role: 'Holger:Anm1') if not anm1.nil?
