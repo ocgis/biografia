@@ -16,6 +16,9 @@ class Export < ActiveRecord::Base
   end
   
   def make_export
+    self.status = 'PROCESSING'
+    self.save
+
     a = ArchiveFile.new(full_file_name, 'application/zip')
     a.export
 
