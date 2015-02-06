@@ -44,10 +44,10 @@ class ExportsController < ApplicationController
     while true do
       Export.uncached do
         export = Export.find(params.require(:id))
-        sse.write({ status: { replace: export.status } })
+        sse.write({ status: { replace: "#{export.status} #{i}" } })
       end
       i = i + 1
-      sleep(0.5)
+      sleep(1)
     end
 
   rescue IOError
