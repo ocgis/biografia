@@ -16,37 +16,13 @@ class Export < ActiveRecord::Base
   end
   
   def make_export
-    self.status = 'PROCESSING'
-    self.save
-
-    a = ArchiveFile.new(full_file_name, 'application/zip')
+    a = ArchiveFile.new(full_file_name, 'application/zip', status_object: self)
     a.export
+  end
 
-    # f = File.open(full_file_name, "w")
-    # f.puts('<?xml version="1.0" encoding="utf-8"?>')
-    # f.puts('<biografia>')
-
-    # for c in [ Person, Event, EventDate, Note, Address, Relationship, Medium, Reference ]
-    #   c.all.each do |o|
-    #     self.status = 'PROCESSING ' + c.name + ' objects'
-    #     self.save
-    #     while not o.nil?
-    #       f.puts("<#{o.class.name}>")
-    #       o.attributes.each do |key,value|
-    #         f.puts("<#{key}>#{value}</#{key}>")
-    #       end
-    #       author = User.find(o.originator)
-    #       f.puts("<author>#{o.originator} (#{author.name})</author>")
-    #       f.puts("</#{o.class.name}>")
-    #       o = o.previous_version
-    #     end
-    #   end
-    # end
-
-    # f.puts('</biografia>')
-    # f.close()
-
-    self.status = 'DONE'
+  def set_status(status)
+    self.status = status
     self.save
   end
+
 end

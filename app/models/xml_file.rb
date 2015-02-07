@@ -41,10 +41,24 @@ class XmlFile
     'U' => 'o'
   }
 
-  def initialize
+  def initialize(options = {})
+    defaults = {
+      status_object: nil
+    }
+    options = defaults.merge(options)
+
     @maxloops = 20000
     @families = []
     @person_attributes = {}
+    @status_object = options[:status_object]
+  end
+
+  def set_status(status)
+    unless @status_object.nil?
+      @status_object.set_status(status)
+    else
+      puts("xml_file.rb: Status set to: #{status}")
+    end
   end
 
   def import(file, options = {})
@@ -718,6 +732,8 @@ class XmlFile
 
 
   def export(file, options = {})
+    self.set_status("Exporting XML file #{file}")
+
     defaults = { type: nil }
     options = defaults.merge(options)
 
@@ -734,6 +750,8 @@ class XmlFile
       end
       fd.puts("</dump>")
     end
+
+    self.set_status("Done exporting XML file #{file}")
   end
 
   def export_p(fd)

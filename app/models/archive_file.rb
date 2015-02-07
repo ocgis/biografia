@@ -4,9 +4,23 @@ require 'zip'
 
 class ArchiveFile
 
-  def initialize(filename, content_type)
+  def initialize(filename, content_type, options = {})
+    defaults = {
+      status_object: nil
+    }
+    options = defaults.merge(options)
+
     @filename = filename
     @content_type = content_type
+    @status_object = options[:status_object]
+  end
+
+  def set_status(status)
+    unless @status_object.nil?
+      @status_object.set_status(status)
+    else
+      puts("archive_file.rb: Status set to: #{status}")
+    end
   end
 
   def import
@@ -28,13 +42,15 @@ class ArchiveFile
       raise StandardError, "Can't import #{@content_type} file"
     end
 
-    f = Folder.new(extract_path)
+    f = Folder.new(extract_path, status_object: @status_object)
     f.import()
   end
 
   def export
+    self.set_status("Exporting archive file #{@filename}")
+
     extract_path = @filename + '.extract'
-    f = Folder.new(extract_path)
+    f = Folder.new(extract_path, status_object: @status_object)
     f.export()
 
     if @content_type == 'application/zip'
@@ -55,9 +71,11 @@ class ArchiveFile
         Dir.chdir(old_dir)
       end
     else
+      self.set_status("Can't export archive file #{@filename}")
       raise StandardError, "Can't export #{@content_type} file"
     end
 
+    self.set_status("Done exporting archive file #{@filename}")
   end
 
 end
