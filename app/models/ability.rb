@@ -13,6 +13,7 @@ class Ability
       can [:new, :create], [ Address, Event, Person]
       can [:new, :create, :search, :register, :file_thumb], Medium
       can [:create, :index, :new, :show, :status, :file], Export
+      can [:new, :show, :status], Import
     end
     if user.has_role? :watcher
       can [:index, :show], [Address, Event, EventDate, Note, Person, Relationship]

@@ -47,7 +47,11 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :imports, :only => [:new]
+  resources :imports, :only => [:new, :show] do
+    member do
+      get 'status'
+    end
+  end
 
   resources :media, :except => [:destroy, :update] do
     collection do

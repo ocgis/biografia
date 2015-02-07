@@ -62,6 +62,8 @@ class XmlFile
   end
 
   def import(file, options = {})
+    self.set_status("Importing XML file #{file}")
+
     defaults = { source: nil }
     options = defaults.merge(options)
 
@@ -85,6 +87,8 @@ class XmlFile
     end
 
     f.close()
+
+    self.set_status("Done importing XML file #{file}")
   end
 
   def parse_row(row)

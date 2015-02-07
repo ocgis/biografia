@@ -24,6 +24,8 @@ class ArchiveFile
   end
 
   def import
+    self.set_status("Importing archive file #{@filename}")
+
     if @content_type == 'application/zip'
       extract_path = @filename + '.extract'
       FileUtils.rm_r(extract_path) if File.exists?(extract_path)
@@ -44,6 +46,8 @@ class ArchiveFile
 
     f = Folder.new(extract_path, status_object: @status_object)
     f.import()
+
+    self.set_status("Done importing archive file #{@filename}")
   end
 
   def export

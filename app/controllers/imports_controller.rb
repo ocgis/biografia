@@ -1,24 +1,52 @@
 class ImportsController < ApplicationController
 
-  # FIXME: load_and_authorize_resource
+  load_and_authorize_resource
 
   def new
     transfer_obj = Transfer.find(params[:transfer_id])
-
-    # Get the file
-    filename = transfer_obj.full_file_name
-
-    if transfer_obj.content_type == 'text/xml'
-      x = XmlFile.new
-      x.import(filename)
-    elsif transfer_obj.content_type == 'application/x-gedcom'
-      g = GedcomFile.new(filename)
-      g.import
-    elsif transfer_obj.content_type == 'application/zip'
-      a = ArchiveFile.new(filename, transfer_obj.content_type)
-      a.import
+    object = Import.new
+    object.file_name = transfer_obj.full_file_name
+    object.content_type = transfer_obj.content_type
+    if object.save
+      Spawnling.new do
+        begin
+          object.make_import
+        rescue => e
+          object.status = "#{e.message}\n#{e.backtrace.inspect}"
+          object.save
+        end
+      end
+      redirect_to :action => 'show', :id => object.id
     else
-      raise StandardError, "Can't import #{transfer_obj.content_type} file"
+      raise StandardError, "Could not create import object"
     end
   end
+
+
+  def show
+    @import = Import.find(params.require(:id))
+  end
+
+  include ActionController::Live
+
+  def status
+    response.headers['Content-Type'] = 'text/event-stream'
+    sse = SSE.new(response.stream, event: "update")
+    i = 0
+    while true do
+      Import.uncached do
+        import = Import.find(params.require(:id))
+        sse.write({ status: { replace: "#{import.status} #{i}" } })
+      end
+      i = i + 1
+      sleep(1)
+    end
+
+  rescue IOError
+    # Just exit
+
+  ensure
+    sse.close
+  end
+
 end

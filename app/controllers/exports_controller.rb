@@ -22,7 +22,7 @@ class ExportsController < ApplicationController
       end
       redirect_to :action => 'show', :id => object.id
     else
-      raise StandardException
+      raise StandardError, "Could not create export object"
     end
   end
 

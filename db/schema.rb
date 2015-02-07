@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141211192155) do
+ActiveRecord::Schema.define(version: 20150207130918) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -51,6 +51,14 @@ ActiveRecord::Schema.define(version: 20141211192155) do
     t.string   "name"
     t.string   "email"
     t.string   "password_digest"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "imports", force: true do |t|
+    t.string   "file_name",                                 null: false
+    t.string   "content_type",                              null: false
+    t.string   "status",       limit: 300, default: "INIT"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
