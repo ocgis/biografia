@@ -40,9 +40,9 @@ ActiveRecord::Schema.define(version: 20150207130918) do
   end
 
   create_table "exports", force: true do |t|
-    t.string   "file_name",                     null: false
-    t.string   "content_type",                  null: false
-    t.string   "status",       default: "INIT"
+    t.string   "file_name",                                  null: false
+    t.string   "content_type",                               null: false
+    t.string   "status",       limit: 1024, default: "INIT"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,9 +56,9 @@ ActiveRecord::Schema.define(version: 20150207130918) do
   end
 
   create_table "imports", force: true do |t|
-    t.string   "file_name",                                 null: false
-    t.string   "content_type",                              null: false
-    t.string   "status",       limit: 300, default: "INIT"
+    t.string   "file_name",                                  null: false
+    t.string   "content_type",                               null: false
+    t.string   "status",       limit: 1024, default: "INIT"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

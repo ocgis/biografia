@@ -101,11 +101,11 @@ class XmlFile
             if c.name == 'number'
               v[c['name']] = c.children[0].to_s.to_i
             elsif (c.name == 'alpha')
-              v[c['name']] = c.children[0].to_s
+              v[c['name']] = CGI.unescapeHTML(c.children[0].to_s)
             elsif (c.name == 'timestamp')
               v[c['name']] = DateTime.parse(c.children[0].to_s)
             elsif (c.name == 'memoblob')
-              v[c['name']] = c.children[0].to_s
+              v[c['name']] = CGI.unescapeHTML(c.children[0].to_s)
             else
               raise StandardError, "Unknown data type #{c.name}"
             end
@@ -192,8 +192,6 @@ class XmlFile
 
   def make_calling_name(v)
     ttnamn = v['ttnamn']
-    ttnamn = '<' if ttnamn == "&lt;\n"
-    ttnamn = '>' if ttnamn == "&gt;\n"
     cn_end = ttnamn[0].ord - '0'.ord
 
     if cn_end == 0
@@ -1031,11 +1029,13 @@ class XmlFile
   end
 
   def make_alpha_tag(name, value)
-    return make_tag("alpha", name, value)
+    value = '' if value.nil?
+    return make_tag("alpha", name, CGI.escapeHTML(value))
   end
 
   def make_memoblob_tag(name, value)
-    return make_tag("memoblob", name, value)
+    value = '' if value.nil?
+    return make_tag("memoblob", name, CGI.escapeHTML(value))
   end
 
   def make_number_tag(name, value)
@@ -1076,8 +1076,6 @@ class XmlFile
       end
     end
     end_index = (last + '0'.ord).chr
-    end_index = "&lt;\n" if end_index == "<"
-    end_index = "&gt;\n" if end_index == ">"
     return end_index
   end
 
