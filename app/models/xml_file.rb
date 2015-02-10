@@ -270,9 +270,10 @@ class XmlFile
       person_name.given_name = v['fornamn'] unless empty?(v['fornamn'])
       person_name.surname = surname
       person_name.calling_name = make_calling_name(v)
-      person_name.created_at = v['regtid']
-      person_name.updated_at = v['upptid']
-      person_name.save
+      if person_name.changed?
+        person_name.created_at = v['regtid']
+        person_name.updated_at = v['upptid']
+      end
       i = i + 1
     end
     person.sex = KON2SEX[v['kon']]
