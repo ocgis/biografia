@@ -4,8 +4,8 @@ class ExportsController < ApplicationController
   load_and_authorize_resource
 
   def new
-    @export = Export.new({file_name: 'bah',
-                          content_type: 'xml'})
+    @export = Export.new({file_name: 'test.xml',
+                          content_type: 'application/biografia-xml'})
   end
 
   def create

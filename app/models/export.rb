@@ -16,8 +16,15 @@ class Export < ActiveRecord::Base
   end
   
   def make_export
-    a = ArchiveFile.new(full_file_name, 'application/zip', status_object: self)
-    a.export
+    if content_type == 'application/zip'
+      a = ArchiveFile.new(full_file_name, 'application/zip', status_object: self)
+      a.export
+    elsif content_type == 'application/biografia-xml'
+      b = BiografiaXml.new(status_object: self)
+      b.export(full_file_name)
+    else
+      raise StandardError, "Unknown content type #{self.content_type}"
+    end
   end
 
   def set_status(status)
