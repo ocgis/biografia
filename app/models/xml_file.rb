@@ -47,7 +47,7 @@ class XmlFile
     }
     options = defaults.merge(options)
 
-    @maxloops = 20
+    @maxloops = 20000
     @families = []
     @person_attributes = {}
     @status_object = options[:status_object]
