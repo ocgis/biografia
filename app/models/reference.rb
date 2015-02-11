@@ -6,13 +6,27 @@ class Reference < ActiveRecord::Base
   def self.add(object1, object2, options={})
     defaults = {
       :role => nil,
+      :ts_by_objects => false
     }
     options = defaults.merge(options)
-    reference = Reference.create(:name  => options[:role],
-                                 :type1 => object1.class.name,
-                                 :id1   => object1.id,
-                                 :type2 => object2.class.name,
-                                 :id2   => object2.id)
+    reference = Reference.new(:name  => options[:role],
+                              :type1 => object1.class.name,
+                              :id1   => object1.id,
+                              :type2 => object2.class.name,
+                              :id2   => object2.id)
+    if options[:ts_by_objects]
+      if object1.created_at > object2.created_at
+        latest = object1
+      else
+        latest = object2
+      end
+      reference.created_at = latest.created_at
+      reference.updated_at = latest.updated_at
+    end
+
+    unless reference.save
+      raise StandardError, "Could not save #{reference.inspect}"
+    end
 
     return reference
   end

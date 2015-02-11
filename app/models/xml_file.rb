@@ -47,7 +47,7 @@ class XmlFile
     }
     options = defaults.merge(options)
 
-    @maxloops = 20000
+    @maxloops = 20
     @families = []
     @person_attributes = {}
     @status_object = options[:status_object]
@@ -394,7 +394,7 @@ class XmlFile
       end
       children.each do |role, child|
         puts "Role: #{role} Child: #{child.inspect}"
-        object.get_or_add_reference(child, role: role) unless child.nil?
+        object.get_or_add_reference(child, role: role, ts_by_objects: true) unless child.nil?
       end
     else
       object = find_by_source(Event, source)
@@ -437,21 +437,21 @@ class XmlFile
     if check_person_params(v)
       person = make_person(v)
       birth = make_birth(v)
-      person.get_or_add_reference(birth, role: 'Born') if not birth.nil?
+      person.get_or_add_reference(birth, role: 'Born', ts_by_objects: true) if not birth.nil?
       christening = make_christening(v)
-      person.get_or_add_reference(christening, role: 'Christened') if not christening.nil?
+      person.get_or_add_reference(christening, role: 'Christened', ts_by_objects: true) if not christening.nil?
       death = make_death(v)
-      person.get_or_add_reference(death, role: 'Died') if not death.nil?
+      person.get_or_add_reference(death, role: 'Died', ts_by_objects: true) if not death.nil?
       funeral = make_funeral(v)
-      person.get_or_add_reference(funeral, role: 'Burried') if not funeral.nil?
+      person.get_or_add_reference(funeral, role: 'Burried', ts_by_objects: true) if not funeral.nil?
       address = make_address(v, 'hemort', 'hemfs', person_source(v['p'], field: 'hem'))
-      person.get_or_add_reference(address, role: ADDRESS_ROLE) if not address.nil?
+      person.get_or_add_reference(address, role: ADDRESS_ROLE, ts_by_objects: true) if not address.nil?
       title = make_note(v, 'Yrke', 'yrke', person_source(v['p'], field: 'yrke'))
-      person.get_or_add_reference(title, role: 'Profession') if not title.nil?
+      person.get_or_add_reference(title, role: 'Profession', ts_by_objects: true) if not title.nil?
       anm1 = make_note(v, nil, 'anm1', person_source(v['p'], field: 'anm1'))
-      person.get_or_add_reference(anm1, role: 'Holger:Anm1') if not anm1.nil?
+      person.get_or_add_reference(anm1, role: 'Holger:Anm1', ts_by_objects: true) if not anm1.nil?
       anm2 = make_note(v, nil, 'anm2', person_source(v['p'], field: 'anm2'))
-      person.get_or_add_reference(anm2, role: 'Holger:Anm2') if not anm2.nil?
+      person.get_or_add_reference(anm2, role: 'Holger:Anm2', ts_by_objects: true) if not anm2.nil?
       return true
     end
     return false
@@ -507,10 +507,18 @@ class XmlFile
         else
           if rels.length == 0
             # Not found: OK
-            rel = Relationship.create_save()
+            rel = Relationship.new
+            ts = get_object_with_latest_timestamps(parents)
+            unless ts.nil?
+              rel.created_at = ts.created_at
+              rel.updated_at = ts.updated_at
+            end
+            unless rel.save
+              raise StandardError, "Could not save #{rel}"
+            end
           
             for parent in parents
-              parent.get_or_add_reference(rel, role: 'Spouse')
+              parent.get_or_add_reference(rel, role: 'Spouse', ts_by_objects: true)
             end
           else
             raise StandardError, "Found #{rels.length} relationships for #{parents}, <=1 expected"
@@ -519,7 +527,7 @@ class XmlFile
 
         if not family[:child].nil?
           child = find_by_source(Person, person_source(family[:child]))
-          child.get_or_add_reference(rel, role: 'Child')
+          child.get_or_add_reference(rel, role: 'Child', ts_by_objects: true)
         end
       else
         Rails::logger.error("ERROR: Could not find parents in db: #{parent_ids}")
@@ -627,14 +635,24 @@ class XmlFile
     end
 
     if rel.nil? and spouses.length > 0
-      rel = Relationship.create_save()
-
+      rel = Relationship.new
+      ts = get_object_with_latest_timestamps(spouses)
+      unless ts.nil?
+        rel.created_at = ts.created_at
+        rel.updated_at = ts.updated_at
+      end
+      unless rel.save
+        raise StandardError, "Could not save #{rel}"
+      end
+          
       for spouse in spouses
-        spouse.get_or_add_reference(rel, role: 'Spouse')
+        spouse.get_or_add_reference(rel, role: 'Spouse', ts_by_objects: true)
       end
     end
 
     if not rel.nil?
+      v['regtid'] = rel.created_at
+      v['upptid'] = rel.updated_at
       attach_wedding(v, rel)
     end
 
@@ -653,14 +671,18 @@ class XmlFile
     end
     wedding = find_by_source_or_new(Event, marriage_source(v['v']))
     wedding[:name] = name
-    unless wedding.save
-      raise StandardError, "Could not save wedding: #{wedding.inspect}"
+    if wedding.changed?
+      wedding.created_at = v['regtid']
+      wedding.updated_at = v['upptid']
+      unless wedding.save
+        raise StandardError, "Could not save wedding: #{wedding.inspect}"
+      end
     end
-    wedding.get_or_add_reference(address, role: ADDRESS_ROLE) if not address.nil?
-    wedding.get_or_add_reference(event_date, role: DATE_ROLE) if not event_date.nil?
-    wedding.get_or_add_reference(note) if not note.nil?
+    wedding.get_or_add_reference(address, role: ADDRESS_ROLE, ts_by_objects: true) if not address.nil?
+    wedding.get_or_add_reference(event_date, role: DATE_ROLE, ts_by_objects: true) if not event_date.nil?
+    wedding.get_or_add_reference(note, ts_by_objects: true) if not note.nil?
 
-    relationship.get_or_add_reference(wedding, role: role)
+    relationship.get_or_add_reference(wedding, role: role, ts_by_objects: true)
   end
 
   def check_remark_params(v)
@@ -726,7 +748,7 @@ class XmlFile
     unless person.nil?
       remark = make_note(v, nil, 'anmtext', remark_source(v['p'], v['r'], field: 'anmtext'))
       if not remark.nil?
-        person.get_or_add_reference(remark, role: "Holger:Anmtext#{v['r']}")
+        person.get_or_add_reference(remark, role: "Holger:Anmtext#{v['r']}", ts_by_objects: true)
       end
     else
       Rails::logger.error("ERROR: Could not find person in db: #{v['p']}")
@@ -1116,6 +1138,18 @@ class XmlFile
     else
       raise StandardError, "Object has more than one note: #{object.inspect} #{notes.inspect}"
     end
+  end
+
+  def get_object_with_latest_timestamps(objects)
+    latest = nil
+
+    objects.each do |object|
+      if latest.nil? or (latest.created_at < object.created_at)
+        latest = object
+      end
+    end
+
+    return latest
   end
 
 end
