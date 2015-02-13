@@ -258,7 +258,8 @@ class XmlFile
       end
     end
     while surnames.length > person.person_names.length
-      person.person_names << PersonName.new
+      person.person_names << PersonName.new(created_at: v['regtid'],
+                                            updated_at: v['upptid'])
     end
     while surnames.length < person.person_names.length
       person.person_names.last.destroy
