@@ -27,15 +27,18 @@ class BiografiaXml
     for c in [ Person, PersonName, Event, EventDate, Note, Address, Relationship, Medium, PositionInPicture, Reference ]
       c.all.each do |o|
         set_status('PROCESSING ' + c.name + ' objects')
+        v = o.versions.last
         while not o.nil?
           f.puts("<#{o.class.name}>")
           o.attributes.each do |key,value|
-            f.puts("<#{key}>#{value}</#{key}>")
+            safe_value = CGI.escapeHTML(value.to_s)
+            f.puts("<#{key}>#{safe_value}</#{key}>")
           end
-          author = User.find(o.originator)
-          f.puts("<author>#{o.originator} (#{author.name})</author>")
+          author = User.find(v.whodunnit)
+          f.puts("<author>#{v.whodunnit} (#{author.name})</author>")
           f.puts("</#{o.class.name}>")
           o = o.previous_version
+          v = v.previous
         end
       end
     end
