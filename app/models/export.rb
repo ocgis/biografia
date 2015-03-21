@@ -32,4 +32,8 @@ class Export < ActiveRecord::Base
     self.save
   end
 
+  def one_line
+    return "#{file_name} (#{content_type})"
+  end
+
 end
