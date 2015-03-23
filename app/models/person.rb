@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Person < ActiveRecord::Base
   has_paper_trail
 
@@ -83,6 +84,67 @@ class Person < ActiveRecord::Base
       end
     end
     return children
+  end
+
+  def find_family_members
+    family_members = []
+    family_refs = get_references(model: Relationship)
+    family_refs.each do |family_ref|
+      family = family_ref.other_object(self)
+      family.get_references(model: Person).each do |person_ref|
+        person = person_ref.other_object(family)
+
+        if person.id != self.id
+          family_member = OpenStruct.new
+          family_member.object = person
+          if family_ref.name == "Child"
+            if person_ref.name == "Child"
+              if person.sex == "M"
+                family_member.role = "Bror"
+              elsif person.sex == "F"
+                family_member.role = "Syster"
+              else
+                family_member.role = "Syskon"
+              end
+            elsif person_ref.name == "Spouse"
+              if person.sex == "M"
+                family_member.role = "Far"
+              elsif person.sex == "F"
+                family_member.role = "Mor"
+              else
+                family_member.role = "Förälder"
+              end
+            else
+              family_member.role = "Error: person_ref.name == #{person_ref.name}" 
+            end
+          elsif family_ref.name == "Spouse"
+            if person_ref.name == "Child"
+              if person.sex == "M"
+                family_member.role = "Son"
+              elsif person.sex == "F"
+                family_member.role = "Dotter"
+              else
+                family_member.role = "Barn"
+              end
+            elsif person_ref.name == "Spouse"
+              if person.sex == "M"
+                family_member.role = "Make" # FIXME: Check relationship events
+              elsif person.sex == "F"
+                family_member.role = "Maka" # FIXME: Check relationship events
+              else
+                family_member.role = "Partner"
+              end
+            else
+              family_member.role = "Error: person_ref.name == #{person_ref.name}" 
+            end
+          else
+            family_member.role = "Error: family_ref.name == #{family_ref.name}" 
+          end
+          family_members << family_member
+        end
+      end
+    end
+    return family_members
   end
 
 end
