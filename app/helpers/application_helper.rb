@@ -8,4 +8,25 @@ module ApplicationHelper
     id = a[1].to_i
     return link_to name, { :controller => controller, :action => :show, :id => id }, extras
   end
+
+  def application_show_versions(object)
+    out = ''.html_safe
+    out << '<hr />'.html_safe
+    version = object.versions.last
+    until version.nil?
+      out << object.inspect
+      out << '<br />'.html_safe
+      out << version.inspect
+      out << '<br />'.html_safe
+      out << version.event
+      out << ' by '
+      out << User.find(version.whodunnit).name
+      out << '<br />'.html_safe
+      out << '<br />'.html_safe
+
+      object = object.previous_version
+      version = version.previous
+    end
+    return out
+  end
 end
