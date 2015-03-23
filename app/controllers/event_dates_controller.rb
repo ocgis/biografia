@@ -5,6 +5,9 @@ class EventDatesController < ApplicationController
 
   protected
 
+  def new_object(options={})
+  end
+
   def create_object
     p = ActionController::Parameters.new(event_date_params)
     object = EventDate.new()

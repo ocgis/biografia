@@ -5,6 +5,9 @@ class NotesController < ApplicationController
 
   protected
 
+  def new_object(options={})
+  end
+
   def create_object
     return Note.new(note_params)
   end

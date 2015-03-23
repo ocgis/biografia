@@ -1,22 +1,5 @@
-<%= form_tag({ :action => "createp" }, { :remote => true } ) do %>
+<% hidden_fields = {}
+   hidden_fields['parentName'] = parentName if defined? parentName
+   hidden_fields['topName'] = topName if defined? topName %>
 
-<%= hidden_field 'form', 'parentName', :value => parentName if defined? parentName %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-F&ouml;rnamn:
-<%= text_field "person", "given_name", "size" => 20 %><br/>
-
-Tilltalsnamn:
-<%= text_field "person", "calling_name", "size" => 20 %><br/>
-
-Efternamn:
-<%= text_field "person", "surname", "maxlength" => 20 %><br/>
-
-K&ouml;n:
-<%= text_field "person", "sex", "maxlength" => 20 %><br/>
-
-Roll:
-<%= text_field "reference", "name" %><br/>
-
-<input type="submit" value="Save">
-<% end %>
+<%= render partial: 'form', object: @person, locals: { hidden_fields: hidden_fields, options: { remote: true, url: { action: "createp" } } } %>

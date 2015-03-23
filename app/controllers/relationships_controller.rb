@@ -5,6 +5,13 @@ class RelationshipsController < ApplicationController
 
   protected
 
+  def new_object(options={})
+    @relationship = Relationship.new()
+    if not options[:reference].nil?
+      @relationship.set_extra(:reference, options[:reference])
+    end
+  end
+
   def create_object
     return Relationship.new(object_params)
   end

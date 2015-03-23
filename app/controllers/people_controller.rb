@@ -12,14 +12,18 @@ class PeopleController < ApplicationController
 
   def examine
     person = find_object
-    @object = [person] + person.person_names
+#    @object = [person] + person.person_names
+    @object = person
   end
 
   protected
 
-  def new_object
+  def new_object(options={})
     @person = Person.new()
     @person.person_names << PersonName.new()
+    if not options[:reference].nil?
+      @person.set_extra(:reference, options[:reference])
+    end
   end
 
   def create_object
@@ -57,7 +61,7 @@ class PeopleController < ApplicationController
   end
 
   def all_objects
-    Person.all
+    Person.all.limit(50) # FIXME
   end
 
   def index_title

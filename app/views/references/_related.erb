@@ -15,10 +15,7 @@
 
 <h3>Förhållanden</h3>
 <ul>
-<%= render :partial => "relationships/showp",
-           :layout => "li",
-           :collection => related_objs[:relationships],
-           :locals => { :options => common_options } %>
+<%= relationships_render(related_objs[:relationships], common_options) %>
 </ul>
 
 <h3>Händelser</h3>

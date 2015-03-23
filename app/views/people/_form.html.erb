@@ -23,7 +23,8 @@
 <%=   f.label :sex, "Kön" %>
 <%=   f.text_field :sex, :size => 20 %>
 <br/>
-<%    if not form[:reference].nil? %>
+<%    reference = form.get_extra(:reference)
+      if not reference.nil? %>
 <%=     fields_for :reference, reference do |reference_fields| %>
 <%=       reference_fields.label :name, "Roll:" %>
 <%=       reference_fields.text_field :name %>

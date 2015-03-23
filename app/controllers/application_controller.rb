@@ -13,9 +13,12 @@ class ApplicationController < ActionController::Base
 
   def newp
     locals = { :topName => params.require(:topName) }
+    options = {}
     if not params[:parentName].nil?
       locals[:parentName] = params[:parentName]
+      options[:reference] = Reference.new
     end
+    new_object(options)
     respond_to do |format|
       format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'newp', :replaceElem => params[:newElem], :hideElem => params[:hideElem] } }
     end

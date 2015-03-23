@@ -6,7 +6,7 @@ class EventsController < ApplicationController
 
   protected
 
-  def new_object
+  def new_object(options={})
   end
 
   def create_object
