@@ -15,7 +15,11 @@
 <% end %>
 
 <% if options[:showFull] %>
+
 <%=  render :partial => "references/related", :object => showp, :locals => { :options => options } %>
+
+<%= application_make_tabs %>
+
 <% end %>
 
 <% if options[:enclosedById] %>

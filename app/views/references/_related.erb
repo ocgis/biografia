@@ -5,6 +5,12 @@
                       :showModifier => true,
                       :parent => related } %>
 
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-people">Personer</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-people">
 <h3>Personer</h3>
 <ul>
 <%= render :partial => "people/showp",
@@ -12,12 +18,31 @@
            :collection => related_objs[:people],
            :locals => { :options => common_options } %>
 </ul>
+</div>
+<% end %>
+
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-relationships">Förhållanden</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-relationships">
 
 <h3>Förhållanden</h3>
 <ul>
 <%= relationships_render(related_objs[:relationships], common_options) %>
 </ul>
 
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-events">Händelser</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-events">
 <h3>Händelser</h3>
 <ul>
   
@@ -32,6 +57,16 @@
   <%= type %>
   <%= "<br />" %>
 <% end %>
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-addresses">Adresser</a></li>
+<% end %>
+
+
+<% content_for :tabs_content do %>
+<div id="tabs-addresses">
 
 <h3>Adresser</h3>
 <ul>
@@ -41,6 +76,17 @@
            :locals => { :options => common_options } %>
 </ul>
 
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-notes">Kommentarer</a></li>
+<% end %>
+
+
+<% content_for :tabs_content do %>
+<div id="tabs-notes">
+
 <h3>Kommentarer</h3>
 <ul>
 <%= render :partial => "notes/showp",
@@ -49,6 +95,16 @@
            :locals => { :options => common_options } %>
 </ul>
 
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-media">Media</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-media">
+
 <h3>Media</h3>
 <ul>
 <%= render :partial => "media/showp",
@@ -56,3 +112,6 @@
            :layout => "li",
            :locals => { :options => common_options } %>
 </ul>
+
+</div>
+<% end %>

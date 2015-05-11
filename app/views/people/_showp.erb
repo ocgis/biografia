@@ -9,7 +9,7 @@
   if defined?  showFull and showFull
     showp.long_name
   else
-    link_to showp.long_name, :controller => showp.controller, :action => 'show', :id => showp.id
+    person_link_to(showp)
   end
 %>
 <%= showp.sex %>
@@ -34,9 +34,23 @@
 </p>
 
 <% if options[:showFull] %>
-	
-    <%= render :partial => "references/related", :object => showp, :locals => { :options => { :topName => options[:topName] } } %>
 
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-family">Familjemedlemmar</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-family">
+   <%= person_show_family(showp) %>
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-ancestry">Antavla</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-ancestry">
     <h3>Övrigt</h3>
     <p>
     <%= link_to "Antavla", :action => "ancestry",
@@ -44,7 +58,14 @@
                            :controller => showp.controller %>
     </p>
 		
-  <% end %>
+</div>
+<% end %>
+
+<%= render :partial => "references/related", :object => showp, :locals => { :options => { :topName => options[:topName] } } %>
+
+<%= application_make_tabs %>
+
+<% end %>
 		
 <% if options[:enclosedById] %>
 </span>

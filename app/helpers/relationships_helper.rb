@@ -52,6 +52,7 @@ module RelationshipsHelper
 
     if options[:showFull]
       html += render :partial => "references/related", :object => showp, :locals => { :options => options }
+      html += application_make_tabs
     end
 
     if options[:enclosedById]

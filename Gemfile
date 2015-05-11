@@ -26,6 +26,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 # Use Jcrop for jquery
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails', ref: '77bce10f6d0'
@@ -35,6 +36,7 @@ gem 'jcrop-rails', github: 'bukalapak/jcrop-rails', ref: '77bce10f6d0'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
+gem 'jquery-turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'

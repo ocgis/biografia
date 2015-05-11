@@ -29,4 +29,15 @@ module ApplicationHelper
     end
     return out
   end
+
+  def application_make_tabs
+    html = ""
+    html += '<div id="tabs">'
+    html += '<ul>'
+    html += content_for :tabs_headers
+    html += '</ul>'
+    html += content_for :tabs_content
+    html.html_safe
+  end
+
 end

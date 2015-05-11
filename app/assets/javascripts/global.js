@@ -1,6 +1,8 @@
 //= require jcrop
 
 $(function() {
+    $( "#tabs" ).tabs();
+
     $(document).on('click', '.toggler', function(event){
         event.preventDefault();
         id = "#" + $(this).attr('data-toggleid')
