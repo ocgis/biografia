@@ -18,7 +18,7 @@
 			});
 			
 			obj.find('.list li').click(function() { //onclick event, fadeout 'list'
-			obj.find('.list').fadeOut(400);
+			    obj.find('.list').fadeOut(400);
 			});
 		});
 	};

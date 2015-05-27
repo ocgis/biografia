@@ -42,13 +42,15 @@ module ApplicationHelper
   end
 
   def application_attach_modifier(object, options, &block)
-    html = ""
-    html += '<div class="dropdownmenu">'
+    html = "<table><tr><td>"
     html += capture(&block)
+    html += "</td><td>"
+    html += '<div class="dropdownmenu">'
     if options[:showModifier]
       html += render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
     end
     html += '</div>'
+    html += "</td></tr></table>"
     html.html_safe
   end
 
