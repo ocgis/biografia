@@ -1,4 +1,3 @@
+<%= application_attach_modifier(showfullp, options) do %>
 <%= showfullp.one_line %>
-<%  if options[:showModifier] %>
-<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp, :locals => { :options => options } %>
 <%  end %>

@@ -1,6 +1,8 @@
 //= require jcrop
 
 $(function() {
+    $('.dropdownmenu').dropdownmenu();
+    $( "#dialog").dialog({modal: true, appendTo: "#modal_dialog"});
     $( "#tabs" ).tabs();
 
     $(document).on('click', '.toggler', function(event){

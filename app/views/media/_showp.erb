@@ -3,13 +3,13 @@
 <span id="<%= showp.object_name %>">
 <% end %>
 
-<%=
-  if options[:showModifier]
-    render :partial => 'application/modifier', :object => showp, :locals => { :options => options }
-  end
-%>
+<%= application_attach_modifier(showp, options) do %>
+<% end %>
 
 <% if options[:showFull] %>
+  <div id="modal_dialog">
+  </div>
+
   <% if options[:mode] == 'tag' %>
     <br />
     <%= link_to "avbryt taggning", { :id => showp.id, :controller => showp.controller, :action => 'show' } %>
@@ -43,6 +43,7 @@
 <%=
   if options[:showFull]
     render :partial => "references/related", :object => showp, :locals => { :options => options }
+    application_make_tabs
   end
 %>
 

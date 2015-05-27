@@ -1,6 +1,5 @@
+<%= application_attach_modifier(showfullp, options) do %>
 <%= showfullp.name %>
-<%  if options[:showModifier] %>
-<%=   render :partial => showfullp.controller + '/modifier', :object => showfullp, :locals => { :options => options } %>
 <%  end %>
 <ul>
 <%  new_options = options.merge({ :enclosedById => true,

@@ -7,9 +7,8 @@ module RelationshipsHelper
     related_objects = showlimitedp.get_extra(:related_objects)
 
     html = ""
-    html += link_to showlimitedp.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id
-    if options[:showModifier]
-      html += render :partial => showlimitedp.controller + '/modifier', :object => showlimitedp, :locals => { :options => options }
+    html += application_attach_modifier(showlimitedp, options) do
+      link_to showlimitedp.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id
     end
     html += '<ul>'
     html += render(:partial => 'people/showp',

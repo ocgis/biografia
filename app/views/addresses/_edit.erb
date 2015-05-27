@@ -1,3 +1,4 @@
+<%= application_modal_dialog("Ändra adress") do %>
 <%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
@@ -12,4 +13,5 @@
 </table>
 
 <input type="submit" value="Save">
+<% end %>
 <% end %>

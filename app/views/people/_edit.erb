@@ -1,4 +1,6 @@
+<%= application_modal_dialog("Ändra person") do %>
 <% hidden_fields = {} %>
 <% hidden_fields['referenceId'] = edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
 <% hidden_fields['topName'] = topName if defined? topName %>
 <%= render partial: 'form', object: edit, locals: { options: { remote: true, method: :patch }, hidden_fields: hidden_fields } %>
+<% end %>

@@ -20,7 +20,7 @@ class ReferencesController < ApplicationController
     options[:showFull] = params[:showFull] if params[:showFull] != nil
     
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'connchoose', :object => object, :replaceElem => object.object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'connchoose', :object => object, :replaceElem => 'modal_dialog' } }
     end
   end
 
@@ -30,7 +30,7 @@ class ReferencesController < ApplicationController
     updateListName = form.require(:updateListName)
 
     person_names = PersonName.where("given_name LIKE \"%#{filter}%\"").first(20)
-    @people = person_names.collect{|person_name| person_name.person}
+    @people = person_names.collect{|person_name| person_name.person}.compact # FIXME: This should not be necessary
     @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
     @objects = @people.collect {|p| [ p.long_name, p.object_name ] }
     @objects = @objects + @events.collect {|e| [ e.one_line, e.object_name ] }
@@ -64,8 +64,6 @@ class ReferencesController < ApplicationController
       reference.position_in_pictures.create( :x => x, :y => y, :width => width, :height => height )
     end
     
-    object = { :object => obj1 }
-
     locals =
       {
         :enclosedById => false,
@@ -91,7 +89,7 @@ class ReferencesController < ApplicationController
       }
     options[:topName] = params.require(:topName)  
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'references/delete', :object => obj, :replaceElem => obj.object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'references/delete', :object => obj, :replaceElem => "modal_dialog" } }
     end
   end
 

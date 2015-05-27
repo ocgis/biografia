@@ -1,4 +1,4 @@
-<%=
+<%
   name = modifier.object_name
   menuId = name + "_menu"
   newId = name + "_new"
@@ -6,26 +6,27 @@
   common_options = {}
   common_options[:topName] = options[:topName]
   common_options[:topName] ||= "Undefined in modifier for #{name}"
- 
-  link_to ">", "#", :class => "toggler", :"data-toggleid" => menuId
 %>
 
-<span id="<%= menuId %>" style="display:none">
+	<input type="text" name="test" value="+" class="selector" readonly="readonly" />
+	<ul class="list">
 
-<%=
-  if options[:showAddEvent]
-    showNewId = true
+<% if options[:showAddEvent] %>
+<li>
+<%= showNewId = true
     ae_options = common_options.merge({ :controller       => "events",
                                         :action           => "newp",
                                         :parentName       => name,
                                         :newElem          => newId,
                                         :hideElem         => menuId})
     link_to "lägg till händelse", ae_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<% if options[:showAddNote] %>
+<li>
 <%=
-  if options[:showAddNote]
     showNewId = true
     an_options = common_options.merge({ :controller       => "notes",
                                         :action           => "newp",
@@ -33,11 +34,13 @@
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "kommentera", an_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<% if options[:showAddDate] %>
+<li>
 <%=
-  if options[:showAddDate]
     showNewId = true
     ad_options = common_options.merge({ :controller       => "event_dates",
                                         :action           => "newp",
@@ -45,11 +48,13 @@
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till datum", ad_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<% if options[:showAddAddress] %>
+<li>
 <%=
-  if options[:showAddAddress]
     showNewId = true
     aa_options = common_options.merge({ :controller       => "addresses",
                                         :action           => "newp",
@@ -57,11 +62,13 @@
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till adress", aa_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<% if options[:showAddRelationship] %>
+<li>
 <%=
-  if options[:showAddRelationship]
     showNewId = true
     ar_options = common_options.merge({ :controller       => "relationships",
                                         :action           => "newp",
@@ -69,11 +76,13 @@
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till förhållande", ar_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<% if options[:showAddPerson] %>
+<li>
 <%=
-  if options[:showAddPerson]
     showNewId = true
     ap_options = common_options.merge({ :controller       => "people",
                                         :action           => "newp",
@@ -81,9 +90,11 @@
                                         :newElem          => newId,
                                         :hideElem         => menuId })
     link_to "lägg till person", ap_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<li>
 <%=
   ch_options = { :controller => modifier.controller,
   	             :action     => "edit",
@@ -92,7 +103,9 @@
   ch_options[:topName] = options[:topName]
   link_to "ändra", ch_options, { :remote => true }
 %>
+</li>
 
+<li>
 <%=
   rt_options =
     {
@@ -104,9 +117,11 @@
   rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
   link_to "referera till", rt_options, { :remote => true }
 %>
+</li>
 
+<% if not modifier.get_extra(:reference).nil? %>
+<li>
 <%=
-  if not modifier.get_extra(:reference).nil?
     rr_options = 
       {
 		    :controller          => 'references',
@@ -116,9 +131,11 @@
       }
     rr_options[:topName] = options[:topName]
     link_to "ta bort referens", rr_options, { :remote => true }
-  end
 %>
+</li>
+<% end %>
 
+<li>
 <%=
   de_options = {
   		:controller          => modifier.controller,
@@ -130,8 +147,10 @@
   link_to "radera", de_options, { :remote => true }
 %>
 
-</span>
+            </li>
+	</ul>
 
 <% if defined? showNewId %>
 	<span id="<%= newId %>"></span>
 <% end %>
+

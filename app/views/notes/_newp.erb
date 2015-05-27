@@ -1,3 +1,4 @@
+<%= application_modal_dialog("Ny kommentar") do %>
 <%= form_tag({ :action => "createp" }, { :remote => true } ) do %>
 
 <%= hidden_field 'form', 'parentName', :value => parentName if defined? parentName %>
@@ -9,4 +10,5 @@
 </table>
 
 <input type="submit" value="Save">
+<% end %>
 <% end %>

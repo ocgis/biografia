@@ -1,3 +1,4 @@
+<%= application_modal_dialog("Radera") do %>
 Vill du verkligen ta bort den här?
 <%= link_to 'Ja', { :controller => delete.controller,
                     :action => 'destroy',
@@ -13,3 +14,4 @@ Vill du verkligen ta bort den här?
            :object => delete,
            :locals => { :options => options.merge({ :enclosedById => false,
                                                     :showModifier => false }) } %>
+<% end %>

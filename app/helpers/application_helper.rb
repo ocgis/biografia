@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module ApplicationHelper
   def link_to_object_name(name, object_name, extras)
     a = object_name.split('_')
@@ -38,6 +39,25 @@ module ApplicationHelper
     html += '</ul>'
     html += content_for :tabs_content
     html.html_safe
+  end
+
+  def application_attach_modifier(object, options, &block)
+    html = ""
+    html += '<div class="dropdownmenu">'
+    html += capture(&block)
+    if options[:showModifier]
+      html += render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
+    end
+    html += '</div>'
+    html.html_safe
+  end
+
+  def application_modal_dialog(title, &block)
+    capture do
+      concat "<div id=\"dialog\" title=\"#{title}\">".html_safe
+      concat capture(&block)
+      concat '</div>'.html_safe
+    end
   end
 
 end

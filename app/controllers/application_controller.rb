@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     end
     new_object(options)
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'newp', :replaceElem => params[:newElem], :hideElem => params[:hideElem] } }
+      format.js { render "replace_html", :locals => { :object => nil, :locals => locals, :partial => 'newp', :replaceElem => "modal_dialog", :hideElem => params[:hideElem] } }
     end
   end
 
@@ -115,7 +115,7 @@ class ApplicationController < ActionController::Base
     object.set_extra(:related_objects, related)
     @edited = object
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edit', :object => object, :replaceElem => object.object_name } }
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edit', :object => object, :replaceElem => "modal_dialog" } }
     end
   end
 
@@ -160,14 +160,12 @@ class ApplicationController < ActionController::Base
   end
 
   def delete
-    id = params.require(:id)
-
     obj = find_object
     obj.set_extra(:related_objects, obj.related_objects)
     options = { }
     options[:topName] = params.require(:topName)  
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'delete', :object => obj, :replaceElem => obj.object_name } }
+      format.js { render "replace_html", :locals => { :locals => { :options => options }, :partial => 'delete', :object => obj, :replaceElem => "modal_dialog" } }
     end
   end
 

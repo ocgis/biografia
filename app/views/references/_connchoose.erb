@@ -1,5 +1,12 @@
+<%=
+  new_options = options.merge({ :enclosedById => false,
+                                :showModifier => false })
+  render :partial => connchoose.controller + '/showp', :object => connchoose, :locals => { :options => new_options }
+%>
+
 <% updateListName = connchoose.object_name + '_list' %>
 
+<%= application_modal_dialog("Välj") do %>
 <%= form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do %>
 
 <%= hidden_field 'form', 'updateListName', :value => updateListName %>
@@ -32,9 +39,5 @@
 	
 	<%= submit_tag %>
 <% end %>
+<% end %>
 
-<%=
-  new_options = options.merge({ :enclosedById => false,
-                                :showModifier => false })
-  render :partial => connchoose.controller + '/showp', :object => connchoose, :locals => { :options => new_options }
-%>

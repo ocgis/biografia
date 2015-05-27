@@ -4,7 +4,10 @@
 <span id="<%= name %>">
 <% end %>
 
-<p>
+<% mod_options = options %>
+<% mod_options[:relation] = showp.get_extra(:relation) if showp.get_extra(:relation) != nil %>
+
+<%= application_attach_modifier(showp, mod_options) do %>
 <%=
   if defined?  showFull and showFull
     showp.long_name
@@ -19,21 +22,14 @@
 <%   end %>
 <% end %>
 
-<%=
-  if options[:showModifier]
-    mod_options = options.merge({ :showAddEvent => true,
-                                  :showAddNote => true,
-                                  :showAddDate => false,
-                                  :showAddAddress => true,
-                                  :showAddRelationship => true })
-    mod_options[:relation] = showp.get_extra(:relation) if showp.get_extra(:relation) != nil
-    render :partial => 'application/modifier', :object => showp, :locals => { :options => mod_options }
-  end
-%>
+<% end %>
+
 <br />
-</p>
 
 <% if options[:showFull] %>
+
+<div id="modal_dialog">
+</div>
 
 <% content_for :tabs_headers do %>
 <li><a href="#tabs-family">Familjemedlemmar</a></li>
