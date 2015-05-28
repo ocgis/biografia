@@ -31,6 +31,17 @@ module ApplicationHelper
     return out
   end
 
+  def application_show_latest_update(object)
+    version = object.versions.last
+    name = User.find(version.whodunnit).name
+    date = object.updated_at.strftime("%Y-%m-%d %H:%M")
+    capture do
+      concat '<span class="latest_update">'.html_safe
+      concat link_to "Ändrad av #{name} #{date}", { controller: object.controller, id: object.id, action: :examine }
+      concat '</span>'.html_safe
+    end
+  end
+
   def application_make_tabs
     html = ""
     html += '<div id="tabs">'
@@ -49,6 +60,7 @@ module ApplicationHelper
     if options[:showModifier]
       html += render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
     end
+    html += application_show_latest_update(object)
     html += '</div>'
     html += "</td></tr></table>"
     html.html_safe
