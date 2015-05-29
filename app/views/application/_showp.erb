@@ -8,11 +8,13 @@
 <%=  render :partial => showp.controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
 <% end %>
 
+<!-- FIXME: Remove?
 <% if not showp.get_extra(:reference).nil? %>
 <%   if not showp.get_extra(:reference).name.nil? %>
 <%=    showp.get_extra(:reference).name %>
 <%   end %>
 <% end %>
+-->
 
 <% if options[:showFull] %>
 
