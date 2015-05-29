@@ -83,6 +83,10 @@ class MediaController < ApplicationController
     Medium.all
   end
 
+  def find_object
+    return Medium.find(params.require(:id))
+  end
+
   def index_title
     return "Index över mediafiler"
   end

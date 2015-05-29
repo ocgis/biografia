@@ -61,6 +61,7 @@ Biografia::Application.routes.draw do
     end
     
     member do
+      get 'examine'
       get 'delete'
       get 'showp'
       get 'image'
