@@ -1,3 +1,4 @@
+<%= application_modal_dialog("Ändra förhållande") do %>
 <%= form_tag({ :action => 'update', :id => edit.id }, { :remote => true, :method => :patch }) do %>
 
 <%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
@@ -18,4 +19,5 @@
 		:collection => related_objects[:notes],
 		:locals => { :enclosedById => true, :showModifier => false } %>
 
+<% end %>
 <% end %>

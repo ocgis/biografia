@@ -51,6 +51,7 @@ module RelationshipsHelper
 #    end
 
     if options[:showFull]
+      html += '<div id="modal_dialog"></div>'.html_safe
       html += render :partial => "references/related", :object => showp, :locals => { :options => options }
       html += application_make_tabs
     end
