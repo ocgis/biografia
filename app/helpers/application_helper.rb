@@ -74,4 +74,12 @@ module ApplicationHelper
     end
   end
 
+  def application_make_hidden_fields(hidden_fields)
+    capture do
+      hidden_fields.each do |key, value|
+        concat hidden_field 'form', key, value: value
+      end
+    end
+  end
+
 end

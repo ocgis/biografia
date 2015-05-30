@@ -1,11 +1,7 @@
 <% args = [form] %>
 <% args.append(options) if defined?(options) %>
 <%= form_for(*args) do |f| %>
-<%  if defined?(hidden_fields) %>
-<%    hidden_fields.each do |key, value| %>
-<%=     hidden_field 'form', key, value: value %>
-<%    end %>
-<%  end %>
+<%=   application_make_hidden_fields(hidden_fields) if defined?(hidden_fields) %>
 <%    form.person_names.each_with_index do |person_name,i| %>
 <%=     fields_for "person_name_#{i}", person_name do |person_name_fields| %>
 <%=       person_name_fields.hidden_field(:id, value: person_name.id) unless person_name.id.nil? %>

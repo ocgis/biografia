@@ -1,13 +1,8 @@
 <%= application_modal_dialog("Ändra förhållande") do %>
-<%= form_tag({ :action => 'update', :id => edit.id }, { :remote => true, :method => :patch }) do %>
-
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-<%= text_field 'relationship', 'name' %><br/>
-
-<input type="submit" value="Save">
-
+<% hidden_fields = {} %>
+<% hidden_fields['referenceId'] = edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
+<% hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: edit, locals: { options: { remote: true, method: :patch }, hidden_fields: hidden_fields } %>
 <% related_objects = edit.get_extra(:related_objects) %>
 <%= render :partial => 'event_dates/showp',
 		:collection => related_objects[:event_dates],
@@ -19,5 +14,4 @@
 		:collection => related_objects[:notes],
 		:locals => { :enclosedById => true, :showModifier => false } %>
 
-<% end %>
 <% end %>

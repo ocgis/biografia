@@ -1,13 +1,6 @@
 <%= application_modal_dialog("Nytt förhållande") do %>
-<%= form_tag({ :action => "createp" }, { :remote => true } ) do %>
-
-<%= hidden_field 'form', 'parentName', :value => parentName if defined? parentName %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-Namn:
-
-<%= text_field "relationship", "name", "size" => 20 %><br/>
-
-<input type="submit" value="Save">
-<% end %>
+<% hidden_fields = {}
+   hidden_fields['parentName'] = parentName if defined? parentName
+   hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: @relationship, locals: { hidden_fields: hidden_fields, options: { remote: true, url: { action: "createp" } } } %>
 <% end %>
