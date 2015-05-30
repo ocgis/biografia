@@ -1,18 +1,6 @@
 <%= application_modal_dialog("Ny adress") do %>
-<%= form_tag({ :action => "createp" }, { :remote => true } ) do %>
-
-<%= hidden_field 'form', 'parentName', :value => parentName if defined? parentName %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-Adress:
-<table>
-<tr><td>Gata</td><td><%= text_field "address", "street" %></td></tr>
-<tr><td>Postort</td><td><%= text_field "address", "town" %></td></tr>
-<tr><td>Postnummer</td><td><%= text_field "address", "zipcode" %></td></tr>
-<tr><td>Församling</td><td><%= text_field "address", "parish" %></td></tr>
-<tr><td>Land</td><td><%= text_field "address", "country" %></td></tr>
-</table>
-
-<input type="submit" value="Save">
-<% end %>
+<% hidden_fields = {}
+   hidden_fields['parentName'] = parentName if defined? parentName
+   hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: @address, locals: { hidden_fields: hidden_fields, options: { remote: true, url: { action: "createp" } } } %>
 <% end %>

@@ -1,10 +1,6 @@
 <%= application_modal_dialog("Ändra datum") do %>
-<%= form_for(@edited, action: 'update', remote: true, method: :patch) do |f| %>
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-<table>
-<tr><td>Datum</td><td><%= f.text_field "date", value: @edited.get_date %></td></tr>
-</table>
-<%= f.submit "Spara" %>
-<% end %>
+<% hidden_fields = {} %>
+<% hidden_fields['referenceId'] = edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
+<% hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: edit, locals: { options: { remote: true, method: :patch }, hidden_fields: hidden_fields } %>
 <% end %>

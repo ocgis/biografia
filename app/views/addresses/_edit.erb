@@ -1,17 +1,6 @@
 <%= application_modal_dialog("Ändra adress") do %>
-<%= form_tag({ :action => "update", :id => edit.id }, { :remote => true, :method => :patch }) do %>
-
-<%= hidden_field 'form', 'referenceId', :value => edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
-<%= hidden_field 'form', 'topName', :value => topName if defined? topName %>
-
-<table>
-<tr><td>Gata</td><td><%= text_field "address", "street" %></td></tr>
-<tr><td>Postort</td><td><%= text_field "address", "town" %></td></tr>
-<tr><td>Postnummer</td><td><%= text_field "address", "zipcode" %></td></tr>
-<tr><td>Församling</td><td><%= text_field "address", "parish" %></td></tr>
-<tr><td>Land</td><td><%= text_field "address", "country" %></td></tr>
-</table>
-
-<input type="submit" value="Save">
-<% end %>
+<% hidden_fields = {} %>
+<% hidden_fields['referenceId'] = edit.get_extra(:reference).id if not edit.get_extra(:reference).nil? %>
+<% hidden_fields['topName'] = topName if defined? topName %>
+<%= render partial: 'form', object: edit, locals: { options: { remote: true, method: :patch }, hidden_fields: hidden_fields } %>
 <% end %>

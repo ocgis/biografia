@@ -6,6 +6,10 @@ class EventDatesController < ApplicationController
   protected
 
   def new_object(options={})
+    @event_date = EventDate.new()
+    if not options[:reference].nil?
+      @event_date.set_extra(:reference, options[:reference])
+    end
   end
 
   def create_object

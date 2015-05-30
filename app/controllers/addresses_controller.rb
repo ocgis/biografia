@@ -24,6 +24,10 @@ class AddressesController < ApplicationController
   end
 
   def new_object(options={})
+    @address = Address.new()
+    if not options[:reference].nil?
+      @address.set_extra(:reference, options[:reference])
+    end
   end
 
   def create_object

@@ -7,6 +7,10 @@ class EventsController < ApplicationController
   protected
 
   def new_object(options={})
+    @event = Event.new()
+    if not options[:reference].nil?
+      @event.set_extra(:reference, options[:reference])
+    end
   end
 
   def create_object
