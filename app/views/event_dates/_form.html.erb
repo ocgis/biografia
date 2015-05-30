@@ -5,7 +5,7 @@
 <table>
 <tr>
 <td><%= f.label :date, "Datum" %></td>
-<td><%= f.text_field :date, value: @edited.get_date %></td>
+<td><%= f.text_field :date, value: form.get_date %></td>
 </tr>
 <%    reference = form.get_extra(:reference)
       if not reference.nil? %>
