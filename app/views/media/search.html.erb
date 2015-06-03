@@ -1,5 +1,9 @@
-<% @files.each do |file| %>
-<% thumbnail = image_tag(url_for(:controller => 'media', :action => 'file_thumb', :file => file)) %>
-<%=  link_to thumbnail, :action => 'register', :file_name => file %>
+<% @nodes.each do |node, number| %>
+<% if number.nil? %>
+<% thumbnail = image_tag(url_for(:controller => 'media', :action => 'file_thumb', :file => node)) %>
+<%=  link_to thumbnail, :action => 'register', :file_name => node %>
+<% else %>
+<%=  link_to "#{node} (#{number})", { controller: :media, action: :search, path: node } %>
+<% end %> 
 <br/>
 <% end %>

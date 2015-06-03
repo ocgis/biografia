@@ -53,12 +53,33 @@ class MediaController < ApplicationController
   end
   
   def search
+    if params[:path]
+      path = params[:path]
+    else
+      path = 'files'
+    end
+
     old_dir = Dir.pwd
     Dir.chdir(Biografia::Application.config.protected_path)
-    file_media = Medium.where('file_name LIKE "files/%"').pluck("file_name")
-    @files = search_dir("files") - file_media
+    file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck("file_name")
+    paths = search_dir(path) - file_media
+    @nodes = {}
 
-    @files = @files[0..50]    
+    base_length = path.length + 1
+    paths.each do |p|
+      parts = p[base_length..-1].split('/')
+      if parts.length == 1 # File
+        @nodes[p] = nil
+      else
+        full = path + '/' + parts[0]
+        if @nodes.key?(full)
+          @nodes[full] += 1
+        else
+          @nodes[full] = 1
+        end
+      end
+    end
+
     Dir.chdir(old_dir)
   end
 
