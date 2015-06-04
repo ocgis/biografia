@@ -4,40 +4,7 @@
   render :partial => connchoose.controller + '/showp', :object => connchoose, :locals => { :options => new_options }
 %>
 
-<% updateListName = connchoose.object_name + '_list' %>
-
 <%= application_modal_dialog("Välj") do %>
-<%= form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do %>
-
-<%= hidden_field 'form', 'updateListName', :value => updateListName %>
-
-<%=
-  if not options[:showFull].nil?
-    hidden_field 'form', 'showFull', :value => options[:showFull]
-  end
-%>
-
-<table>
-<%= text_field 'filter', 'filter', :data => { :submitform => "yes" } %><br/>
-</table>
-
-<% end %>
-
-<%= form_tag({ :controller => 'references', :action => "connection_add" }, { :remote => true, :id => 'yes' }) do %>
-  <%= hidden_field 'form', 'x', :value => 0 %>
-  <%= hidden_field 'form', 'y', :value => 0 %>
-  <%= hidden_field 'form', 'w', :value => 0 %>
-  <%= hidden_field 'form', 'h', :value => 0 %>
-  <%= hidden_field 'form', 'connect1Id', :value => connchoose.object_name %>
-  <%=
-    if not options[:showFull].nil?
-      hidden_field 'form', 'showFull', :value => options[:showFull]
-    end
-  %>
-
-  <div id="<%= updateListName %>"></div>
-	
-	<%= submit_tag %>
-<% end %>
+<%= render partial: "connchooseform", object: connchoose, locals: { options: options }
 <% end %>
 
