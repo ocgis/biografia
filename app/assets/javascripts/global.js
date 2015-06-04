@@ -23,7 +23,10 @@ function hideTree(event) {
 
 function initPage() {
     $('.dropdownmenu').dropdownmenu();
-    $( "#dialog").dialog({modal: true, appendTo: "#modal_dialog"});
+    $( "#dialog").dialog({modal: true,
+                          appendTo: "#modal_dialog",
+                          width: 'auto',
+                          resizable: false });
     $( "#tabs" ).tabs();
     $('*[data-tagable]').Jcrop({onChange: updateCoords});
 
