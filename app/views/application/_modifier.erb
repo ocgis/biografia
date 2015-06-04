@@ -119,6 +119,21 @@
 %>
 </li>
 
+<% if options[:showTagMedium] %>
+<li>
+<%=
+    showNewId = true
+    ap_options = common_options.merge({ :controller       => modifier.controller,
+                                        :action           => "tag",
+                                        :id               => modifier.id,
+                                        :parentName       => name,
+                                        :newElem          => newId,
+                                        :hideElem         => menuId })
+    link_to "tagga", ap_options, { :remote => true }
+%>
+</li>
+<% end %>
+
 <% if not modifier.get_extra(:reference).nil? %>
 <li>
 <%=

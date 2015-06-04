@@ -64,6 +64,7 @@ Biografia::Application.routes.draw do
       get 'examine'
       get 'delete'
       get 'showp'
+      get 'tag'
       get 'image'
       get 'thumb'
     end

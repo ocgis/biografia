@@ -52,6 +52,14 @@ class MediaController < ApplicationController
     @object.set_extra(:related_objects, related)
   end
   
+  def tag
+    object = Medium.find(params.require(:id))
+    locals = {}
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :object => object, :locals => locals, :partial => 'tag', :replaceElem => "modal_dialog", :hideElem => params[:hideElem] } }
+    end
+  end
+
   def search
     if params[:path]
       path = params[:path]

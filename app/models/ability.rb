@@ -11,7 +11,7 @@ class Ability
       can [:delete, :destroy, :connection_choose, :connection_add, :connection_list], Reference
       can [:create, :new], Transfer
       can [:new, :create], [ Address, Event, Person]
-      can [:new, :create, :search, :register, :file_thumb, :examine], Medium
+      can [:new, :create, :tag, :search, :register, :file_thumb, :examine], Medium
       can [:create, :index, :new, :show, :status, :file], Export
       can [:new, :show, :status], Import
     end
