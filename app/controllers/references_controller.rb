@@ -37,7 +37,7 @@ class ReferencesController < ApplicationController
     locals = {}
     locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => updateListName } }
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => updateListName, :noReInit => true } }
     end
   end
 
