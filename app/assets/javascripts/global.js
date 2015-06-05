@@ -1,10 +1,14 @@
 //= require jcrop
 
 function updateCoords(c) {
-    $('#form_x').val(c.x);
-    $('#form_y').val(c.y);
-    $('#form_w').val(c.w);
-    $('#form_h').val(c.h);
+    var elements = $("#tag_image");
+    var iw = $(elements[0]).width();
+    var ih = $(elements[0]).height();
+
+    $('#form_x').val((c.x*1000)/iw);
+    $('#form_y').val((c.y*1000)/ih);
+    $('#form_w').val((c.w*1000)/iw);
+    $('#form_h').val((c.h*1000)/ih);
 }
 
 function showTree(event) {
@@ -31,9 +35,21 @@ function initPage() {
     $('*[data-tagable]').Jcrop({onChange: updateCoords});
 
     {
+        var imgs = $('#tagged_image');
+        var iw = $(imgs[0]).width();
+        var ih = $(imgs[0]).height();
+
         var elements = $('*[data-hover]');
 		
         for(i=0; i<elements.length; i++) {
+            var x=(($(elements[i]).attr("data-x")*iw)/1000)|0;
+            var y=(($(elements[i]).attr("data-y")*ih)/1000)|0;
+            var w=(($(elements[i]).attr("data-w")*iw)/1000)|0;
+            var h=(($(elements[i]).attr("data-h")*ih)/1000)|0;
+            $(elements[i]).css("left", x.toString() + 'px');
+            $(elements[i]).css("top", y.toString() + 'px');
+            $(elements[i]).css("width", w.toString() + 'px');
+            $(elements[i]).css("height", h.toString() + 'px');
             $(elements[i]).hover(showTree, hideTree);
         }
     }

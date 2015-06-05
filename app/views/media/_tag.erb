@@ -1,7 +1,7 @@
 <%= application_modal_dialog("Tagga bild") do %>
 
 <div>
-<%= image_tag(url_for(:controller => tag.controller, :id => tag.id, :action => 'image'), 'data-tagable' => 'true', :id => 'hoolabaloo') %>
+<%= image_tag(url_for(:controller => tag.controller, :id => tag.id, :action => 'image'), 'data-tagable' => 'true', :id => 'tag_image') %>
 </div>
 
 <%= render :partial => "references/connchooseform", :object => tag, :locals => { :options => {} } %>
