@@ -26,6 +26,29 @@ function hideTree(event) {
 }
 
 function initPage() {
+    function initTaggedImages() {
+        var imgs = $.merge($('#tagged_image'), $('#tag_image'));
+
+        for(var i=0; i<imgs.length; i++) {
+            var factor = 0.7;
+            var iw = $(imgs[i]).width();
+            var ih = $(imgs[i]).height();
+            var ww = $(window).width();
+            var wh = $(window).height();
+
+            var scalew = iw/ww;
+            var scaleh = ih/wh;
+            var scale = Math.max(scalew, scaleh);
+            if(scale > factor) {
+                iw = (iw * factor) / scale;
+                ih = (ih * factor) / scale;
+                $(imgs[i]).width(iw);
+                $(imgs[i]).height(ih);
+            }
+        }
+    }
+    initTaggedImages();
+
     $('.dropdownmenu').dropdownmenu();
     $( "#dialog").dialog({modal: true,
                           appendTo: "#modal_dialog",
@@ -34,14 +57,14 @@ function initPage() {
     $( "#tabs" ).tabs();
     $('*[data-tagable]').Jcrop({onChange: updateCoords});
 
-    {
+    function initHoverTags() {
         var imgs = $('#tagged_image');
         var iw = $(imgs[0]).width();
         var ih = $(imgs[0]).height();
 
         var elements = $('*[data-hover]');
 		
-        for(i=0; i<elements.length; i++) {
+        for(var i=0; i<elements.length; i++) {
             var x=(($(elements[i]).attr("data-x")*iw)/1000)|0;
             var y=(($(elements[i]).attr("data-y")*ih)/1000)|0;
             var w=(($(elements[i]).attr("data-w")*iw)/1000)|0;
@@ -53,6 +76,7 @@ function initPage() {
             $(elements[i]).hover(showTree, hideTree);
         }
     }
+    initHoverTags();
 }
 
 $(function() {
