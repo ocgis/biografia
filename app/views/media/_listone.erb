@@ -1,2 +1,2 @@
-<%= link_to listone.file_name, :action => "show", :id => listone.id %>
-<br />
+<% thumbnail = image_tag(url_for(:controller => listone.controller, :id => listone.id, :action => 'thumb')) %>
+<%= link_to thumbnail, :controller => listone.controller, :action => 'show', :id => listone.id %>
