@@ -29,7 +29,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
 # Use Jcrop for jquery
-gem 'jcrop-rails', github: 'bukalapak/jcrop-rails', ref: '77bce10f6d0'
+gem 'jcrop-rails-v2'
 
 # Use prototype as the JavaScript library
 # gem "prototype-rails", "~> 4.0.0"

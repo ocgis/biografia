@@ -1,5 +1,3 @@
-//= require jcrop
-
 function updateCoords(c) {
     var elements = $("#tag_image");
     var iw = $(elements[0]).width();
