@@ -1,41 +1,42 @@
 <%= @file_type %>
 <% if options[:enclosedById] %>
-<span id="<%= showp.object_name %>">
+  <span id="<%= showp.object_name %>">
 <% end %>
 
 <%= application_attach_modifier(showp, options) do %>
 <% end %>
 
 <% if options[:showFull] %>
-  <div id="modal_dialog">
-  </div>
-    <br />
-    <div style="position:relative">
-    <%= image_tag(url_for(:controller => showp.controller, :id => showp.id, :action => 'image'), :style => 'max-height: 700px; max-width: 100%', :id => 'tagged_image') %>
-    <% showp.positions_in_object.each do |position| %>
-      <% x=position.get_extra(:position).x.to_i %>
-      <% y=position.get_extra(:position).y.to_i %>
-      <% w=position.get_extra(:position).width.to_i %>
-      <% h=position.get_extra(:position).height.to_i %>
-      <span style="position:absolute;top:<%= y %>px;left:<%= x %>px;width:<%= w %>px;height:<%= h %>px;background-color:transparent" data-hover="true" data-x="<%= x %>" data-y="<%= y %>" data-w="<%= w %>" data-h="<%= h %>">
-      <span style="position:absolute;bottom:0px;left:0px;width:100%;background-color:blue;display:none"><%= position.name %></span>
-      </span>
-    <% end %>
-    </div>
+  <div id="modal_dialog"></div>
+  <br />
+  <table>
+    <tr>
+      <td style="vertical-align:top">
+        <div style="position:relative">
+          <%= image_tag(url_for(:controller => showp.controller, :id => showp.id, :action => 'image'), :style => 'max-height: 700px; max-width: 100%', :id => 'tagged_image') %>
+          <% showp.positions_in_object.each do |position| %>
+            <% x=position.get_extra(:position).x.to_i %>
+            <% y=position.get_extra(:position).y.to_i %>
+            <% w=position.get_extra(:position).width.to_i %>
+            <% h=position.get_extra(:position).height.to_i %>
+            <span style="position:absolute;top:<%= y %>px;left:<%= x %>px;width:<%= w %>px;height:<%= h %>px;background-color:transparent" data-hover="true" data-x="<%= x %>" data-y="<%= y %>" data-w="<%= w %>" data-h="<%= h %>">
+              <span style="position:absolute;bottom:0px;left:0px;width:100%;background-color:blue;display:none"><%= position.name %></span>
+            </span>
+          <% end %>
+        </div>
+      </td>
+      <td style="vertcial-align:top">
+        <%= render :partial => "references/related", :object => showp, :locals => { :options => options } %>
+        <%= application_make_tabs %>
+      </td>
+    </tr>
+  </table>
 <% else %>
   <% thumbnail = image_tag(url_for(:controller => showp.controller, :id => showp.id, :action => 'thumb')) %>
   <%= link_to thumbnail, :controller => showp.controller, :action => 'show', :id => showp.id %>
+  <br />
 <% end %>
 
-<br />
-
-<%=
-  if options[:showFull]
-    render :partial => "references/related", :object => showp, :locals => { :options => options }
-    application_make_tabs
-  end
-%>
-
 <% if options[:enclosedById] %>
-</span>
+  </span>
 <% end %>

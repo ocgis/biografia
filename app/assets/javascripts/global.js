@@ -54,7 +54,7 @@ function initPage() {
                           appendTo: "#modal_dialog",
                           width: 'auto',
                           resizable: false });
-    $( "#tabs" ).tabs();
+    $( "#tabs" ).tabs({heightStyle: "fill"});
     $('*[data-tagable]').Jcrop({onChange: updateCoords});
 
     function initHoverTags() {
