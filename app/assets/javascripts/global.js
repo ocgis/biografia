@@ -86,9 +86,17 @@ $(function() {
         $(id).toggle();
     });
 
+    var globalTimeout = null;
     $(document).on('keyup', "*[data-submitform]", function(event) {
         var form = $(this).parent();
-        form.submit();
+        if (globalTimeout != null) {
+            clearTimeout(globalTimeout);
+        }
+        globalTimeout = setTimeout(function() {
+            globalTimeout = null;
+
+            form.submit();
+        }, 200);
     });
 
     function handleEvent(e) {
