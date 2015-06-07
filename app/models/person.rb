@@ -147,4 +147,22 @@ class Person < ActiveRecord::Base
     return family_members
   end
 
+  def self.filtered_search(filters)
+    if filters.length > 0
+      person_names = PersonName.where("given_name LIKE \"%#{filters[0]}%\" OR surname LIKE \"%#{filters[0]}%\"")
+
+      filters[1..-1].each do |filter|
+        person_names = person_names.where("given_name LIKE \"%#{filter}%\" OR surname LIKE \"%#{filter}%\"")
+      end
+      person_names = person_names.distinct
+      person_names = person_names.first(100)
+
+      people = person_names.collect{|person_name| person_name.person}
+      people.compact! # FIXME: This should not be necessary
+      return people
+    else
+      return []
+    end
+  end
+
 end

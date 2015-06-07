@@ -25,12 +25,12 @@ class ReferencesController < ApplicationController
   end
 
   def connection_list
-    filter = params.require(:filter).require(:filter)
+    filter = params.require(:filter)[:filter]
     form = params.require(:form)
     updateListName = form.require(:updateListName)
 
-    person_names = PersonName.where("given_name LIKE \"%#{filter}%\"").first(20)
-    @people = person_names.collect{|person_name| person_name.person}.compact # FIXME: This should not be necessary
+    filters = filter.split(' ')
+    @people = Person.filtered_search(filters)
     @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
     @objects = @people.collect {|p| [ p.long_name, p.object_name ] }
     @objects = @objects + @events.collect {|e| [ e.one_line, e.object_name ] }
