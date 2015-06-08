@@ -30,10 +30,12 @@ class ReferencesController < ApplicationController
     updateListName = form.require(:updateListName)
 
     filters = filter.split(' ')
-    @people = Person.filtered_search(filters)
-    @events = Event.where("name LIKE \"%#{filter}%\"").first(20)
-    @objects = @people.collect {|p| [ p.long_name, p.object_name ] }
-    @objects = @objects + @events.collect {|e| [ e.one_line, e.object_name ] }
+    people = Person.filtered_search(filters)
+    events = Event.where("name LIKE \"%#{filter}%\"").first(20)
+    addresses = Address.filtered_search(filters)
+    @objects = people.collect {|p| [ p.long_name, p.object_name ] } +
+               events.collect {|e| [ e.one_line, e.object_name ] } +
+               addresses.collect {|e| [ e.one_line, e.object_name ] }
     locals = {}
     locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|

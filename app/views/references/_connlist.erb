@@ -1,30 +1,12 @@
 <table>
 <tr>
 <td>
-Personer
-</td>
-<td>
-Händelser
+Sökresultat
 </td>
 </tr>
 <tr>
 <td>
-<%= select('form', 'connect2Id', @objects, {:include_blank => 'None'}, {:size => 10 }) %>
-</td>
-<td>
-<% @events.each do |event| %>
-<%=
-  options = 
-	  {
-	    :controller => 'references',
-	    :action => 'connection_add',
-	    :connect2Id => event.object_name
-	  }
-  options[:showFull] = showFull if defined? showFull
-  link_to event.name, options, { :remote => true }
-%>
-<br />
-<% end %>
+<%= select('form', 'connect2Id', @objects, {:include_blank => false}, {:size => 10 }) %>
 </td>
 </tr>
 </table>

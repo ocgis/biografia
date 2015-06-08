@@ -31,4 +31,17 @@ class Address < ActiveRecord::Base
 
        return address
    end
+
+
+  def self.filtered_search(filters)
+    addresses = Address.all
+
+    filters.each do |filter|
+      addresses = addresses.where("town LIKE \"%#{filter}%\" OR street LIKE \"%#{filter}%\" OR zipcode LIKE \"%#{filter}%\" OR parish LIKE \"%#{filter}%\" OR country LIKE \"%#{filter}%\"")
+    end
+    addresses = addresses.first(100)
+
+    return addresses
+  end
+
 end
