@@ -78,6 +78,7 @@ Biografia::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
+  config.public_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public')
   config.protected_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'protected')
   config.cache_path = File.join(config.protected_path, 'cache')
   config.files_path = File.join(config.protected_path, 'files')

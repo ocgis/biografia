@@ -69,6 +69,7 @@ gem 'acts_as_list'
 gem 'nokogiri'
 
 gem 'rmagick'
+gem 'exifr'
 
 # Used for authentication
 # To use ActiveModel has_secure_password

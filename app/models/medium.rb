@@ -33,7 +33,7 @@ class Medium < ActiveRecord::Base
       end
     end
 
-    return File.join(Biografia::Application.config.public_path, "images", "unknown.gif")
+    return File.join(Biografia::Application.config.public_path, "images", "unknown.gif") # FIXME: public_path not found
   end
 
   def get_fullsize
@@ -54,6 +54,17 @@ class Medium < ActiveRecord::Base
     end
 
     return file_full
+  end
+
+  def extra_info
+    extra_info = {}
+    full_file_name = File.join(Biografia::Application.config.protected_path, file_name)
+    file_type = MIME::Types.type_for(full_file_name).first.content_type
+    if file_type == 'image/jpeg'
+      eo = EXIFR::JPEG.new(full_file_name)
+      extra_info = extra_info.merge(eo.exif[0])
+    end
+    return extra_info
   end
 
 end

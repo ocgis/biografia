@@ -21,27 +21,28 @@ class MediaController < ApplicationController
       File.open(path, "wb") { |f| f.write(filedata) }      
     end
     
-    media = Medium.new(medium_params)
-    if media.save
-      redirect_to :action => 'show', :id => media.id
+    medium = Medium.new(medium_params)
+    if medium.save
+      handle_extra_info(medium)
+      redirect_to :action => 'show', :id => medium.id
     else
       render :action => 'new'
     end
   end
 
   def register
-    media = Medium.new(:file_name => params.require(:file_name))
-    if media.save
-      redirect_to :action => 'show', :id => media.id
+    medium = Medium.new(:file_name => params.require(:file_name))
+    if medium.save
+      handle_extra_info(medium)
+      redirect_to :action => 'show', :id => medium.id
     else
       render :action => 'new'
     end
   end
   
   def show
-    @object = Medium.find(params.require(:id))
+    @object = find_object
     @mode = params[:mode]
-    @file_type = MIME::Types.type_for(@object.file_name)
     related=@object.related_objects
     related[:events].each do |r|
       r.set_extra(:related_objects, r.related_objects)
@@ -113,7 +114,8 @@ class MediaController < ApplicationController
   end
 
   def find_object
-    return Medium.find(params.require(:id))
+    medium = Medium.find(params.require(:id))
+    return medium
   end
 
   def index_title
@@ -124,6 +126,17 @@ class MediaController < ApplicationController
 
   def medium_params
     return params.require(:media).permit(:file_name)
+  end
+
+  def handle_extra_info(medium)
+    puts "Medium extra info:\n#{medium.extra_info.pretty_inspect}"
+    extra_info = medium.extra_info
+
+    if extra_info.key?(:image_description)
+      puts "Add description:\n#{extra_info[:image_description]}"
+      note = Note.create_save(note: extra_info[:image_description])
+      medium.add_reference(note)
+    end
   end
 
   def search_dir(path)
