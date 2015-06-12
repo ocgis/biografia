@@ -35,7 +35,7 @@ Biografia::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.public_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'public')
-  config.protected_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'protected')
+  config.protected_path = File.join(Pathname.new(::Rails.root).realpath.to_s, 'test', 'files')
   config.cache_path = File.join(config.protected_path, 'cache')
   config.files_path = File.join(config.protected_path, 'files')
   config.transfer_path = File.join(config.protected_path, 'transfer', 'test')

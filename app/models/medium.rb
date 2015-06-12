@@ -62,7 +62,9 @@ class Medium < ActiveRecord::Base
     file_type = MIME::Types.type_for(full_file_name).first.content_type
     if file_type == 'image/jpeg'
       eo = EXIFR::JPEG.new(full_file_name)
-      extra_info = extra_info.merge(eo.exif[0])
+      unless eo.exif.nil?
+        extra_info = extra_info.merge(eo.exif[0])
+      end
     end
     return extra_info
   end

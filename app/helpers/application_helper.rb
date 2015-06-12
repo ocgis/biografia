@@ -33,12 +33,18 @@ module ApplicationHelper
 
   def application_show_latest_update(object)
     version = object.versions.last
-    name = User.find(version.whodunnit).name
-    date = object.updated_at.strftime("%Y-%m-%d %H:%M")
-    capture do
-      concat '<span class="latest_update">'.html_safe
-      concat link_to "Ändrad av #{name} #{date}", { controller: object.controller, id: object.id, action: :examine }
-      concat '</span>'.html_safe
+    unless version.nil?
+      name = User.find(version.whodunnit).name
+      date = object.updated_at.strftime("%Y-%m-%d %H:%M")
+      capture do
+        concat '<span class="latest_update">'.html_safe
+        concat link_to "Ändrad av #{name} #{date}", { controller: object.controller, id: object.id, action: :examine }
+        concat '</span>'.html_safe
+      end
+    else
+      capture do
+        concat '<span class="latest_update">Could not determine latest updater</span>'.html_safe
+      end
     end
   end
 
