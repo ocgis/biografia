@@ -92,16 +92,18 @@ module ApplicationHelper
     defaults = { location: 'Syrhåla' }
     options = defaults.merge(options)
 
+    api_key = Biografia::Application.config.google_public_api_key
+    attribution_url = Biografia::Application.config.google_attribution_url
+    location = url_encode(options[:location])
+
     capture do
-      api_key = Biografia::Application.config.google_public_api_key
-      attribution_url = Biografia::Application.config.google_attribution_url
       concat '<iframe width="600" height="450" frameborder="0" style="border:0"'.html_safe
       concat 'src="https://www.google.com/maps/embed/v1/place'.html_safe
       concat "?key=#{api_key}".html_safe
-      concat "&q=#{options[:location]}".html_safe
+      concat "&q=#{location}".html_safe
       concat '&attribution_source=Google+Maps+Embed+API'.html_safe
       concat "&attribution_web_url=#{attribution_url}".html_safe
-      concat "&attribution_ios_deep_link_id=comgooglemaps://?daddr=#{options[:location]}\">".html_safe
+      concat "&attribution_ios_deep_link_id=comgooglemaps://?daddr=#{location}\">".html_safe
       concat '</iframe>'.html_safe
     end
   end

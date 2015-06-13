@@ -3,26 +3,22 @@
 <% end %>
 
 <% if options[:showFull] %>
-<%=  render :partial => showp.controller + '/showfullp', :object => showp, :locals => { :options => options } %>
+  <div id="modal_dialog"></div>
+  <table>
+    <tr>
+      <td style="vertical-align:top">
+        <%=  render :partial => showp.controller + '/showfullp', :object => showp, :locals => { :options => options } %>
+      </td>
+      <td style="vertical-align:top">
+        <%=  render :partial => "references/related", :object => showp, :locals => { :options => options } %>
+        <%= application_make_tabs %>
+      </td>
+    </tr>
+  </table>
 <% else %>
-<%=  render :partial => showp.controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
+  <%=  render :partial => showp.controller + '/showlimitedp', :object => showp, :locals => { :options => options } %>
 <% end %>
 
-<!-- FIXME: Remove?
-<% if not showp.get_extra(:reference).nil? %>
-<%   if not showp.get_extra(:reference).name.nil? %>
-<%=    showp.get_extra(:reference).name %>
-<%   end %>
-<% end %>
--->
-
-<% if options[:showFull] %>
-
-<%=  render :partial => "references/related", :object => showp, :locals => { :options => options } %>
-
-<%= application_make_tabs %>
-
-<% end %>
 
 <% if options[:enclosedById] %>
 </span>

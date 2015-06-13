@@ -32,6 +32,26 @@ class Address < ActiveRecord::Base
        return address
    end
 
+   def maps_address
+     parts = []
+     unless self.street.nil?
+       parts << self.street
+     end
+     unless self.town.nil?
+       parts << self.town
+     end
+
+     unless self.parish.nil?
+       parts << self.parish
+     end
+
+     if parts.length > 0
+       return parts.join(', ')
+     else
+       return nil
+     end
+   end
+
 
   def self.filtered_search(filters)
     addresses = Address.all
