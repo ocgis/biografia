@@ -83,4 +83,23 @@ class Medium < ActiveRecord::Base
     end
   end
 
+  def get_location(extra_info=extra_info)
+    if extra_info.key?(:gps_latitude) and extra_info.key?(:gps_latitude_ref) and
+       extra_info.key?(:gps_longitude) and extra_info.key?(:gps_longitude_ref)
+      latitude = (extra_info[:gps_latitude][0] + extra_info[:gps_latitude][1] / 60 + extra_info[:gps_latitude][2] / 3600).to_f
+      if extra_info[:gps_latitude_ref] == 'S'
+        latitude = -latitude
+      end
+      longitude = (extra_info[:gps_longitude][0] + extra_info[:gps_longitude][1] / 60 + extra_info[:gps_longitude][2] / 3600).to_f
+      if extra_info[:gps_longitude_ref] == 'W'
+        longitude = -longitude
+      end
+      location = latitude.to_s + ',' + longitude.to_s
+
+      return location
+    else
+      return nil
+    end
+  end
+
 end

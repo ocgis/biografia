@@ -17,6 +17,9 @@
 # Ignore facebook auth config
 /config/initializers/facebook.rb
 
+# Ignore Google config
+/config/initializers/google.rb
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
