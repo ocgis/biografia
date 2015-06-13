@@ -23,7 +23,7 @@ class MediaController < ApplicationController
     
     medium = Medium.new(medium_params)
     if medium.save
-      handle_extra_info(medium)
+      medium.handle_extra_info
       redirect_to :action => 'show', :id => medium.id
     else
       render :action => 'new'
@@ -33,7 +33,7 @@ class MediaController < ApplicationController
   def register
     medium = Medium.new(:file_name => params.require(:file_name))
     if medium.save
-      handle_extra_info(medium)
+      medium.handle_extra_info
       redirect_to :action => 'show', :id => medium.id
     else
       render :action => 'new'
@@ -126,17 +126,6 @@ class MediaController < ApplicationController
 
   def medium_params
     return params.require(:media).permit(:file_name)
-  end
-
-  def handle_extra_info(medium)
-    puts "Medium extra info:\n#{medium.extra_info.pretty_inspect}"
-    extra_info = medium.extra_info
-
-    if extra_info.key?(:image_description)
-      puts "Add description:\n#{extra_info[:image_description]}"
-      note = Note.create_save(note: extra_info[:image_description])
-      medium.add_reference(note)
-    end
   end
 
   def search_dir(path)

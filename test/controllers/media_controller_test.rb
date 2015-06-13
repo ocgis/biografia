@@ -5,7 +5,7 @@ class MediaControllerTest < ActionController::TestCase
   # FIXME: test location: upload as well
   test "should get create" do
     make_user(:editor)
-    get :create, { :media => { :file_name => 'medium.jpeg' }, :location => 'not upload' }
+    get :create, { :media => { :file_name => 'medium_no_exif.jpeg' }, :location => 'not upload' }
     assert_response :redirect
   end
 

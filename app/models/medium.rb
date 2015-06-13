@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'RMagick'
 include Magick
 
@@ -64,9 +66,21 @@ class Medium < ActiveRecord::Base
       eo = EXIFR::JPEG.new(full_file_name)
       unless eo.exif.nil?
         extra_info = extra_info.merge(eo.exif[0])
+        if extra_info.key?(:image_description)
+          extra_info[:image_description] = extra_info[:image_description].force_encoding("utf-8")
+        end
       end
     end
     return extra_info
+  end
+
+  def handle_extra_info
+    extra_info = self.extra_info
+
+    if extra_info.key?(:image_description)
+      note = Note.create_save(note: extra_info[:image_description])
+      self.add_reference(note)
+    end
   end
 
 end
