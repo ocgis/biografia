@@ -3,29 +3,41 @@
 <%= form_for(*args) do |f| %>
 <%=   application_make_hidden_fields(hidden_fields) if defined?(hidden_fields) %>
 <table>
-<tr>
-<td><%=   f.label :street, "Gata" %></td>
-<td><%=   f.text_field :street %></td>
-</tr><tr>
-<td><%=   f.label :town, "Postort" %></td>
-<td><%=   f.text_field :town %></td>
-</tr><tr>
-<td><%=   f.label :zipcode, "Postnummer" %></td>
-<td><%=   f.text_field :zipcode %></td>
-</tr><tr>
-<td><%=   f.label :parish, "Församling" %></td>
-<td><%=   f.text_field :parish %></td>
-</tr><tr>
-<td><%=   f.label :country, "Land" %></td>
-<td><%=   f.text_field :country %></td>
-</tr>
+  <tr>
+    <td><%=   f.label :street, "Gata" %></td>
+    <td><%=   f.text_field :street %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :town, "Postort" %></td>
+    <td><%=   f.text_field :town %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :zipcode, "Postnummer" %></td>
+    <td><%=   f.text_field :zipcode %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :parish, "Församling" %></td>
+    <td><%=   f.text_field :parish %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :country, "Land" %></td>
+    <td><%=   f.text_field :country %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :latitude, "Latitude" %></td>
+    <td><%=   f.text_field :latitude %></td>
+  </tr>
+  <tr>
+    <td><%=   f.label :longitude, "Longitude" %></td>
+    <td><%=   f.text_field :longitude %></td>
+  </tr>
 <%    reference = form.get_extra(:reference)
       if not reference.nil? %>
 <%=     fields_for :reference, reference do |reference_fields| %>
-<tr>
-<td><%=       reference_fields.label :name, "Roll" %></td>
-<td><%=       reference_fields.text_field :name %></td>
-</tr>
+  <tr>
+    <td><%=       reference_fields.label :name, "Roll" %></td>
+    <td><%=       reference_fields.text_field :name %></td>
+  </tr>
 </table>
 <br />
 <%      end %>

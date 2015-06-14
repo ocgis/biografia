@@ -81,6 +81,12 @@ class Medium < ActiveRecord::Base
       note = Note.create_save(note: extra_info[:image_description])
       self.add_reference(note)
     end
+    location = get_location(extra_info)
+    unless location.nil?
+      parts = location.split(',')
+      address = Address.create_save(latitude: parts[0].to_f, longitude: parts[1].to_f)
+      self.add_reference(address)
+    end
   end
 
   def get_location(extra_info=extra_info)

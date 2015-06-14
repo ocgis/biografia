@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150207130918) do
+ActiveRecord::Schema.define(version: 20150613193425) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 20150207130918) do
     t.string   "source"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "latitude",   limit: 24
+    t.float    "longitude",  limit: 24
   end
 
   create_table "event_dates", force: true do |t|

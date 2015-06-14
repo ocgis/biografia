@@ -12,28 +12,8 @@ class Address < ActiveRecord::Base
 
    # FIXME: add test
    def one_line
-       address = ""
-       if self.street != nil
-          address += self.street
-       end
-       if self.town != nil
-         if address != ""
-            address += ", "
-         end
-          address += self.town
-       end
-       if self.parish != nil
-          if address != ""
-             address += ", "
-          end
-          address += self.parish + " församling"
-       end
-
-       return address
-   end
-
-   def maps_address
      parts = []
+
      unless self.street.nil?
        parts << self.street
      end
@@ -42,7 +22,36 @@ class Address < ActiveRecord::Base
      end
 
      unless self.parish.nil?
-       parts << self.parish
+       parts << (self.parish + " församling")
+     end
+
+     unless self.latitude.nil? or self.longitude.nil? or parts.length > 0
+       parts << self.latitude.to_s + ',' + self.longitude.to_s
+     end
+
+     if parts.length > 0
+       return parts.join(', ')
+     else
+       return "Empty address: {self.inspect}"
+     end
+   end
+
+   def maps_address
+     parts = []
+
+     unless self.latitude.nil? or self.longitude.nil?
+       parts << self.latitude.to_s + ',' + self.longitude.to_s
+     else
+       unless self.street.nil?
+         parts << self.street
+       end
+       unless self.town.nil?
+         parts << self.town
+       end
+
+       unless self.parish.nil?
+         parts << self.parish
+       end
      end
 
      if parts.length > 0
