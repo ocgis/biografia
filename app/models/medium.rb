@@ -63,12 +63,10 @@ class Medium < ActiveRecord::Base
     full_file_name = File.join(Biografia::Application.config.protected_path, file_name)
     file_type = MIME::Types.type_for(full_file_name).first.content_type
     if file_type == 'image/jpeg'
-      eo = EXIFR::JPEG.new(full_file_name)
-      unless eo.exif.nil?
-        extra_info = extra_info.merge(eo.exif[0])
-        if extra_info.key?(:image_description)
-          extra_info[:image_description] = extra_info[:image_description].force_encoding("utf-8")
-        end
+      e = Exiftool.new(full_file_name)
+      extra_info = extra_info.merge(e.to_hash)
+      if extra_info.key?(:image_description)
+        extra_info[:image_description] = extra_info[:image_description].force_encoding("utf-8")
       end
     end
     return extra_info
@@ -92,14 +90,8 @@ class Medium < ActiveRecord::Base
   def get_location(extra_info=extra_info)
     if extra_info.key?(:gps_latitude) and extra_info.key?(:gps_latitude_ref) and
        extra_info.key?(:gps_longitude) and extra_info.key?(:gps_longitude_ref)
-      latitude = (extra_info[:gps_latitude][0] + extra_info[:gps_latitude][1] / 60 + extra_info[:gps_latitude][2] / 3600).to_f
-      if extra_info[:gps_latitude_ref] == 'S'
-        latitude = -latitude
-      end
-      longitude = (extra_info[:gps_longitude][0] + extra_info[:gps_longitude][1] / 60 + extra_info[:gps_longitude][2] / 3600).to_f
-      if extra_info[:gps_longitude_ref] == 'W'
-        longitude = -longitude
-      end
+      latitude = extra_info[:gps_latitude]
+      longitude = extra_info[:gps_longitude]
       location = latitude.to_s + ',' + longitude.to_s
 
       return location
