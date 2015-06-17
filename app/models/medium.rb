@@ -65,9 +65,6 @@ class Medium < ActiveRecord::Base
     if file_type == 'image/jpeg'
       e = Exiftool.new(full_file_name)
       extra_info = extra_info.merge(e.to_hash)
-      if extra_info.key?(:image_description)
-        extra_info[:image_description] = extra_info[:image_description].force_encoding("utf-8")
-      end
     end
     return extra_info
   end
@@ -79,11 +76,25 @@ class Medium < ActiveRecord::Base
       note = Note.create_save(note: extra_info[:image_description])
       self.add_reference(note)
     end
+
+    if extra_info.key?(:date_time_original)
+      date_time = extra_info[:date_time_original]
+      date_time[4] = '-'
+      date_time[7] = '-'
+      event_date = EventDate.new()
+      event_date.set_date(date_time)
+      if(event_date.save)
+        self.add_reference(event_date, role: 'Date')
+      else
+        raise StandardError, "Could not save EventDate with date #{event_date}"
+      end
+    end
+
     location = get_location(extra_info)
     unless location.nil?
       parts = location.split(',')
       address = Address.create_save(latitude: parts[0].to_f, longitude: parts[1].to_f)
-      self.add_reference(address)
+      self.add_reference(address, role: 'Position')
     end
   end
 

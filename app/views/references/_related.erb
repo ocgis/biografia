@@ -11,7 +11,6 @@
 
 <% content_for :tabs_content do %>
 <div id="tabs-people">
-<h3>Personer</h3>
 <ul>
 <%= render :partial => "people/showp",
            :layout => "li",
@@ -29,7 +28,6 @@
 <% content_for :tabs_content do %>
 <div id="tabs-relationships">
 
-<h3>Förhållanden</h3>
 <ul>
 <%= relationships_render(related_objs[:relationships], common_options) %>
 </ul>
@@ -43,7 +41,6 @@
 
 <% content_for :tabs_content do %>
 <div id="tabs-events">
-<h3>Händelser</h3>
 <ul>
   
 <%= render :partial => "events/showp",
@@ -68,11 +65,28 @@
 <% content_for :tabs_content do %>
 <div id="tabs-addresses">
 
-<h3>Adresser</h3>
 <ul>
 <%= render :partial => "addresses/showp",
            :layout => "li",
            :collection => related_objs[:addresses],
+           :locals => { :options => common_options } %>
+</ul>
+
+</div>
+<% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-event-dates">Datum</a></li>
+<% end %>
+
+
+<% content_for :tabs_content do %>
+<div id="tabs-event-dates">
+
+<ul>
+<%= render :partial => "event_dates/showp",
+           :layout => "li",
+           :collection => related_objs[:event_dates],
            :locals => { :options => common_options } %>
 </ul>
 
@@ -87,7 +101,6 @@
 <% content_for :tabs_content do %>
 <div id="tabs-notes">
 
-<h3>Kommentarer</h3>
 <ul>
 <%= render :partial => "notes/showp",
            :layout => "li",
@@ -105,7 +118,6 @@
 <% content_for :tabs_content do %>
 <div id="tabs-media">
 
-<h3>Media</h3>
 <ul>
 <%= render :partial => "media/showp",
            :collection => related_objs[:media],

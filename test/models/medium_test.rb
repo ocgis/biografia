@@ -11,6 +11,15 @@ class MediumTest < ActiveSupport::TestCase
     assert extra_info[:image_description] == "Räksmörgås", "Got [#{extra_info[:image_description]}], expected [Räksmörgås]"
   end
 
+  test "medium extra_info date_time_original" do
+    medium = Medium.create_save(file_name: "medium_date_time.jpeg")
+
+    extra_info = medium.extra_info
+
+    test_assert({ got: extra_info[:date_time_original],
+                  expected: "2015:06:16 10:42:02" })
+  end
+
   test "medium get_location" do
     medium = Medium.create_save(file_name: "medium_position.jpeg")
 
@@ -34,6 +43,22 @@ class MediumTest < ActiveSupport::TestCase
                   expected: "Note object" })
     test_assert({ got: referenced_objects[0][:note],
                   expected: "Räksmörgås" })
+  end
+
+  test "medium handle_extra_info date_time_original" do
+    medium = Medium.create_save(file_name: "medium_date_time.jpeg")
+
+    medium.handle_extra_info
+
+    references = medium.get_references
+    referenced_objects = references.collect{ |reference| reference.other_object(medium) }
+
+    test_assert({ got: "#{referenced_objects.length} referenced object",
+                  expected: "1 referenced object" })
+    test_assert({ got: "#{referenced_objects[0].class.name} object",
+                  expected: "EventDate object" })
+    test_assert({ got: referenced_objects[0].get_date(),
+                  expected: "2015-06-16 10:42:02" })
   end
 
   test "medium handle_extra_info position" do

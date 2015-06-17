@@ -19,6 +19,8 @@ class EventDate < ActiveRecord::Base
       return self.date.strftime("%Y-%m-%d")
     elsif self.mask == "YYYY-MM-DD hh:mm"
       return self.date.strftime("%Y-%m-%d %H:%M")
+    elsif self.mask == "YYYY-MM-DD hh:mm:ss"
+      return self.date.strftime("%Y-%m-%d %H:%M:%S")
     else
       return "Unknown mask #{self.mask} #{self.date.to_s}"
     end
@@ -31,14 +33,21 @@ class EventDate < ActiveRecord::Base
       self.mask = "YYYY-MM-DD"
       return true
     end
-    
+
     m = dstr.match(/^(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d)$/)
     if not m.nil?
       self.date = DateTime.new(m[1].to_i, m[2].to_i, m[3].to_i, m[4].to_i, m[5].to_i)
       self.mask = "YYYY-MM-DD hh:mm"
       return true
     end
-    
+
+    m = dstr.match(/^(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)$/)
+    if not m.nil?
+      self.date = DateTime.new(m[1].to_i, m[2].to_i, m[3].to_i, m[4].to_i, m[5].to_i, m[6].to_i)
+      self.mask = "YYYY-MM-DD hh:mm:ss"
+      return true
+    end
+
     raise StandardError, "Could not set date #{dstr}"
   end
 
