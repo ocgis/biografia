@@ -42,7 +42,6 @@ class MediaController < ApplicationController
   
   def show
     @object = find_object
-    puts @object.extra_info.pretty_inspect
     @mode = params[:mode]
     related=@object.related_objects
     related[:events].each do |r|

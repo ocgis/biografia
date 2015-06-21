@@ -31,6 +31,7 @@ module CommonInstanceMethods
                :event_dates => [],
                :relationships => [],
                :media => [],
+               :things => [],
                :unhandled_types => [] }
 
     self.get_references.each do |reference|

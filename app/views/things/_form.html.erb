@@ -1,0 +1,29 @@
+<% args = [form] %>
+<% args.append(options) if defined?(options) %>
+<%= form_for(*args) do |f| %>
+<%=   application_make_hidden_fields(hidden_fields) if defined?(hidden_fields) %>
+<%=   f.label :name, "Namn:" %>
+<%=   f.text_field :name, :size => 20 %>
+<br/>
+<%=   f.label :kind, "Typ:" %>
+<%=   f.text_field :kind, :size => 20 %>
+<br/>
+<%=   f.label :make, "Märke:" %>
+<%=   f.text_field :make, :size => 20 %>
+<br/>
+<%=   f.label :model, "Modell:" %>
+<%=   f.text_field :model, :size => 20 %>
+<br/>
+<%=   f.label :serial, "Serienummer:" %>
+<%=   f.text_field :serial, :size => 20 %>
+<br/>
+<%    reference = form.get_extra(:reference)
+      if not reference.nil? %>
+<%=     fields_for :reference, reference do |reference_fields| %>
+<%=       reference_fields.label :name, "Roll:" %>
+<%=       reference_fields.text_field :name %>
+<br />
+<%      end %>
+<%    end %>
+<%=   f.submit "Spara" %>
+<%  end %>

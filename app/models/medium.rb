@@ -96,6 +96,42 @@ class Medium < ActiveRecord::Base
       address = Address.create_save(latitude: parts[0].to_f, longitude: parts[1].to_f)
       self.add_reference(address, role: 'Position')
     end
+
+    device_attrs = {}
+    device_attrs[:make] = extra_info[:make] if extra_info.key?(:make)
+    device_attrs[:model] = extra_info[:model] if extra_info.key?(:model)
+    device_attrs[:serial] = extra_info[:internal_serial_number] if extra_info.key?(:internal_serial_number)
+    if extra_info.key?(:file_source) and extra_info[:file_source] == "Digital Camera"
+      device_attrs[:kind] = "Camera"
+      device_role = "Camera"
+    end
+    if extra_info.key?(:internal_serial_number)
+      device_attrs[:serial] = extra_info[:internal_serial_number]
+    end
+    if device_attrs.length > 0
+      things = Thing.where(device_attrs)
+      if things.length == 1
+        thing = things.first
+      elsif things.length == 0
+        thing = Thing.create_save(device_attrs)
+      else
+        raise StandardError, "Found several matching things: #{things.pretty_inspect}"
+      end
+      self.add_reference(thing, role: device_role)
+    end
+    if extra_info.key?(:lens_type)
+      lens_attrs = { kind: "Camera Lens",
+                     model: extra_info[:lens_type] }
+      things = Thing.where(lens_attrs)
+      if things.length == 1
+        thing = things.first
+      elsif things.length == 0
+        thing = Thing.create_save(lens_attrs)
+      else
+        raise StandardError, "Found several matching things: #{things.pretty_inspect}"
+      end
+      self.add_reference(thing, role: "CameraLens")
+    end
   end
 
   def get_location(extra_info=extra_info)

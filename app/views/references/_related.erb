@@ -127,3 +127,20 @@
 
 </div>
 <% end %>
+
+<% content_for :tabs_headers do %>
+<li><a href="#tabs-things">Saker</a></li>
+<% end %>
+
+<% content_for :tabs_content do %>
+<div id="tabs-things">
+
+<ul>
+<%= render :partial => "things/showp",
+           :collection => related_objs[:things],
+           :layout => "li",
+           :locals => { :options => common_options } %>
+</ul>
+
+</div>
+<% end %>

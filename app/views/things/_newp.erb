@@ -1,0 +1,7 @@
+<%= application_modal_dialog("Lägg till sak") do %>
+<% hidden_fields = {}
+   hidden_fields['parentName'] = parentName if defined? parentName
+   hidden_fields['topName'] = topName if defined? topName %>
+
+<%= render partial: 'form', object: @thing, locals: { hidden_fields: hidden_fields, options: { remote: true, url: { action: "createp" } } } %>
+<% end %>

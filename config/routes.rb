@@ -120,6 +120,18 @@ Biografia::Application.routes.draw do
     end
   end
 
+  resources :things do
+    collection do
+      post 'createp'
+      get 'newp'
+    end
+
+    member do
+      get 'delete'
+      get 'examine'
+    end
+  end
+
   resources :sessions, :only => [:new]
   resources :transfers, :only => [:create, :new, :index, :show]
   resources :users, :only => [:index, :show, :edit, :update]  

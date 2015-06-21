@@ -43,13 +43,6 @@ module RelationshipsHelper
       html += relationships_showlimitedp(showp, options)
     end
 
-# FIXME: Remove?
-#    if not showp.get_extra(:reference).nil?
-#      if not showp.get_extra(:reference).name.nil?
-#        html += showp.get_extra(:reference).name
-#      end
-#    end
-
     if options[:showFull]
       html += '<div id="modal_dialog"></div>'.html_safe
       html += render :partial => "references/related", :object => showp, :locals => { :options => options }
