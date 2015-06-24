@@ -99,6 +99,11 @@ $(function() {
         }, 200);
     });
 
+    $(document).on('change', "*[data-submitonchange]", function(event) {
+        var form = $(this).parent();
+        form.submit();
+    });
+
     function handleEvent(e) {
         var data = JSON.parse(e.data);
 

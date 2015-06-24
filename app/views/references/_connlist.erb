@@ -6,7 +6,7 @@ Sökresultat
 </tr>
 <tr>
 <td>
-<%= select('form', 'connect2Id', @objects, {:include_blank => false}, {:size => 10 }) %>
+<%= select('form', 'connect2Id', @objects, {:include_blank => false}, {:size => 10, 'data-submitonchange' => true }) %>
 </td>
 </tr>
 </table>
