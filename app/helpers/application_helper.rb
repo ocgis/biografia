@@ -37,13 +37,13 @@ module ApplicationHelper
       name = User.find(version.whodunnit).name
       date = object.updated_at.strftime("%Y-%m-%d %H:%M")
       capture do
-        concat '<span class="latest_update">'.html_safe
-        concat link_to "Ändrad av #{name} #{date}", { controller: object.controller, id: object.id, action: :examine }
-        concat '</span>'.html_safe
+        content_tag(:span, class: "latest_update") do
+          link_to "Ändrad av #{name}<br />#{date}".html_safe, { controller: object.controller, id: object.id, action: :examine }
+        end
       end
     else
       capture do
-        concat '<span class="latest_update">Could not determine latest updater</span>'.html_safe
+        content_tag(:span, "Could not determine latest updater", class: "latest_update")
       end
     end
   end
@@ -59,17 +59,31 @@ module ApplicationHelper
   end
 
   def application_attach_modifier(object, options, &block)
-    html = "<table><tr><td>"
-    html += capture(&block)
-    html += "</td><td>"
-    html += '<div class="dropdownmenu">'
-    if options[:showModifier]
-      html += render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
+    capture do
+      content_tag(:table) do
+        content_tag(:tr) do
+          concat(content_tag(:td) do
+                   capture(&block)
+                 end)
+          concat(content_tag(:td) do
+                   content_tag(:table) do
+                     content_tag(:tr) do
+                       concat(content_tag(:td) do
+                                content_tag(:div, class: "dropdownmenu") do
+                                  if options[:showModifier]
+                                    concat render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
+                                  end
+                                end
+                              end)
+                       concat(content_tag(:td) do
+                                concat application_show_latest_update(object)
+                              end)
+                     end
+                   end
+                 end)
+        end
+      end
     end
-    html += application_show_latest_update(object)
-    html += '</div>'
-    html += "</td></tr></table>"
-    html.html_safe
   end
 
   def application_modal_dialog(title, &block)
