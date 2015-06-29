@@ -5,6 +5,9 @@
 %>
 
 <%= application_modal_dialog("Välj") do %>
-<%= render partial: "connchooseform", object: connchoose, locals: { options: options } %>
+<%= application_search_form(options.merge(submitAction: { :controller => 'references',
+                                                           :action => "connection_add" },
+                                          updateListName: connchoose.object_name + '_list',
+                                          listHiddenFields: { connect1Id: connchoose.object_name })) %>
 <% end %>
 

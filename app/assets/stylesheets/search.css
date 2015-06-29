@@ -1,0 +1,4 @@
+.search>.result { position:absolute;
+                  z-index:999;
+                  display:none
+}

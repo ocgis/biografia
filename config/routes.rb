@@ -47,6 +47,12 @@ Biografia::Application.routes.draw do
     end
   end
 
+  resources :home, :only => [] do
+    collection do
+      post 'goto'
+    end
+  end
+
   resources :imports, :only => [:new, :show] do
     member do
       get 'status'

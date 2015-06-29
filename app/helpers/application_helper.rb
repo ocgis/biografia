@@ -108,4 +108,50 @@ module ApplicationHelper
     end
   end
 
+  def application_search_form(options)
+    defaults = {
+      submitAction: { controller: nil,
+                      action: nil},
+      submitRemote: true,
+      updateListName: 'update_list',
+      showFull: nil,
+      listHiddenFields: {},
+      showList: true
+    }
+
+    options = defaults.merge(options)
+
+    capture do
+      concat '<div class="search">'.html_safe unless options[:showList]
+      concat(form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do
+
+        concat hidden_field 'form', 'updateListName', :value => options[:updateListName]
+
+        if not options[:showFull].nil?
+          concat hidden_field 'form', 'showFull', :value => options[:showFull]
+        end
+
+        concat '<table>'.html_safe
+        concat text_field 'filter', 'filter', 'data-submitform' => "yes", class: 'filter'
+        concat '<br/>'.html_safe
+        concat '</table>'.html_safe
+
+      end)
+
+      concat(form_tag(options[:submitAction], { :remote => options[:submitRemote], :id => 'yes', class: 'result' }) do
+        options[:listHiddenFields].each do | k, v |
+          concat hidden_field 'form', k, :value => v
+        end
+
+        if not options[:showFull].nil?
+          concat hidden_field 'form', 'showFull', :value => options[:showFull]
+        end
+
+        concat '<div id="'.html_safe
+        concat options[:updateListName]
+        concat '"></div>'.html_safe
+      end)
+      concat '</div>'.html_safe unless options[:showList]
+    end
+  end
 end

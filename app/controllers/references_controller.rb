@@ -47,22 +47,16 @@ class ReferencesController < ApplicationController
     form = params.require(:form)
     connect1Id = form.require(:connect1Id)
     connect2Id = form.require(:connect2Id)
-    form_x = form.require(:x)
-    form_y = form.require(:y)
-    form_w = form.require(:w)
-    form_h = form.require(:h)
 
     obj1 = find_by_object_name(connect1Id)
     obj2 = find_by_object_name(connect2Id)
     reference = obj1.add_reference(obj2)
 
-    if(form_x.to_i >= 0)
-      pictureWidth = 1; # FIXME
-      pictureHeight = 1; # FIXME
-      x = form_x.to_f / pictureWidth;
-      y = form_y.to_f / pictureHeight;
-      width = form_w.to_f / pictureWidth;
-      height = form_h.to_f / pictureHeight;
+    unless form[:x].nil?
+      x = form[:x].to_f;
+      y = form[:y].to_f;
+      width = form[:w].to_f;
+      height = form[:h].to_f;
       reference.position_in_pictures.create( :x => x, :y => y, :width => width, :height => height )
     end
     

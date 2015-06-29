@@ -1,69 +1,61 @@
 <% name = showp.object_name %>
 
 <% if options[:enclosedById] %>
-<span id="<%= name %>">
+  <span id="<%= name %>">
 <% end %>
 
 <% mod_options = options %>
 <% mod_options[:relation] = showp.get_extra(:relation) if showp.get_extra(:relation) != nil %>
 
-<%= application_attach_modifier(showp, mod_options) do %>
-<%=
-  if defined?  showFull and showFull
-    showp.long_name
-  else
-    person_link_to(showp)
-  end
-%>
-<%= showp.sex %>
-<!-- FIXME: Remove?
-<% if not showp.get_extra(:reference).nil? %>
-<%   if not showp.get_extra(:reference).name.nil? %>
-<%=    showp.get_extra(:reference).name %>
-<%   end %>
-<% end %>
--->
-
-<% end %>
-
-<br />
-
 <% if options[:showFull] %>
 
-<div id="modal_dialog"></div>
+  <div id="modal_dialog"></div>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-family">Familjemedlemmar</a></li>
+  <% end %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-family">Familjemedlemmar</a></li>
-<% end %>
+  <% content_for :tabs_content do %>
+    <div id="tabs-family">
+      <%= person_show_family(showp) %>
+    </div>
+  <% end %>
 
-<% content_for :tabs_content do %>
-<div id="tabs-family">
-   <%= person_show_family(showp) %>
-</div>
-<% end %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-ancestry">Antavla</a></li>
+  <% end %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-ancestry">Antavla</a></li>
-<% end %>
+  <% content_for :tabs_content do %>
+    <div id="tabs-ancestry">
+      <h3>Övrigt</h3>
+      <p>
+        <%= link_to "Antavla", :action => "ancestry",
+                               :id => showp.id,
+                               :controller => showp.controller %>
+      </p>
+    </div>
+  <% end %>
 
-<% content_for :tabs_content do %>
-<div id="tabs-ancestry">
-    <h3>Övrigt</h3>
-    <p>
-    <%= link_to "Antavla", :action => "ancestry",
-                           :id => showp.id,
-                           :controller => showp.controller %>
-    </p>
-		
-</div>
-<% end %>
-
-<%= render :partial => "references/related", :object => showp, :locals => { :options => { :topName => options[:topName] } } %>
-
-<%= application_make_tabs %>
-
+  <table>
+    <tr>
+      <td style="vertical-align:top">
+        <%= application_attach_modifier(showp, mod_options) do %>
+          <%= showp.long_name %>
+          <%= showp.sex %>
+        <% end %>
+      </td>
+      <td style="vertical-align:top">
+        <%= render :partial => "references/related", :object => showp, :locals => { :options => { :topName => options[:topName] } } %>
+        <%= application_make_tabs %>
+      </td>
+    </tr>
+  </table>
+<% else %>
+  <%= application_attach_modifier(showp, mod_options) do %>
+    <%= person_link_to(showp) %>
+    <%= showp.sex %>
+  <% end %>
 <% end %>
 		
 <% if options[:enclosedById] %>
-</span>
+  </span>
 <% end %>

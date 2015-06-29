@@ -7,7 +7,14 @@
         </div>
       </td>
       <td style="align-vertical:top">
-        <%= render :partial => "references/connchooseform", :object => tag, :locals => { :options => {} } %>
+        <%= application_search_form(submitAction: { :controller => 'references',
+                                                    :action => "connection_add" },
+                                    updateListName: tag.object_name + '_list',
+                                    listHiddenFields: { x: 0,
+                                                        y: 0,
+                                                        w: 0,
+                                                        h: 0,
+                                                        connect1Id: tag.object_name }) %>
       </td>
     </tr>
   </table>

@@ -14,84 +14,81 @@
 
 <% if current_user %>
 
+<table class="table-menu">
+<tr>
+<td>
+<%= link_to "Personer", :controller => "people", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Händelser", :controller => "events", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Media", :controller => "media", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Adresser", :controller => "addresses", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Saker", :controller => "things", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Överföringar", :controller => "transfers", :action => "index" %>
+</td>
+
+<td>
+<%= link_to "Exporter", :controller => "exports", :action => "index" %>
+</td>
+
+<td>
+<%= application_search_form(submitAction: { :controller => 'home',
+                                            :action => 'goto' },
+                            updateListName: 'main_search_list',
+                            showList: false) %>
+</td>
+
+</tr>
+
+<tr>
+<td>
+<%= link_to "Lägg till person", :controller => "people", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Lägg till händelse", :controller => "events", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Lägg till medium", :controller => "media", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Lägg till adress", :controller => "addresses", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Lägg till sak", :controller => "things", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Överför fil", :controller => "transfers", :action => "new" %>
+</td>
+
+<td>
+<%= link_to "Exportera fil", :controller => "exports", :action => "new" %>
+</td>
+
+<td>
 <div id="user-widget">
   Inloggad som <strong><%= current_user.name %></strong>.
   <%= link_to "Logga ut", signout_path, id: "sign_out" %>
 </div>
+</td>
 
-<table>
-<tr>
-<td>
-<b>Överföringar</b>
-</td>
-<td>
-<%= link_to "Lägg till", :controller => "transfers", :action => "new" %>
-</td>
-</tr>
-
-<tr>
-<td>
-<b>Exporter</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "exports", :action => "index" %>
-<%= link_to "Lägg till", :controller => "exports", :action => "new" %>
-</td>
-</tr>
-
-<tr>
-<td>
-<b>Personer</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "people", :action => "index" %>
-<%= link_to "Lägg till", :controller => "people", :action => "new" %>
-<%= link_to "Sök", :controller => "people", :action => "index" %>
-</td>
-</tr>      
-
-<tr>
-<td>
-<b>Händelser</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "events", :action => "index" %>
-<%= link_to "Lägg till", :controller => "events", :action => "new" %>
-<%= link_to "Sök", :controller => "events", :action => "index" %>
-</td>
-</tr>      
-
-<tr>
-<td>
-<b>Media</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "media", :action => "index" %>
-<%= link_to "Lägg till", :controller => "media", :action => "new" %>
-<%= link_to "Sök lokalt", :controller => "media", :action => "search" %>
-</td>
-</tr>
-
-<tr>
-<td>
-<b>Adresser</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "addresses", :action => "index" %>
-<%= link_to "Lägg till", :controller => "addresses", :action => "new" %>
-<%= link_to "Sök", :controller => "addresses", :action => "index" %>
-</td>
-</tr>      
-
-<tr>
-<td>
-<b>Saker</b>
-</td>
-<td>
-<%= link_to "Lista alla", :controller => "things", :action => "index" %>
-<%= link_to "Lägg till", :controller => "things", :action => "new" %>
-<%= link_to "Sök", :controller => "things", :action => "index" %>
-</td>
 </tr>
 
 </table>

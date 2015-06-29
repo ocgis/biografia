@@ -48,6 +48,7 @@ function initPage() {
     initTaggedImages();
 
     $('.dropdownmenu').dropdownmenu();
+    $('.search').search();
     $( "#dialog").dialog({modal: true,
                           appendTo: "#modal_dialog",
                           width: 'auto',
