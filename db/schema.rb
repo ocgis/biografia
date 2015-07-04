@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617193420) do
+ActiveRecord::Schema.define(version: 20150704154021) do
 
   create_table "addresses", force: true do |t|
     t.string   "street",     limit: 80
@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(version: 20150617193420) do
     t.integer  "roles_mask",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "home_object_name"
   end
 
   create_table "versions", force: true do |t|

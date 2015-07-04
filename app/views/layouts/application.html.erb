@@ -60,7 +60,7 @@
 
           <td>
             <div id="user-widget">
-              Inloggad som <strong><%= current_user.name %></strong>.
+              Inloggad som <strong><%= link_to_object_name(current_user.name, current_user.home_object_name, {}) %></strong>.
               <%= link_to "Logga ut", signout_path, id: "sign_out" %>
             </div>
           </td>
