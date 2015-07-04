@@ -36,22 +36,24 @@
             <%= link_to "Saker", :controller => "things", :action => "index" %>
           </td>
 
-          <td>
-            <% if current_user.has_role?(:editor) %>
+          <% if current_user.has_role?(:editor) %>
+            <td>
               <%= link_to "Överföringar", :controller => "transfers", :action => "index" %>
-            <% end %>
-          </td>
+            </td>
 
-          <td>
-            <% if current_user.has_role?(:editor) %>
+            <td>
               <%= link_to "Exporter", :controller => "exports", :action => "index" %>
-            <% end %>
-          </td>
+            </td>
+          <% end %>
+
+          <% if current_user.has_role?(:admin) %>
+            <td>
+              <%= link_to "Användare", :controller => "users", :action => "index" %>
+            </td>
+          <% end %>
 
           <td>
-            <% if current_user.has_role?(:admin) %>
-              <%= link_to "Användare", :controller => "users", :action => "index" %>
-            <% end %>
+            <%= link_to "Logga ut", signout_path, id: "sign_out" %>
           </td>
 
           <td style="width:99%">
@@ -65,10 +67,7 @@
           </td>
 
           <td>
-            <div id="user-widget">
-              Inloggad som <strong><%= link_to_object_name(current_user.name, current_user.home_object_name, {}) %></strong>.
-              <%= link_to "Logga ut", signout_path, id: "sign_out" %>
-            </div>
+            <strong><%= link_to_object_name(current_user.name, current_user.home_object_name, {}) %></strong>
           </td>
 
         </tr>
