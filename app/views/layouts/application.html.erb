@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-<% if current_user %>
-  <title><%=h yield(:title) %></title>
-<% else %>
-  <title>Inte inloggad</title>
-<% end %>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tag %>
-</head>
-<body>
+  <head>
+    <% if current_user %>
+      <title><%=h yield(:title) %></title>
+    <% else %>
+      <title>Inte inloggad</title>
+    <% end %>
+    <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+    <%= csrf_meta_tag %>
+  </head>
+  <body>
 
-<% if current_user %>
+    <% if current_user %>
 
-<table class="table-menu">
-<tr>
-<td>
-<%= link_to "Personer", :controller => "people", :action => "index" %>
-</td>
+      <table class="table-menu">
+        <tr>
+          <td>
+            <%= link_to "Personer", :controller => "people", :action => "index" %>
+          </td>
 
-<td>
-<%= link_to "Händelser", :controller => "events", :action => "index" %>
-</td>
+          <td>
+            <%= link_to "Händelser", :controller => "events", :action => "index" %>
+          </td>
 
-<td>
-<%= link_to "Media", :controller => "media", :action => "index" %>
-</td>
+          <td>
+            <%= link_to "Media", :controller => "media", :action => "index" %>
+          </td>
 
-<td>
-<%= link_to "Adresser", :controller => "addresses", :action => "index" %>
-</td>
+          <td>
+            <%= link_to "Adresser", :controller => "addresses", :action => "index" %>
+          </td>
 
-<td>
-<%= link_to "Saker", :controller => "things", :action => "index" %>
-</td>
+          <td>
+            <%= link_to "Saker", :controller => "things", :action => "index" %>
+          </td>
 
-<td>
-<%= link_to "Överföringar", :controller => "transfers", :action => "index" %>
-</td>
+          <td>
+            <% if current_user.has_role?(:editor) %>
+              <%= link_to "Överföringar", :controller => "transfers", :action => "index" %>
+            <% end %>
+          </td>
 
-<td>
-<%= link_to "Exporter", :controller => "exports", :action => "index" %>
-</td>
+          <td>
+            <% if current_user.has_role?(:editor) %>
+              <%= link_to "Exporter", :controller => "exports", :action => "index" %>
+            <% end %>
+          </td>
 
-<td>
-<%= application_search_form(submitAction: { :controller => 'home',
-                                            :action => 'goto' },
-                            updateListName: 'main_search_list',
-                            showList: false) %>
-</td>
+          <td style="width:99%">
+          </td>
 
-</tr>
+          <td>
+            <%= application_search_form(submitAction: { :controller => 'home',
+                                                        :action => 'goto' },
+                                        updateListName: 'main_search_list',
+                                        showList: false) %>
+          </td>
 
-<tr>
-<td>
-<%= link_to "Lägg till", :controller => "people", :action => "new" %>
-</td>
+          <td>
+            <div id="user-widget">
+              Inloggad som <strong><%= current_user.name %></strong>.
+              <%= link_to "Logga ut", signout_path, id: "sign_out" %>
+            </div>
+          </td>
 
-<td>
-<%= link_to "Lägg till", :controller => "events", :action => "new" %>
-</td>
+        </tr>
 
-<td>
-<%= link_to "Lägg till", :controller => "media", :action => "new" %>
-<%= link_to "Sök lokalt", :controller => "media", :action => "search" %>
-</td>
+        <% if current_user.has_role?(:editor) %>
+        <tr>
 
-<td>
-<%= link_to "Lägg till", :controller => "addresses", :action => "new" %>
-</td>
+          <td>
+            <%= link_to "Lägg till", :controller => "people", :action => "new" %>
+          </td>
 
-<td>
-<%= link_to "Lägg till", :controller => "things", :action => "new" %>
-</td>
+          <td>
+            <%= link_to "Lägg till", :controller => "events", :action => "new" %>
+          </td>
 
-<td>
-<%= link_to "Överför fil", :controller => "transfers", :action => "new" %>
-</td>
+          <td>
+            <%= link_to "Lägg till", :controller => "media", :action => "new" %>
+            <%= link_to "Sök lokalt", :controller => "media", :action => "search" %>
+          </td>
 
-<td>
-<%= link_to "Exportera fil", :controller => "exports", :action => "new" %>
-</td>
+          <td>
+            <%= link_to "Lägg till", :controller => "addresses", :action => "new" %>
+          </td>
 
-<td>
-<div id="user-widget">
-  Inloggad som <strong><%= current_user.name %></strong>.
-  <%= link_to "Logga ut", signout_path, id: "sign_out" %>
-</div>
-</td>
+          <td>
+            <%= link_to "Lägg till", :controller => "things", :action => "new" %>
+          </td>
 
-</tr>
+          <td>
+            <%= link_to "Överför fil", :controller => "transfers", :action => "new" %>
+          </td>
 
-</table>
+          <td>
+            <%= link_to "Exportera fil", :controller => "exports", :action => "new" %>
+          </td>
 
-<%= yield %>
+        </tr>
+        <% end %>
 
-<% else %>
-  Inte inloggad. Gå <%= link_to "hit", :controller => "sessions", :action => "new" %> för att logga in.
-<% end %>
+      </table>
+
+      <%= yield %>
+
+    <% else %>
+      Inte inloggad. Gå <%= link_to "hit", :controller => "sessions", :action => "new" %> för att logga in.
+    <% end %>
 
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
 
-</body>
+  </body>
 </html>
