@@ -26,4 +26,17 @@ class Thing < ActiveRecord::Base
     return parts.join(', ')
   end
 
+  def self.filtered_search(filters)
+    things = Thing.all
+
+    filters.each do |filter|
+      fields = ["name", "make", "model", "serial"]
+      query = fields.collect{|field| "#{field} LIKE \"%#{filter}%\""}.join(" OR ")
+      things = things.where(query)
+    end
+    things = things.first(100)
+
+    return things
+  end
+
 end

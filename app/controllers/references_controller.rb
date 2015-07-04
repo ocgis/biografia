@@ -33,9 +33,11 @@ class ReferencesController < ApplicationController
     people = Person.filtered_search(filters)
     events = Event.where("name LIKE \"%#{filter}%\"").first(20)
     addresses = Address.filtered_search(filters)
+    things = Thing.filtered_search(filters)
     @objects = people.collect {|p| [ p.long_name, p.object_name ] } +
                events.collect {|e| [ e.one_line, e.object_name ] } +
-               addresses.collect {|e| [ e.one_line, e.object_name ] }
+               addresses.collect {|e| [ e.one_line, e.object_name ] } +
+               things.collect {|e| [ e.one_line, e.object_name ] }
     locals = {}
     locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|
