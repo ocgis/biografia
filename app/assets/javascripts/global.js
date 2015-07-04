@@ -101,8 +101,9 @@ $(function() {
     });
 
     $(document).on('change', "*[data-submitonchange]", function(event) {
+        event.stopImmediatePropagation(); // Avoid multiple submits
         var form = $(this).parent();
-        form.submit();
+        $(form).submit();
     });
 
     function handleEvent(e) {
