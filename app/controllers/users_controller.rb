@@ -1,12 +1,8 @@
+# -*- coding: utf-8 -*-
 class UsersController < ApplicationController
 
   load_and_authorize_resource
 
-  def index
-    @users = User.all
-    render :partial => 'indexp', :collection => @users
-  end
-  
   def show
     @user = User.find(params.require(:id))
   end
@@ -27,6 +23,16 @@ class UsersController < ApplicationController
     end
     user.save
     redirect_to :action => :show, :id => id
+  end
+
+  protected
+
+  def all_objects
+    return User.all
+  end
+
+  def index_title
+    return "Alla användare"
   end
 
   private

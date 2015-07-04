@@ -48,6 +48,12 @@
             <% end %>
           </td>
 
+          <td>
+            <% if current_user.has_role?(:admin) %>
+              <%= link_to "Användare", :controller => "users", :action => "index" %>
+            <% end %>
+          </td>
+
           <td style="width:99%">
           </td>
 
