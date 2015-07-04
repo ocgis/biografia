@@ -68,13 +68,15 @@ module ApplicationHelper
           concat(content_tag(:td) do
                    content_tag(:table) do
                      content_tag(:tr) do
-                       concat(content_tag(:td) do
-                                content_tag(:div, class: "dropdownmenu") do
-                                  if options[:showModifier]
-                                    concat render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
+                       if current_user and current_user.has_role?(:editor)
+                         concat(content_tag(:td) do
+                                  content_tag(:div, class: "dropdownmenu") do
+                                    if options[:showModifier]
+                                      concat render :partial => object.controller + '/modifier', :object => object, :locals => { :options => options }
+                                    end
                                   end
-                                end
-                              end)
+                                end)
+                       end
                        concat(content_tag(:td) do
                                 concat application_show_latest_update(object)
                               end)
