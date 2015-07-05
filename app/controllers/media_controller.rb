@@ -31,12 +31,17 @@ class MediaController < ApplicationController
   end
 
   def register
-    medium = Medium.new(:file_name => params.require(:file_name))
-    if medium.save
-      medium.handle_extra_info
-      redirect_to :action => 'show', :id => medium.id
+    media = Medium.where(file_name: params.require(:file_name))
+    if media.length >= 1 # Prevent double registration
+      redirect_to :action => 'show', :id => media[0].id
     else
-      render :action => 'new'
+      medium = Medium.new(file_name: params.require(:file_name))
+      if medium.save
+        medium.handle_extra_info
+        redirect_to :action => 'show', :id => medium.id
+      else
+        render :action => 'new'
+      end
     end
   end
   

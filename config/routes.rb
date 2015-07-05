@@ -59,7 +59,7 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :media, :except => [:destroy, :update] do
+  resources :media, :except => [:update] do
     collection do
       get 'register'
       get 'search'
