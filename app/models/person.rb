@@ -148,15 +148,13 @@ class Person < ActiveRecord::Base
   end
 
   def self.filtered_search(filters)
-    person_names = PersonName.all
+    people = Person.joins(:person_names)
     filters.each do |filter|
-      person_names = person_names.where("given_name LIKE \"%#{filter}%\" OR surname LIKE \"%#{filter}%\"")
+      people = people.where("given_name LIKE \"%#{filter}%\" OR surname LIKE \"%#{filter}%\"")
     end
-    person_names = person_names.distinct
-    person_names = person_names.first(100)
+    people = people.distinct
+    people = people.first(100)
 
-    people = person_names.collect{|person_name| person_name.person}
-    people.compact! # FIXME: This should not be necessary
     return people
   end
 
