@@ -23,7 +23,7 @@ class ReferencesControllerTest < ActionController::TestCase
   end
 
   test "should post connection_list" do
-    make_user(:editor)
+    make_user(:watcher)
     @request.accept = "text/javascript"
     post :connection_list, { :filter => { :filter => 'hej' },
                              :form => { :connect1Id => people(:person1).object_name,
