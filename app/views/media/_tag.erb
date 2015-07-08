@@ -9,6 +9,7 @@
       <td style="align-vertical:top">
         <%= application_search_form(submitAction: { :controller => 'references',
                                                     :action => "connection_add" },
+                                    filterHiddenFields: { ignoreName: tag.object_name },
                                     updateListName: tag.object_name + '_list',
                                     listHiddenFields: { x: 0,
                                                         y: 0,

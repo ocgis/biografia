@@ -7,6 +7,7 @@
 <%= application_modal_dialog("Välj") do %>
 <%= application_search_form(options.merge(submitAction: { :controller => 'references',
                                                            :action => "connection_add" },
+                                          filterHiddenFields: { ignoreName: connchoose.object_name },
                                           updateListName: connchoose.object_name + '_list',
                                           listHiddenFields: { connect1Id: connchoose.object_name })) %>
 <% end %>

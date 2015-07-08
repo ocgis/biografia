@@ -145,6 +145,10 @@ module ApplicationHelper
       concat '<div class="search">'.html_safe unless options[:showList]
       concat(form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do
 
+        options[:filterHiddenFields].each do | k, v |
+          concat hidden_field 'form', k, :value => v
+        end
+
         concat hidden_field 'form', 'updateListName', :value => options[:updateListName]
 
         if not options[:showFull].nil?

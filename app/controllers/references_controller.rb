@@ -28,16 +28,25 @@ class ReferencesController < ApplicationController
     filter = params.require(:filter)[:filter]
     form = params.require(:form)
     updateListName = form.require(:updateListName)
+    if form[:searchModel].nil?
+      searchModels = [ Person, Event, Address, Thing ]
+    else
+      # FIXME: Check that model is allowed for search
+      searchModels = [ form[:searchModel].constantize ]
+    end
 
     filters = filter.split(' ')
-    people = Person.filtered_search(filters)
-    events = Event.where("name LIKE \"%#{filter}%\"").first(20)
-    addresses = Address.filtered_search(filters)
-    things = Thing.filtered_search(filters)
-    @objects = people.collect {|p| [ p.long_name, p.object_name ] } +
-               events.collect {|e| [ e.one_line, e.object_name ] } +
-               addresses.collect {|e| [ e.one_line, e.object_name ] } +
-               things.collect {|e| [ e.one_line, e.object_name ] }
+
+    found = []
+    searchModels.each do |searchModel|
+      found += searchModel.filtered_search(filters)
+    end
+    @objects = found.collect {|f| [ f.one_line, f.object_name ] }
+
+    unless form[:ignoreName].nil?
+      @objects.reject!{|object| object[1] == form[:ignoreName]}
+    end
+
     locals = {}
     locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|

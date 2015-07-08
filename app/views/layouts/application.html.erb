@@ -62,6 +62,7 @@
           <td>
             <%= application_search_form(submitAction: { :controller => 'home',
                                                         :action => 'goto' },
+                                        filterHiddenFields: {},
                                         updateListName: 'main_search_list',
                                         showList: false) %>
           </td>
