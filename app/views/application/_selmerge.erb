@@ -1,0 +1,13 @@
+<%=
+  new_options = options.merge({ :enclosedById => false,
+                                :showModifier => false })
+  render :partial => selmerge.controller + '/showp', :object => selmerge, :locals => { :options => new_options }
+%>
+
+<%= application_modal_dialog("Välj") do %>
+<%= application_search_form(options.merge(submitAction: { :controller => selmerge.controller,
+                                                          :action => "edmerge" },
+                                          updateListName: selmerge.object_name + '_list',
+                                          listHiddenFields: { connect1Id: selmerge.object_name })) %>
+<% end %>
+

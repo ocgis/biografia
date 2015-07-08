@@ -16,7 +16,7 @@ class AddressesController < ApplicationController
   end
 
   def all_objects
-    return Address.all
+    return Address.all.limit(50)
   end
 
   def index_title

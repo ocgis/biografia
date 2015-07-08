@@ -7,7 +7,7 @@ class Ability
       can :manage, User
     end
     if user.has_role? :editor
-      can [:delete, :destroy, :newp, :createp, :edit, :update, :examine], [Address, Event, EventDate, Note, Person, Relationship, Thing]
+      can [:delete, :destroy, :newp, :createp, :edit, :update, :selmerge, :edmerge, :domerge, :examine], [Address, Event, EventDate, Note, Person, Relationship, Thing]
       can [:delete, :destroy, :connection_choose, :connection_add], Reference
       can [:create, :new], Transfer
       can [:new, :create], [ Address, Event, Person, Thing]

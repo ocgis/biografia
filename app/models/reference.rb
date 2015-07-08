@@ -42,6 +42,18 @@ class Reference < ActiveRecord::Base
     return other
   end
 
+  def replace_object(old, new)
+    if (old.class.name == self.type1) and (old.id == self.id1)
+      self.type1 = new.class.name
+      self.id1 = new.id
+    elsif (old.class.name == self.type2) and (old.id == self.id2)
+      self.type2 = new.class.name
+      self.id2 = new.id
+    else
+      raise StandardError, "old: #{old.inspect} reference: #{self.inspect}"
+    end
+  end
+
   def self.get_references_from_object(object, options = {})
     defaults = {
       :role  => nil,

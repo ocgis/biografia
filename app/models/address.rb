@@ -61,6 +61,18 @@ class Address < ActiveRecord::Base
      end
    end
 
+   def merge(other)
+     fields = ['street','town','zipcode','parish','country','source','latitude','longitude']
+     fields.each do |field|
+       unless self.send(field) == other.send(field)
+         if self.send(field).nil?
+           self.send(field+'=', other.send(field))
+         elsif not other.send(field).nil? # Both non-nil
+           self.send(field+'=', self.send(field)+' / '+ other.send(field))
+         end
+       end
+     end
+   end
 
   def self.filtered_search(filters)
     addresses = Address.all

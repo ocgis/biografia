@@ -13,6 +13,9 @@ Biografia::Application.routes.draw do
     member do
       get 'delete'
       get 'examine'
+      get :selmerge
+      post :edmerge
+      patch :domerge
     end
   end
   

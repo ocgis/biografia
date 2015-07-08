@@ -99,7 +99,7 @@
   ch_options = { :controller => modifier.controller,
   	             :action     => "edit",
 		             :id         => modifier.id }
-  ch_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  ch_options[:refernceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
   ch_options[:topName] = options[:topName]
   link_to "ändra", ch_options, { :remote => true }
 %>
@@ -118,6 +118,22 @@
   link_to "referera till", rt_options, { :remote => true }
 %>
 </li>
+
+<% if options[:showMergeWith] %>
+<li>
+<%=
+  rt_options =
+    {
+		  :controller => modifier.controller,
+		  :action     => "selmerge",
+		  :name       => name
+    }
+  rt_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
+  link_to "slå ihop med", rt_options, { :remote => true }
+%>
+</li>
+<% end %>
 
 <% if options[:showTagMedium] %>
 <li>

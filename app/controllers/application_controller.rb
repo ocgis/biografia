@@ -159,6 +159,46 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def selmerge
+    object = find_object
+    locals = { options: {} }
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'selmerge', :object => object, :replaceElem => "modal_dialog" } }
+    end
+  end
+
+  def edmerge
+    object = find_object
+    merged = find_by_object_name(params.require(:form).require(:connect2Id))
+    object.merge(merged)
+    locals = { options: { merged: merged } }
+    respond_to do |format|
+      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edmerge', :object => object, :replaceElem => "modal_dialog" } }
+    end
+  end
+
+  def domerge
+    merged = find_by_object_name(params.require(:form).require(:mergedName))
+    object = find_object_and_update_attrs
+    unless object.save
+      raise StandardError, "Could not save object: #{object.pretty_inspect}"
+    end
+    references = merged.get_references
+    references.each do |reference|
+      reference.replace_object(merged, object)
+      unless reference.save
+        raise StandardError, "Could not save object: #{reference.pretty_inspect}"
+      end
+    end
+    unless merged.destroy
+      raise StandardError, "Could not destroy object: #{merged.pretty_inspect}"
+    end
+
+    respond_to do |format|
+      format.js { render "reload_page" }
+    end
+  end
+
   def delete
     obj = find_object
     obj.set_extra(:related_objects, obj.related_objects)

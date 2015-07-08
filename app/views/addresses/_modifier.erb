@@ -1,3 +1,4 @@
 <%= render :partial => 'application/modifier',
            :object => modifier,
-           :locals => { :options => { :topName => options[:topName] } } %>
+           :locals => { options: { topName: options[:topName],
+                                   showMergeWith: true  } } %>
