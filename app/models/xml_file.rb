@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class XmlFile
 
+  ACCOMMODATION_ROLE = "Accommodation"
   ADDRESS_ROLE = "Address"
   DATE_ROLE = "Date"
 
@@ -428,6 +429,12 @@ class XmlFile
                         'Cause' => make_note(v, 'Orsak', 'dodors', person_source(v['p'], field: 'dodors')) })
   end
 
+  def make_accommodation(v)
+    return make_event(v, person_source(v['p'], field: 'hem'),
+                      { name: 'Boende' },
+                      { ADDRESS_ROLE => make_address(v, 'hemort', 'hemfs', person_source(v['p'], field: 'hem')) })
+  end
+
   def make_funeral(v)
     return make_event(v, person_source(v['p'], field: 'beg'),
                       { name: 'Begravning' },
@@ -445,8 +452,8 @@ class XmlFile
       person.get_or_add_reference(death, role: 'Died', ts_by_objects: true) if not death.nil?
       funeral = make_funeral(v)
       person.get_or_add_reference(funeral, role: 'Burried', ts_by_objects: true) if not funeral.nil?
-      address = make_address(v, 'hemort', 'hemfs', person_source(v['p'], field: 'hem'))
-      person.get_or_add_reference(address, role: ADDRESS_ROLE, ts_by_objects: true) if not address.nil?
+      accommodation = make_accommodation(v)
+      person.get_or_add_reference(accommodation, role: ACCOMMODATION_ROLE, ts_by_objects: true) if not accommodation.nil?
       title = make_note(v, 'Yrke', 'yrke', person_source(v['p'], field: 'yrke'))
       person.get_or_add_reference(title, role: 'Profession', ts_by_objects: true) if not title.nil?
       anm1 = make_note(v, nil, 'anm1', person_source(v['p'], field: 'anm1'))
