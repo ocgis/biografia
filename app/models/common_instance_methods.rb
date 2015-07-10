@@ -36,6 +36,7 @@ module CommonInstanceMethods
 
     self.get_references.each do |reference|
       object = reference.other_object(self)
+      object.set_extra(:parent, self)
       object.set_extra(:reference, reference)
       retval[object.controller.to_sym].append(object)
     end
@@ -74,11 +75,14 @@ module CommonInstanceMethods
     @extras[k] = v
   end
   
-  def get_extra(key)
+  def get_extra(key=nil)
     if @extras.nil?
       return nil
+    elsif key.nil?
+      return @extras
     else
       return @extras[key]
     end
   end
+
 end

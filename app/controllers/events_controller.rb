@@ -28,7 +28,7 @@ class EventsController < ApplicationController
   end
 
   def all_objects
-    return Event.all
+    return Event.all.limit(50)
   end
 
   def index_title
