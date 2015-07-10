@@ -5,142 +5,158 @@
                       :showModifier => true,
                       :parent => related } %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-people">Personer</a></li>
+<% unless related_objs[:events].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-events">Händelser</a></li>
+  <% end %>
+
+  <% content_for :tabs_content do %>
+    <div id="tabs-events">
+      <ul>
+
+        <%= render :partial => "events/showp",
+                   :layout => "li",
+                   :collection => related_objs[:events],
+                   :locals => { :options => common_options } %>
+      </ul>
+
+      <% for type in related_objs[:unhandled_types] %>
+        <%= "Warning: unhandled type " %>
+        <%= type %>
+        <%= "<br />" %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
 
-<% content_for :tabs_content do %>
-<div id="tabs-people">
-<ul>
-<%= render :partial => "people/showp",
-           :layout => "li",
-           :collection => related_objs[:people],
-           :locals => { :options => common_options } %>
-</ul>
-</div>
+<% unless related_objs[:notes].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-notes">Kommentarer</a></li>
+  <% end %>
+
+
+  <% content_for :tabs_content do %>
+    <div id="tabs-notes">
+
+      <ul>
+        <%= render :partial => "notes/showp",
+                   :layout => "li",
+                   :collection => related_objs[:notes],
+                   :locals => { :options => common_options } %>
+      </ul>
+
+    </div>
+  <% end %>
 <% end %>
 
+<% unless related_objs[:people].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-people">Personer</a></li>
+  <% end %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-relationships">Förhållanden</a></li>
-<% end %>
-
-<% content_for :tabs_content do %>
-<div id="tabs-relationships">
-
-<ul>
-<%= relationships_render(related_objs[:relationships], common_options) %>
-</ul>
-
-</div>
-<% end %>
-
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-events">Händelser</a></li>
-<% end %>
-
-<% content_for :tabs_content do %>
-<div id="tabs-events">
-<ul>
-  
-<%= render :partial => "events/showp",
-           :layout => "li",
-           :collection => related_objs[:events],
-           :locals => { :options => common_options } %>
-</ul>
-
-<% for type in related_objs[:unhandled_types] %>
-  <%= "Warning: unhandled type " %>
-  <%= type %>
-  <%= "<br />" %>
-<% end %>
-</div>
-<% end %>
-
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-addresses">Adresser</a></li>
-<% end %>
-
-
-<% content_for :tabs_content do %>
-<div id="tabs-addresses">
-
-<ul>
-<%= render :partial => "addresses/showp",
-           :layout => "li",
-           :collection => related_objs[:addresses],
-           :locals => { :options => common_options } %>
-</ul>
-
-</div>
-<% end %>
-
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-event-dates">Datum</a></li>
+  <% content_for :tabs_content do %>
+    <div id="tabs-people">
+      <ul>
+        <%= render :partial => "people/showp",
+                   :layout => "li",
+                   :collection => related_objs[:people],
+                   :locals => { :options => common_options } %>
+      </ul>
+    </div>
+  <% end %>
 <% end %>
 
 
-<% content_for :tabs_content do %>
-<div id="tabs-event-dates">
+<% unless related_objs[:relationships].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-relationships">Förhållanden</a></li>
+  <% end %>
 
-<ul>
-<%= render :partial => "event_dates/showp",
-           :layout => "li",
-           :collection => related_objs[:event_dates],
-           :locals => { :options => common_options } %>
-</ul>
+  <% content_for :tabs_content do %>
+    <div id="tabs-relationships">
 
-</div>
+      <ul>
+        <%= relationships_render(related_objs[:relationships], common_options) %>
+      </ul>
+
+    </div>
+  <% end %>
 <% end %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-notes">Kommentarer</a></li>
+<% unless related_objs[:addresses].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-addresses">Adresser</a></li>
+  <% end %>
+
+
+  <% content_for :tabs_content do %>
+    <div id="tabs-addresses">
+
+      <ul>
+        <%= render :partial => "addresses/showp",
+                   :layout => "li",
+                   :collection => related_objs[:addresses],
+                   :locals => { :options => common_options } %>
+      </ul>
+
+    </div>
+  <% end %>
 <% end %>
 
+<% unless related_objs[:event_dates].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-event-dates">Datum</a></li>
+  <% end %>
 
-<% content_for :tabs_content do %>
-<div id="tabs-notes">
 
-<ul>
-<%= render :partial => "notes/showp",
-           :layout => "li",
-           :collection => related_objs[:notes],
-           :locals => { :options => common_options } %>
-</ul>
+  <% content_for :tabs_content do %>
+    <div id="tabs-event-dates">
 
-</div>
+      <ul>
+        <%= render :partial => "event_dates/showp",
+                   :layout => "li",
+                   :collection => related_objs[:event_dates],
+                   :locals => { :options => common_options } %>
+      </ul>
+
+    </div>
+  <% end %>
 <% end %>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-media">Media</a></li>
+<% unless related_objs[:media].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-media">Media</a></li>
+  <% end %>
+
+  <% content_for :tabs_content do %>
+    <div id="tabs-media">
+
+      <ul>
+        <%= render :partial => "media/showp",
+                   :collection => related_objs[:media],
+                   :layout => "li",
+                   :locals => { :options => common_options } %>
+      </ul>
+
+    </div>
+  <% end %>
 <% end %>
 
-<% content_for :tabs_content do %>
-<div id="tabs-media">
+<% unless related_objs[:things].length == 0 %>
+  <% content_for :tabs_headers do %>
+    <li><a href="#tabs-things">Saker</a></li>
+  <% end %>
 
-<ul>
-<%= render :partial => "media/showp",
-           :collection => related_objs[:media],
-           :layout => "li",
-           :locals => { :options => common_options } %>
-</ul>
+  <% content_for :tabs_content do %>
+    <div id="tabs-things">
 
-</div>
-<% end %>
+      <ul>
+        <%= render :partial => "things/showp",
+                   :collection => related_objs[:things],
+                   :layout => "li",
+                   :locals => { :options => common_options } %>
+      </ul>
 
-<% content_for :tabs_headers do %>
-<li><a href="#tabs-things">Saker</a></li>
-<% end %>
-
-<% content_for :tabs_content do %>
-<div id="tabs-things">
-
-<ul>
-<%= render :partial => "things/showp",
-           :collection => related_objs[:things],
-           :layout => "li",
-           :locals => { :options => common_options } %>
-</ul>
-
-</div>
+    </div>
+  <% end %>
 <% end %>
