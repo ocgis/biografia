@@ -37,7 +37,7 @@ module ApplicationHelper
 
   def application_show_latest_update(object)
     version = object.versions.last
-    unless version.nil?
+    unless version.nil? or version.whodunnit.nil?
       name = User.find(version.whodunnit).name
       date = object.updated_at.strftime("%Y-%m-%d %H:%M")
       capture do
