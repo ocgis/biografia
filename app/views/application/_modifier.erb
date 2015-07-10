@@ -122,15 +122,16 @@
 <% if options[:showMergeWith] %>
 <li>
 <%=
-  rt_options =
+  sm_options =
     {
 		  :controller => modifier.controller,
 		  :action     => "selmerge",
+                  :id         => modifier.id,
 		  :name       => name
     }
-  rt_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
-  rt_options[:showFull] = options[:showFull] if !options[:showFull].nil?
-  link_to "slå ihop med", rt_options, { :remote => true }
+  sm_options[:referenceId] = modifier.get_extra(:reference).id if !modifier.get_extra(:reference).nil?
+  sm_options[:showFull] = options[:showFull] if !options[:showFull].nil?
+  link_to "slå ihop med", sm_options, { :remote => true }
 %>
 </li>
 <% end %>
