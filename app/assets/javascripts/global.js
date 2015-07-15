@@ -69,6 +69,7 @@ function initWhenImagesLoaded() {
     initHoverTags();
 
     $( "#tabs" ).tabs({heightStyle: "fill"});
+    $('*[data-tagable]').Jcrop({onChange: updateCoords});
 }
 
 function initPage() {
@@ -79,7 +80,6 @@ function initPage() {
                           width: 'auto',
                           resizable: false });
     $( "#tabs" ).tabs({heightStyle: "fill"});
-    $('*[data-tagable]').Jcrop({onChange: updateCoords});
 
     $('#tag_image, #tagged_image').imagesLoaded(initWhenImagesLoaded);
 };
