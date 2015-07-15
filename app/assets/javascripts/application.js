@@ -15,5 +15,6 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.Jcrop
+//= require imagesloaded
 //= require_tree .
 //= require turbolinks
