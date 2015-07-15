@@ -53,13 +53,14 @@ module ApplicationHelper
   end
 
   def application_make_tabs
-    html = ""
-    html += '<div id="tabs">'
-    html += '<ul>'
-    html += content_for :tabs_headers
-    html += '</ul>'
-    html += content_for :tabs_content
-    html.html_safe
+    capture do
+      content_tag(:div, id: "tabs") do
+        concat(content_tag(:ul) do
+                 content_for :tabs_headers
+               end)
+        concat content_for :tabs_content
+      end
+    end
   end
 
   def application_attach_modifier(object, options, &block)
