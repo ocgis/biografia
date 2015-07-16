@@ -37,7 +37,9 @@ class AddressesController < ApplicationController
   private
 
   def address_params
-    params.require(:address).permit(:street, :town, :zipcode, :parish, :country, :latitude, :longitude)
+    p = params.require(:address).permit(:street, :town, :zipcode, :parish, :country, :latitude, :longitude)
+    [ :street, :town, :zipcode, :parish, :country, :latitude, :longitude ].each { |attr| p[attr] = nil if p[attr].blank? }
+    return p
   end
 
 end
