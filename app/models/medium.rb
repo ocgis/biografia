@@ -62,7 +62,7 @@ class Medium < ActiveRecord::Base
     extra_info = {}
     full_file_name = File.join(Biografia::Application.config.protected_path, file_name)
     file_type = MIME::Types.type_for(full_file_name).first.content_type
-    if file_type == 'image/jpeg'
+    if (file_type == 'image/jpeg') or (file_type == 'image/tiff')
       e = Exiftool.new(full_file_name)
       extra_info = extra_info.merge(e.to_hash)
     end
