@@ -25,9 +25,7 @@ class ReferencesControllerTest < ActionController::TestCase
   test "should post connection_list" do
     make_user(:watcher)
     @request.accept = "text/javascript"
-    post :connection_list, { :filter => { :filter => 'hej' },
-                             :form => { :connect1Id => people(:person1).object_name,
-                                        :updateListName => 'List name' } }
+    get :connection_list, { :q => 'hej' }
     assert_response :success
   end
 

@@ -7,9 +7,8 @@
 <%= application_modal_dialog("Välj") do %>
 <%= application_search_form(options.merge(submitAction: { :controller => selmerge.controller,
                                                           :action => "edmerge" },
-                                          filterHiddenFields: { ignoreName: selmerge.object_name,
-                                                                searchModel: selmerge.class.name },
-                                          updateListName: selmerge.object_name + '_list',
-                                          listHiddenFields: { connect1Id: selmerge.object_name })) %>
+                                          ignoreName: selmerge.object_name,
+                                          searchModel: selmerge.class.name,
+                                          hiddenFields: { connect1Id: selmerge.object_name })) %>
 <% end %>
 

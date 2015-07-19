@@ -8,7 +8,7 @@ module RelationshipsHelper
 
     html = ""
     html += application_attach_modifier(showlimitedp, options) do
-      link_to showlimitedp.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id
+      link_to showlimitedp.decorate.one_line, :controller => showlimitedp.controller, :action => 'show', :id => showlimitedp.id
     end
     html += '<ul>'
     html += render(:partial => 'people/showp',

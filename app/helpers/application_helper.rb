@@ -134,48 +134,36 @@ module ApplicationHelper
       submitAction: { controller: nil,
                       action: nil},
       submitRemote: true,
-      updateListName: 'update_list',
       showFull: nil,
-      listHiddenFields: {},
-      showList: true
+      hiddenFields: {},
+      showList: true,
+      ignoreName: nil,
+      searchModel: nil
     }
 
     options = defaults.merge(options)
 
     capture do
       concat '<div class="search">'.html_safe unless options[:showList]
-      concat(form_tag({ :controller => 'references', :action => "connection_list" }, { :remote => true, :id => 'yes' }) do
+      concat(form_tag(options[:submitAction], { :remote => true }) do
+               options[:hiddenFields].each do | k, v |
+                 concat hidden_field 'form', k, :value => v
+               end
 
-        options[:filterHiddenFields].each do | k, v |
-          concat hidden_field 'form', k, :value => v
-        end
+               concat hidden_field 'form', 'connect2Id'
 
-        concat hidden_field 'form', 'updateListName', :value => options[:updateListName]
+               if not options[:showFull].nil?
+                 concat hidden_field 'form', 'showFull', :value => options[:showFull]
+               end
 
-        if not options[:showFull].nil?
-          concat hidden_field 'form', 'showFull', :value => options[:showFull]
-        end
-
-        concat '<table>'.html_safe
-        concat text_field 'filter', 'filter', 'data-submitform' => "yes", class: 'filter'
-        concat '<br/>'.html_safe
-        concat '</table>'.html_safe
-
-      end)
-
-      concat(form_tag(options[:submitAction], { :remote => options[:submitRemote], :id => 'yes', class: 'result' }) do
-        options[:listHiddenFields].each do | k, v |
-          concat hidden_field 'form', k, :value => v
-        end
-
-        if not options[:showFull].nil?
-          concat hidden_field 'form', 'showFull', :value => options[:showFull]
-        end
-
-        concat '<div id="'.html_safe
-        concat options[:updateListName]
-        concat '"></div>'.html_safe
-      end)
+               filter_options = {
+                 class: 'filter',
+                 'data-url' => url_for(controller: 'references', action: 'connection_list')
+               }
+               filter_options['data-ignore-name'] = options[:ignoreName] unless options[:ignoreName].nil?
+               filter_options['data-search-model'] = options[:searchModel] unless options[:searchModel].nil?
+               concat text_field 'filter', 'filter', filter_options
+             end)
       concat '</div>'.html_safe unless options[:showList]
     end
   end

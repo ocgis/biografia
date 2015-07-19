@@ -72,9 +72,55 @@ function initWhenImagesLoaded() {
     $('*[data-tagable]').Jcrop({onChange: updateCoords});
 }
 
+function initAutocompleters() {
+    var elements = $(".filter");
+
+    for(var i=0; i<elements.length; i++) {
+        var url = $(elements[i]).attr("data-url");
+        var ignoreName = $(elements[i]).attr("data-ignore-name");
+        var searchModel = $(elements[i]).attr("data-search-model");
+        $(elements[i]).autocomplete({
+            source: function( request, response ) {
+                var data ={
+                    q: request.term,
+                    ignoreName: ignoreName,
+                    searchModel: searchModel
+                };
+
+                $.ajax({
+                    url: url,
+                    dataType: "jsonp",
+                    data: data,
+                    success: function( data ) {
+                        response( data );
+                    }
+                });
+            },
+            minLength: 3,
+            select: function( event, ui ) {
+                var connect2Id = $(this).siblings("#form_connect2Id")[0];
+                var form = $(this.form);
+                $(connect2Id).val(ui.item.value);
+                $(form).submit();
+            },
+            open: function() {
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                $( this ).autocomplete('widget').css('z-index', 999);
+            },
+            close: function() {
+                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+        }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+            return $( "<li>" )
+                .append( item.label )
+                .appendTo( ul );
+        };
+    }
+}
+
 function initPage() {
     $('.dropdownmenu').dropdownmenu();
-    $('.search').search();
+    initAutocompleters();
     $( "#dialog").dialog({modal: true,
                           appendTo: "#modal_dialog",
                           width: 'auto',

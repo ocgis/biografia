@@ -1120,7 +1120,7 @@ class XmlFile
   end
 
   def dates_to_string(dates)
-    date_strings = dates.collect{|date| date.one_line}
+    date_strings = dates.collect{|date| date.decorate.one_line}
     return date_strings.join(', ')
   end
 

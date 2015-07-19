@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class ReferencesController < ApplicationController
 
   load_and_authorize_resource
@@ -25,14 +26,12 @@ class ReferencesController < ApplicationController
   end
 
   def connection_list
-    filter = params.require(:filter)[:filter]
-    form = params.require(:form)
-    updateListName = form.require(:updateListName)
-    if form[:searchModel].nil?
+    filter = params.require(:q)
+    if params[:searchModel].nil?
       searchModels = [ Person, Event, Address, Thing ]
     else
       # FIXME: Check that model is allowed for search
-      searchModels = [ form[:searchModel].constantize ]
+      searchModels = [ params[:searchModel].constantize ]
     end
 
     filters = filter.split(' ')
@@ -41,16 +40,14 @@ class ReferencesController < ApplicationController
     searchModels.each do |searchModel|
       found += searchModel.filtered_search(filters)
     end
-    @objects = found.collect {|f| [ f.one_line, f.object_name ] }
+    objects = found.collect {|f| { label: f.decorate.one_line, value: f.object_name } }
 
-    unless form[:ignoreName].nil?
-      @objects.reject!{|object| object[1] == form[:ignoreName]}
+    unless params[:ignoreName].nil?
+      objects.reject!{|object| object[:value] == params[:ignoreName]}
     end
 
-    locals = {}
-    locals[:showFull] = form[:showFull] if form[:showFull] != nil
     respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'connlist', :object => nil, :replaceElem => updateListName, :noReInit => true } }
+      format.js { render json: objects.to_json, callback: params['callback'] }
     end
   end
 

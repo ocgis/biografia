@@ -1,4 +1,4 @@
-  <%=h content_for(:title, 'Information om ' + @object.one_line) %>
+  <%=h content_for(:title, 'Information om ' + @object.decorate.one_line) %>
 	<%= render :partial => "showp",
 		:object => @object,
 		:locals => { :options => { :topName => @object.object_name,

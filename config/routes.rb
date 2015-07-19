@@ -109,7 +109,7 @@ Biografia::Application.routes.draw do
       get  "connection_add"
       post "connection_add"
       get  "connection_choose"
-      post "connection_list"
+      get  "connection_list"
     end
     
     member do

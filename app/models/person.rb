@@ -39,10 +39,6 @@ class Person < ActiveRecord::Base
     short_name
   end
 
-  def one_line
-    long_name
-  end
-
   #FIXME: Add test
   def find_parents
     parents = []

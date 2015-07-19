@@ -1,7 +1,7 @@
 module PeopleHelper
 
   def person_link_to(person)
-    return link_to person.long_name, :controller => person.controller, :action => 'show', :id => person.id
+    return link_to person.decorate.one_line, :controller => person.controller, :action => 'show', :id => person.id
   end
 
   def person_show_family(person)
