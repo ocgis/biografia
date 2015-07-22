@@ -15,6 +15,8 @@ class EventDate < ActiveRecord::Base
   def get_date
     if self.mask.nil?
       return self.date.to_s
+    elsif self.mask == "YYYY"
+      return self.date.strftime("%Y")
     elsif self.mask == "YYYY-MM"
       return self.date.strftime("%Y-%m")
     elsif self.mask == "YYYY-MM-DD"
@@ -40,6 +42,13 @@ class EventDate < ActiveRecord::Base
     if not m.nil?
       self.date = DateTime.new(m[1].to_i, m[2].to_i)
       self.mask = "YYYY-MM"
+      return true
+    end
+
+    m = dstr.match(/^(\d\d\d\d)$/)
+    if not m.nil?
+      self.date = DateTime.new(m[1].to_i)
+      self.mask = "YYYY"
       return true
     end
 
