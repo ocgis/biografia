@@ -138,7 +138,8 @@ module ApplicationHelper
       hiddenFields: {},
       showList: true,
       ignoreName: nil,
-      searchModel: nil
+      searchModel: nil,
+      submitButtons: []
     }
 
     options = defaults.merge(options)
@@ -163,6 +164,11 @@ module ApplicationHelper
                filter_options['data-ignore-name'] = options[:ignoreName] unless options[:ignoreName].nil?
                filter_options['data-search-model'] = options[:searchModel] unless options[:searchModel].nil?
                concat text_field 'filter', 'filter', filter_options
+               options[:submitButtons].each do |sb|
+                 concat(content_tag(:div) do
+                          submit_tag sb[1], name: sb[0]
+                        end)
+               end
              end)
       concat '</div>'.html_safe unless options[:showList]
     end

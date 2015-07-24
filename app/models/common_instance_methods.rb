@@ -70,6 +70,25 @@ module CommonInstanceMethods
     return Reference.get_references_between_objects(self, referenced)
   end
 
+  def find_identical
+    return self.class.where(self.attributes.except("id", "source", "created_at", "updated_at")).where.not(id: self.id)
+  end
+
+  def merge_references_destroy_others(others)
+    others.each do |merged|
+      references = merged.get_references
+      references.each do |reference|
+        reference.replace_object(merged, self)
+        unless reference.save
+          raise StandardError, "Could not save object: #{reference.pretty_inspect}"
+        end
+      end
+      unless merged.destroy
+        raise StandardError, "Could not destroy object: #{merged.pretty_inspect}"
+      end
+    end
+  end
+
   def set_extra(k, v)
     @extras = {} if @extras.nil?
     @extras[k] = v

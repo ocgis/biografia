@@ -9,6 +9,7 @@
                                                           :action => "edmerge" },
                                           ignoreName: selmerge.object_name,
                                           searchModel: selmerge.class.name,
-                                          hiddenFields: { connect1Id: selmerge.object_name })) %>
+                                          hiddenFields: { connect1Id: selmerge.object_name },
+                                          submitButtons: [["mergeWithIdentical", "Slå ihop med alla identiska"]] )) %>
 <% end %>
 

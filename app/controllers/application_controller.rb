@@ -169,11 +169,18 @@ class ApplicationController < ActionController::Base
 
   def edmerge
     object = find_object
-    merged = find_by_object_name(params.require(:form).require(:connect2Id))
-    object.merge(merged)
-    locals = { options: { merged: merged } }
-    respond_to do |format|
-      format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edmerge', :object => object, :replaceElem => "modal_dialog" } }
+    if params[:mergeWithIdentical].nil?
+      merged = find_by_object_name(params.require(:form).require(:connect2Id))
+      object.merge(merged)
+      locals = { options: { merged: merged } }
+      respond_to do |format|
+        format.js { render "replace_html", :locals => { :locals => locals, :partial => 'edmerge', :object => object, :replaceElem => "modal_dialog" } }
+      end
+    else # Merge all identical objects with this one
+      object.merge_references_destroy_others(object.find_identical)
+      respond_to do |format|
+        format.js { render "reload_page" }
+      end
     end
   end
 
@@ -183,16 +190,7 @@ class ApplicationController < ActionController::Base
     unless object.save
       raise StandardError, "Could not save object: #{object.pretty_inspect}"
     end
-    references = merged.get_references
-    references.each do |reference|
-      reference.replace_object(merged, object)
-      unless reference.save
-        raise StandardError, "Could not save object: #{reference.pretty_inspect}"
-      end
-    end
-    unless merged.destroy
-      raise StandardError, "Could not destroy object: #{merged.pretty_inspect}"
-    end
+    object.merge_references_destroy_others([merged])
 
     respond_to do |format|
       format.js { render "reload_page" }
