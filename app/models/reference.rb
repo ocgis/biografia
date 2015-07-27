@@ -31,15 +31,20 @@ class Reference < ActiveRecord::Base
     return reference
   end
 
-  def other_object(object)
+  def other_object_type_and_id(object)
     if (object.class.name == type1) and (object.id == id1)
-      other = type2.constantize.find(id2)
+      other = OpenStruct.new({ type: type2.constantize, id: id2 })
     elsif (object.class.name == type2) and (object.id == id2)
-      other = type1.constantize.find(id1)
+      other = OpenStruct.new({ type: type1.constantize, id: id1 })
     else
       raise StandardError, "object: #{object.inspect} reference: #{self.inspect}"
     end
     return other
+  end
+
+  def other_object(object)
+    o = other_object_type_and_id(object)
+    return o.type.find(o.id)
   end
 
   def replace_object(old, new)

@@ -34,11 +34,19 @@ module CommonInstanceMethods
                :things => [],
                :unhandled_types => [] }
 
+    referenced = {}
     self.get_references.each do |reference|
-      object = reference.other_object(self)
-      object.set_extra(:parent, self)
-      object.set_extra(:reference, reference)
-      retval[object.controller.to_sym].append(object)
+      o = reference.other_object_type_and_id(self)
+      referenced[o.type] = (referenced[o.type] || {}).merge(o.id => reference)
+    end
+
+    referenced.each do |type, ids_refs|
+      objects = type.find(ids_refs.keys)
+      objects.each do |object|
+        object.set_extra(:parent, self)
+        object.set_extra(:reference, ids_refs[object.id])
+        retval[object.controller.to_sym].append(object)
+      end
     end
 
     return retval
