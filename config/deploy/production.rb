@@ -16,7 +16,7 @@ role :db,  %w{rails@127.0.0.1}
 # extended properties on the server.
 set :stage, :production
 
-server '127.0.0.1', user: 'rails', roles: %w{web app}
+server '127.0.0.1', user: 'biografia', roles: %w{web app}
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
