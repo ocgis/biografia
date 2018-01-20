@@ -81,7 +81,7 @@ gem 'exiftool'
 gem 'bcrypt-ruby', '~> 3.1.2'
 
 gem 'omniauth'
-gem 'omniauth-facebook', '1.4.0'
+gem 'omniauth-facebook'
 gem 'omniauth-identity'
 
 # Used for permissions
