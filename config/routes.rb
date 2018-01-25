@@ -66,6 +66,8 @@ Biografia::Application.routes.draw do
     collection do
       get 'register'
       get 'search'
+      get 'show_file'
+      get 'file_image'
       get 'file_thumb'
     end
     

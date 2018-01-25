@@ -1,0 +1,4 @@
+<% fullsize = image_tag(url_for(:controller => 'media', :action => 'file_image', :file => @file_name)) %>
+<%=  link_to fullsize, :action => 'file_image', :file => @file_name %>
+<br />
+<%= link_to "Registrera fil som medium", :action => 'register', :file_name => @file_name %>

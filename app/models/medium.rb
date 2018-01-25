@@ -39,6 +39,10 @@ class Medium < ActiveRecord::Base
   end
 
   def get_fullsize
+    return Medium.get_fullsize_for(file_name)
+  end
+
+  def self.get_fullsize_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
     if mime_type.length == 1
