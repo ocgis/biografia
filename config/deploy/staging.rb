@@ -18,7 +18,7 @@ set :stage, :staging
 
 server '127.0.0.1', user: 'biografia', roles: %w{web app}
 
-set :rails_env, "production"
+set :rails_env, "staging"
 
 set :deploy_to, '/home/biografia/biografia_staging'
 set :branch, 'staging'
