@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '4.2.11.1'
 
 # Use draper for decorations
 gem 'draper'
@@ -55,10 +55,7 @@ end
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano', group: :development
-gem 'capistrano'
-gem 'capistrano-bundler'
-gem 'capistrano-rails'
+gem 'capistrano-rails', group: :development
 
 # Add this if you're using rbenv
 gem 'capistrano-rbenv', github: "capistrano/rbenv"
