@@ -16,11 +16,11 @@ role :db,  %w{rails@127.0.0.1}
 # extended properties on the server.
 set :stage, :staging
 
-server '127.0.0.1', user: 'biografia', roles: %w{web app}
+server '127.0.0.1', user: 'rails', roles: %w{web app}
 
 set :rails_env, "staging"
 
-set :deploy_to, '/home/biografia/biografia_staging'
+set :deploy_to, '/home/rails/biografia_staging'
 set :branch, 'staging'
 
 # you can set custom ssh options
