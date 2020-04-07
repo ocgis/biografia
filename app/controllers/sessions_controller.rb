@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   end
  
   def create
-    user = User.from_omniauth(ENV["omniauth.auth"])
+    user = User.from_omniauth(request.env["omniauth.auth"])
     session[:user_id] = user.id
     unless user.home_object_name.nil?
       redirect_to find_by_object_name(user.home_object_name)
