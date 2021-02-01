@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '~> 6.0'
 
 # Use draper for decorations
 gem 'draper'
@@ -76,6 +76,8 @@ gem 'exiftool'
 # Used for authentication
 # To use ActiveModel has_secure_password
 gem 'bcrypt'
+
+gem 'devise'
 
 gem 'omniauth'
 gem 'omniauth-facebook'

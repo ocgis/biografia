@@ -53,7 +53,7 @@
           <% end %>
 
           <td>
-            <%= link_to "Logga ut", signout_path, id: "sign_out" %>
+            <%= link_to "Logga ut", destroy_user_session_path, method: :delete %>
           </td>
 
           <td style="width:99%">

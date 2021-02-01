@@ -138,7 +138,7 @@ class Medium < ActiveRecord::Base
     end
   end
 
-  def get_location(extra_info=extra_info)
+  def get_location(extra_info)
     if extra_info.key?(:gps_latitude) and extra_info.key?(:gps_latitude_ref) and
        extra_info.key?(:gps_longitude) and extra_info.key?(:gps_longitude_ref)
       latitude = extra_info[:gps_latitude]

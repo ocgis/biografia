@@ -4,8 +4,16 @@ class User < ActiveRecord::Base
   
   roles :admin, :editor, :watcher
   
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
+  devise :omniauthable, :omniauth_providers => [:facebook]
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]
       user.provider = auth.provider
       user.uid = auth.uid
       user.name = auth.info.name

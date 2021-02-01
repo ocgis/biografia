@@ -1,7 +1,7 @@
 <% if current_user %>
 Inloggad som <%= current_user.name %>
 <% else %>
-<%= link_to "Logga in med Facebook", "/auth/facebook", id: "sign_in" %>
+<%= link_to "Logga in med Facebook", "/users/auth/facebook", id: "sign_in" %>
 <br />
 <p>
   <strong>Använder du inte de tjänsterna?</strong>

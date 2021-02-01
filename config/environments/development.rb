@@ -35,4 +35,6 @@ Biografia::Application.configure do
 
   config.export_relative_path = File.join('export', 'debug')
   config.export_path = File.join(config.protected_path, config.export_relative_path)
+
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
