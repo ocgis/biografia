@@ -2,7 +2,7 @@ set :application, 'biografia'
 set :repo_url, 'git@github.com:ocgis/biografia.git'
 
 set :linked_files, %w{config/database.yml config/initializers/facebook.rb config/initializers/google.rb}
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system, protected}
+set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system, protected}
 
 namespace :deploy do
 
