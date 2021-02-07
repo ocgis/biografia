@@ -1,0 +1,8 @@
+@import 'global.css';
+@import 'dropdownmenu.css';
+@import 'table_menu.css';
+@import 'search.css';
+@import 'jquery-ui-dist/jquery-ui.css';
+/*
+ *= require jquery.Jcrop
+ */

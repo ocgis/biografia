@@ -27,21 +27,8 @@ gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-
-# Use Jcrop for jquery
-gem 'jcrop-rails-v2'
-
 # Use prototype as the JavaScript library
 # gem "prototype-rails", "~> 4.0.0"
-
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-gem 'jquery-turbolinks'
-
-gem 'imagesLoaded_rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
@@ -50,9 +37,6 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
-
-# Use unicorn as the app server
-# gem 'unicorn'
 
 # Use Capistrano for deployment
 gem 'capistrano-rails', group: :development
@@ -102,3 +86,5 @@ gem 'pry-doc'
 
 # Export db data
 gem 'yaml_db'
+
+gem "webpacker", "~> 5.2"
