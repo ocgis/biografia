@@ -3,6 +3,7 @@ class Person < ActiveRecord::Base
   has_paper_trail
 
   has_many :person_names, -> { order("position ASC") }
+  accepts_nested_attributes_for :person_names, allow_destroy: true
 
   extend CommonClassMethods
   include CommonInstanceMethods
@@ -158,4 +159,9 @@ class Person < ActiveRecord::Base
     return people
   end
 
+  def all_attributes
+    person_names_attr = person_names.map(&:attributes)
+
+    attributes.update({ person_names: person_names_attr })
+  end
 end
