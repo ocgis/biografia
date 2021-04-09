@@ -1,90 +1,88 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
+# frozen_string_literal: true
+
+# Implementation of the person class
 class Person < ActiveRecord::Base
   has_paper_trail
 
-  has_many :person_names, -> { order("position ASC") }
+  has_many :person_names, -> { order('position ASC') }
   accepts_nested_attributes_for :person_names, allow_destroy: true
 
   extend CommonClassMethods
   include CommonInstanceMethods
 
   def controller
-    return "people"
+    'people'
   end
 
   def short_name
-    person_name = self.person_names.last
-    if not person_name.nil?
-      names = [ person_name.calling_name, person_name.surname ]
-      names.compact!
-      return names.join(" ")
-    else
-      return "!!!Error in DB: person name missing!!!"
-    end
+    person_name = person_names.last
+
+    return '!!!Error in DB: person name missing!!!' if person_name.nil?
+
+    names = [person_name.calling_name, person_name.surname]
+    names.compact!
+    names.join(' ')
   end
 
   def long_name
-    person_names = self.person_names.collect{|pn| [ pn.given_name, pn.surname ].compact.join(" ")}
-    if person_names.length == 1
-      return person_names[0]
-    elsif person_names.length > 1
-      main = person_names.pop
-      other = person_names.join(", ")
-      return "#{main} (#{other})"
-    else
-      return "!!!Error in DB: person name missing!!!"
-    end
+    person_names = self.person_names.collect { |pn| [pn.given_name, pn.surname].compact.join(' ') }
+
+    return person_names[0] if person_names.length == 1
+    return '!!!Error in DB: person name missing!!!' unless person_names.length > 1
+
+    main = person_names.pop
+    other = person_names.join(', ')
+    "#{main} (#{other})"
   end
-  
+
   def name
     short_name
   end
 
-  #FIXME: Add test
+  # FIXME: Add test
   def find_parents
     parents = []
-    family_refs = get_references.where(:name => 'Child')
+    family_refs = get_references.where(name: 'Child')
     family_refs.each do |family_ref|
       family = family_ref.other_object(self)
-      parent_refs = family.get_references.where(:name => 'Spouse')
+      parent_refs = family.get_references.where(name: 'Spouse')
       parent_refs.each do |parent_ref|
         parents << parent_ref.other_object(family)
       end
     end
-    return parents
+    parents
   end
 
-  #FIXME: Add test
+  # FIXME: Add test
   def find_spouses
     spouses = []
-    family_refs = get_references.where(:name => 'Spouse')
+    family_refs = get_references.where(name: 'Spouse')
     family_refs.each do |family_ref|
       family = family_ref.other_object(self)
-      spouse_refs = family.get_references.where(:name => 'Spouse')
+      spouse_refs = family.get_references.where(name: 'Spouse')
       members = []
       spouse_refs.each do |spouse_ref|
         member = spouse_ref.other_object(family)
-        if member.object_name != self.object_name
-          members << member
-        end
+        members << member if member.object_name != object_name
       end
-      spouses << { :members => members, :name => 'FIXME' }
+      spouses << { members: members, name: 'FIXME' }
     end
-    return spouses
+    spouses
   end
 
-  #FIXME: Add test
+  # FIXME: Add test
   def find_children
     children = []
-    family_refs = get_references.where(:name => 'Spouse')
+    family_refs = get_references.where(name: 'Spouse')
     family_refs.each do |family_ref|
       family = family_ref.other_object(self)
-      child_refs = family.get_references.where(:name => 'Child')
+      child_refs = family.get_references.where(name: 'Child')
       child_refs.each do |child_ref|
         children << child_ref.other_object(family)
       end
     end
-    return children
+    children
   end
 
   def find_family_members
@@ -95,57 +93,65 @@ class Person < ActiveRecord::Base
       family.get_references(model: Person).each do |person_ref|
         person = person_ref.other_object(family)
 
-        if person.id != self.id
-          family_member = OpenStruct.new
-          family_member.object = person
-          if family_ref.name == "Child"
-            if person_ref.name == "Child"
-              if person.sex == "M"
-                family_member.role = "Bror"
-              elsif person.sex == "F"
-                family_member.role = "Syster"
+        next if person.id == id
+
+        family_member = OpenStruct.new
+        family_member.object = person
+        family_member.role =
+          case family_ref.name
+          when 'Child'
+            case person_ref.name
+            when 'Child'
+              case person.sex
+              when 'M'
+                'Bror'
+              when 'F'
+                'Syster'
               else
-                family_member.role = "Syskon"
+                'Syskon'
               end
-            elsif person_ref.name == "Spouse"
-              if person.sex == "M"
-                family_member.role = "Far"
-              elsif person.sex == "F"
-                family_member.role = "Mor"
+            when 'Spouse'
+              case person.sex
+              when 'M'
+                'Far'
+              when 'F'
+                'Mor'
               else
-                family_member.role = "Förälder"
+                'Förälder'
               end
             else
-              family_member.role = "Error: person_ref.name == #{person_ref.name}" 
+              "Error: person_ref.name == #{person_ref.name}"
             end
-          elsif family_ref.name == "Spouse"
-            if person_ref.name == "Child"
-              if person.sex == "M"
-                family_member.role = "Son"
-              elsif person.sex == "F"
-                family_member.role = "Dotter"
+          when 'Spouse'
+            case person_ref.name
+            when 'Child'
+              case person.sex
+              when 'M'
+                'Son'
+              when 'F'
+                'Dotter'
               else
-                family_member.role = "Barn"
+                'Barn'
               end
-            elsif person_ref.name == "Spouse"
-              if person.sex == "M"
-                family_member.role = "Make" # FIXME: Check relationship events
-              elsif person.sex == "F"
-                family_member.role = "Maka" # FIXME: Check relationship events
+            when 'Spouse'
+              case person.sex
+              when 'M'
+                'Make' # FIXME: Check relationship events
+              when 'F'
+                'Maka' # FIXME: Check relationship events
               else
-                family_member.role = "Partner"
+                'Partner'
               end
             else
-              family_member.role = "Error: person_ref.name == #{person_ref.name}" 
+              "Error: person_ref.name == #{person_ref.name}"
             end
           else
-            family_member.role = "Error: family_ref.name == #{family_ref.name}" 
+            "Error: family_ref.name == #{family_ref.name}"
           end
-          family_members << family_member
-        end
+        family_members << family_member
       end
     end
-    return family_members
+    family_members
   end
 
   def self.filtered_search(filters)
@@ -153,10 +159,7 @@ class Person < ActiveRecord::Base
     filters.each do |filter|
       people = people.where("given_name LIKE \"%#{filter}%\" OR surname LIKE \"%#{filter}%\"")
     end
-    people = people.distinct
-    people = people.first(100)
-
-    return people
+    people = people.distinct.first(100)
   end
 
   def all_attributes
