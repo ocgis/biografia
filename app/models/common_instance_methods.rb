@@ -112,4 +112,17 @@ module CommonInstanceMethods
     end
   end
 
+
+  def get_version_info
+    version = self.versions.last
+    unless version.nil? or version.whodunnit.nil?
+      name = User.find(version.whodunnit).name
+      date = self.updated_at.strftime("%Y-%m-%d %H:%M")
+      return { name: name,
+               date: date }
+    else
+      return nil
+    end
+  end
+
 end
