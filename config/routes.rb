@@ -1,6 +1,12 @@
 Biografia::Application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
+  namespace :api do
+    namespace :v1 do
+      resources :people, only: [:index, :show, :create]
+    end
+  end
+
   resources :addresses do
     collection do
       post 'createp'
@@ -200,4 +206,7 @@ Biografia::Application.routes.draw do
   #   end
 
   root :to => "public#home"
+
+  get '/*path' => 'react#entry'
+
 end
