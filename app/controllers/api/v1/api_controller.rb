@@ -71,7 +71,7 @@ module Api
         @object.set_extra(:related_objects, related)
 
         @object_attributes = @object.all_attributes
-        @object_attributes.update({ version: @object.get_version_info })
+        @object_attributes.update({ version: @object.version_info })
       end
     end
   end

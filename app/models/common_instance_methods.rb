@@ -1,41 +1,43 @@
+# frozen_string_literal: true
+
+# Methods that are common among all models
 module CommonInstanceMethods
-  def add_reference(referenced_object, options={})
-    return Reference.add(self, referenced_object, options)
+  def add_reference(referenced_object, options = {})
+    Reference.add(self, referenced_object, options)
   end
 
-  def get_or_add_reference(referenced_object, options={})
+  def get_or_add_reference(referenced_object, options = {})
     references = get_references_to_object(referenced_object)
-    if references.length == 1
+    case references.length
+    when 1
       reference = references[0]
-    elsif references.length == 0
+    when 0
       reference = Reference.add(self, referenced_object, options)
     else
-      raise StandardError, "ERROR: More than one reference between objects! #{self.inspect} #{referenced_object.inspect}"
+      raise StandardError, "ERROR: More than one reference between objects! #{inspect} #{referenced_object.inspect}"
     end
-    return reference
+    reference
   end
 
   def destroy_with_references
-    self.get_references.each do |reference|
-      reference.destroy
-    end
-    self.destroy
+    get_references.each(&:destroy)
+    destroy
   end
 
   def related_objects
-    retval = { :object => self,
-               :people => [],
-               :events => [],
-               :addresses => [],
-               :notes => [],
-               :event_dates => [],
-               :relationships => [],
-               :media => [],
-               :things => [],
-               :unhandled_types => [] }
+    retval = { object: self,
+               people: [],
+               events: [],
+               addresses: [],
+               notes: [],
+               event_dates: [],
+               relationships: [],
+               media: [],
+               things: [],
+               unhandled_types: [] }
 
     referenced = {}
-    self.get_references.each do |reference|
+    get_references.each do |reference|
       o = reference.other_object_type_and_id(self)
       referenced[o.type] = (referenced[o.type] || {}).merge(o.id => reference)
     end
@@ -49,37 +51,37 @@ module CommonInstanceMethods
       end
     end
 
-    return retval
+    retval
   end
 
   def object_name
-    return "#{self.class.name}_#{id}"
+    "#{self.class.name}_#{id}"
   end
 
   def positions_in_object
     positions = []
     get_references.each do |reference|
       position = reference.position_in_pictures
-      
-      if position.length > 0
-        obj = reference.other_object(self)
-        obj.set_extra(:position, position[0])        
-        positions.push(obj)
-      end
+
+      next if position.empty?
+
+      obj = reference.other_object(self)
+      obj.set_extra(:position, position[0])
+      positions.push(obj)
     end
-    return positions  
+    positions
   end
 
   def get_references(options = {})
-    return Reference.get_references_from_object(self, options)
+    Reference.get_references_from_object(self, options)
   end
-  
+
   def get_references_to_object(referenced)
-    return Reference.get_references_between_objects(self, referenced)
+    Reference.get_references_between_objects(self, referenced)
   end
 
   def find_identical
-    return self.class.where(self.attributes.except("id", "source", "created_at", "updated_at")).where.not(id: self.id)
+    self.class.where(attributes.except('id', 'source', 'created_at', 'updated_at')).where.not(id: id)
   end
 
   def merge_references_destroy_others(others)
@@ -87,42 +89,33 @@ module CommonInstanceMethods
       references = merged.get_references
       references.each do |reference|
         reference.replace_object(merged, self)
-        unless reference.save
-          raise StandardError, "Could not save object: #{reference.pretty_inspect}"
-        end
+        raise StandardError, "Could not save object: #{reference.pretty_inspect}" unless reference.save
       end
-      unless merged.destroy
-        raise StandardError, "Could not destroy object: #{merged.pretty_inspect}"
-      end
+      raise StandardError, "Could not destroy object: #{merged.pretty_inspect}" unless merged.destroy
     end
   end
 
-  def set_extra(k, v)
+  def set_extra(key, value)
     @extras = {} if @extras.nil?
-    @extras[k] = v
+    @extras[key] = value
   end
-  
-  def get_extra(key=nil)
+
+  def get_extra(key = nil)
     if @extras.nil?
-      return nil
+      nil
     elsif key.nil?
-      return @extras
+      @extras
     else
-      return @extras[key]
+      @extras[key]
     end
   end
 
+  def version_info
+    version = versions.last
 
-  def get_version_info
-    version = self.versions.last
-    unless version.nil? or version.whodunnit.nil?
-      name = User.find(version.whodunnit).name
-      date = self.updated_at.strftime("%Y-%m-%d %H:%M")
-      return { name: name,
-               date: date }
-    else
-      return nil
-    end
+    return if version.nil? || version.whodunnit.nil?
+
+    { name: User.find(version.whodunnit).name,
+      date: updated_at.strftime('%Y-%m-%d %H:%M') }
   end
-
 end
