@@ -200,7 +200,7 @@ class ShowPerson extends React.Component {
       for (let i = parts.length - 1; i > 0; i -= 1) {
         parts.splice(i, 0, <strong key={index}>{personName.calling_name}</strong>);
       }
-      parts = parts.concat(`${personName.surname}`);
+      parts = parts.concat(` ${personName.surname}`);
 
       return parts;
     }
