@@ -6,6 +6,7 @@ Biografia::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :people, only: %i[index show create]
+      resources :notes, only: %i[show]
     end
   end
 

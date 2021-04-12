@@ -32,7 +32,6 @@ module Api
       def show
         r = {}
         r[@object.class.name.underscore.to_sym] = @object_attributes
-        r[:related] = @object[:related]
         r[:options] = { topName: @object.object_name,
                         showFull: true,
                         enclosedById: false,
@@ -68,10 +67,22 @@ module Api
         (related[:events] + related[:relationships]).each do |r|
           r.set_extra(:related_objects, r.related_objects)
         end
-        @object.set_extra(:related_objects, related)
+
+        related_attributes = {}
+
+        related.each do |key, objects|
+          next if key == :object
+
+          related_attributes[key] = objects.map do |object|
+            object_attributes = object.all_attributes
+            object_attributes.update({ version: object.version_info })
+            object_attributes
+          end
+        end
 
         @object_attributes = @object.all_attributes
-        @object_attributes.update({ version: @object.version_info })
+        @object_attributes.update({ version: @object.version_info,
+                                    related: related_attributes })
       end
     end
   end

@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { IndexPerson, ShowPerson } from './Person';
+import { IndexPerson } from './Person';
+import { ShowPerson } from './ShowPerson';
+import { ShowNote } from './ShowNote';
 
 export default (
   <Router>
@@ -14,6 +16,11 @@ export default (
         path="/r/people"
         exact
         component={IndexPerson}
+      />
+      <Route
+        path="/r/notes/:id"
+        exact
+        component={ShowNote}
       />
     </Switch>
   </Router>

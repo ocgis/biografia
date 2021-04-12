@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
-import { AddPerson } from './Person';
+import { AddPerson } from './AddPerson';
 
 const Modifier = (props) => {
   const modalState = {};

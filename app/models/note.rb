@@ -20,4 +20,7 @@ class Note < ActiveRecord::Base
     end
   end
 
+  def all_attributes
+    attributes
+  end
 end

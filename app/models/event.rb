@@ -25,4 +25,7 @@ class Event < ActiveRecord::Base
     return events
   end
 
+  def all_attributes
+    attributes
+  end
 end

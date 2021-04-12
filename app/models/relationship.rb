@@ -50,4 +50,7 @@ class Relationship < ActiveRecord::Base
     return found
   end
 
+  def all_attributes
+    attributes
+  end
 end
