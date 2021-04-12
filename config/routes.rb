@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 Biografia::Application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   namespace :api do
     namespace :v1 do
-      resources :people, only: [:index, :show, :create]
+      resources :people, only: %i[index show create]
     end
   end
 
@@ -21,8 +23,8 @@ Biografia::Application.routes.draw do
       patch :domerge
     end
   end
-  
-  resources :event_dates, :except => [:create, :new] do
+
+  resources :event_dates, except: %i[create new] do
     collection do
       post 'createp'
       get 'newp'
@@ -33,7 +35,7 @@ Biografia::Application.routes.draw do
       get 'examine'
     end
   end
-  
+
   resources :events do
     collection do
       post 'createp'
@@ -46,26 +48,26 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :exports, :only => [:index, :new, :create, :show] do
+  resources :exports, only: %i[index new create show] do
     member do
       get 'status'
       get 'file'
     end
   end
 
-  resources :home, :only => [] do
+  resources :home, only: [] do
     collection do
       post 'goto'
     end
   end
 
-  resources :imports, :only => [:new, :show] do
+  resources :imports, only: %i[new show] do
     member do
       get 'status'
     end
   end
 
-  resources :media, :except => [:update] do
+  resources :media, except: [:update] do
     collection do
       get 'register'
       get 'search'
@@ -73,7 +75,7 @@ Biografia::Application.routes.draw do
       get 'file_image'
       get 'file_thumb'
     end
-    
+
     member do
       get 'examine'
       get 'delete'
@@ -84,7 +86,7 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :notes, :except => [:create, :new] do
+  resources :notes, except: %i[create new] do
     collection do
       post 'createp'
       get 'newp'
@@ -101,28 +103,28 @@ Biografia::Application.routes.draw do
       post 'createp'
       get 'newp'
     end
-    
+
     member do
       get 'ancestry'
       get 'delete'
       get 'examine'
     end
   end
-  
-  resources :references, :only => [:destroy] do
+
+  resources :references, only: [:destroy] do
     collection do
-      get  "connection_add"
-      post "connection_add"
-      get  "connection_choose"
-      get  "connection_list"
+      get  'connection_add'
+      post 'connection_add'
+      get  'connection_choose'
+      get  'connection_list'
     end
-    
+
     member do
-      get  "delete"
+      get  'delete'
     end
   end
 
-  resources :relationships, :except => [:create, :new] do
+  resources :relationships, except: %i[create new] do
     collection do
       post 'createp'
       get 'newp'
@@ -146,9 +148,9 @@ Biografia::Application.routes.draw do
     end
   end
 
-  resources :sessions, :only => [:new]
-  resources :transfers, :only => [:create, :new, :index, :show]
-  resources :users, :only => [:index, :show, :edit, :update]  
+  resources :sessions, only: [:new]
+  resources :transfers, only: %i[create new index show]
+  resources :users, only: %i[index show edit update]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -190,7 +192,7 @@ Biografia::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'
@@ -205,8 +207,7 @@ Biografia::Application.routes.draw do
   #     resources :products
   #   end
 
-  root :to => "public#home"
+  root to: 'public#home'
 
   get '/*path' => 'react#entry'
-
 end
