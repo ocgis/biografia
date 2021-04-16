@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 # Simple Role Syntax
 # ==================
 # Supports bulk-adding hosts to roles, the primary
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
 # Don't declare `role :all`, it's a meta role
-role :app, %w{rails@127.0.0.1}
-role :web, %w{rails@127.0.0.1}
-role :db,  %w{rails@127.0.0.1}
+role :app, %w[rails@127.0.0.1]
+role :web, %w[rails@127.0.0.1]
+role :db,  %w[rails@127.0.0.1]
 
 # Extended Server Syntax
 # ======================
@@ -16,11 +18,11 @@ role :db,  %w{rails@127.0.0.1}
 # extended properties on the server.
 set :stage, :production
 
-server '127.0.0.1', user: 'biografia', roles: %w{web app}
+server '127.0.0.1', user: 'rails', roles: %w[web app]
 
-set :rails_env, "production"
+set :rails_env, 'production'
 
-set :deploy_to, '/home/biografia/biografia'
+set :deploy_to, '/home/rails/biografia'
 
 # you can set custom ssh options
 # it's possible to pass any option but you need to keep in mind that net/ssh understand limited list of options
