@@ -1,2 +1,0 @@
-Biografia::Application.config.facebook_app_id     = 'My facebook app id'
-Biografia::Application.config.facebook_app_secret = 'My facebook app secret'

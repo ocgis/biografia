@@ -1,2 +1,0 @@
-Biografia::Application.config.google_public_api_key = 'My public API key'
-Biografia::Application.config.google_attribution_url = 'My attribution URL'

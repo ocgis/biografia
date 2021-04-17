@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -42,12 +44,12 @@ end
 gem 'capistrano-rails', group: :development
 
 # Add this if you're using rbenv
-gem 'capistrano-rbenv', github: "capistrano/rbenv"
+gem 'capistrano-rbenv', github: 'capistrano/rbenv'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'mime-types', :require => 'mime/types'
+gem 'mime-types', require: 'mime/types'
 
 gem 'acts_as_list'
 
@@ -55,17 +57,20 @@ gem 'acts_as_list'
 gem 'nokogiri'
 
 gem 'rmagick'
+
 gem 'exiftool'
 
 # Used for authentication
 # To use ActiveModel has_secure_password
 gem 'bcrypt'
 
-gem 'devise'
+# gem 'devise'
+gem 'devise', github: 'heartcombo/devise', branch: 'ca-omniauth-2'
 
-gem 'omniauth'
+# gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-identity'
+gem 'omniauth-rails_csrf_protection'
 
 # Used for permissions
 gem 'cancancan'
@@ -87,4 +92,4 @@ gem 'pry-doc'
 # Export db data
 gem 'yaml_db'
 
-gem "webpacker", "~> 5.2"
+gem 'webpacker', '~> 5.2'
