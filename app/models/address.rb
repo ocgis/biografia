@@ -1,78 +1,61 @@
-# coding: utf-8
+# frozen_string_literal: true
 
+# This is the address model
 class Address < ActiveRecord::Base
-   has_paper_trail
-   
-   extend CommonClassMethods
-   include CommonInstanceMethods
+  has_paper_trail
 
-   def controller
-     return 'addresses'
-   end
+  extend CommonClassMethods
+  include CommonInstanceMethods
 
-   # FIXME: add test
-   def one_line
-     parts = []
+  def controller
+    'addresses'
+  end
 
-     unless self.street.nil?
-       parts << self.street
-     end
-     unless self.town.nil?
-       parts << self.town
-     end
+  # FIXME: add test
+  def one_line
+    parts = []
 
-     unless self.parish.nil?
-       parts << (self.parish + " församling")
-     end
+    parts << street unless street.nil?
 
-     unless self.latitude.nil? or self.longitude.nil? or parts.length > 0
-       parts << self.latitude.to_s + ',' + self.longitude.to_s
-     end
+    parts << town unless town.nil?
 
-     if parts.length > 0
-       return parts.join(', ')
-     else
-       return "Empty address: {self.inspect}"
-     end
-   end
+    parts << ("#{parish} församling") unless parish.nil?
 
-   def maps_address
-     parts = []
+    parts << "#{latitude},#{longitude}" unless latitude.nil? || longitude.nil? || parts.length.positive?
 
-     unless self.latitude.nil? or self.longitude.nil?
-       parts << self.latitude.to_s + ',' + self.longitude.to_s
-     else
-       unless self.street.nil?
-         parts << self.street
-       end
-       unless self.town.nil?
-         parts << self.town
-       end
+    return "Empty address: #{inspect}" if parts.length.zero?
 
-       unless self.parish.nil?
-         parts << self.parish
-       end
-     end
+    parts.join(', ')
+  end
 
-     if parts.length > 0
-       return parts.join(', ')
-     else
-       return nil
-     end
-   end
+  def maps_address
+    parts = []
 
-   def merge(other)
-     fields = ['street','town','zipcode','parish','country','source','latitude','longitude']
-     fields.each do |field|
-       unless self.send(field) == other.send(field)
-         if self.send(field).nil?
-           self.send(field+'=', other.send(field))
-         elsif not other.send(field).nil? # Both non-nil
-           self.send(field+'=', self.send(field)+' / '+ other.send(field))
-         end
-       end
-     end
-   end
+    if latitude.nil? || longitude.nil?
+      parts << street unless street.nil?
+      parts << town unless town.nil?
+      parts << parish unless parish.nil?
+    else
+      parts << "#{latitude},#{longitude}"
+    end
+
+    return nil if parts.length.zero?
+
+    parts.join(', ')
+  end
+
+  def merge(other)
+    fields = %w[street town zipcode parish country source latitude longitude]
+    fields.each do |field|
+      unless send(field) == other.send(field)
+        if send(field).nil?
+          send("#{field}=", other.send(field))
+        elsif !other.send(field).nil? # Both non-nil
+          send("#{field}=", "#{send(field)} / #{other.send(field)}")
+        end
+      end
+    end
+  end
 
   def self.filtered_search(filters)
     addresses = Address.all
@@ -80,9 +63,7 @@ class Address < ActiveRecord::Base
     filters.each do |filter|
       addresses = addresses.where("town LIKE \"%#{filter}%\" OR street LIKE \"%#{filter}%\" OR zipcode LIKE \"%#{filter}%\" OR parish LIKE \"%#{filter}%\" OR country LIKE \"%#{filter}%\"")
     end
-    addresses = addresses.first(100)
-
-    return addresses
+    addresses.first(100)
   end
 
   def all_attributes
