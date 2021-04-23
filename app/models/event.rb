@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# This is the event model
 class Event < ActiveRecord::Base
   has_paper_trail
 
@@ -5,24 +8,22 @@ class Event < ActiveRecord::Base
   include CommonInstanceMethods
 
   def controller
-    return "events"
+    'events'
   end
 
   def one_line
-    return name
+    name
   end
 
   def self.filtered_search(filters)
     events = Event.all
 
     filters.each do |filter|
-      fields = ["name"]
-      query = fields.collect{|field| "#{field} LIKE \"%#{filter}%\""}.join(" OR ")
+      fields = ['name']
+      query = fields.collect { |field| "#{field} LIKE \"%#{filter}%\"" }.join(' OR ')
       events = events.where(query)
     end
-    events = events.first(100)
-
-    return events
+    events.first(100)
   end
 
   def all_attributes
