@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# frozen_string_literal: true
+
+# This is the relationship model
 class Relationship < ActiveRecord::Base
   has_paper_trail
 
@@ -6,19 +8,19 @@ class Relationship < ActiveRecord::Base
   include CommonInstanceMethods
 
   def controller
-    return 'relationships'
+    'relationships'
   end
 
   def one_line
-    if name.nil? or name == ""
-      retstr = "Familj"
-    else
-      retstr = name
-    end
-    
-    if not @extras.nil?
+    retstr = if name.nil? || name == ''
+               'Familj'
+             else
+               name
+             end
+
+    unless @extras.nil?
       people = @extras[:related_objects][:people]
-      if not people.nil?
+      unless people.nil?
         if people.length == 1
           retstr << " bestående av #{people[0].name}"
         elsif people.length == 2
@@ -31,8 +33,8 @@ class Relationship < ActiveRecord::Base
         end
       end
     end
-    
-    return retstr
+
+    retstr
   end
 
   def self.find_by_spouses(spouses)
@@ -40,14 +42,12 @@ class Relationship < ActiveRecord::Base
     rel_refs = spouses[0].get_references(model: Relationship)
     rel_refs.each do |rel_ref|
       rel = rel_ref.other_object(spouses[0])
-      rel_spouse_refs = rel.get_references({:role => 'Spouse', :model => Person})
-      rel_spouse_ids = rel_spouse_refs.collect{|ref| ref.other_object(rel).id}
-      spouse_ids = spouses.collect{|spouse| spouse.id}
-      if rel_spouse_ids.sort == spouse_ids.sort
-        found.append(rel)
-      end
+      rel_spouse_refs = rel.get_references({ role: 'Spouse', model: Person })
+      rel_spouse_ids = rel_spouse_refs.collect { |ref| ref.other_object(rel).id }
+      spouse_ids = spouses.collect(&:id)
+      found.append(rel) if rel_spouse_ids.sort == spouse_ids.sort
     end
-    return found
+    found
   end
 
   def all_attributes
