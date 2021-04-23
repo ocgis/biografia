@@ -69,7 +69,7 @@ class ShowPerson extends React.Component {
           <tbody>
             <tr>
               <td>
-                <Person person={person} currentUser={currentUser} showFull />
+                <Person object={person} currentUser={currentUser} showFull />
               </td>
               <td>
                 <ShowReferences related={person.related} currentUser={currentUser} />

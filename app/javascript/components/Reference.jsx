@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import { Person } from './Person';
+import { Event } from './Event';
 import { Note } from './Note';
 
 const { TabPane } = Tabs;
@@ -15,6 +16,11 @@ const RenderElement = (props) => {
     case 'people':
       return (
         <Person person={element} currentUser={currentUser} />
+      );
+
+    case 'events':
+      return (
+        <Event event={element} currentUser={currentUser} />
       );
 
     case 'notes':

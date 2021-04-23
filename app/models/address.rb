@@ -85,4 +85,7 @@ class Address < ActiveRecord::Base
     return addresses
   end
 
+  def all_attributes
+    attributes
+  end
 end

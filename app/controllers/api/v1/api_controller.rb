@@ -63,26 +63,32 @@ module Api
 
       def set_object
         @object = find_object
-        related = @object.related_objects
-        (related[:events] + related[:relationships]).each do |r|
-          r.set_extra(:related_objects, r.related_objects)
-        end
 
+        @object_attributes = @object.all_attributes
+        @object_attributes.update({ version: @object.version_info,
+                                    related: fetch_related_attributes(@object.related_objects,
+                                                                      %i[events relationships]) })
+      end
+
+      def fetch_related_attributes(related_objects, deep_keys)
         related_attributes = {}
 
-        related.each do |key, objects|
+        related_objects.each do |key, objects|
           next if key == :object
 
           related_attributes[key] = objects.map do |object|
             object_attributes = object.all_attributes
             object_attributes.update({ version: object.version_info })
+
+            if deep_keys.include? key
+              object_attributes.update({ related: fetch_related_attributes(object.related_objects, []) })
+            end
+
             object_attributes
           end
         end
 
-        @object_attributes = @object.all_attributes
-        @object_attributes.update({ version: @object.version_info,
-                                    related: related_attributes })
+        related_attributes
       end
     end
   end

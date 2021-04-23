@@ -82,8 +82,8 @@ IndexPerson.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
-const Person = (props) => {
-  const { person, currentUser, showFull } = props;
+const PersonNames = (props) => {
+  const { object: { person_names: pns } } = props;
 
   const renderPersonName = (personName, index) => {
     if (personName.calling_name != null) {
@@ -98,33 +98,37 @@ const Person = (props) => {
     return `${personName.given_name} ${personName.surname}`;
   };
 
-  const renderName = (pns) => {
-    const personNames = pns.map((personName, i) => renderPersonName(personName, i));
+  const personNames = pns.map((personName, i) => renderPersonName(personName, i));
 
-    if (personNames.length === 1) {
-      return personNames[0];
+  if (personNames.length === 1) {
+    return personNames[0];
+  }
+  if (personNames.length > 1) {
+    let result = [].concat(personNames[personNames.length - 1]);
+    result.push(' (');
+    result = result.concat(personNames[0]);
+    for (let i = 1; i < personNames.length - 1; i += 1) {
+      result.push(', ');
+      result = result.concat(personNames[i]);
     }
-    if (personNames.length > 1) {
-      let result = [].concat(personNames[personNames.length - 1]);
-      result.push(' (');
-      result = result.concat(personNames[0]);
-      for (let i = 1; i < personNames.length - 1; i += 1) {
-        result.push(', ');
-        result = result.concat(personNames[i]);
-      }
-      result.push(')');
-      return result;
-    }
-    return '!!!Error in DB: person name missing!!!';
-  };
+    result.push(')');
+    return result;
+  }
+  return '!!!Error in DB: person name missing!!!';
+};
+
+const Person = (props) => {
+  const { object: person, currentUser, showFull } = props;
 
   let name = null;
   if (showFull) {
-    name = renderName(person.person_names);
+    name = (
+      <PersonNames object={person} />
+    );
   } else {
     name = (
       <Link to={`/r/people/${person.id}`}>
-        {renderName(person.person_names)}
+        <PersonNames object={person} />
       </Link>
     );
   }
@@ -149,7 +153,7 @@ const Person = (props) => {
 };
 
 Person.propTypes = {
-  person: PropTypes.shape({
+  object: PropTypes.shape({
     id: PropTypes.number,
     person_names: PropTypes.arrayOf(PropTypes.shape({})),
     sex: PropTypes.string,
@@ -161,5 +165,7 @@ Person.propTypes = {
 Person.defaultProps = {
   showFull: false,
 };
+
+Person.OneLine = PersonNames;
 
 export { Person, IndexPerson };

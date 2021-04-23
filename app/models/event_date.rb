@@ -69,4 +69,7 @@ class EventDate < ActiveRecord::Base
     raise StandardError, "Could not set date #{dstr}"
   end
 
+  def all_attributes
+    attributes
+  end
 end
