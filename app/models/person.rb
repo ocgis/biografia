@@ -165,6 +165,7 @@ class Person < ActiveRecord::Base
   def all_attributes
     person_names_attr = person_names.map(&:attributes)
 
-    attributes.update({ person_names: person_names_attr })
+    attributes.update({ person_names: person_names_attr,
+                        name: name })
   end
 end

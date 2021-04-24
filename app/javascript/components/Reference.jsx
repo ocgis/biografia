@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 import { Person } from './Person';
 import { Event } from './Event';
 import { Note } from './Note';
+import { Relationship } from './Relationship';
 
 const { TabPane } = Tabs;
 
@@ -28,6 +29,11 @@ const RenderElement = (props) => {
         <Note note={element} currentUser={currentUser} />
       );
 
+    case 'relationships':
+      return (
+        <Relationship object={element} currentUser={currentUser} />
+      );
+
     default:
       console.log(kind, element);
       return null;
@@ -48,6 +54,7 @@ const ShowReferences = (props) => {
       people: 'Personer',
       events: 'Händelser',
       notes: 'Kommentarer',
+      relationships: 'Förhållanden',
     }[key];
     if (header == null) {
       return `Undefined: ${key}`;
