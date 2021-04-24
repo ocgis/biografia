@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 # This is the relationship model
 class Relationship < ActiveRecord::Base
