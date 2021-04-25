@@ -16,8 +16,9 @@ class ShowPerson extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { location: { search } } = this.props;
-    if (search !== prevProps.location.search) {
+    const { location: { pathname, search } } = this.props;
+    if (pathname !== prevProps.location.pathname
+        || search !== prevProps.location.search) {
       this.loadData();
     }
   }
@@ -82,7 +83,10 @@ class ShowPerson extends React.Component {
   }
 }
 ShowPerson.propTypes = {
-  location: PropTypes.shape({ search: PropTypes.string.isRequired }).isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
