@@ -17,7 +17,7 @@ const RenderElement = (props) => {
   switch (kind) {
     case 'people':
       return (
-        <Person person={element} currentUser={currentUser} />
+        <Person object={element} currentUser={currentUser} />
       );
 
     case 'events':

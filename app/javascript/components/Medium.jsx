@@ -8,8 +8,18 @@ const Medium = (props) => {
   const { currentUser } = props;
   const { showFull } = props;
 
+  let mediaTag = null;
+
   if (showFull) {
-    return 'Implement medium show full';
+    mediaTag = (
+      <img src={`/media/${medium.id}/image`} alt={medium.file_name} />
+    );
+  } else {
+    mediaTag = (
+      <Link to={`/r/media/${medium.id}`}>
+        <img src={`/media/${medium.id}/thumb`} alt={medium.file_name} />
+      </Link>
+    );
   }
 
   return (
@@ -24,9 +34,7 @@ const Medium = (props) => {
           </tr>
         </tbody>
       </table>
-      <Link to={`/r/media/${medium.id}`}>
-        <img src={`/media/${medium.id}/thumb`} alt={medium.file_name} />
-      </Link>
+      {mediaTag}
       <br />
     </div>
   );

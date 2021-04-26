@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { IndexPerson } from './Person';
 import { ShowPerson } from './ShowPerson';
 import { ShowNote } from './ShowNote';
+import { ShowMedium } from './ShowMedium';
 
 export default (
   <Router>
@@ -21,6 +22,11 @@ export default (
         path="/r/notes/:id"
         exact
         component={ShowNote}
+      />
+      <Route
+        path="/r/media/:id"
+        exact
+        component={ShowMedium}
       />
     </Switch>
   </Router>
