@@ -13,13 +13,13 @@
       <td style="vertical-align:top">
         <div style="position:relative">
           <%= image_tag(url_for(:controller => showp.controller, :id => showp.id, :action => 'image'), :style => 'max-height: 700px; max-width: 100%', :id => 'tagged_image') %>
-          <% showp.positions_in_object.each do |position| %>
-            <% x=position.get_extra(:position).x.to_i %>
-            <% y=position.get_extra(:position).y.to_i %>
-            <% w=position.get_extra(:position).width.to_i %>
-            <% h=position.get_extra(:position).height.to_i %>
+          <% showp.positions_in_object.each do |pio| %>
+            <% x=pio[:position].x.to_i %>
+            <% y=pio[:position].y.to_i %>
+            <% w=pio[:position].width.to_i %>
+            <% h=pio[:position].height.to_i %>
             <span style="position:absolute;top:<%= y %>px;left:<%= x %>px;width:<%= w %>px;height:<%= h %>px;background-color:transparent" data-hover="true" data-x="<%= x %>" data-y="<%= y %>" data-w="<%= w %>" data-h="<%= h %>">
-              <span style="position:absolute;bottom:0px;left:0px;width:100%;background-color:blue;display:none"><%= position.name %></span>
+              <span style="position:absolute;bottom:0px;left:0px;width:100%;background-color:blue;display:none"><%= pio[:object].name %></span>
             </span>
           <% end %>
         </div>

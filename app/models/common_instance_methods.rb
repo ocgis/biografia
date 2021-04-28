@@ -66,8 +66,8 @@ module CommonInstanceMethods
       next if position.empty?
 
       obj = reference.other_object(self)
-      obj.set_extra(:position, position[0])
-      positions.push(obj)
+      positions.push({ object: obj,
+                       position: position[0] })
     end
     positions
   end
