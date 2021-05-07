@@ -95,4 +95,4 @@ ShowMedium.propTypes = {
   }).isRequired,
 };
 
-export { ShowMedium };
+export { ShowMedium as default, ShowMedium };

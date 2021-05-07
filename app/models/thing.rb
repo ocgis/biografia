@@ -39,4 +39,7 @@ class Thing < ActiveRecord::Base
     return things
   end
 
+  def all_attributes
+    attributes
+  end
 end

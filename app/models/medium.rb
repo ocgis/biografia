@@ -152,6 +152,11 @@ class Medium < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes
+    puts positions_in_object.inspect
+    pio_attributes = positions_in_object.map do |pio|
+      pio[:object] = pio[:object].all_attributes
+      pio
+    end
+    attributes.update({ positions_in_object: pio_attributes })
   end
 end
