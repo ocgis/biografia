@@ -4,6 +4,7 @@ import { IndexPerson } from './Person';
 import { ShowPerson } from './ShowPerson';
 import { ShowNote } from './ShowNote';
 import { ShowMedium } from './ShowMedium';
+import { ShowEvent } from './ShowEvent';
 
 export default (
   <Router>
@@ -27,6 +28,11 @@ export default (
         path="/r/media/:id"
         exact
         component={ShowMedium}
+      />
+      <Route
+        path="/r/events/:id"
+        exact
+        component={ShowEvent}
       />
     </Switch>
   </Router>

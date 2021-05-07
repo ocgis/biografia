@@ -22,7 +22,7 @@ const RenderElement = (props) => {
 
     case 'events':
       return (
-        <Event event={element} currentUser={currentUser} />
+        <Event object={element} currentUser={currentUser} />
       );
 
     case 'notes':

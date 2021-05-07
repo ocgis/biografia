@@ -34,12 +34,19 @@ const ListRelated = (props) => {
 };
 
 const Event = (props) => {
-  const { event } = props;
+  const { object: event } = props;
   const { currentUser } = props;
   const { showFull } = props;
 
+  let name = null;
   if (showFull) {
-    return 'Implement event show full';
+    name = event.name;
+  } else {
+    name = (
+      <Link to={`/r/events/${event.id}`}>
+        {event.name}
+      </Link>
+    );
   }
   return (
     <div>
@@ -48,9 +55,7 @@ const Event = (props) => {
           <tr>
             <td>
               <ListRelated object={event} oneLine={EventDate.OneLine} relatedName="event_dates" currentUser={currentUser} />
-              <Link to={`/r/events/${event.id}`}>
-                {event.name}
-              </Link>
+              {name}
               <ListRelated object={event} oneLine={Person.OneLine} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
               <ListRelated object={event} oneLine={Address.OneLine} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
             </td>
@@ -66,7 +71,7 @@ const Event = (props) => {
 };
 
 Event.propTypes = {
-  event: PropTypes.shape({
+  object: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
     related: PropTypes.shape({}),
