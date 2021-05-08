@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LoadData from './LoadData';
-import { TopMenu } from './TopMenu';
+import TopMenu from './TopMenu';
 import { ShowReferences } from './Reference';
 
 class Show extends LoadData {

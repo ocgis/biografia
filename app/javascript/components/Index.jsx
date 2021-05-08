@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadData from './LoadData';
-import { TopMenu } from './TopMenu';
+import TopMenu from './TopMenu';
 
 class Index extends LoadData {
   url = () => this.apiUrl;

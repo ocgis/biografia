@@ -88,4 +88,4 @@ TopMenu.propTypes = {
   currentUser: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
 };
 
-export { TopMenu };
+export default TopMenu;
