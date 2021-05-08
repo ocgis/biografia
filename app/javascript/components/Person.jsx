@@ -168,4 +168,4 @@ Person.defaultProps = {
 
 Person.OneLine = PersonNames;
 
-export { Person, IndexPerson };
+export { Person as default, IndexPerson };

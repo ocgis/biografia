@@ -5,6 +5,7 @@ import ShowPerson from './ShowPerson';
 import ShowNote from './ShowNote';
 import ShowMedium from './ShowMedium';
 import ShowEvent from './ShowEvent';
+import ShowEventDate from './ShowEventDate';
 import ShowAddress from './ShowAddress';
 
 export default (
@@ -34,6 +35,11 @@ export default (
         path="/r/events/:id"
         exact
         component={ShowEvent}
+      />
+      <Route
+        path="/r/event_dates/:id"
+        exact
+        component={ShowEventDate}
       />
       <Route
         path="/r/addresses/:id"

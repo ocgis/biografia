@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import { Person } from './Person';
-import { Event } from './Event';
-import { Note } from './Note';
-import { Relationship } from './Relationship';
-import { Medium } from './Medium';
-import { Address } from './Address';
+import Person from './Person';
+import Event from './Event';
+import Note from './Note';
+import Relationship from './Relationship';
+import Medium from './Medium';
+import Address from './Address';
+import EventDate from './EventDate';
 
 const { TabPane } = Tabs;
 
@@ -24,6 +25,11 @@ const RenderElement = (props) => {
     case 'events':
       return (
         <Event object={element} currentUser={currentUser} />
+      );
+
+    case 'event_dates':
+      return (
+        <EventDate object={element} currentUser={currentUser} />
       );
 
     case 'notes':
@@ -65,6 +71,7 @@ const ShowReferences = (props) => {
     const header = {
       people: 'Personer',
       events: 'Händelser',
+      event_dates: 'Datum',
       notes: 'Kommentarer',
       relationships: 'Förhållanden',
       media: 'Media',

@@ -1,5 +1,5 @@
 import Show from './Show';
-import { Address } from './Address';
+import Address from './Address';
 
 class ShowAddress extends Show {
   constructor(props) {

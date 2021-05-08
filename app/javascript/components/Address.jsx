@@ -78,4 +78,4 @@ Address.defaultProps = {
 
 Address.OneLine = OneLine;
 
-export { Address as default, Address };
+export default Address;

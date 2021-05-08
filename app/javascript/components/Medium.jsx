@@ -130,4 +130,4 @@ Medium.defaultProps = {
   showFull: false,
 };
 
-export { Medium as default, Medium };
+export default Medium;

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Modifier, VersionInfo } from './Common';
-import { EventDate } from './EventDate';
-import { Person } from './Person';
-import { Address } from './Address';
+import EventDate from './EventDate';
+import Person from './Person';
+import Address from './Address';
 
 const ListRelated = (props) => {
   const { object } = props;
@@ -84,4 +84,4 @@ Event.defaultProps = {
   showFull: false,
 };
 
-export { Event as default, Event };
+export default Event;

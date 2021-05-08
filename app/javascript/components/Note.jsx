@@ -57,4 +57,4 @@ Note.defaultProps = {
   showFull: false,
 };
 
-export { Note };
+export default Note;

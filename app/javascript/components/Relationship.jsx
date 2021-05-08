@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Modifier, VersionInfo } from './Common';
-import { Person } from './Person';
-import { EventDate } from './EventDate';
-import { Address } from './Address';
-import { Note } from './Note';
+import Person from './Person';
+import EventDate from './EventDate';
+import Address from './Address';
+import Note from './Note';
 
 const ListObjects = (props) => {
   const { object } = props;
@@ -115,4 +115,4 @@ Relationship.defaultProps = {
   showFull: false,
 };
 
-export { Relationship as default, Relationship };
+export default Relationship;

@@ -1,5 +1,5 @@
 import Show from './Show';
-import { Medium } from './Medium';
+import Medium from './Medium';
 
 class ShowMedium extends Show {
   constructor(props) {
