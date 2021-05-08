@@ -8,7 +8,7 @@ module Api
     class ApiController < ActionController::Base
       # Log user on commit
       before_action :set_paper_trail_whodunnit
-      before_action :set_current_user, only: [:show]
+      before_action :set_current_user, only: [:show, :index]
       before_action :set_object, only: [:show]
 
       # Prevent CSRF attacks by raising an exception.
@@ -25,6 +25,7 @@ module Api
 
         r = {}
         r[objects_name] = all_objects.map(&:all_attributes)
+        r[:current_user] = @current_user_hash
 
         render json: r
       end
