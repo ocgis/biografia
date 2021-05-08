@@ -1,11 +1,18 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Col, Menu, Input, Row } from 'antd';
+import {
+  Col,
+  Menu,
+  Input,
+  Row,
+} from 'antd';
 
 const { SubMenu } = Menu;
 
 const TopMenu = (props) => {
   const { currentUser } = props;
+  const history = useHistory();
 
   let personCol = '';
   if (currentUser != null) {
@@ -21,17 +28,17 @@ const TopMenu = (props) => {
       <Row>
         <Col span={24}>
           <Menu mode="horizontal">
-            <SubMenu title="Personer">
+            <SubMenu title="Personer" onTitleClick={() => history.push('/r/people')}>
               <Menu.Item>
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Händelser">
+            <SubMenu title="Händelser" onTitleClick={() => history.push('/r/events')}>
               <Menu.Item>
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Media">
+            <SubMenu title="Media" onTitleClick={() => history.push('/r/media')}>
               <Menu.Item>
                 Lägg till
               </Menu.Item>
@@ -39,22 +46,22 @@ const TopMenu = (props) => {
                 Sök lokalt
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Adresser">
+            <SubMenu title="Adresser" onTitleClick={() => history.push('/r/addresses')}>
               <Menu.Item>
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Saker">
+            <SubMenu title="Saker" onTitleClick={() => history.push('/r/things')}>
               <Menu.Item>
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Överföringar">
+            <SubMenu title="Överföringar" onTitleClick={() => history.push('/r/transfers')}>
               <Menu.Item>
                 Överför fil
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Exporter">
+            <SubMenu title="Exporter" onTitleClick={() => history.push('/r/exports')}>
               <Menu.Item>
                 Exportera fil
               </Menu.Item>
