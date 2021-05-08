@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
 import { ShowReferences } from './Reference';
@@ -43,15 +42,5 @@ class Show extends LoadData {
     );
   }
 }
-Show.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string.isRequired,
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
-  }).isRequired,
-};
 
 export default Show;
