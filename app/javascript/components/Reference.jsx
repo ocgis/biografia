@@ -28,7 +28,7 @@ const RenderElement = (props) => {
 
     case 'notes':
       return (
-        <Note note={element} currentUser={currentUser} />
+        <Note object={element} currentUser={currentUser} />
       );
 
     case 'relationships':

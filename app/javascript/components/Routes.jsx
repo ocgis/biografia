@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { IndexPerson } from './Person';
-import { ShowPerson } from './ShowPerson';
-import { ShowNote } from './ShowNote';
-import { ShowMedium } from './ShowMedium';
-import { ShowEvent } from './ShowEvent';
-import { ShowAddress } from './ShowAddress';
+import ShowPerson from './ShowPerson';
+import ShowNote from './ShowNote';
+import ShowMedium from './ShowMedium';
+import ShowEvent from './ShowEvent';
+import ShowAddress from './ShowAddress';
 
 export default (
   <Router>

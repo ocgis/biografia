@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Modifier, VersionInfo } from './Common';
 
 const Note = (props) => {
-  const { note } = props;
+  const { object: note } = props;
   const { currentUser } = props;
   const { showFull } = props;
 
@@ -44,7 +44,7 @@ const Note = (props) => {
 };
 
 Note.propTypes = {
-  note: PropTypes.shape({
+  object: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
     note: PropTypes.string,
