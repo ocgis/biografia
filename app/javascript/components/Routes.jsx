@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { IndexPerson } from './Person';
+import IndexPerson from './IndexPerson';
 import ShowPerson from './ShowPerson';
 import ShowNote from './ShowNote';
 import ShowMedium from './ShowMedium';

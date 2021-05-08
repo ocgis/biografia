@@ -17,13 +17,8 @@ class Api::V1::PeopleController < Api::V1::ApiController
     return person
   end
 
-
   def all_objects
-    people = Person.all.preload(:person_names).limit(50).map do |person|
-      person.attributes.update({ long_name: person.long_name})
-    end
-
-    return people
+    Person.all.preload(:person_names).limit(50)
   end
 
 

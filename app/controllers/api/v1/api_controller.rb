@@ -24,7 +24,7 @@ module Api
         objects_name = self.class.name.underscore.split('/')[-1].split('_')[..-2].join('_').to_sym
 
         r = {}
-        r[objects_name] = all_objects
+        r[objects_name] = all_objects.map(&:all_attributes)
 
         render json: r
       end
