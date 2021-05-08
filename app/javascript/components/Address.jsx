@@ -1,6 +1,9 @@
-const Address = () => null;
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Modifier, VersionInfo } from './Common';
 
-Address.OneLine = (props) => {
+const OneLine = (props) => {
   const { object: address } = props;
 
   const parts = [];
@@ -27,4 +30,52 @@ Address.OneLine = (props) => {
   return parts.join(', ');
 };
 
-export { Address };
+const Address = (props) => {
+  const { object: address } = props;
+  const { currentUser } = props;
+  const { showFull } = props;
+
+  let name = null;
+  if (showFull) {
+    name = (
+      <OneLine object={address} />
+    );
+  } else {
+    name = (
+      <Link to={`/r/addresses/${address.id}`}>
+        <OneLine object={address} />
+      </Link>
+    );
+  }
+  return (
+    <div>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              {name}
+            </td>
+            <Modifier currentUser={currentUser} />
+            <td>
+              <VersionInfo object={address} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+Address.propTypes = {
+  object: PropTypes.shape({}).isRequired,
+  currentUser: PropTypes.shape({}).isRequired,
+  showFull: PropTypes.bool,
+};
+
+Address.defaultProps = {
+  showFull: false,
+};
+
+Address.OneLine = OneLine;
+
+export { Address as default, Address };

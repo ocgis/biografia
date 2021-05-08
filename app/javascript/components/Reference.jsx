@@ -6,6 +6,7 @@ import { Event } from './Event';
 import { Note } from './Note';
 import { Relationship } from './Relationship';
 import { Medium } from './Medium';
+import { Address } from './Address';
 
 const { TabPane } = Tabs;
 
@@ -40,6 +41,11 @@ const RenderElement = (props) => {
         <Medium object={element} currentUser={currentUser} />
       );
 
+    case 'addresses':
+      return (
+        <Address object={element} currentUser={currentUser} />
+      );
+
     default:
       console.log(kind, element);
       return null;
@@ -62,6 +68,7 @@ const ShowReferences = (props) => {
       notes: 'Kommentarer',
       relationships: 'Förhållanden',
       media: 'Media',
+      addresses: 'Adresser',
     }[key];
     if (header == null) {
       return `Undefined: ${key}`;

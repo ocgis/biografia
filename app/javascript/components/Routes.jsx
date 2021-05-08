@@ -5,6 +5,7 @@ import { ShowPerson } from './ShowPerson';
 import { ShowNote } from './ShowNote';
 import { ShowMedium } from './ShowMedium';
 import { ShowEvent } from './ShowEvent';
+import { ShowAddress } from './ShowAddress';
 
 export default (
   <Router>
@@ -33,6 +34,11 @@ export default (
         path="/r/events/:id"
         exact
         component={ShowEvent}
+      />
+      <Route
+        path="/r/addresses/:id"
+        exact
+        component={ShowAddress}
       />
     </Switch>
   </Router>
