@@ -28,10 +28,11 @@ class Index extends LoadData {
 
   renderObject = (object) => {
     const { objectsUrl, showObject: ShowObject } = this;
+    const { currentUser } = this.state;
     return (
       <React.Fragment key={object.id}>
         <Link to={`${objectsUrl}/${object.id}`}>
-          <ShowObject object={object} mode="oneLine" />
+          <ShowObject object={object} mode="oneLine" currentUser={currentUser} />
         </Link>
         <br />
       </React.Fragment>
