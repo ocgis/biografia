@@ -10,6 +10,8 @@ import ShowEvent from './ShowEvent';
 import ShowEventDate from './ShowEventDate';
 import IndexAddress from './IndexAddress';
 import ShowAddress from './ShowAddress';
+import IndexThing from './IndexThing';
+import ShowThing from './ShowThing';
 
 export default (
   <Router>
@@ -63,6 +65,16 @@ export default (
         path="/r/addresses"
         exact
         component={IndexAddress}
+      />
+      <Route
+        path="/r/things/:id"
+        exact
+        component={ShowThing}
+      />
+      <Route
+        path="/r/things"
+        exact
+        component={IndexThing}
       />
     </Switch>
   </Router>
