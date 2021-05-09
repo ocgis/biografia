@@ -13,6 +13,10 @@ module Api
       def find_object
         Address.find(params.require(:id))
       end
+
+      def all_objects
+        Address.all.limit(50)
+      end
     end
   end
 end

@@ -8,6 +8,7 @@ import ShowMedium from './ShowMedium';
 import IndexEvent from './IndexEvent';
 import ShowEvent from './ShowEvent';
 import ShowEventDate from './ShowEventDate';
+import IndexAddress from './IndexAddress';
 import ShowAddress from './ShowAddress';
 
 export default (
@@ -57,6 +58,11 @@ export default (
         path="/r/addresses/:id"
         exact
         component={ShowAddress}
+      />
+      <Route
+        path="/r/addresses"
+        exact
+        component={IndexAddress}
       />
     </Switch>
   </Router>
