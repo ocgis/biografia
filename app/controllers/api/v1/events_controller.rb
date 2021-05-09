@@ -13,6 +13,10 @@ module Api
       def find_object
         Event.find(params.require(:id))
       end
+
+      def all_objects
+        Event.all.limit(50)
+      end
     end
   end
 end

@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Modifier, VersionInfo } from './Common';
 
+const OneLine = (props) => {
+  const { object: medium } = props;
+
+  return (
+    <img src={`/media/${medium.id}/thumb`} alt={medium.file_name} />
+  );
+};
+
 class Medium extends React.Component {
   constructor(props) {
     super(props);
@@ -93,7 +101,7 @@ class Medium extends React.Component {
     } else {
       mediaTag = (
         <Link to={`/r/media/${medium.id}`}>
-          <img src={`/media/${medium.id}/thumb`} alt={medium.file_name} />
+          <OneLine object={medium} />
         </Link>
       );
     }
@@ -129,5 +137,7 @@ Medium.propTypes = {
 Medium.defaultProps = {
   showFull: false,
 };
+
+Medium.OneLine = OneLine;
 
 export default Medium;

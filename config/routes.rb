@@ -7,8 +7,8 @@ Biografia::Application.routes.draw do
     namespace :v1 do
       resources :people, only: %i[index show create]
       resources :notes, only: %i[show]
-      resources :media, only: %i[show]
-      resources :events, only: %i[show]
+      resources :media, only: %i[index show]
+      resources :events, only: %i[index show]
       resources :event_dates, only: %i[show]
       resources :addresses, only: %i[show]
     end

@@ -13,6 +13,10 @@ module Api
       def find_object
         Medium.find(params.require(:id))
       end
+
+      def all_objects
+        Medium.all
+      end
     end
   end
 end

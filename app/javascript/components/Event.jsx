@@ -33,6 +33,12 @@ const ListRelated = (props) => {
   return parts;
 };
 
+const OneLine = (props) => {
+  const { object: event } = props;
+
+  return event.name;
+};
+
 const Event = (props) => {
   const { object: event } = props;
   const { currentUser } = props;
@@ -83,5 +89,7 @@ Event.propTypes = {
 Event.defaultProps = {
   showFull: false,
 };
+
+Event.OneLine = OneLine;
 
 export default Event;
