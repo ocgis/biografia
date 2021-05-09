@@ -4,7 +4,7 @@ import Medium from './Medium';
 class IndexMedium extends Index {
   constructor(props) {
     super(props);
-    this.showObject = Medium.OneLine;
+    this.showObject = Medium;
     this.objectName = 'media';
     this.objectsUrl = '/r/media';
     this.apiUrl = '/api/v1/media';

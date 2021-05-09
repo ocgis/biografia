@@ -28,7 +28,7 @@ class Show extends LoadData {
           <tbody>
             <tr>
               <td>
-                <ShowObject object={object} currentUser={currentUser} showFull />
+                <ShowObject object={object} currentUser={currentUser} mode="full" />
               </td>
             </tr>
             <tr>

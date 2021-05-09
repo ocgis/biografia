@@ -39,10 +39,16 @@ const OneLine = (props) => {
 };
 
 const Person = (props) => {
-  const { object: person, currentUser, showFull } = props;
+  const { object: person, currentUser, mode } = props;
+
+  if (mode === 'oneLine') {
+    return (
+      <OneLine object={person} />
+    );
+  }
 
   let name = null;
-  if (showFull) {
+  if (mode === 'full') {
     name = (
       <OneLine object={person} />
     );
@@ -80,13 +86,11 @@ Person.propTypes = {
     sex: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Person.defaultProps = {
-  showFull: false,
+  mode: '',
 };
-
-Person.OneLine = OneLine;
 
 export default Person;

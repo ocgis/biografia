@@ -11,6 +11,12 @@ const OneLine = (props) => {
   );
 };
 
+OneLine.propTypes = {
+  object: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 class Medium extends React.Component {
   constructor(props) {
     super(props);
@@ -46,11 +52,17 @@ class Medium extends React.Component {
   render = () => {
     const { object: medium } = this.props;
     const { currentUser } = this.props;
-    const { showFull } = this.props;
+    const { mode } = this.props;
+
+    if (mode === 'oneLine') {
+      return (
+        <OneLine object={medium} />
+      );
+    }
 
     let mediaTag = null;
 
-    if (showFull) {
+    if (mode === 'full') {
       const positionTags = medium.positions_in_object.map((pio) => {
         const { imgWidth, imgHeight } = this.state;
         const x = (pio.position.x * imgWidth) / 1000;
@@ -131,13 +143,11 @@ Medium.propTypes = {
     file_name: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Medium.defaultProps = {
-  showFull: false,
+  mode: '',
 };
-
-Medium.OneLine = OneLine;
 
 export default Medium;

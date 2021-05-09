@@ -6,11 +6,18 @@ import { Modifier, VersionInfo } from './Common';
 const Note = (props) => {
   const { object: note } = props;
   const { currentUser } = props;
-  const { showFull } = props;
+  const { mode } = props;
+
+  if (mode === 'oneLine') {
+    if (note.title == null) {
+      return 'Utan rubrik';
+    }
+    return note.title;
+  }
 
   let title = null;
   if (note.title != null) {
-    if (showFull) {
+    if (mode === 'full') {
       title = note.title;
     } else {
       title = (
@@ -50,11 +57,11 @@ Note.propTypes = {
     note: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Note.defaultProps = {
-  showFull: false,
+  mode: '',
 };
 
 export default Note;

@@ -33,10 +33,16 @@ const OneLine = (props) => {
 const Address = (props) => {
   const { object: address } = props;
   const { currentUser } = props;
-  const { showFull } = props;
+  const { mode } = props;
+
+  if (mode === 'oneLine') {
+    return (
+      <OneLine object={address} />
+    );
+  }
 
   let name = null;
-  if (showFull) {
+  if (mode === 'full') {
     name = (
       <OneLine object={address} />
     );
@@ -69,13 +75,11 @@ const Address = (props) => {
 Address.propTypes = {
   object: PropTypes.shape({}).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Address.defaultProps = {
-  showFull: false,
+  mode: '',
 };
-
-Address.OneLine = OneLine;
 
 export default Address;

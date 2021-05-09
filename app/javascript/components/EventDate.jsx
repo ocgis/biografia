@@ -13,10 +13,16 @@ const OneLine = (props) => {
 const EventDate = (props) => {
   const { object: eventDate } = props;
   const { currentUser } = props;
-  const { showFull } = props;
+  const { mode } = props;
+
+  if (mode === 'oneLine') {
+    return (
+      <OneLine object={eventDate} />
+    );
+  }
 
   let name = null;
-  if (showFull) {
+  if (mode === 'full') {
     name = (
       <OneLine object={eventDate} />
     );
@@ -49,13 +55,11 @@ const EventDate = (props) => {
 EventDate.propTypes = {
   object: PropTypes.shape({}).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 EventDate.defaultProps = {
-  showFull: false,
+  mode: '',
 };
-
-EventDate.OneLine = OneLine;
 
 export default EventDate;

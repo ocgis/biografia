@@ -10,7 +10,7 @@ const ListRelated = (props) => {
   const { object } = props;
   const { relatedName } = props;
   const { prefix } = props;
-  const { oneLine: OneLine } = props;
+  const { showObject: ShowObject } = props;
   const { currentUser } = props;
   const relObjs = object.related[relatedName];
 
@@ -25,7 +25,7 @@ const ListRelated = (props) => {
 
   parts = parts.concat(relObjs.map((relObj) => (
     <Link to={`/r/${relatedName}/${relObj.id}`} key={relObj.id}>
-      <OneLine object={relObj} currentUser={currentUser} />
+      <ShowObject object={relObj} currentUser={currentUser} mode="oneLine" />
       {' '}
     </Link>
   )));
@@ -33,19 +33,17 @@ const ListRelated = (props) => {
   return parts;
 };
 
-const OneLine = (props) => {
-  const { object: event } = props;
-
-  return event.name;
-};
-
 const Event = (props) => {
   const { object: event } = props;
   const { currentUser } = props;
-  const { showFull } = props;
+  const { mode } = props;
+
+  if (mode === 'oneLine') {
+    return event.name;
+  }
 
   let name = null;
-  if (showFull) {
+  if (mode === 'full') {
     name = event.name;
   } else {
     name = (
@@ -60,10 +58,10 @@ const Event = (props) => {
         <tbody>
           <tr>
             <td>
-              <ListRelated object={event} oneLine={EventDate.OneLine} relatedName="event_dates" currentUser={currentUser} />
+              <ListRelated object={event} showObject={EventDate} relatedName="event_dates" currentUser={currentUser} />
               {name}
-              <ListRelated object={event} oneLine={Person.OneLine} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
-              <ListRelated object={event} oneLine={Address.OneLine} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
+              <ListRelated object={event} showObject={Person} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
+              <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
             </td>
             <Modifier currentUser={currentUser} />
             <td>
@@ -83,13 +81,11 @@ Event.propTypes = {
     related: PropTypes.shape({}),
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Event.defaultProps = {
-  showFull: false,
+  mode: '',
 };
-
-Event.OneLine = OneLine;
 
 export default Event;

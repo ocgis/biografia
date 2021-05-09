@@ -31,7 +31,7 @@ class Index extends LoadData {
     return (
       <React.Fragment key={object.id}>
         <Link to={`${objectsUrl}/${object.id}`}>
-          <ShowObject object={object} />
+          <ShowObject object={object} mode="oneLine" />
         </Link>
         <br />
       </React.Fragment>

@@ -70,9 +70,15 @@ const OneLine = (props) => {
 const Relationship = (props) => {
   const { object: relationship } = props;
   const { currentUser } = props;
-  const { showFull } = props;
+  const { mode } = props;
 
-  if (showFull) {
+  if (mode === 'oneLine') {
+    return (
+      <OneLine object={relationship} />
+    );
+  }
+
+  if (mode === 'full') {
     return 'Implement relationship show full';
   }
 
@@ -108,11 +114,11 @@ Relationship.propTypes = {
     related: PropTypes.shape({}),
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
-  showFull: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 Relationship.defaultProps = {
-  showFull: false,
+  mode: '',
 };
 
 export default Relationship;
