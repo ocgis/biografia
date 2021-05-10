@@ -12,6 +12,7 @@ import IndexAddress from './IndexAddress';
 import ShowAddress from './ShowAddress';
 import IndexThing from './IndexThing';
 import ShowThing from './ShowThing';
+import ShowRelationship from './ShowRelationship';
 
 export default (
   <Router>
@@ -75,6 +76,11 @@ export default (
         path="/r/things"
         exact
         component={IndexThing}
+      />
+      <Route
+        path="/r/relationships/:id"
+        exact
+        component={ShowRelationship}
       />
     </Switch>
   </Router>

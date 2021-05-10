@@ -78,8 +78,17 @@ const Relationship = (props) => {
     );
   }
 
+  let element = null;
   if (mode === 'full') {
-    return 'Implement relationship show full';
+    element = (
+      <OneLine object={relationship} />
+    );
+  } else {
+    element = (
+      <Link to={`/r/relationships/${relationship.id}`}>
+        <OneLine object={relationship} />
+      </Link>
+    );
   }
 
   return (
@@ -88,9 +97,7 @@ const Relationship = (props) => {
         <tbody>
           <tr>
             <td>
-              <Link to={`/r/relationships/${relationship.id}`}>
-                <OneLine object={relationship} />
-              </Link>
+              {element}
             </td>
             <Modifier currentUser={currentUser} />
             <td>
