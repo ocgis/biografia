@@ -70,7 +70,7 @@ const TopMenu = (props) => {
               Användare
             </Menu.Item>
             <Menu.Item>
-              Logga ut
+              <a href="/users/sign_out" data-method="delete">Logga ut</a>
             </Menu.Item>
           </Menu>
         </Col>

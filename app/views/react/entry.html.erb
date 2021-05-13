@@ -1,7 +1,11 @@
 <html>
+  <% if current_user %>
   <head>
     <%= stylesheet_pack_tag "Page" %>
     <%= javascript_pack_tag "Page" %>
   </head>
+  <% else %>
+  Inte inloggad. Gå <%= link_to "hit", :controller => "sessions", :action => "new" %> för att logga in.
+  <% end %>
   <%= csrf_meta_tag %>
 </html>
