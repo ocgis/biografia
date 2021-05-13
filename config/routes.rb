@@ -13,6 +13,7 @@ Biografia::Application.routes.draw do
       resources :addresses, only: %i[index show]
       resources :things, only: %i[index show]
       resources :relationships, only: %i[show]
+      resources :transfers, only: %i[index show]
     end
   end
 
