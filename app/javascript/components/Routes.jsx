@@ -15,6 +15,8 @@ import ShowThing from './ShowThing';
 import ShowRelationship from './ShowRelationship';
 import IndexTransfer from './IndexTransfer';
 import ShowTransfer from './ShowTransfer';
+import IndexExport from './IndexExport';
+import ShowExport from './ShowExport';
 
 export default (
   <Router>
@@ -93,6 +95,16 @@ export default (
         path="/r/transfers"
         exact
         component={IndexTransfer}
+      />
+      <Route
+        path="/r/exports/:id"
+        exact
+        component={ShowExport}
+      />
+      <Route
+        path="/r/exports"
+        exact
+        component={IndexExport}
       />
     </Switch>
   </Router>

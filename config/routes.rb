@@ -14,6 +14,11 @@ Biografia::Application.routes.draw do
       resources :things, only: %i[index show]
       resources :relationships, only: %i[show]
       resources :transfers, only: %i[index show]
+      resources :exports, only: %i[index show] do
+        collection do
+          get :file
+        end
+      end
     end
   end
 
