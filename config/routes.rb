@@ -19,6 +19,7 @@ Biografia::Application.routes.draw do
           get :file
         end
       end
+      resources :users, only: %i[index show]
     end
   end
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Col,
@@ -67,7 +67,7 @@ const TopMenu = (props) => {
               </Menu.Item>
             </SubMenu>
             <Menu.Item>
-              Användare
+              <Link to="/r/users">Användare</Link>
             </Menu.Item>
             <Menu.Item>
               <a href="/users/sign_out" data-method="delete">Logga ut</a>

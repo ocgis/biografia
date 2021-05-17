@@ -17,6 +17,8 @@ import IndexTransfer from './IndexTransfer';
 import ShowTransfer from './ShowTransfer';
 import IndexExport from './IndexExport';
 import ShowExport from './ShowExport';
+import IndexUser from './IndexUser';
+import ShowUser from './ShowUser';
 
 export default (
   <Router>
@@ -105,6 +107,16 @@ export default (
         path="/r/exports"
         exact
         component={IndexExport}
+      />
+      <Route
+        path="/r/users/:id"
+        exact
+        component={ShowUser}
+      />
+      <Route
+        path="/r/users"
+        exact
+        component={IndexUser}
       />
     </Switch>
   </Router>
