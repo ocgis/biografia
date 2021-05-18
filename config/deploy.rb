@@ -3,7 +3,7 @@
 set :application, 'biografia'
 set :repo_url, 'git@github.com:ocgis/biografia.git'
 
-set :linked_files, %w[config/database.yml]
+set :linked_files, %w[config/database.yml app/javascript/components/Config.jsx]
 set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system protected]
 
 namespace :deploy do

@@ -20,6 +20,9 @@
 # Ignore Google config
 /config/initializers/google.rb
 
+# Ignore React config
+/app/javascript/components/Config.jsx
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp

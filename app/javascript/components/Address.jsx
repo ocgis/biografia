@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Modifier, VersionInfo } from './Common';
+import EmbeddedMap from './EmbeddedMap';
 
 const OneLine = (props) => {
   const { object: address } = props;
@@ -43,9 +44,19 @@ const Address = (props) => {
 
   let name = null;
   if (mode === 'full') {
-    name = (
-      <OneLine object={address} />
-    );
+    if (address.maps_address == null) {
+      name = (
+        <OneLine object={address} />
+      );
+    } else {
+      name = (
+        <div>
+          <OneLine object={address} />
+          <br />
+          <EmbeddedMap location={address.maps_address} />
+        </div>
+      );
+    }
   } else {
     name = (
       <Link to={`/r/addresses/${address.id}`}>

@@ -1,0 +1,8 @@
+const Config = {
+  google: {
+    publicApiKey: 'Public API key here',
+    attributionUrl: 'https://localhost:3000', // Replace with site root url
+  },
+};
+
+export default Config;

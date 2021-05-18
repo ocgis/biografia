@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 # This is the address model
@@ -67,6 +68,6 @@ class Address < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes
+    attributes.update({ maps_address: maps_address })
   end
 end
