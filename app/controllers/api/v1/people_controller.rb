@@ -3,29 +3,31 @@ class Api::V1::PeopleController < Api::V1::ApiController
 
   load_and_authorize_resource
 
-
   protected
 
   def create_object
     puts person_params
   end
 
-
   def find_object
-    person = Person.find(params.require(:id))
+    Person.find(params.require(:id))
+  end
 
-    return person
+  def find_object_and_update_attrs
+    object = Person.find(params.require(:id))
+    object.attributes = person_params
+    object
   end
 
   def all_objects
     Person.all.preload(:person_names).limit(50)
   end
 
-
   private
-  
-  def person_params
-    params.require(:person).permit(:sex, person_names_attributes: [:given_name, :calling_name, :surname])
-  end
 
+  def person_params
+    params.require(:person).permit(:id, :sex, :source,
+                                   person_names_attributes: %i[id given_name calling_name surname position
+                                                               person_id _destroy])
+  end
 end

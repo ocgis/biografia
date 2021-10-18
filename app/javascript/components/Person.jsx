@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Input } from 'antd';
+import {
+  CheckOutlined, CloseOutlined, EditOutlined, PlusOutlined,
+} from '@ant-design/icons';
 import { Modifier, VersionInfo } from './Common';
 
 const OneLine = (props) => {
@@ -39,7 +43,15 @@ const OneLine = (props) => {
 };
 
 const Person = (props) => {
-  const { object: person, currentUser, mode } = props;
+  const {
+    object: person,
+    currentUser,
+    mode,
+    onEdit,
+    onSave,
+    onCancel,
+    updateState,
+  } = props;
 
   if (mode === 'oneLine') {
     return (
@@ -47,16 +59,118 @@ const Person = (props) => {
     );
   }
 
-  let name = null;
   if (mode === 'full') {
-    name = (
-      <OneLine object={person} />
+    return (
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <OneLine object={person} />
+              {' '}
+              {person.sex}
+            </td>
+            <td>
+              <EditOutlined onClick={onEdit} />
+            </td>
+            <Modifier currentUser={currentUser} />
+            <td>
+              <VersionInfo object={person} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     );
-  } else {
-    name = (
-      <Link to={`/r/people/${person.id}`}>
-        <OneLine object={person} />
-      </Link>
+  }
+
+  if (mode === 'edit') {
+    const renderPersonName = (pn, setProperty) => {
+      if (pn._destroy) {
+        return null;
+      }
+      return (
+        <tr key={pn.id}>
+          <td>
+            <Input
+              defaultValue={pn.given_name}
+              onChange={(event) => setProperty('given_name', event.target.value)}
+            />
+          </td>
+          <td>
+            <Input
+              defaultValue={pn.calling_name}
+              onChange={(event) => setProperty('calling_name', event.target.value)}
+            />
+          </td>
+          <td>
+            <Input
+              defaultValue={pn.surname}
+              onChange={(event) => setProperty('surname', event.target.value)}
+            />
+          </td>
+          <td>
+            <CloseOutlined
+              onClick={() => {
+                setProperty('_destroy', true);
+                updateState({ person });
+              }}
+            />
+          </td>
+        </tr>
+      );
+    };
+
+    return (
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Förnamn
+              </th>
+              <th>
+                Tilltalsnamn
+              </th>
+              <th>
+                Efternamn
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {person.person_names.map((pn, index) => renderPersonName(pn, (property, value) => {
+              person.person_names[index][property] = value;
+            }))}
+          </tbody>
+        </table>
+        <PlusOutlined
+          onClick={() => {
+            person.person_names.push({
+              given_name: null,
+              calling_name: null,
+              surname: null,
+            });
+            updateState({ person });
+          }}
+        />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                Kön:
+              </td>
+              <td>
+                <Input
+                  defaultValue={person.sex}
+                  onChange={(event) => {
+                    person.sex = event.target.value;
+                  }}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <CheckOutlined onClick={onSave} />
+        <CloseOutlined onClick={onCancel} />
+      </div>
     );
   }
 
@@ -65,7 +179,9 @@ const Person = (props) => {
       <tbody>
         <tr>
           <td>
-            {name}
+            <Link to={`/r/people/${person.id}`}>
+              <OneLine object={person} />
+            </Link>
             {' '}
             {person.sex}
           </td>
@@ -87,10 +203,18 @@ Person.propTypes = {
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   mode: PropTypes.string,
+  onEdit: PropTypes.func,
+  onSave: PropTypes.func,
+  onCancel: PropTypes.func,
+  updateState: PropTypes.func,
 };
 
 Person.defaultProps = {
   mode: '',
+  onEdit: null,
+  onSave: null,
+  onCancel: null,
+  updateState: null,
 };
 
 export default Person;

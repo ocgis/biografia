@@ -8,8 +8,9 @@ module Api
     class ApiController < ActionController::Base
       # Log user on commit
       before_action :set_paper_trail_whodunnit
-      before_action :set_current_user, only: [:show, :index]
+      before_action :set_current_user, only: %i[show index]
       before_action :set_object, only: [:show]
+      before_action :set_object_attributes, only: [:show]
 
       # Prevent CSRF attacks by raising an exception.
       # For APIs, you may want to use :null_session instead.
@@ -55,6 +56,19 @@ module Api
         end
       end
 
+      def update
+        @object = find_object_and_update_attrs
+        if @object.save
+          set_object_attributes
+          r = {}
+          r[@object.class.name.underscore.to_sym] = @object_attributes
+
+          render json: r
+        else
+          render json: { error: 'Object could not be created' }
+        end
+      end
+
       private
 
       def set_current_user
@@ -64,7 +78,9 @@ module Api
 
       def set_object
         @object = find_object
+      end
 
+      def set_object_attributes
         @object_attributes = @object.all_attributes
         @object_attributes.update({ version: @object.version_info,
                                     related: fetch_related_attributes(@object.related_objects,
