@@ -59,11 +59,10 @@ module Api
       def update
         @object = find_object_and_update_attrs
         if @object.save
-          set_object_attributes
+          object_attributes = @object.all_attributes
           r = {}
-          r[@object.class.name.underscore.to_sym] = @object_attributes
-
-          render json: r
+          r[@object.class.name.underscore.to_sym] = object_attributes
+          render json: {}
         else
           render json: { error: 'Object could not be created' }
         end

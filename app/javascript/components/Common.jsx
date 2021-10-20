@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
-import { AddPerson } from './AddPerson';
+import EditPerson from './EditPerson';
 
 const Modifier = (props) => {
   const modalState = {};
@@ -23,6 +23,10 @@ const Modifier = (props) => {
     modalState[key].setVisible(false);
   };
 
+  const cancelButtonClicked = (key) => {
+    modalState[key].setVisible(false);
+  };
+
   const { currentUser } = props;
 
   if (currentUser.roles.includes('editor')) {
@@ -36,13 +40,21 @@ const Modifier = (props) => {
         <Dropdown overlay={menu} trigger="click">
           <PlusCircleOutlined />
         </Dropdown>
-        <Modal
-          title="Lägg till person"
-          visible={modalState.person.isVisible}
-          footer={null}
-        >
-          <AddPerson onFinish={() => { okButtonClicked('person'); }} />
-        </Modal>
+        {
+          modalState.person.isVisible && (
+            <Modal
+              title="Lägg till person"
+              visible
+              closable={false}
+              footer={null}
+            >
+              <EditPerson
+                onOk={() => { okButtonClicked('person'); }}
+                onCancel={() => { cancelButtonClicked('person'); }}
+              />
+            </Modal>
+          )
+        }
       </td>
     );
   }

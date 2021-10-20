@@ -6,7 +6,7 @@ class Api::V1::PeopleController < Api::V1::ApiController
   protected
 
   def create_object
-    puts person_params
+    Person.new(person_params)
   end
 
   def find_object

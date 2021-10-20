@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
-import {
-  CheckOutlined, CloseOutlined, EditOutlined, PlusOutlined,
-} from '@ant-design/icons';
+import { Modal } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import { Modifier, VersionInfo } from './Common';
+import EditPerson from './EditPerson';
 
 const OneLine = (props) => {
   const { object: { person_names: pns } } = props;
@@ -47,10 +46,7 @@ const Person = (props) => {
     object: person,
     currentUser,
     mode,
-    onEdit,
-    onSave,
-    onCancel,
-    updateState,
+    reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -60,116 +56,58 @@ const Person = (props) => {
   }
 
   if (mode === 'full') {
-    return (
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <OneLine object={person} />
-              {' '}
-              {person.sex}
-            </td>
-            <td>
-              <EditOutlined onClick={onEdit} />
-            </td>
-            <Modifier currentUser={currentUser} />
-            <td>
-              <VersionInfo object={person} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  }
-
-  if (mode === 'edit') {
-    const renderPersonName = (pn, setProperty) => {
-      if (pn._destroy) {
-        return null;
-      }
-      return (
-        <tr key={pn.id}>
-          <td>
-            <Input
-              defaultValue={pn.given_name}
-              onChange={(event) => setProperty('given_name', event.target.value)}
-            />
-          </td>
-          <td>
-            <Input
-              defaultValue={pn.calling_name}
-              onChange={(event) => setProperty('calling_name', event.target.value)}
-            />
-          </td>
-          <td>
-            <Input
-              defaultValue={pn.surname}
-              onChange={(event) => setProperty('surname', event.target.value)}
-            />
-          </td>
-          <td>
-            <CloseOutlined
-              onClick={() => {
-                setProperty('_destroy', true);
-                updateState({ person });
-              }}
-            />
-          </td>
-        </tr>
-      );
+    const us = useState(false);
+    const modalState = {
+      isVisible: us[0],
+      setVisible: us[1],
+    };
+    const editPersonClicked = () => {
+      modalState.setVisible(true);
+    };
+    const okButtonClicked = () => {
+      modalState.setVisible(false);
+      reload();
+    };
+    const cancelButtonClicked = () => {
+      modalState.setVisible(false);
     };
 
     return (
       <div>
         <table>
-          <thead>
-            <tr>
-              <th>
-                Förnamn
-              </th>
-              <th>
-                Tilltalsnamn
-              </th>
-              <th>
-                Efternamn
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {person.person_names.map((pn, index) => renderPersonName(pn, (property, value) => {
-              person.person_names[index][property] = value;
-            }))}
-          </tbody>
-        </table>
-        <PlusOutlined
-          onClick={() => {
-            person.person_names.push({
-              given_name: null,
-              calling_name: null,
-              surname: null,
-            });
-            updateState({ person });
-          }}
-        />
-        <table>
           <tbody>
             <tr>
               <td>
-                Kön:
+                <OneLine object={person} />
+                {' '}
+                {person.sex}
               </td>
               <td>
-                <Input
-                  defaultValue={person.sex}
-                  onChange={(event) => {
-                    person.sex = event.target.value;
-                  }}
-                />
+                <EditOutlined onClick={editPersonClicked} />
+              </td>
+              <Modifier currentUser={currentUser} />
+              <td>
+                <VersionInfo object={person} />
               </td>
             </tr>
           </tbody>
         </table>
-        <CheckOutlined onClick={onSave} />
-        <CloseOutlined onClick={onCancel} />
+        {
+          modalState.isVisible && (
+            <Modal
+              title="Ändra person"
+              visible
+              closable={false}
+              footer={null}
+            >
+              <EditPerson
+                person={person}
+                onOk={(response) => { okButtonClicked(response); }}
+                onCancel={(response) => { cancelButtonClicked(response); }}
+              />
+            </Modal>
+          )
+        }
       </div>
     );
   }
@@ -203,18 +141,12 @@ Person.propTypes = {
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   mode: PropTypes.string,
-  onEdit: PropTypes.func,
-  onSave: PropTypes.func,
-  onCancel: PropTypes.func,
-  updateState: PropTypes.func,
+  reload: PropTypes.func,
 };
 
 Person.defaultProps = {
   mode: '',
-  onEdit: null,
-  onSave: null,
-  onCancel: null,
-  updateState: null,
+  reload: () => alert('Missing reload callback'),
 };
 
 export default Person;

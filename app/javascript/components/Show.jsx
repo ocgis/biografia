@@ -39,39 +39,18 @@ class Show extends LoadData {
                   object={object}
                   currentUser={currentUser}
                   mode={showMode}
-                  onEdit={() => {
-                    this.setState({
-                      showMode: 'edit',
-                      original: JSON.parse(JSON.stringify(object)),
-                      error: null,
-                    });
-                  }}
-                  onSave={() => {
-                    this.saveData((data) => {
-                      const newState = data;
-                      if (!newState.error) {
-                        newState.showMode = 'full';
-                      }
-                      this.setState(newState);
-                    });
-                  }}
-                  onCancel={() => {
-                    const newState = {
-                      showMode: 'full',
-                      error: null,
-                    };
-                    newState[objectName] = this.state.original;
-                    this.setState(newState);
-                  }}
-                  updateState={(newState) => {
-                    this.setState(newState);
+                  reload={() => {
+                    this.loadData();
                   }}
                 />
               </td>
             </tr>
             <tr>
               <td>
-                <ShowReferences related={object.related} currentUser={currentUser} />
+                <ShowReferences
+                  related={object.related}
+                  currentUser={currentUser}
+                />
               </td>
             </tr>
           </tbody>
