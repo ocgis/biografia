@@ -94,4 +94,7 @@ class Reference < ActiveRecord::Base
                            object1.class.name, object1.id, object2.class.name, object2.id)
   end
 
+  def all_attributes
+    attributes
+  end
 end

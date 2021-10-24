@@ -20,6 +20,11 @@ Biografia::Application.routes.draw do
         end
       end
       resources :users, only: %i[index show]
+      resources :references, only: %i[create] do
+        collection do
+          get :list
+        end
+      end
     end
   end
 

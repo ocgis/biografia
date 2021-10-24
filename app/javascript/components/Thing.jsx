@@ -82,7 +82,13 @@ const Thing = (props) => {
             <td>
               {element}
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'Thing',
+                id: thing.id,
+              }}
+            />
             <td>
               <VersionInfo object={thing} />
             </td>

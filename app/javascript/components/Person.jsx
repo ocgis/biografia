@@ -85,7 +85,13 @@ const Person = (props) => {
               <td>
                 <EditOutlined onClick={editPersonClicked} />
               </td>
-              <Modifier currentUser={currentUser} />
+              <Modifier
+                currentUser={currentUser}
+                mainObject={{
+                  type_: 'Person',
+                  id: person.id,
+                }}
+              />
               <td>
                 <VersionInfo object={person} />
               </td>
@@ -123,7 +129,13 @@ const Person = (props) => {
             {' '}
             {person.sex}
           </td>
-          <Modifier currentUser={currentUser} />
+          <Modifier
+            currentUser={currentUser}
+            mainObject={{
+              type_: 'Person',
+              id: person.id,
+            }}
+          />
           <td>
             <VersionInfo object={person} />
           </td>

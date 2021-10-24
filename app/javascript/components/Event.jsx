@@ -63,7 +63,13 @@ const Event = (props) => {
               <ListRelated object={event} showObject={Person} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
               <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'Event',
+                id: event.id,
+              }}
+            />
             <td>
               <VersionInfo object={event} />
             </td>

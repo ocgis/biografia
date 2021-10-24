@@ -68,6 +68,16 @@ module Api
         end
       end
 
+      protected
+
+      def find_by_object_name(object_name)
+        a = object_name.split('_')
+        if a.length != 2
+          raise StandardError, "Not a valid object name: #{object_name}."
+        end
+        Kernel.const_get(a[0]).find(a[1].to_i)
+      end
+
       private
 
       def set_current_user

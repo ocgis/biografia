@@ -123,7 +123,13 @@ class Medium extends React.Component {
         <table>
           <tbody>
             <tr>
-              <Modifier currentUser={currentUser} />
+              <Modifier
+                currentUser={currentUser}
+                mainObject={{
+                  type_: 'Medium',
+                  id: medium.id,
+                }}
+              />
               <td>
                 <VersionInfo object={medium} />
               </td>

@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import EditPerson from './EditPerson';
+import AddReference from './AddReference';
 
 const Modifier = (props) => {
   const modalState = {};
-  ['person'].forEach((e) => {
+  ['person', 'reference'].forEach((e) => {
     const us = useState(false);
     modalState[e] = {
       isVisible: us[0],
@@ -27,12 +28,13 @@ const Modifier = (props) => {
     modalState[key].setVisible(false);
   };
 
-  const { currentUser } = props;
+  const { currentUser, mainObject } = props;
 
   if (currentUser.roles.includes('editor')) {
     const menu = (
       <Menu onClick={menuItemClicked}>
         <Menu.Item key="person">lägg till person</Menu.Item>
+        <Menu.Item key="reference">referera till</Menu.Item>
       </Menu>
     );
     return (
@@ -55,12 +57,32 @@ const Modifier = (props) => {
             </Modal>
           )
         }
+        {
+          modalState.reference.isVisible && (
+            <Modal
+              title="Referera till"
+              visible
+              closable={false}
+              footer={null}
+            >
+              <AddReference
+                referFrom={mainObject}
+                onOk={() => { okButtonClicked('reference'); }}
+                onCancel={() => { cancelButtonClicked('reference'); }}
+              />
+            </Modal>
+          )
+        }
       </td>
     );
   }
   return null;
 };
 Modifier.propTypes = {
+  mainObject: PropTypes.shape({
+    type_: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+  }).isRequired,
   currentUser: PropTypes.shape({
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),

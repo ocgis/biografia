@@ -41,7 +41,13 @@ const EventDate = (props) => {
             <td>
               {name}
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'EventDate',
+                id: eventDate.id,
+              }}
+            />
             <td>
               <VersionInfo object={eventDate} />
             </td>

@@ -28,7 +28,8 @@ class SaveData extends React.Component {
 
     const { objectName, state } = this;
 
-    const sendData = railsify(state[objectName]);
+    const sendData = {};
+    sendData[objectName] = railsify(state[objectName]);
 
     let url = this.apiUrl;
     let axiosCall = axios.post;
@@ -38,6 +39,7 @@ class SaveData extends React.Component {
       axiosCall = axios.patch;
     }
 
+    console.log(sendData);
     axiosCall(url, sendData).then((response) => {
       const result = {};
       result[objectName] = response.data[objectName];

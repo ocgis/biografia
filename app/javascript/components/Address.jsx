@@ -72,7 +72,13 @@ const Address = (props) => {
             <td>
               {name}
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'Address',
+                id: address.id,
+              }}
+            />
             <td>
               <VersionInfo object={address} />
             </td>

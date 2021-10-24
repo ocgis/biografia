@@ -99,7 +99,13 @@ const Relationship = (props) => {
             <td>
               {element}
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'Relationship',
+                id: relationship.id,
+              }}
+            />
             <td>
               <VersionInfo object={relationship} />
             </td>

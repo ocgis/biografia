@@ -36,7 +36,13 @@ const Note = (props) => {
             <td>
               {title}
             </td>
-            <Modifier currentUser={currentUser} />
+            <Modifier
+              currentUser={currentUser}
+              mainObject={{
+                type_: 'Note',
+                id: note.id,
+              }}
+            />
             <td>
               <VersionInfo object={note} />
             </td>
