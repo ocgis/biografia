@@ -15,7 +15,7 @@ gem 'sqlite3'
 gem 'mysql2'
 
 # Use puma to get web server threads
-gem 'puma'
+gem 'puma', '>= 5.5.1'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
