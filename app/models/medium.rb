@@ -157,6 +157,9 @@ class Medium < ActiveRecord::Base
       pio[:object] = pio[:object].all_attributes
       pio
     end
-    attributes.update({ positions_in_object: pio_attributes })
+    attributes.update({
+                        type_: 'Medium',
+                        positions_in_object: pio_attributes
+                      }).update(extras)
   end
 end

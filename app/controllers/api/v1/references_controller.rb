@@ -40,6 +40,14 @@ module Api
         render json: { result: objects }
       end
 
+      def destroy
+        reference = Reference.find(params[:id])
+        reference.position_in_pictures.destroy_all
+        reference.destroy
+
+        render json: { reference: {} }
+      end
+
       protected
 
       def create_object

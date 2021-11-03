@@ -87,10 +87,8 @@ const Person = (props) => {
               </td>
               <Modifier
                 currentUser={currentUser}
-                mainObject={{
-                  type_: 'Person',
-                  id: person.id,
-                }}
+                mainObject={person}
+                reload={reload}
               />
               <td>
                 <VersionInfo object={person} />
@@ -131,10 +129,8 @@ const Person = (props) => {
           </td>
           <Modifier
             currentUser={currentUser}
-            mainObject={{
-              type_: 'Person',
-              id: person.id,
-            }}
+            mainObject={person}
+            reload={reload}
           />
           <td>
             <VersionInfo object={person} />
@@ -153,12 +149,11 @@ Person.propTypes = {
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   mode: PropTypes.string,
-  reload: PropTypes.func,
+  reload: PropTypes.func.isRequired,
 };
 
 Person.defaultProps = {
   mode: '',
-  reload: () => alert('Missing reload callback'),
 };
 
 export default Person;

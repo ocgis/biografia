@@ -50,9 +50,9 @@ class Medium extends React.Component {
   }
 
   render = () => {
-    const { object: medium } = this.props;
-    const { currentUser } = this.props;
-    const { mode } = this.props;
+    const {
+      currentUser, mode, object: medium, reload,
+    } = this.props;
 
     if (mode === 'oneLine') {
       return (
@@ -125,10 +125,8 @@ class Medium extends React.Component {
             <tr>
               <Modifier
                 currentUser={currentUser}
-                mainObject={{
-                  type_: 'Medium',
-                  id: medium.id,
-                }}
+                mainObject={medium}
+                reload={reload}
               />
               <td>
                 <VersionInfo object={medium} />
@@ -149,6 +147,7 @@ Medium.propTypes = {
     file_name: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 
