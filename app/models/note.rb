@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Implementation of the note class
 class Note < ActiveRecord::Base
   has_paper_trail
 
@@ -5,22 +8,17 @@ class Note < ActiveRecord::Base
   include CommonInstanceMethods
 
   def controller
-    return "notes"
+    'notes'
   end
 
   def one_line
-    unless title.nil?
-      return title
-    else
-      if note.length > 0
-        return note.split("\n")[0]
-      else
-        return ''
-      end
-    end
+    return title unless title.nil?
+    return '' unless note.length.positive?
+
+    note.split("\n")[0]
   end
 
   def all_attributes
-    attributes
+    attributes.update({ type_: 'Note' }).update(extras)
   end
 end

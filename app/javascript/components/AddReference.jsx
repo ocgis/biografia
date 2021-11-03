@@ -12,6 +12,7 @@ class AddReference extends SaveData {
     this.objectName = 'reference';
     this.apiUrl = '/api/v1/references';
     this.state = {
+      value: null,
       descriptionOptions: [],
       reference: {
         type1: props.referFrom.type_,
@@ -25,6 +26,7 @@ class AddReference extends SaveData {
   render = () => {
     const handleResult = (result) => {
       const { onOk } = this.props;
+
       if (result.error == null) {
         onOk(result);
       } else {
@@ -54,13 +56,26 @@ class AddReference extends SaveData {
       });
     });
 
-    const setSelected = (value, object) => {
-      this.state.reference.type2 = object.key.type_;
-      this.state.reference.id2 = object.key.id;
-      this.setState({ reference: this.state.reference });
+    const onChange = (value) => {
+      this.setState({ value });
     };
 
-    const { descriptionOptions, error } = this.state;
+    const onSelect = (index, object) => {
+      const option = this.state.descriptionOptions[index];
+      this.state.reference.type2 = option.key.type_;
+      this.state.reference.id2 = option.key.id;
+      this.setState({
+        reference: this.state.reference,
+        value: object.label,
+      });
+    };
+
+    const { descriptionOptions, error, value } = this.state;
+
+    const options = descriptionOptions.map((val, index) => ({
+      value: index,
+      label: val.value,
+    }));
 
     return (
       <table>
@@ -68,10 +83,12 @@ class AddReference extends SaveData {
           <tr>
             <td>
               <AutoComplete
+                value={value}
                 style={{ width: '50ch' }}
-                options={descriptionOptions}
+                options={options}
                 onSearch={(search) => searchObject(search)}
-                onSelect={setSelected}
+                onChange={onChange}
+                onSelect={onSelect}
               />
             </td>
           </tr>

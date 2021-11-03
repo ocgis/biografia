@@ -50,6 +50,9 @@ class Show extends LoadData {
                 <ShowReferences
                   related={object.related}
                   currentUser={currentUser}
+                  reload={() => {
+                    this.loadData();
+                  }}
                 />
               </td>
             </tr>

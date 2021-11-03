@@ -27,9 +27,9 @@ const OneLine = (props) => {
 };
 
 const Thing = (props) => {
-  const { object: thing } = props;
-  const { currentUser } = props;
-  const { mode } = props;
+  const {
+    currentUser, mode, object: thing, reload,
+  } = props;
 
   if (mode === 'oneLine') {
     return (
@@ -84,10 +84,8 @@ const Thing = (props) => {
             </td>
             <Modifier
               currentUser={currentUser}
-              mainObject={{
-                type_: 'Thing',
-                id: thing.id,
-              }}
+              mainObject={thing}
+              reload={reload}
             />
             <td>
               <VersionInfo object={thing} />
@@ -107,6 +105,7 @@ Thing.propTypes = {
     make: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 

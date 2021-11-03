@@ -110,6 +110,14 @@ module CommonInstanceMethods
     end
   end
 
+  def extras
+    if @extras.nil?
+      {}
+    else
+      @extras
+    end
+  end
+
   def version_info
     version = versions.last
 

@@ -27,6 +27,6 @@ class Event < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes
+    attributes.update({ type_: 'Event' }).update(extras)
   end
 end

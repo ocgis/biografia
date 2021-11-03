@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { Modifier, VersionInfo } from './Common';
 
 const Note = (props) => {
-  const { object: note } = props;
-  const { currentUser } = props;
-  const { mode } = props;
+  const {
+    currentUser, mode, object: note, reload,
+  } = props;
 
   if (mode === 'oneLine') {
     if (note.title == null) {
@@ -38,10 +38,8 @@ const Note = (props) => {
             </td>
             <Modifier
               currentUser={currentUser}
-              mainObject={{
-                type_: 'Note',
-                id: note.id,
-              }}
+              mainObject={note}
+              reload={reload}
             />
             <td>
               <VersionInfo object={note} />
@@ -63,6 +61,7 @@ Note.propTypes = {
     note: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 

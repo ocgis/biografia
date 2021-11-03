@@ -34,9 +34,9 @@ const ListRelated = (props) => {
 };
 
 const Event = (props) => {
-  const { object: event } = props;
-  const { currentUser } = props;
-  const { mode } = props;
+  const {
+    currentUser, mode, object: event, reload,
+  } = props;
 
   if (mode === 'oneLine') {
     return event.name;
@@ -65,10 +65,8 @@ const Event = (props) => {
             </td>
             <Modifier
               currentUser={currentUser}
-              mainObject={{
-                type_: 'Event',
-                id: event.id,
-              }}
+              mainObject={event}
+              reload={reload}
             />
             <td>
               <VersionInfo object={event} />
@@ -87,6 +85,7 @@ Event.propTypes = {
     related: PropTypes.shape({}),
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 
