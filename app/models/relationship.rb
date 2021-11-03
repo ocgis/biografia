@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: false
 
 # This is the relationship model
@@ -51,6 +52,6 @@ class Relationship < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes
+    attributes.update({ type_: 'Relationship' }).update(extras)
   end
 end

@@ -11,9 +11,9 @@ const OneLine = (props) => {
 };
 
 const EventDate = (props) => {
-  const { object: eventDate } = props;
-  const { currentUser } = props;
-  const { mode } = props;
+  const {
+    currentUser, mode, object: eventDate, reload,
+  } = props;
 
   if (mode === 'oneLine') {
     return (
@@ -43,10 +43,8 @@ const EventDate = (props) => {
             </td>
             <Modifier
               currentUser={currentUser}
-              mainObject={{
-                type_: 'EventDate',
-                id: eventDate.id,
-              }}
+              mainObject={eventDate}
+              reload={reload}
             />
             <td>
               <VersionInfo object={eventDate} />
@@ -61,6 +59,7 @@ const EventDate = (props) => {
 EventDate.propTypes = {
   object: PropTypes.shape({}).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 

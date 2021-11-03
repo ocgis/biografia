@@ -13,66 +13,41 @@ import Thing from './Thing';
 const { TabPane } = Tabs;
 
 const RenderElement = (props) => {
-  const { kind } = props;
-  const { element } = props;
-  const { currentUser } = props;
+  const {
+    currentUser, element, kind, reload,
+  } = props;
 
-  switch (kind) {
-    case 'people':
-      return (
-        <Person object={element} currentUser={currentUser} />
-      );
+  const componentMap = {
+    addresses: Address,
+    event_dates: EventDate,
+    events: Event,
+    media: Medium,
+    notes: Note,
+    people: Person,
+    relationships: Relationship,
+    things: Thing,
+  };
+  const Component = componentMap[kind];
 
-    case 'events':
-      return (
-        <Event object={element} currentUser={currentUser} />
-      );
-
-    case 'event_dates':
-      return (
-        <EventDate object={element} currentUser={currentUser} />
-      );
-
-    case 'notes':
-      return (
-        <Note object={element} currentUser={currentUser} />
-      );
-
-    case 'relationships':
-      return (
-        <Relationship object={element} currentUser={currentUser} />
-      );
-
-    case 'media':
-      return (
-        <Medium object={element} currentUser={currentUser} />
-      );
-
-    case 'addresses':
-      return (
-        <Address object={element} currentUser={currentUser} />
-      );
-
-    case 'things':
-      return (
-        <Thing object={element} currentUser={currentUser} />
-      );
-
-    default:
-      console.log(kind, element);
-      return null;
+  if (Component == null) {
+    console.log(kind, element);
+    return null;
   }
+
+  return (
+    <Component object={element} currentUser={currentUser} reload={reload} />
+  );
 };
 
 RenderElement.propTypes = {
   kind: PropTypes.string.isRequired,
   element: PropTypes.shape({}).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
 };
 
 const ShowReferences = (props) => {
-  const { related } = props;
-  const { currentUser } = props;
+  const { currentUser, related, reload } = props;
   const tabHeader = (key) => {
     const header = {
       people: 'Personer',
@@ -101,6 +76,7 @@ const ShowReferences = (props) => {
                   kind={key}
                   element={element}
                   key={element.id}
+                  reload={reload}
                   currentUser={currentUser}
                 />
               ))}
@@ -116,8 +92,13 @@ const ShowReferences = (props) => {
 ShowReferences.propTypes = {
   related: PropTypes.shape({
     notes: PropTypes.arrayOf(PropTypes.shape({})),
+    reload: PropTypes.func,
   }).isRequired,
+  reload: PropTypes.func,
   currentUser: PropTypes.shape({}).isRequired,
+};
+ShowReferences.defaultProps = {
+  reload: () => alert('Missing reload callback'),
 };
 
 export { ShowReferences };

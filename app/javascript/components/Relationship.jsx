@@ -68,9 +68,9 @@ const OneLine = (props) => {
 };
 
 const Relationship = (props) => {
-  const { object: relationship } = props;
-  const { currentUser } = props;
-  const { mode } = props;
+  const {
+    currentUser, mode, object: relationship, reload,
+  } = props;
 
   if (mode === 'oneLine') {
     return (
@@ -101,10 +101,8 @@ const Relationship = (props) => {
             </td>
             <Modifier
               currentUser={currentUser}
-              mainObject={{
-                type_: 'Relationship',
-                id: relationship.id,
-              }}
+              mainObject={relationship}
+              reload={reload}
             />
             <td>
               <VersionInfo object={relationship} />
@@ -127,6 +125,7 @@ Relationship.propTypes = {
     related: PropTypes.shape({}),
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
 

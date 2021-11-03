@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
+# frozen_string_literal: true
+
+# Implementation of the thing class
 class Thing < ActiveRecord::Base
   has_paper_trail
 
@@ -6,40 +9,36 @@ class Thing < ActiveRecord::Base
   include CommonInstanceMethods
 
   def controller
-    return "things"
+    'things'
   end
 
   def one_line
     parts = []
 
-    unless self.name.nil?
-      parts.append(self.name)
+    if !name.nil?
+      parts.append(name)
     else
-      parts.append(self.make) unless self.make.nil?
-      parts.append(self.model) unless self.model.nil?
+      parts.append(make) unless make.nil?
+      parts.append(model) unless model.nil?
     end
 
-    if parts.length == 0
-      parts.append("Okänd sak")
-    end
+    parts.append('Okänd sak') if parts.length.zero?
 
-    return parts.join(', ')
+    parts.join(', ')
   end
 
   def self.filtered_search(filters)
     things = Thing.all
 
     filters.each do |filter|
-      fields = ["name", "make", "model", "serial"]
-      query = fields.collect{|field| "#{field} LIKE \"%#{filter}%\""}.join(" OR ")
+      fields = %w[name make model serial]
+      query = fields.collect { |field| "#{field} LIKE \"%#{filter}%\"" }.join(' OR ')
       things = things.where(query)
     end
-    things = things.first(100)
-
-    return things
+    things.first(100)
   end
 
   def all_attributes
-    attributes
+    attributes.update({ type_: 'Thing' }).update(extras)
   end
 end

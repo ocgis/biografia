@@ -39,7 +39,6 @@ class SaveData extends React.Component {
       axiosCall = axios.patch;
     }
 
-    console.log(sendData);
     axiosCall(url, sendData).then((response) => {
       const result = {};
       result[objectName] = response.data[objectName];
