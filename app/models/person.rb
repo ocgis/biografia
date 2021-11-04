@@ -155,7 +155,7 @@ class Person < ActiveRecord::Base
   end
 
   def self.filtered_search(filters)
-    people = Person.joins(:person_names)
+    people = Person.preload(:person_names).joins(:person_names)
     filters.each do |filter|
       people = people.where("given_name LIKE \"%#{filter}%\" OR surname LIKE \"%#{filter}%\"")
     end
