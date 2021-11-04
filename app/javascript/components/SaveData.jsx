@@ -30,6 +30,7 @@ class SaveData extends React.Component {
 
     const sendData = {};
     sendData[objectName] = railsify(state[objectName]);
+    sendData.referFrom = state.referFrom;
 
     let url = this.apiUrl;
     let axiosCall = axios.post;

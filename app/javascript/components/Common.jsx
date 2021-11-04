@@ -20,7 +20,7 @@ const Modifier = (props) => {
       key: 'person',
       text: 'lägg till person',
       component: EditPerson,
-      props: {},
+      props: { referFrom: mainObject },
     },
     {
       key: 'reference',

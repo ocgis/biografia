@@ -10,8 +10,14 @@ class EditPerson extends SaveData {
     this.objectName = 'person';
     this.apiUrl = '/api/v1/people';
 
-    const { person } = props;
+    const { person, referFrom } = props;
     this.state = { person: JSON.parse(JSON.stringify(person)) };
+    if (referFrom != null) {
+      this.state.referFrom = {
+        type_: referFrom.type_,
+        id: referFrom.id,
+      };
+    }
   }
 
   render = () => {
@@ -133,12 +139,17 @@ EditPerson.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   person: PropTypes.shape(),
+  referFrom: PropTypes.shape({
+    type_: PropTypes.string,
+    id: PropTypes.number,
+  }),
 };
 EditPerson.defaultProps = {
   person: {
     sex: null,
     person_names: [],
   },
+  referFrom: null,
 };
 
 export default EditPerson;
