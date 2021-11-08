@@ -127,6 +127,7 @@ class Medium extends React.Component {
                 currentUser={currentUser}
                 mainObject={medium}
                 reload={reload}
+                showAddPerson
               />
               <td>
                 <VersionInfo object={medium} />

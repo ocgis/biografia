@@ -67,6 +67,7 @@ const Event = (props) => {
               currentUser={currentUser}
               mainObject={event}
               reload={reload}
+              showAddPerson
             />
             <td>
               <VersionInfo object={event} />

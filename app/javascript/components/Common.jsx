@@ -13,22 +13,24 @@ const Modifier = (props) => {
     return null;
   }
 
-  const { mainObject, reload } = props;
+  const { mainObject, reload, showAddPerson } = props;
 
-  const itemList = [
-    {
+  const itemList = [];
+  if (showAddPerson) {
+    itemList.push({
       key: 'person',
       text: 'lägg till person',
       component: EditPerson,
       props: { referFrom: mainObject },
-    },
-    {
-      key: 'reference',
-      text: 'referera till',
-      component: AddReference,
-      props: { referFrom: mainObject },
-    },
-  ];
+    });
+  }
+
+  itemList.push({
+    key: 'reference',
+    text: 'referera till',
+    component: AddReference,
+    props: { referFrom: mainObject },
+  });
 
   if (mainObject.reference != null) {
     itemList.push({
@@ -107,8 +109,10 @@ Modifier.propTypes = {
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  showAddPerson: PropTypes.bool,
 };
 Modifier.defaultProps = {
+  showAddPerson: false,
 };
 
 const VersionInfo = (props) => {

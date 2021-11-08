@@ -103,6 +103,7 @@ const Relationship = (props) => {
               currentUser={currentUser}
               mainObject={relationship}
               reload={reload}
+              showAddPerson
             />
             <td>
               <VersionInfo object={relationship} />
