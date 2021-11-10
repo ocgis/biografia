@@ -1,18 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Col,
   Menu,
   Input,
+  Modal,
   Row,
 } from 'antd';
+import EditPerson from './EditPerson';
 
 const { SubMenu } = Menu;
 
 const TopMenu = (props) => {
   const { currentUser } = props;
   const history = useHistory();
+  const [modalKey, setModalKey] = useState(null);
+
+  const showModal = () => {
+    const modals = {
+      addPerson: {
+        title: 'Lägg till person',
+        component: EditPerson,
+        type_: 'person',
+        controller: 'people',
+      },
+    };
+
+    const modal = modals[modalKey];
+    if (modal == null) {
+      return null;
+    }
+
+    const onCancel = () => setModalKey(null);
+    const onOk = (result) => {
+      setModalKey(null);
+      history.push(`/r/${modal.controller}/${result[modal.type_].id}`);
+    };
+
+    const Component = modal.component;
+    return (
+      <Modal
+        title={modal.title}
+        visible
+        closable={false}
+        footer={null}
+      >
+        <Component
+          onOk={onOk}
+          onCancel={onCancel}
+        />
+      </Modal>
+    );
+  };
+
+  const menuClicked = (object) => {
+    setModalKey(object.key);
+  };
 
   let personCol = '';
   if (currentUser != null) {
@@ -25,11 +69,17 @@ const TopMenu = (props) => {
 
   return (
     <div>
+      { showModal() }
       <Row>
         <Col span={24}>
           <Menu mode="horizontal">
-            <SubMenu title="Personer" onTitleClick={() => history.push('/r/people')}>
-              <Menu.Item>
+            <SubMenu
+              key="people"
+              title="Personer"
+              onTitleClick={() => history.push('/r/people')}
+              onClick={menuClicked}
+            >
+              <Menu.Item key="addPerson">
                 Lägg till
               </Menu.Item>
             </SubMenu>
