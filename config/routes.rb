@@ -8,7 +8,7 @@ Biografia::Application.routes.draw do
       resources :people, only: %i[index show create update]
       resources :notes, only: %i[show]
       resources :media, only: %i[index show]
-      resources :events, only: %i[index show]
+      resources :events, only: %i[index show create update]
       resources :event_dates, only: %i[show]
       resources :addresses, only: %i[index show]
       resources :things, only: %i[index show]

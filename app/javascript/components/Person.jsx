@@ -85,6 +85,7 @@ const Person = (props) => {
                 currentUser={currentUser}
                 mainObject={person}
                 reload={reload}
+                showAddEvent
               />
               <td>
                 <VersionInfo object={person} />
@@ -127,6 +128,7 @@ const Person = (props) => {
             currentUser={currentUser}
             mainObject={person}
             reload={reload}
+            showAddEvent
           />
           <td>
             <VersionInfo object={person} />

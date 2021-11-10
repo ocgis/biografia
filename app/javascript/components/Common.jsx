@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
+import EditEvent from './EditEvent';
 import EditPerson from './EditPerson';
 import AddReference from './AddReference';
 import RemoveReference from './RemoveReference';
@@ -13,9 +14,20 @@ const Modifier = (props) => {
     return null;
   }
 
-  const { mainObject, reload, showAddPerson } = props;
+  const {
+    mainObject, reload, showAddPerson, showAddEvent,
+  } = props;
 
   const itemList = [];
+  if (showAddEvent) {
+    itemList.push({
+      key: 'event',
+      text: 'lägg till händelse',
+      component: EditEvent,
+      props: { referFrom: mainObject },
+    });
+  }
+
   if (showAddPerson) {
     itemList.push({
       key: 'person',
@@ -42,7 +54,7 @@ const Modifier = (props) => {
   }
 
   const modalState = {};
-  ['person', 'reference', 'removeReference'].forEach((e) => {
+  ['person', 'event', 'reference', 'removeReference'].forEach((e) => {
     const us = useState(false);
     modalState[e] = {
       isVisible: us[0],
@@ -110,9 +122,11 @@ Modifier.propTypes = {
     roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   showAddPerson: PropTypes.bool,
+  showAddEvent: PropTypes.bool,
 };
 Modifier.defaultProps = {
   showAddPerson: false,
+  showAddEvent: false,
 };
 
 const VersionInfo = (props) => {
