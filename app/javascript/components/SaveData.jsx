@@ -10,6 +10,7 @@ class SaveData extends React.Component {
         updated_at,
         version,
         related,
+        type_,
         ...outdata
       } = indata;
       Object.entries(outdata).forEach((entry) => {
@@ -35,8 +36,8 @@ class SaveData extends React.Component {
     let url = this.apiUrl;
     let axiosCall = axios.post;
 
-    if (sendData.id != null) {
-      url = `${this.apiUrl}/${sendData.id}`;
+    if (sendData[objectName].id != null) {
+      url = `${this.apiUrl}/${sendData[objectName].id}`;
       axiosCall = axios.patch;
     }
 
