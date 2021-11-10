@@ -53,42 +53,27 @@ const Modifier = (props) => {
     });
   }
 
-  const modalState = {};
-  ['person', 'event', 'reference', 'removeReference'].forEach((e) => {
-    const us = useState(false);
-    modalState[e] = {
-      isVisible: us[0],
-      setVisible: us[1],
-    };
-  });
+  const [modalKey, setModalKey] = useState(null);
 
   const menuItemClicked = (event) => {
-    modalState[event.key].setVisible(true);
+    setModalKey(event.key);
   };
 
-  const okButtonClicked = (key) => {
-    modalState[key].setVisible(false);
+  const okButtonClicked = () => {
+    setModalKey(null);
     reload();
   };
 
-  const cancelButtonClicked = (key) => {
-    modalState[key].setVisible(false);
+  const cancelButtonClicked = () => {
+    setModalKey(null);
   };
 
-  const menu = (
-    <Menu onClick={menuItemClicked}>
-      { itemList.map((item) => (<Menu.Item key={item.key}>{item.text}</Menu.Item>)) }
-    </Menu>
-  );
-  return (
-    <td>
-      <Dropdown overlay={menu} trigger="click">
-        <PlusCircleOutlined />
-      </Dropdown>
-      {itemList.map((item) => {
-        if (!modalState[item.key].isVisible) {
-          return null;
-        }
+  const showModal = () => {
+    if (modalKey == null) {
+      return null;
+    }
+    return itemList.map((item) => {
+      if (item.key === modalKey) {
         /* eslint-disable react/jsx-props-no-spreading */
         const Component = item.component;
         return (
@@ -106,7 +91,22 @@ const Modifier = (props) => {
             />
           </Modal>
         );
-      })}
+      }
+      return null;
+    });
+  };
+
+  const menu = (
+    <Menu onClick={menuItemClicked}>
+      { itemList.map((item) => (<Menu.Item key={item.key}>{item.text}</Menu.Item>)) }
+    </Menu>
+  );
+  return (
+    <td>
+      <Dropdown overlay={menu} trigger="click">
+        <PlusCircleOutlined />
+      </Dropdown>
+      { showModal() }
     </td>
   );
 };
