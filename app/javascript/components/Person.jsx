@@ -56,20 +56,16 @@ const Person = (props) => {
   }
 
   if (mode === 'full') {
-    const us = useState(false);
-    const modalState = {
-      isVisible: us[0],
-      setVisible: us[1],
-    };
+    const [modalIsVisible, modalSetVisible] = useState(false);
     const editPersonClicked = () => {
-      modalState.setVisible(true);
+      modalSetVisible(true);
     };
     const okButtonClicked = () => {
-      modalState.setVisible(false);
+      modalSetVisible(false);
       reload();
     };
     const cancelButtonClicked = () => {
-      modalState.setVisible(false);
+      modalSetVisible(false);
     };
 
     return (
@@ -97,7 +93,7 @@ const Person = (props) => {
           </tbody>
         </table>
         {
-          modalState.isVisible && (
+          modalIsVisible && (
             <Modal
               title="Ändra person"
               visible
