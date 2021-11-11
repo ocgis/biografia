@@ -26,6 +26,10 @@ module Api
       def set_object
         @object = find_object
       end
+
+      def set_object_attributes
+        @object_attributes = @object.all_attributes
+      end
     end
   end
 end
