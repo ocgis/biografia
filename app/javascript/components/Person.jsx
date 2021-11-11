@@ -78,9 +78,14 @@ const Person = (props) => {
                 {' '}
                 {person.sex}
               </td>
-              <td>
-                <EditOutlined onClick={editPersonClicked} />
-              </td>
+              {
+                currentUser.roles.includes('editor')
+                && (
+                  <td>
+                    <EditOutlined onClick={editPersonClicked} />
+                  </td>
+                )
+              }
               <Modifier
                 currentUser={currentUser}
                 mainObject={person}
@@ -145,7 +150,10 @@ Person.propTypes = {
     person_names: PropTypes.arrayOf(PropTypes.shape({})),
     sex: PropTypes.string,
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.number,
+    roles: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   mode: PropTypes.string,
   reload: PropTypes.func.isRequired,
 };

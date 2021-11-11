@@ -79,7 +79,7 @@ const Event = (props) => {
               <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
             </td>
             {
-              mode === 'full'
+              (mode === 'full' && currentUser.roles.includes('editor'))
               && (
                 <td>
                   <EditOutlined onClick={editEventClicked} />
@@ -125,7 +125,10 @@ Event.propTypes = {
     name: PropTypes.string,
     related: PropTypes.shape({}),
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.number,
+    roles: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };
