@@ -91,6 +91,7 @@ const Event = (props) => {
               mainObject={event}
               reload={reload}
               showAddPerson
+              showAddEventDate
             />
             {
               (mode === 'full' && modalIsVisible)

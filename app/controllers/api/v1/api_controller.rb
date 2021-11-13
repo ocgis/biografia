@@ -16,9 +16,8 @@ module Api
       # For APIs, you may want to use :null_session instead.
       protect_from_forgery with: :exception
 
-      # FIXME: Don't redirect
-      rescue_from CanCan::AccessDenied do |exception|
-        redirect_to root_url, alert: exception.message
+      rescue_from CanCan::AccessDenied do
+        render status: :unauthorized, json: { error: 'Access denied' }
       end
 
       def index
