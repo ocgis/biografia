@@ -88,7 +88,6 @@ const Person = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       {personElements}
     </Base>

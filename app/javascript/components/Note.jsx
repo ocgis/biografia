@@ -47,7 +47,6 @@ const Note = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       {title}
     </Base>

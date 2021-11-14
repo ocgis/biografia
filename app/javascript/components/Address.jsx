@@ -74,7 +74,6 @@ const Address = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       {name}
     </Base>

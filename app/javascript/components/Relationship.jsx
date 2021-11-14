@@ -114,7 +114,6 @@ const Relationship = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       {element}
     </Base>

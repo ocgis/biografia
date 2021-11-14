@@ -66,7 +66,6 @@ const Event = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       <ListRelated object={event} showObject={EventDate} relatedName="event_dates" currentUser={currentUser} />
       {name}

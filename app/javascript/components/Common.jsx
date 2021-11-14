@@ -21,6 +21,7 @@ const Modifier = (props) => {
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship,
+    editComponent, editTitle,
   } = props;
 
   const itemList = [];
@@ -79,6 +80,13 @@ const Modifier = (props) => {
   }
 
   itemList.push({
+    key: 'update',
+    text: 'ändra',
+    title: editTitle,
+    component: editComponent,
+    props: { object: mainObject },
+  });
+  itemList.push({
     key: 'reference',
     text: 'referera till',
     component: AddReference,
@@ -115,11 +123,15 @@ const Modifier = (props) => {
     }
     return itemList.map((item) => {
       if (item.key === modalKey) {
+        let { title } = item;
+        if (title == null) {
+          title = item.text;
+        }
         /* eslint-disable react/jsx-props-no-spreading */
         const Component = item.component;
         return (
           <Modal
-            title={item.text}
+            title={title}
             visible
             closable={false}
             footer={null}
@@ -168,6 +180,8 @@ Modifier.propTypes = {
   showAddEventDate: PropTypes.bool,
   showAddNote: PropTypes.bool,
   showAddRelationship: PropTypes.bool,
+  editComponent: PropTypes.func.isRequired,
+  editTitle: PropTypes.string.isRequired,
 };
 Modifier.defaultProps = {
   showAddAddress: false,

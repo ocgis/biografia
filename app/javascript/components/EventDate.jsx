@@ -43,7 +43,6 @@ const EventDate = (props) => {
       }}
       currentUser={currentUser}
       reload={reload}
-      mode={mode}
     >
       {name}
     </Base>
