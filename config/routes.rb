@@ -6,7 +6,7 @@ Biografia::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :people, only: %i[index show create update]
-      resources :notes, only: %i[show]
+      resources :notes, only: %i[show create update]
       resources :media, only: %i[index show]
       resources :events, only: %i[index show create update]
       resources :event_dates, only: %i[show create update]

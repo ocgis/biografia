@@ -81,7 +81,10 @@ const Person = (props) => {
       editComponent={EditPerson}
       editTitle="Ändra person"
       modifierProps={{
+        showAddAddress: true,
         showAddEvent: true,
+        showAddNote: true,
+        showAddRelationship: true,
       }}
       currentUser={currentUser}
       reload={reload}

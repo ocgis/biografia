@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditNote from './EditNote';
 
 const Note = (props) => {
   const {
@@ -29,28 +30,23 @@ const Note = (props) => {
   }
 
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {title}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={note}
-              reload={reload}
-            />
-            <td>
-              <VersionInfo object={note} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <Base
+      object={note}
+      editComponent={EditNote}
+      editTitle="Ändra kommentar"
+      modifierProps={{
+        showAddPerson: true,
+        showAddEventDate: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      {title}
       <pre>
         {note.note}
       </pre>
-    </div>
+    </Base>
   );
 };
 

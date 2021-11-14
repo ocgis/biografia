@@ -86,6 +86,9 @@ const Thing = (props) => {
               currentUser={currentUser}
               mainObject={thing}
               reload={reload}
+              showAddAddress
+              showAddEventDate
+              showAddNote
             />
             <td>
               <VersionInfo object={thing} />

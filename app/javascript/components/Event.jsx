@@ -59,7 +59,9 @@ const Event = (props) => {
       editComponent={EditEvent}
       editTitle="Ändra händelse"
       modifierProps={{
+        showAddAddress: true,
         showAddPerson: true,
+        showAddNote: true,
         showAddEventDate: true,
       }}
       currentUser={currentUser}

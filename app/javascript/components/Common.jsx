@@ -6,6 +6,7 @@ import { Dropdown, Menu, Modal } from 'antd';
 import EditEvent from './EditEvent';
 import EditEventDate from './EditEventDate';
 import EditPerson from './EditPerson';
+import EditNote from './EditNote';
 import AddReference from './AddReference';
 import RemoveReference from './RemoveReference';
 
@@ -16,7 +17,7 @@ const Modifier = (props) => {
   }
 
   const {
-    mainObject, reload, showAddPerson, showAddEvent, showAddEventDate,
+    mainObject, reload, showAddPerson, showAddEvent, showAddNote, showAddEventDate,
   } = props;
 
   const itemList = [];
@@ -25,6 +26,15 @@ const Modifier = (props) => {
       key: 'event',
       text: 'lägg till händelse',
       component: EditEvent,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddNote) {
+    itemList.push({
+      key: 'note',
+      text: 'kommentera',
+      component: EditNote,
       props: { referFrom: mainObject },
     });
   }
@@ -134,11 +144,13 @@ Modifier.propTypes = {
   showAddPerson: PropTypes.bool,
   showAddEvent: PropTypes.bool,
   showAddEventDate: PropTypes.bool,
+  showAddNote: PropTypes.bool,
 };
 Modifier.defaultProps = {
   showAddPerson: false,
   showAddEvent: false,
   showAddEventDate: false,
+  showAddNote: false,
 };
 
 const VersionInfo = (props) => {

@@ -10,8 +10,22 @@ module Api
 
       protected
 
+      def create_object
+        Note.new(note_params)
+      end
+
       def find_object
         Note.find(params.require(:id))
+      end
+
+      def find_object_and_update_attrs
+        object = Note.find(params.require(:id))
+        object.attributes = note_params
+        object
+      end
+
+      def note_params
+        params.require(:note).permit(:id, :category, :title, :note, :source)
       end
     end
   end
