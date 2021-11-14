@@ -8,6 +8,7 @@ import {
   Modal,
   Row,
 } from 'antd';
+import EditAddress from './EditAddress';
 import EditEvent from './EditEvent';
 import EditPerson from './EditPerson';
 
@@ -31,6 +32,12 @@ const TopMenu = (props) => {
         component: EditEvent,
         type_: 'event',
         controller: 'events',
+      },
+      addAddress: {
+        title: 'Lägg till adress',
+        component: EditAddress,
+        type_: 'address',
+        controller: 'addresses',
       },
     };
 
@@ -107,8 +114,13 @@ const TopMenu = (props) => {
                 Sök lokalt
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Adresser" onTitleClick={() => history.push('/r/addresses')}>
-              <Menu.Item>
+            <SubMenu
+              key="addresses"
+              title="Adresser"
+              onTitleClick={() => history.push('/r/addresses')}
+              onClick={menuClicked}
+            >
+              <Menu.Item key="addAddress">
                 Lägg till
               </Menu.Item>
             </SubMenu>

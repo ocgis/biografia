@@ -10,7 +10,7 @@ Biografia::Application.routes.draw do
       resources :media, only: %i[index show]
       resources :events, only: %i[index show create update]
       resources :event_dates, only: %i[show create update]
-      resources :addresses, only: %i[index show]
+      resources :addresses, only: %i[index show create update]
       resources :things, only: %i[index show]
       resources :relationships, only: %i[show]
       resources :transfers, only: %i[index show]

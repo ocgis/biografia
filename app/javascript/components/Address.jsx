@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
 
 const OneLine = (props) => {
@@ -65,25 +66,18 @@ const Address = (props) => {
     );
   }
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {name}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={address}
-              reload={reload}
-            />
-            <td>
-              <VersionInfo object={address} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={address}
+      editComponent={EditAddress}
+      editTitle="Ändra adress"
+      modifierProps={{
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      {name}
+    </Base>
   );
 };
 

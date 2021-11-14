@@ -5,6 +5,7 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import EditEvent from './EditEvent';
 import EditEventDate from './EditEventDate';
+import EditAddress from './EditAddress';
 import EditPerson from './EditPerson';
 import EditNote from './EditNote';
 import AddReference from './AddReference';
@@ -17,7 +18,7 @@ const Modifier = (props) => {
   }
 
   const {
-    mainObject, reload, showAddPerson, showAddEvent, showAddNote, showAddEventDate,
+    mainObject, reload, showAddAddress, showAddPerson, showAddEvent, showAddNote, showAddEventDate,
   } = props;
 
   const itemList = [];
@@ -44,6 +45,15 @@ const Modifier = (props) => {
       key: 'eventDate',
       text: 'lägg till datum',
       component: EditEventDate,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddAddress) {
+    itemList.push({
+      key: 'address',
+      text: 'lägg till adress',
+      component: EditAddress,
       props: { referFrom: mainObject },
     });
   }
@@ -141,12 +151,14 @@ Modifier.propTypes = {
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  showAddAddress: PropTypes.bool,
   showAddPerson: PropTypes.bool,
   showAddEvent: PropTypes.bool,
   showAddEventDate: PropTypes.bool,
   showAddNote: PropTypes.bool,
 };
 Modifier.defaultProps = {
+  showAddAddress: false,
   showAddPerson: false,
   showAddEvent: false,
   showAddEventDate: false,
