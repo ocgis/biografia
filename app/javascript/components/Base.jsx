@@ -6,7 +6,8 @@ import { Modifier, VersionInfo } from './Common';
 
 const Base = (props) => {
   const {
-    currentUser, mode, object, reload, children, editComponent: Edit, editTitle, modifierProps,
+    currentUser, mode, object, reload, children, appendElements,
+    editComponent: Edit, editTitle, modifierProps,
   } = props;
 
   const [modalIsVisible, modalSetVisible] = useState(false);
@@ -67,12 +68,14 @@ const Base = (props) => {
           </tr>
         </tbody>
       </table>
+      {appendElements}
     </div>
   );
 };
 
 Base.propTypes = {
   children: PropTypes.node,
+  appendElements: PropTypes.node,
   object: PropTypes.shape().isRequired,
   editComponent: PropTypes.func.isRequired,
   editTitle: PropTypes.string.isRequired,
@@ -87,6 +90,7 @@ Base.propTypes = {
 
 Base.defaultProps = {
   children: null,
+  appendElements: null,
   modifierProps: {},
   mode: '',
 };

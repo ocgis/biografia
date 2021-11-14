@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditRelationship from './EditRelationship';
 import Person from './Person';
 import EventDate from './EventDate';
 import Address from './Address';
@@ -91,33 +92,32 @@ const Relationship = (props) => {
     );
   }
 
-  return (
+  const appendElements = (
     <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {element}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={relationship}
-              reload={reload}
-              showAddEvent
-              showAddNote
-              showAddPerson
-            />
-            <td>
-              <VersionInfo object={relationship} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
       <ListObjects object={relationship} relatedName="people" output={Person} currentUser={currentUser} />
       <ListObjects object={relationship} relatedName="event_dates" output={EventDate} currentUser={currentUser} />
       <ListObjects object={relationship} relatedName="addresses" output={Address} currentUser={currentUser} />
       <ListObjects object={relationship} relatedName="notes" output={Note} currentUser={currentUser} />
     </div>
+  );
+
+  return (
+    <Base
+      object={relationship}
+      appendElements={appendElements}
+      editComponent={EditRelationship}
+      editTitle="Ändra förhållande"
+      modifierProps={{
+        showAddEvent: true,
+        showAddNote: true,
+        showAddPerson: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      {element}
+    </Base>
   );
 };
 

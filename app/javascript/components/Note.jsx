@@ -29,9 +29,16 @@ const Note = (props) => {
     }
   }
 
+  const appendElements = (
+    <pre>
+      {note.note}
+    </pre>
+  );
+
   return (
     <Base
       object={note}
+      appendElements={appendElements}
       editComponent={EditNote}
       editTitle="Ändra kommentar"
       modifierProps={{
@@ -43,9 +50,6 @@ const Note = (props) => {
       mode={mode}
     >
       {title}
-      <pre>
-        {note.note}
-      </pre>
     </Base>
   );
 };
