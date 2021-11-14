@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
 import EditPerson from './EditPerson';
 
 const OneLine = (props) => {
@@ -55,87 +53,42 @@ const Person = (props) => {
     );
   }
 
-  if (mode === 'full') {
-    const [modalIsVisible, modalSetVisible] = useState(false);
-    const editPersonClicked = () => {
-      modalSetVisible(true);
-    };
-    const okButtonClicked = () => {
-      modalSetVisible(false);
-      reload();
-    };
-    const cancelButtonClicked = () => {
-      modalSetVisible(false);
-    };
+  let personElements = null;
 
-    return (
+  if (mode === 'full') {
+    personElements = (
       <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <OneLine object={person} />
-                {' '}
-                {person.sex}
-              </td>
-              <td>
-                <EditOutlined onClick={editPersonClicked} />
-              </td>
-              <Modifier
-                currentUser={currentUser}
-                mainObject={person}
-                reload={reload}
-                showAddEvent
-              />
-              <td>
-                <VersionInfo object={person} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {
-          modalIsVisible && (
-            <Modal
-              title="Ändra person"
-              visible
-              closable={false}
-              footer={null}
-            >
-              <EditPerson
-                person={person}
-                onOk={(response) => { okButtonClicked(response); }}
-                onCancel={(response) => { cancelButtonClicked(response); }}
-              />
-            </Modal>
-          )
-        }
+        <OneLine object={person} />
+        {' '}
+        {person.sex}
+      </div>
+    );
+  } else {
+    personElements = (
+      <div>
+        <Link to={`/r/people/${person.id}`}>
+          <OneLine object={person} />
+        </Link>
+        {' '}
+        {person.sex}
       </div>
     );
   }
 
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <Link to={`/r/people/${person.id}`}>
-              <OneLine object={person} />
-            </Link>
-            {' '}
-            {person.sex}
-          </td>
-          <Modifier
-            currentUser={currentUser}
-            mainObject={person}
-            reload={reload}
-            showAddEvent
-          />
-          <td>
-            <VersionInfo object={person} />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <Base
+      object={person}
+      editComponent={EditPerson}
+      editTitle="Ändra person"
+      modifierProps={{
+        showAddEvent: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      {personElements}
+    </Base>
   );
 };
 

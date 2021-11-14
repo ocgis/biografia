@@ -10,7 +10,7 @@ class EditPerson extends SaveData {
     this.objectName = 'person';
     this.apiUrl = '/api/v1/people';
 
-    const { person, referFrom } = props;
+    const { object: person, referFrom } = props;
     this.state = { person: JSON.parse(JSON.stringify(person)) };
     if (referFrom != null) {
       this.state.referFrom = {
@@ -39,14 +39,14 @@ class EditPerson extends SaveData {
       onCancel();
     };
 
-    const renderPersonName = (pn, setProperty) => {
+    const renderPersonName = (pn, index, setProperty) => {
       const { person } = this.state;
 
       if (pn._destroy) {
         return null;
       }
       return (
-        <tr key={pn.id}>
+        <tr key={index}>
           <td>
             <Input
               defaultValue={pn.given_name}
@@ -96,9 +96,11 @@ class EditPerson extends SaveData {
             </tr>
           </thead>
           <tbody>
-            {person.person_names.map((pn, index) => renderPersonName(pn, (property, value) => {
-              person.person_names[index][property] = value;
-            }))}
+            {person.person_names.map(
+              (pn, index) => renderPersonName(pn, index, (property, value) => {
+                person.person_names[index][property] = value;
+              }),
+            )}
           </tbody>
         </table>
         <PlusOutlined
@@ -138,14 +140,14 @@ class EditPerson extends SaveData {
 EditPerson.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  person: PropTypes.shape(),
+  object: PropTypes.shape(),
   referFrom: PropTypes.shape({
     type_: PropTypes.string,
     id: PropTypes.number,
   }),
 };
 EditPerson.defaultProps = {
-  person: {
+  object: {
     sex: null,
     person_names: [],
   },

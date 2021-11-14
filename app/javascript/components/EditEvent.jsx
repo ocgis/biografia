@@ -10,7 +10,7 @@ class EditEvent extends SaveData {
     this.objectName = 'event';
     this.apiUrl = '/api/v1/events';
 
-    const { event, referFrom } = props;
+    const { object: event, referFrom } = props;
     this.state = { event: JSON.parse(JSON.stringify(event)) };
     if (referFrom != null) {
       this.state.referFrom = {
@@ -70,14 +70,14 @@ class EditEvent extends SaveData {
 EditEvent.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  event: PropTypes.shape(),
+  object: PropTypes.shape(),
   referFrom: PropTypes.shape({
     type_: PropTypes.string,
     id: PropTypes.number,
   }),
 };
 EditEvent.defaultProps = {
-  event: {
+  object: {
     name: null,
     source: null,
   },

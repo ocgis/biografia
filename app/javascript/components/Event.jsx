@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modal } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
 import EventDate from './EventDate';
 import Person from './Person';
 import Address from './Address';
@@ -45,18 +43,6 @@ const Event = (props) => {
     return event.name;
   }
 
-  const [modalIsVisible, modalSetVisible] = useState(false);
-  const editEventClicked = () => {
-    modalSetVisible(true);
-  };
-  const okButtonClicked = () => {
-    modalSetVisible(false);
-    reload();
-  };
-  const cancelButtonClicked = () => {
-    modalSetVisible(false);
-  };
-
   let name = null;
   if (mode === 'full') {
     name = event.name;
@@ -68,55 +54,23 @@ const Event = (props) => {
     );
   }
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <ListRelated object={event} showObject={EventDate} relatedName="event_dates" currentUser={currentUser} />
-              {name}
-              <ListRelated object={event} showObject={Person} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
-              <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
-            </td>
-            {
-              mode === 'full'
-              && (
-                <td>
-                  <EditOutlined onClick={editEventClicked} />
-                </td>
-              )
-            }
-            <Modifier
-              currentUser={currentUser}
-              mainObject={event}
-              reload={reload}
-              showAddPerson
-              showAddEventDate
-            />
-            {
-              (mode === 'full' && modalIsVisible)
-              && (
-                <Modal
-                  title="Ändra händelse"
-                  visible
-                  closable={false}
-                  footer={null}
-                >
-                  <EditEvent
-                    event={event}
-                    onOk={(response) => { okButtonClicked(response); }}
-                    onCancel={(response) => { cancelButtonClicked(response); }}
-                  />
-                </Modal>
-              )
-            }
-            <td>
-              <VersionInfo object={event} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={event}
+      editComponent={EditEvent}
+      editTitle="Ändra händelse"
+      modifierProps={{
+        showAddPerson: true,
+        showAddEventDate: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      <ListRelated object={event} showObject={EventDate} relatedName="event_dates" currentUser={currentUser} />
+      {name}
+      <ListRelated object={event} showObject={Person} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
+      <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
+    </Base>
   );
 };
 

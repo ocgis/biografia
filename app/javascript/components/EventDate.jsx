@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Modal } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
 import EditEventDate from './EditEventDate';
 
 const OneLine = (props) => {
@@ -24,18 +22,6 @@ const EventDate = (props) => {
     );
   }
 
-  const [modalIsVisible, modalSetVisible] = useState(false);
-  const editEventDateClicked = () => {
-    modalSetVisible(true);
-  };
-  const okButtonClicked = () => {
-    modalSetVisible(false);
-    reload();
-  };
-  const cancelButtonClicked = () => {
-    modalSetVisible(false);
-  };
-
   let name = null;
   if (mode === 'full') {
     name = (
@@ -49,50 +35,18 @@ const EventDate = (props) => {
     );
   }
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {name}
-            </td>
-            {
-              (mode === 'full' && currentUser.roles.includes('editor'))
-              && (
-                <td>
-                  <EditOutlined onClick={editEventDateClicked} />
-                </td>
-              )
-            }
-            <Modifier
-              currentUser={currentUser}
-              mainObject={eventDate}
-              reload={reload}
-            />
-            {
-              (mode === 'full' && modalIsVisible)
-              && (
-                <Modal
-                  title="Ändra datum"
-                  visible
-                  closable={false}
-                  footer={null}
-                >
-                  <EditEventDate
-                    eventDate={eventDate}
-                    onOk={(response) => { okButtonClicked(response); }}
-                    onCancel={(response) => { cancelButtonClicked(response); }}
-                  />
-                </Modal>
-              )
-            }
-            <td>
-              <VersionInfo object={eventDate} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={eventDate}
+      editComponent={EditEventDate}
+      editTitle="Ändra datum"
+      modifierProps={{
+      }}
+      currentUser={currentUser}
+      reload={reload}
+      mode={mode}
+    >
+      {name}
+    </Base>
   );
 };
 

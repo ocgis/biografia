@@ -10,7 +10,7 @@ class EditEventDate extends SaveData {
     this.objectName = 'eventDate';
     this.apiUrl = '/api/v1/event_dates';
 
-    const { eventDate, referFrom } = props;
+    const { object: eventDate, referFrom } = props;
     this.state = { eventDate: JSON.parse(JSON.stringify(eventDate)) };
     if (referFrom != null) {
       this.state.referFrom = {
@@ -70,14 +70,14 @@ class EditEventDate extends SaveData {
 EditEventDate.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  eventDate: PropTypes.shape(),
+  object: PropTypes.shape(),
   referFrom: PropTypes.shape({
     type_: PropTypes.string,
     id: PropTypes.number,
   }),
 };
 EditEventDate.defaultProps = {
-  eventDate: {
+  object: {
     date: null,
     source: null,
   },
