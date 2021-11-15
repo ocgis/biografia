@@ -24,6 +24,8 @@ module Api
         object
       end
 
+      private
+
       def note_params
         params.require(:note).permit(:id, :category, :title, :note, :source)
       end

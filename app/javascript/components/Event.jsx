@@ -62,6 +62,7 @@ const Event = (props) => {
         showAddAddress: true,
         showAddPerson: true,
         showAddNote: true,
+        showAddThing: true,
         showAddEventDate: true,
       }}
       currentUser={currentUser}

@@ -85,6 +85,7 @@ const Person = (props) => {
         showAddEvent: true,
         showAddNote: true,
         showAddRelationship: true,
+        showAddThing: true,
       }}
       currentUser={currentUser}
       reload={reload}

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditThing from './EditThing';
 
 const OneLine = (props) => {
   const { object: thing } = props;
@@ -42,7 +43,7 @@ const Thing = (props) => {
     element = [];
     if (thing.name != null) {
       element.push(thing.name);
-      element.push(<br />);
+      element.push(<br key="name" />);
     }
     const makeModel = [];
     if (thing.make != null) {
@@ -53,15 +54,15 @@ const Thing = (props) => {
     }
     if (makeModel.length > 0) {
       element.push(makeModel.join(' '));
-      element.push(<br />);
+      element.push(<br key="makeModel" />);
     }
     if (thing.kind != null) {
       element.push(thing.kind);
-      element.push(<br />);
+      element.push(<br key="kind" />);
     }
     if (thing.serial != null) {
       element.push(`Serienummer: ${thing.serial}`);
-      element.push(<br />);
+      element.push(<br key="serial" />);
     }
     if (element.length === 0) {
       element.push('Okänd sak');
@@ -75,28 +76,19 @@ const Thing = (props) => {
   }
 
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {element}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={thing}
-              reload={reload}
-              showAddAddress
-              showAddEventDate
-              showAddNote
-            />
-            <td>
-              <VersionInfo object={thing} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={thing}
+      editComponent={EditThing}
+      editTitle="Ändra sak"
+      modifierProps={{
+        showAddEvent: true,
+        showAddPerson: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {element}
+    </Base>
   );
 };
 

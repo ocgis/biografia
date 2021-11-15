@@ -9,6 +9,7 @@ import EditAddress from './EditAddress';
 import EditPerson from './EditPerson';
 import EditNote from './EditNote';
 import EditRelationship from './EditRelationship';
+import EditThing from './EditThing';
 import AddReference from './AddReference';
 import RemoveReference from './RemoveReference';
 
@@ -20,7 +21,7 @@ const Modifier = (props) => {
 
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
-    showAddNote, showAddEventDate, showAddRelationship,
+    showAddNote, showAddEventDate, showAddRelationship, showAddThing,
     editComponent, editTitle,
   } = props;
 
@@ -75,6 +76,15 @@ const Modifier = (props) => {
       key: 'person',
       text: 'lägg till person',
       component: EditPerson,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddThing) {
+    itemList.push({
+      key: 'thing',
+      text: 'lägg till sak',
+      component: EditThing,
       props: { referFrom: mainObject },
     });
   }
@@ -180,6 +190,7 @@ Modifier.propTypes = {
   showAddEventDate: PropTypes.bool,
   showAddNote: PropTypes.bool,
   showAddRelationship: PropTypes.bool,
+  showAddThing: PropTypes.bool,
   editComponent: PropTypes.func.isRequired,
   editTitle: PropTypes.string.isRequired,
 };
@@ -190,6 +201,7 @@ Modifier.defaultProps = {
   showAddEventDate: false,
   showAddNote: false,
   showAddRelationship: false,
+  showAddThing: false,
 };
 
 const VersionInfo = (props) => {

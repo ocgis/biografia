@@ -11,6 +11,7 @@ import {
 import EditAddress from './EditAddress';
 import EditEvent from './EditEvent';
 import EditPerson from './EditPerson';
+import EditThing from './EditThing';
 
 const { SubMenu } = Menu;
 
@@ -38,6 +39,12 @@ const TopMenu = (props) => {
         component: EditAddress,
         type_: 'address',
         controller: 'addresses',
+      },
+      addThing: {
+        title: 'Lägg till sak',
+        component: EditThing,
+        type_: 'thing',
+        controller: 'things',
       },
     };
 
@@ -124,8 +131,13 @@ const TopMenu = (props) => {
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Saker" onTitleClick={() => history.push('/r/things')}>
-              <Menu.Item>
+            <SubMenu
+              key="things"
+              title="Saker"
+              onTitleClick={() => history.push('/r/things')}
+              onClick={menuClicked}
+            >
+              <Menu.Item key="addThing">
                 Lägg till
               </Menu.Item>
             </SubMenu>
