@@ -76,7 +76,14 @@ const TopMenu = (props) => {
   };
 
   const menuClicked = (object) => {
-    setModalKey(object.key);
+    switch (object.key) {
+      case 'searchMediaLocally':
+        history.push('/r/media/search');
+        break;
+
+      default:
+        setModalKey(object.key);
+    }
   };
 
   let personCol = '';
@@ -113,11 +120,16 @@ const TopMenu = (props) => {
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Media" onTitleClick={() => history.push('/r/media')}>
+            <SubMenu
+              key="media"
+              title="Media"
+              onTitleClick={() => history.push('/r/media')}
+              onClick={menuClicked}
+            >
               <Menu.Item>
                 Lägg till
               </Menu.Item>
-              <Menu.Item>
+              <Menu.Item key="searchMediaLocally">
                 Sök lokalt
               </Menu.Item>
             </SubMenu>

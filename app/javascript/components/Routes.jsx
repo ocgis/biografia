@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import IndexPerson from './IndexPerson';
 import ShowPerson from './ShowPerson';
 import ShowNote from './ShowNote';
+import SearchMedium from './SearchMedium';
 import IndexMedium from './IndexMedium';
 import ShowMedium from './ShowMedium';
 import IndexEvent from './IndexEvent';
@@ -37,6 +38,11 @@ export default (
         path="/r/notes/:id"
         exact
         component={ShowNote}
+      />
+      <Route
+        path="/r/media/search"
+        exact
+        component={SearchMedium}
       />
       <Route
         path="/r/media/:id"
