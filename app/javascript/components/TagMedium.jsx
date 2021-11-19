@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import SaveData from './SaveData';
 
-class AddReference extends SaveData {
+class TagMedium extends SaveData {
   constructor(props) {
     super(props);
     this.objectName = 'reference';
@@ -19,6 +21,9 @@ class AddReference extends SaveData {
         id1: props.referFrom.id,
         type2: null,
         id2: null,
+      },
+      crop: {
+        unit: '%',
       },
     };
   }
@@ -70,16 +75,45 @@ class AddReference extends SaveData {
       });
     };
 
-    const { descriptionOptions, error, value } = this.state;
+    const {
+      descriptionOptions, crop, error, value,
+    } = this.state;
+    const { referFrom } = this.props;
 
     const options = descriptionOptions.map((val, index) => ({
       value: index,
       label: val.value,
     }));
 
+    const onCropChange = (_, newCrop) => {
+      if (newCrop.width > 0 && newCrop.height > 0) {
+        this.state.reference.position_in_pictures = [{
+          x: newCrop.x * 10.0,
+          y: newCrop.y * 10.0,
+          width: newCrop.width * 10.0,
+          height: newCrop.height * 10.0,
+        }];
+      } else {
+        this.state.reference.position_in_pictures = null;
+      }
+      this.setState({
+        reference: this.state.reference,
+        crop: newCrop,
+      });
+    };
+
     return (
       <table>
         <tbody>
+          <tr>
+            <td>
+              <ReactCrop
+                src={`/media/${referFrom.id}/image`}
+                crop={crop}
+                onChange={onCropChange}
+              />
+            </td>
+          </tr>
           <tr>
             <td>
               <AutoComplete
@@ -104,7 +138,7 @@ class AddReference extends SaveData {
     );
   }
 }
-AddReference.propTypes = {
+TagMedium.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   referFrom: PropTypes.shape({
@@ -112,7 +146,7 @@ AddReference.propTypes = {
     id: PropTypes.number.isRequired,
   }).isRequired,
 };
-AddReference.defaultProps = {
+TagMedium.defaultProps = {
 };
 
-export default AddReference;
+export default TagMedium;

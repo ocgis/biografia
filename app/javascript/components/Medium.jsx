@@ -133,6 +133,7 @@ class Medium extends React.Component {
                 showAddNote
                 showAddPerson
                 showAddThing
+                showTagMedium
               />
               <td>
                 <VersionInfo object={medium} />

@@ -61,8 +61,8 @@ module Api
                                           :id1,
                                           :type2,
                                           :id2,
-                                          position_in_picture_attributes:
-                                            %i[x y w h])
+                                          position_in_pictures_attributes:
+                                            %i[x y width height])
       end
     end
   end

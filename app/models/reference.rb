@@ -2,6 +2,7 @@ class Reference < ActiveRecord::Base
   has_paper_trail
 
   has_many :position_in_pictures
+  accepts_nested_attributes_for :position_in_pictures, allow_destroy: true
 
   def self.add(object1, object2, options={})
     defaults = {

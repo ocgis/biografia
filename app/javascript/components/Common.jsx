@@ -11,6 +11,7 @@ import EditNote from './EditNote';
 import EditRelationship from './EditRelationship';
 import EditThing from './EditThing';
 import AddReference from './AddReference';
+import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
 
 const Modifier = (props) => {
@@ -22,7 +23,7 @@ const Modifier = (props) => {
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    editComponent, editTitle,
+    showTagMedium, editComponent, editTitle,
   } = props;
 
   const itemList = [];
@@ -96,12 +97,22 @@ const Modifier = (props) => {
     component: editComponent,
     props: { object: mainObject },
   });
+
   itemList.push({
     key: 'reference',
     text: 'referera till',
     component: AddReference,
     props: { referFrom: mainObject },
   });
+
+  if (showTagMedium) {
+    itemList.push({
+      key: 'tagMedium',
+      text: 'tagga',
+      component: TagMedium,
+      props: { referFrom: mainObject },
+    });
+  }
 
   if (mainObject.reference != null) {
     itemList.push({
@@ -191,6 +202,7 @@ Modifier.propTypes = {
   showAddNote: PropTypes.bool,
   showAddRelationship: PropTypes.bool,
   showAddThing: PropTypes.bool,
+  showTagMedium: PropTypes.bool,
   editComponent: PropTypes.func.isRequired,
   editTitle: PropTypes.string.isRequired,
 };
@@ -202,6 +214,7 @@ Modifier.defaultProps = {
   showAddNote: false,
   showAddRelationship: false,
   showAddThing: false,
+  showTagMedium: false,
 };
 
 const VersionInfo = (props) => {
