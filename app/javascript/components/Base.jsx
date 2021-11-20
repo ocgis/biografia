@@ -40,8 +40,8 @@ Base.propTypes = {
   children: PropTypes.node,
   appendElements: PropTypes.node,
   object: PropTypes.shape().isRequired,
-  editComponent: PropTypes.func.isRequired,
-  editTitle: PropTypes.string.isRequired,
+  editComponent: PropTypes.func,
+  editTitle: PropTypes.string,
   modifierProps: PropTypes.shape(),
   currentUser: PropTypes.shape({
     id: PropTypes.number,
@@ -53,6 +53,8 @@ Base.propTypes = {
 Base.defaultProps = {
   children: null,
   appendElements: null,
+  editComponent: null,
+  editTitle: null,
   modifierProps: {},
 };
 

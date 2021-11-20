@@ -90,13 +90,15 @@ const Modifier = (props) => {
     });
   }
 
-  itemList.push({
-    key: 'update',
-    text: 'ändra',
-    title: editTitle,
-    component: editComponent,
-    props: { object: mainObject },
-  });
+  if (editComponent != null && editTitle != null) {
+    itemList.push({
+      key: 'update',
+      text: 'ändra',
+      title: editTitle,
+      component: editComponent,
+      props: { object: mainObject },
+    });
+  }
 
   itemList.push({
     key: 'reference',
@@ -203,8 +205,8 @@ Modifier.propTypes = {
   showAddRelationship: PropTypes.bool,
   showAddThing: PropTypes.bool,
   showTagMedium: PropTypes.bool,
-  editComponent: PropTypes.func.isRequired,
-  editTitle: PropTypes.string.isRequired,
+  editComponent: PropTypes.func,
+  editTitle: PropTypes.string,
 };
 Modifier.defaultProps = {
   showAddAddress: false,
@@ -215,6 +217,8 @@ Modifier.defaultProps = {
   showAddRelationship: false,
   showAddThing: false,
   showTagMedium: false,
+  editComponent: null,
+  editTitle: null,
 };
 
 const VersionInfo = (props) => {

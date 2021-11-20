@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
 
 const OneLine = (props) => {
   const { object: medium } = props;
@@ -119,31 +119,21 @@ class Medium extends React.Component {
     }
 
     return (
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <Modifier
-                currentUser={currentUser}
-                mainObject={medium}
-                reload={reload}
-                showAddAddress
-                showAddEvent
-                showAddEventDate
-                showAddNote
-                showAddPerson
-                showAddThing
-                showTagMedium
-              />
-              <td>
-                <VersionInfo object={medium} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {mediaTag}
-        <br />
-      </div>
+      <Base
+        object={medium}
+        appendElements={mediaTag}
+        modifierProps={{
+          showAddAddress: true,
+          showAddEvent: true,
+          showAddEventDate: true,
+          showAddNote: true,
+          showAddPerson: true,
+          showAddThing: true,
+          showTagMedium: true,
+        }}
+        currentUser={currentUser}
+        reload={reload}
+      />
     );
   };
 }
