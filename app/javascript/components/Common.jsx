@@ -23,7 +23,7 @@ const Modifier = (props) => {
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, editComponent, editTitle,
+    showTagMedium, editComponent, editTitle, modalWidth,
   } = props;
 
   const itemList = [];
@@ -159,6 +159,7 @@ const Modifier = (props) => {
             closable={false}
             footer={null}
             key={item.key}
+            width={modalWidth}
           >
             <Component
               {...item.props}
@@ -207,6 +208,7 @@ Modifier.propTypes = {
   showTagMedium: PropTypes.bool,
   editComponent: PropTypes.func,
   editTitle: PropTypes.string,
+  modalWidth: PropTypes.number,
 };
 Modifier.defaultProps = {
   showAddAddress: false,
@@ -219,6 +221,7 @@ Modifier.defaultProps = {
   showTagMedium: false,
   editComponent: null,
   editTitle: null,
+  modalWidth: null,
 };
 
 const VersionInfo = (props) => {
