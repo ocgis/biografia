@@ -64,11 +64,13 @@ class EditNote extends SaveData {
               </td>
               <td>
                 <Input.TextArea
-                  rows={4}
+                  rows={40}
+                  cols={120}
                   defaultValue={note.note}
                   onChange={(event) => {
                     note.note = event.target.value;
                   }}
+                  style={{ fontFamily: 'monospace' }}
                 />
               </td>
             </tr>
