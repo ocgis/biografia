@@ -21,10 +21,12 @@ class TagMedium extends SaveData {
         id1: props.referFrom.id,
         type2: null,
         id2: null,
+        position_in_pictures: null,
       },
       crop: {
         unit: '%',
       },
+      error: null,
     };
   }
 
@@ -40,7 +42,12 @@ class TagMedium extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      const { type2, id2, position_in_pictures } = this.state.reference;
+      if (type2 == null || id2 == null || position_in_pictures == null) {
+        this.setState({ error: 'Välj referens och position' });
+      } else {
+        this.saveData(handleResult);
+      }
     };
 
     const closeButtonClicked = () => {
@@ -54,15 +61,20 @@ class TagMedium extends SaveData {
 
       const encodedSearch = encodeURIComponent(searchString);
       axios.get(`/api/v1/references/list?q=${encodedSearch}`).then((response) => {
-        this.state.descriptionOptions = response.data.result;
-        this.setState(this.state);
+        this.setState({
+          descriptionOptions: response.data.result,
+          error: null,
+        });
       }).catch((error) => {
         console.log('ERROR', error);
       });
     });
 
     const onChange = (value) => {
-      this.setState({ value });
+      this.setState({
+        value,
+        error: null,
+      });
     };
 
     const onSelect = (index, object) => {
@@ -99,6 +111,7 @@ class TagMedium extends SaveData {
       this.setState({
         reference: this.state.reference,
         crop: newCrop,
+        error: null,
       });
     };
 
