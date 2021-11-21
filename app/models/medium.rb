@@ -14,11 +14,11 @@ class Medium < ActiveRecord::Base
     'media'
   end
 
-  def get_thumbnail
-    Medium.get_thumbnail_for(file_name)
+  def thumbnail
+    Medium.thumbnail_for(file_name)
   end
 
-  def self.get_thumbnail_for(file_name)
+  def self.thumbnail_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
     if mime_type.length == 1 && mime_type[0].media_type == 'image'
@@ -37,11 +37,11 @@ class Medium < ActiveRecord::Base
     File.join(Biografia::Application.config.public_path, 'images', 'unknown.gif') # FIXME: public_path not found
   end
 
-  def get_fullsize
-    Medium.get_fullsize_for(file_name)
+  def fullsize
+    Medium.fullsize_for(file_name)
   end
 
-  def self.get_fullsize_for(file_name)
+  def self.fullsize_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
     if mime_type.length == 1 && mime_type[0].sub_type != 'jpeg'
