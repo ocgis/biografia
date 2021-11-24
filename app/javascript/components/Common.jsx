@@ -239,7 +239,7 @@ const VersionInfo = (props) => {
 
   if (version != null) {
     return (
-      <Link to={webUrl(object.type_, 'examine')}>
+      <Link to={webUrl(object.type_, object.id, 'examine')}>
         <span className="latest_update">
           {`Ändrad av ${version.name}`}
           <br />
