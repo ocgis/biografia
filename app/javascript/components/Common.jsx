@@ -13,7 +13,7 @@ import EditThing from './EditThing';
 import AddReference from './AddReference';
 import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
-import Remove from './Remove';
+import RemoveObject from './RemoveObject';
 import { webUrl } from './Mappings';
 
 const Modifier = (props) => {
@@ -130,7 +130,7 @@ const Modifier = (props) => {
   itemList.push({
     key: 'remove',
     text: 'radera',
-    component: Remove,
+    component: RemoveObject,
     props: { object: mainObject },
   });
 

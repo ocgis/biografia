@@ -72,6 +72,12 @@ module Api
         end
       end
 
+      def destroy
+        object = find_object
+        object.destroy_with_references
+        render json: {}
+      end
+
       protected
 
       def find_by_object_name(object_name)
