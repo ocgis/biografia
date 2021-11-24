@@ -6,9 +6,7 @@ import SaveData from './SaveData';
 
 class EditNote extends SaveData {
   constructor(props) {
-    super(props);
-    this.objectName = 'note';
-    this.apiUrl = '/api/v1/notes';
+    super(props, 'Note');
 
     const { object: note, referFrom } = props;
     this.state = { note: JSON.parse(JSON.stringify(note)) };

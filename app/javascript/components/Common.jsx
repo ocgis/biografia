@@ -13,6 +13,8 @@ import EditThing from './EditThing';
 import AddReference from './AddReference';
 import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
+import Remove from './Remove';
+import { webUrl } from './Mappings';
 
 const Modifier = (props) => {
   const { currentUser } = props;
@@ -125,6 +127,13 @@ const Modifier = (props) => {
     });
   }
 
+  itemList.push({
+    key: 'remove',
+    text: 'radera',
+    component: Remove,
+    props: { object: mainObject },
+  });
+
   const [modalKey, setModalKey] = useState(null);
 
   const menuItemClicked = (event) => {
@@ -230,7 +239,7 @@ const VersionInfo = (props) => {
 
   if (version != null) {
     return (
-      <Link to={`/r/controller/${object.id}/examine`}>
+      <Link to={webUrl(object.type_, 'examine')}>
         <span className="latest_update">
           {`Ändrad av ${version.name}`}
           <br />
@@ -248,6 +257,7 @@ const VersionInfo = (props) => {
 VersionInfo.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
+    type_: PropTypes.string,
     version: PropTypes.shape({
       date: PropTypes.string,
       name: PropTypes.string,

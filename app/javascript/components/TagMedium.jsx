@@ -7,12 +7,11 @@ import { throttle } from 'throttle-debounce';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import SaveData from './SaveData';
+import { apiUrl } from './Mappings';
 
 class TagMedium extends SaveData {
   constructor(props) {
-    super(props);
-    this.objectName = 'reference';
-    this.apiUrl = '/api/v1/references';
+    super(props, 'Reference');
     this.state = {
       value: null,
       descriptionOptions: [],
@@ -60,13 +59,15 @@ class TagMedium extends SaveData {
       axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
       const encodedSearch = encodeURIComponent(searchString);
-      axios.get(`/api/v1/references/list?q=${encodedSearch}`).then((response) => {
+      const { _type_ } = this;
+      axios.get(apiUrl(_type_, `list?q=${encodedSearch}`)).then((response) => {
         this.setState({
           descriptionOptions: response.data.result,
           error: null,
         });
       }).catch((error) => {
-        console.log('ERROR', error);
+        console.log(error);
+        this.setState({ error: 'An exception was raised. Check the console.' });
       });
     });
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import EditThing from './EditThing';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: thing } = props;
@@ -69,7 +70,7 @@ const Thing = (props) => {
     }
   } else {
     element = (
-      <Link to={`/r/things/${thing.id}`}>
+      <Link to={webUrl('Thing', thing.id)}>
         <OneLine object={thing} />
       </Link>
     );

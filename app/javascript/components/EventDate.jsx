@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Base from './Base';
 import EditEventDate from './EditEventDate';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: eventDate } = props;
@@ -29,7 +30,7 @@ const EventDate = (props) => {
     );
   } else {
     name = (
-      <Link to={`/r/event_dates/${eventDate.id}`}>
+      <Link to={webUrl('EventDate', eventDate.id)}>
         <OneLine object={eventDate} />
       </Link>
     );

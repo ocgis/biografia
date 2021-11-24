@@ -2,9 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
+import { apiUrl, controller, webUrl } from './Mappings';
 
 class Index extends LoadData {
-  url = () => this.apiUrl;
+  constructor(props, showObject, _type_) {
+    super(props);
+    this._type_ = _type_;
+    this.showObject = showObject;
+    this.objectName = controller(this._type_);
+  }
+
+  url = () => apiUrl(this._type_);
 
   render = () => {
     const { objectName, state } = this;
@@ -27,11 +35,11 @@ class Index extends LoadData {
   renderObjects = (objects) => objects.map((object) => this.renderObject(object));
 
   renderObject = (object) => {
-    const { objectsUrl, showObject: ShowObject } = this;
+    const { _type_, showObject: ShowObject } = this;
     const { currentUser } = this.state;
     return (
       <React.Fragment key={object.id}>
-        <Link to={`${objectsUrl}/${object.id}`}>
+        <Link to={webUrl(_type_, object.id)}>
           <ShowObject object={object} mode="oneLine" currentUser={currentUser} />
         </Link>
         <br />

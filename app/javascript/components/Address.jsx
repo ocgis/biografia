@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Base from './Base';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: address } = props;
@@ -60,7 +61,7 @@ const Address = (props) => {
     }
   } else {
     name = (
-      <Link to={`/r/addresses/${address.id}`}>
+      <Link to={webUrl('Address', address.id)}>
         <OneLine object={address} />
       </Link>
     );

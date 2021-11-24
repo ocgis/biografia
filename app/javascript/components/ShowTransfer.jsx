@@ -5,10 +5,7 @@ import TopMenu from './TopMenu';
 
 class ShowTransfer extends Show {
   constructor(props) {
-    super(props);
-    this.showObject = Transfer;
-    this.objectName = 'transfer';
-    this.apiUrl = '/api/v1/transfers';
+    super(props, Transfer, 'Transfer');
   }
 
   render = () => {

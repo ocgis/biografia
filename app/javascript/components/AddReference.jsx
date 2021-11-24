@@ -5,12 +5,11 @@ import { AutoComplete } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
 import SaveData from './SaveData';
+import { apiUrl } from './Mappings';
 
 class AddReference extends SaveData {
   constructor(props) {
-    super(props);
-    this.objectName = 'reference';
-    this.apiUrl = '/api/v1/references';
+    super(props, 'Reference');
     this.state = {
       value: null,
       descriptionOptions: [],
@@ -48,11 +47,13 @@ class AddReference extends SaveData {
       axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
       const encodedSearch = encodeURIComponent(searchString);
-      axios.get(`/api/v1/references/list?q=${encodedSearch}`).then((response) => {
+      const { _type_ } = this;
+      axios.get(apiUrl(_type_, `list?q=${encodedSearch}`)).then((response) => {
         this.state.descriptionOptions = response.data.result;
         this.setState(this.state);
       }).catch((error) => {
-        console.log('ERROR', error);
+        console.log(error);
+        this.setState({ error: 'An exception was raised. Check the console.' });
       });
     });
 

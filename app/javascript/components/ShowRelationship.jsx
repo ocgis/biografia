@@ -3,10 +3,7 @@ import Relationship from './Relationship';
 
 class ShowRelationship extends Show {
   constructor(props) {
-    super(props);
-    this.showObject = Relationship;
-    this.objectName = 'relationship';
-    this.apiUrl = '/api/v1/relationships';
+    super(props, Relationship, 'Relationship');
   }
 }
 

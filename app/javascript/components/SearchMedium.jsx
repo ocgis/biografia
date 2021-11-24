@@ -3,12 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import TopMenu from './TopMenu';
+import { apiUrl, webUrl } from './Mappings';
 
 class SearchMedium extends React.Component {
   constructor(props) {
     super(props);
     this.resetState();
-    this.apiUrl = '/api/v1/media';
+    this.apiUrl = apiUrl('Medium');
   }
 
   componentDidMount() {
@@ -81,7 +82,7 @@ class SearchMedium extends React.Component {
       const { history } = this.props;
 
       if (medium != null) {
-        history.push(`/r/media/${medium.id}`);
+        history.push(webUrl('Medium', medium.id));
       } else {
         let { data: { error } } = response;
         if (error == null) {

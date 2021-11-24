@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import EditNote from './EditNote';
+import { webUrl } from './Mappings';
 
 const Note = (props) => {
   const {
@@ -22,7 +23,7 @@ const Note = (props) => {
       title = note.title;
     } else {
       title = (
-        <Link to={`/r/notes/${note.id}`}>
+        <Link to={webUrl('Note', note.id)}>
           {note.title}
         </Link>
       );

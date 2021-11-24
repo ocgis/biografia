@@ -5,10 +5,7 @@ import TopMenu from './TopMenu';
 
 class ShowExport extends Show {
   constructor(props) {
-    super(props);
-    this.showObject = Export;
-    this.objectName = 'export';
-    this.apiUrl = '/api/v1/exports';
+    super(props, Export, 'Export');
   }
 
   render = () => {

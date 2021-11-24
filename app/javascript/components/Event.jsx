@@ -6,14 +6,15 @@ import EventDate from './EventDate';
 import Person from './Person';
 import Address from './Address';
 import EditEvent from './EditEvent';
+import { controller, webUrl } from './Mappings';
 
 const ListRelated = (props) => {
   const { object } = props;
-  const { relatedName } = props;
+  const { relatedType } = props;
   const { prefix } = props;
   const { showObject: ShowObject } = props;
   const { currentUser } = props;
-  const relObjs = object.related[relatedName];
+  const relObjs = object.related[controller(relatedType)];
 
   if (relObjs.length === 0) {
     return null;
@@ -25,7 +26,7 @@ const ListRelated = (props) => {
   }
 
   parts = parts.concat(relObjs.map((relObj) => (
-    <Link to={`/r/${relatedName}/${relObj.id}`} key={relObj.id}>
+    <Link to={webUrl(relatedType, relObj.id)} key={relObj.id}>
       <ShowObject object={relObj} currentUser={currentUser} mode="oneLine" />
       {' '}
     </Link>
@@ -48,7 +49,7 @@ const Event = (props) => {
     name = event.name;
   } else {
     name = (
-      <Link to={`/r/events/${event.id}`}>
+      <Link to={webUrl('Event', event.id)}>
         {event.name}
       </Link>
     );
@@ -68,10 +69,10 @@ const Event = (props) => {
       currentUser={currentUser}
       reload={reload}
     >
-      <ListRelated object={event} showObject={EventDate} relatedName="event_dates" currentUser={currentUser} />
+      <ListRelated object={event} showObject={EventDate} relatedType="EventDate" currentUser={currentUser} />
       {name}
-      <ListRelated object={event} showObject={Person} relatedModule="Person" relatedName="people" currentUser={currentUser} prefix=" med " />
-      <ListRelated object={event} showObject={Address} relatedModule="Address" relatedName="addresses" currentUser={currentUser} prefix=" vid " />
+      <ListRelated object={event} showObject={Person} relatedType="Person" currentUser={currentUser} prefix=" med " />
+      <ListRelated object={event} showObject={Address} relatedType="Address" currentUser={currentUser} prefix=" vid " />
     </Base>
   );
 };

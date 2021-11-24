@@ -76,9 +76,9 @@ module Api
 
       def find_by_object_name(object_name)
         a = object_name.split('_')
-        if a.length != 2
-          raise StandardError, "Not a valid object name: #{object_name}."
-        end
+
+        raise StandardError, "Not a valid object name: #{object_name}." if a.length != 2
+
         Kernel.const_get(a[0]).find(a[1].to_i)
       end
 
@@ -95,9 +95,11 @@ module Api
 
       def set_object_attributes
         @object_attributes = @object.all_attributes
-        @object_attributes.update({ version: @object.version_info,
-                                    related: fetch_related_attributes(@object.related_objects,
-                                                                      %i[events relationships]) })
+        @object_attributes[:version] = @object.version_info if @object.respond_to?(:version_info)
+        return unless @object.respond_to?(:related_objects)
+
+        @object_attributes[:related] = fetch_related_attributes(@object.related_objects,
+                                                                %i[events relationships])
       end
 
       def fetch_related_attributes(related_objects, deep_keys)

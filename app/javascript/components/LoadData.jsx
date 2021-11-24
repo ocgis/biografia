@@ -46,10 +46,8 @@ class LoadData extends React.Component {
       if (error.response) {
         this.setState({ error: `${error.response.status} ${error.response.statusText}` });
       } else {
-        const { history } = this.props;
         console.log(error);
-        console.log('Push /');
-        history.push('/');
+        this.setState({ error: 'An exception was raised. Check the console.' });
       }
     });
   }
@@ -59,7 +57,6 @@ LoadData.propTypes = {
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
   }).isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default LoadData;

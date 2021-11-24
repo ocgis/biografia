@@ -7,13 +7,14 @@ import Person from './Person';
 import EventDate from './EventDate';
 import Address from './Address';
 import Note from './Note';
+import { controller, webUrl } from './Mappings';
 
 const ListObjects = (props) => {
   const { object } = props;
-  const { relatedName } = props;
+  const { relatedType } = props;
   const { output: Output } = props;
   const { currentUser } = props;
-  const relObjs = object.related[relatedName];
+  const relObjs = object.related[controller(relatedType)];
 
   if (relObjs.length === 0) {
     return null;
@@ -21,7 +22,7 @@ const ListObjects = (props) => {
 
   const parts = relObjs.map((relObj) => (
     <li key={relObj.id}>
-      <Link to={`/r/${relatedName}/${relObj.id}`} key={relObj.id}>
+      <Link to={webUrl(relatedType, relObj.id)} key={relObj.id}>
         <Output object={relObj} currentUser={currentUser} />
         {' '}
       </Link>
@@ -37,7 +38,7 @@ const ListObjects = (props) => {
 
 ListObjects.propTypes = {
   object: PropTypes.shape({ related: PropTypes.shape({}) }).isRequired,
-  relatedName: PropTypes.string.isRequired,
+  relatedType: PropTypes.string.isRequired,
   output: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({}).isRequired,
 };
@@ -86,7 +87,7 @@ const Relationship = (props) => {
     );
   } else {
     element = (
-      <Link to={`/r/relationships/${relationship.id}`}>
+      <Link to={webUrl('Relationship', relationship.id)}>
         <OneLine object={relationship} />
       </Link>
     );
@@ -94,10 +95,10 @@ const Relationship = (props) => {
 
   const appendElements = (
     <div>
-      <ListObjects object={relationship} relatedName="people" output={Person} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="event_dates" output={EventDate} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="addresses" output={Address} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="notes" output={Note} currentUser={currentUser} />
+      <ListObjects object={relationship} relatedType="Person" output={Person} currentUser={currentUser} />
+      <ListObjects object={relationship} relatedType="EventDate" output={EventDate} currentUser={currentUser} />
+      <ListObjects object={relationship} relatedType="Address" output={Address} currentUser={currentUser} />
+      <ListObjects object={relationship} relatedType="Note" output={Note} currentUser={currentUser} />
     </div>
   );
 

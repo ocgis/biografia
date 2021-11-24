@@ -5,10 +5,7 @@ import TopMenu from './TopMenu';
 
 class ShowUser extends Show {
   constructor(props) {
-    super(props);
-    this.showObject = User;
-    this.objectName = 'user';
-    this.apiUrl = '/api/v1/users';
+    super(props, User, 'User');
   }
 
   render = () => {

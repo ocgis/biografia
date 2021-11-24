@@ -5,9 +5,7 @@ import Remove from './Remove';
 
 class RemoveReference extends Remove {
   constructor(props) {
-    super(props);
-    this.objectName = 'reference';
-    this.apiUrl = '/api/v1/references';
+    super(props, 'Reference');
     this.state = { reference: this.props.reference };
   }
 

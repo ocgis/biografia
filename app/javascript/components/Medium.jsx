@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: medium } = props;
@@ -162,7 +163,7 @@ class Medium extends React.Component {
       }
     } else {
       mediaTag = (
-        <Link to={`/r/media/${medium.id}`}>
+        <Link to={webUrl('Medium', medium.id)}>
           <OneLine object={medium} />
         </Link>
       );

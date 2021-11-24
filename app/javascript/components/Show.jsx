@@ -3,18 +3,26 @@ import { Alert } from 'antd';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
 import { ShowReferences } from './Reference';
+import { apiUrl, objectName } from './Mappings';
 
 class Show extends LoadData {
+  constructor(props, showObject, _type_) {
+    super(props);
+    this._type_ = _type_;
+    this.showObject = showObject;
+    this.objectName = objectName(this._type_);
+  }
+
   url = () => {
     const { match: { params: { id } } } = this.props;
-    const { apiUrl } = this;
-    return `${apiUrl}/${id}`;
+    const { _type_ } = this;
+    return apiUrl(_type_, id);
   }
 
   render = () => {
-    const { objectName, state } = this;
+    const { _type_, state } = this;
     const { currentUser, error, showMode } = state;
-    const object = state[objectName];
+    const object = state[objectName(_type_)];
     const ShowObject = this.showObject;
     let alertElement = null;
 

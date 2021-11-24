@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Base from './Base';
 import EditPerson from './EditPerson';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: { person_names: pns } } = props;
@@ -66,7 +67,7 @@ const Person = (props) => {
   } else {
     personElements = (
       <div>
-        <Link to={`/r/people/${person.id}`}>
+        <Link to={webUrl('Person', person.id)}>
           <OneLine object={person} />
         </Link>
         {' '}

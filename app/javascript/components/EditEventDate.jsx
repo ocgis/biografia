@@ -6,9 +6,7 @@ import SaveData from './SaveData';
 
 class EditEventDate extends SaveData {
   constructor(props) {
-    super(props);
-    this.objectName = 'eventDate';
-    this.apiUrl = '/api/v1/event_dates';
+    super(props, 'EventDate');
 
     const { object: eventDate, referFrom } = props;
     this.state = { eventDate: JSON.parse(JSON.stringify(eventDate)) };

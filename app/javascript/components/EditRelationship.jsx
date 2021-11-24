@@ -6,9 +6,7 @@ import SaveData from './SaveData';
 
 class EditRelationship extends SaveData {
   constructor(props) {
-    super(props);
-    this.objectName = 'relationship';
-    this.apiUrl = '/api/v1/relationships';
+    super(props, 'Relationship');
 
     const { object: relationship, referFrom } = props;
     this.state = { relationship: JSON.parse(JSON.stringify(relationship)) };

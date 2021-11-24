@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object } = props;
@@ -74,7 +75,7 @@ const User = (props) => {
         </tbody>
       </table>
       <br />
-      <Link to={`/r/users/${object.id}/edit`}>Ändra</Link>
+      <Link to={webUrl('User', object.id, 'edit')}>Ändra</Link>
     </div>
   );
 };

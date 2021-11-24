@@ -12,6 +12,7 @@ import EditAddress from './EditAddress';
 import EditEvent from './EditEvent';
 import EditPerson from './EditPerson';
 import EditThing from './EditThing';
+import { objectName, webUrl } from './Mappings';
 
 const { SubMenu } = Menu;
 
@@ -25,26 +26,22 @@ const TopMenu = (props) => {
       addPerson: {
         title: 'Lägg till person',
         component: EditPerson,
-        type_: 'person',
-        controller: 'people',
+        _type_: 'Person',
       },
       addEvent: {
         title: 'Lägg till händelse',
         component: EditEvent,
-        type_: 'event',
-        controller: 'events',
+        _type_: 'Event',
       },
       addAddress: {
         title: 'Lägg till adress',
         component: EditAddress,
-        type_: 'address',
-        controller: 'addresses',
+        _type_: 'Address',
       },
       addThing: {
         title: 'Lägg till sak',
         component: EditThing,
-        type_: 'thing',
-        controller: 'things',
+        _type_: 'Thing',
       },
     };
 
@@ -56,7 +53,7 @@ const TopMenu = (props) => {
     const onCancel = () => setModalKey(null);
     const onOk = (result) => {
       setModalKey(null);
-      history.push(`/r/${modal.controller}/${result[modal.type_].id}`);
+      history.push(webUrl(modal._type_, result[objectName(modal._type_)].id));
     };
 
     const Component = modal.component;
@@ -78,7 +75,7 @@ const TopMenu = (props) => {
   const menuClicked = (object) => {
     switch (object.key) {
       case 'searchMediaLocally':
-        history.push('/r/media/search');
+        history.push(webUrl('Medium', 'search'));
         break;
 
       default:
@@ -104,7 +101,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="people"
               title="Personer"
-              onTitleClick={() => history.push('/r/people')}
+              onTitleClick={() => history.push(webUrl('Person'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addPerson">
@@ -113,7 +110,7 @@ const TopMenu = (props) => {
             </SubMenu>
             <SubMenu
               title="Händelser"
-              onTitleClick={() => history.push('/r/events')}
+              onTitleClick={() => history.push(webUrl('Event'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addEvent">
@@ -123,7 +120,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="media"
               title="Media"
-              onTitleClick={() => history.push('/r/media')}
+              onTitleClick={() => history.push(webUrl('Medium'))}
               onClick={menuClicked}
             >
               <Menu.Item>
@@ -136,7 +133,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="addresses"
               title="Adresser"
-              onTitleClick={() => history.push('/r/addresses')}
+              onTitleClick={() => history.push(webUrl('Address'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addAddress">
@@ -146,25 +143,25 @@ const TopMenu = (props) => {
             <SubMenu
               key="things"
               title="Saker"
-              onTitleClick={() => history.push('/r/things')}
+              onTitleClick={() => history.push(webUrl('Thing'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addThing">
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Överföringar" onTitleClick={() => history.push('/r/transfers')}>
+            <SubMenu title="Överföringar" onTitleClick={() => history.push(webUrl('Transfer'))}>
               <Menu.Item>
                 Överför fil
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Exporter" onTitleClick={() => history.push('/r/exports')}>
+            <SubMenu title="Exporter" onTitleClick={() => history.push(webUrl('Export'))}>
               <Menu.Item>
                 Exportera fil
               </Menu.Item>
             </SubMenu>
             <Menu.Item>
-              <Link to="/r/users">Användare</Link>
+              <Link to={webUrl('User')}>Användare</Link>
             </Menu.Item>
             <Menu.Item>
               <a href="/users/sign_out" data-method="delete">Logga ut</a>
