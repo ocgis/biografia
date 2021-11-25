@@ -12,7 +12,7 @@ import EditAddress from './EditAddress';
 import EditEvent from './EditEvent';
 import EditPerson from './EditPerson';
 import EditThing from './EditThing';
-import { objectName, webUrl } from './Mappings';
+import { oneName, webUrl } from './Mappings';
 
 const { SubMenu } = Menu;
 
@@ -53,7 +53,7 @@ const TopMenu = (props) => {
     const onCancel = () => setModalKey(null);
     const onOk = (result) => {
       setModalKey(null);
-      history.push(webUrl(modal._type_, result[objectName(modal._type_)].id));
+      history.push(webUrl(modal._type_, result[oneName(modal._type_)].id));
     };
 
     const Component = modal.component;

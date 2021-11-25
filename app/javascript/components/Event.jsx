@@ -6,7 +6,7 @@ import EventDate from './EventDate';
 import Person from './Person';
 import Address from './Address';
 import EditEvent from './EditEvent';
-import { controller, webUrl } from './Mappings';
+import { manyName, webUrl } from './Mappings';
 
 const ListRelated = (props) => {
   const { object } = props;
@@ -14,7 +14,7 @@ const ListRelated = (props) => {
   const { prefix } = props;
   const { showObject: ShowObject } = props;
   const { currentUser } = props;
-  const relObjs = object.related[controller(relatedType)];
+  const relObjs = object.related[manyName(relatedType)];
 
   if (relObjs.length === 0) {
     return null;

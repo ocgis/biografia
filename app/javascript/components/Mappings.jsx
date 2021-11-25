@@ -2,67 +2,67 @@
 
 const mappings = {
   Address: {
-    name: 'address',
-    controller: 'addresses',
+    oneName: 'address',
+    manyName: 'addresses',
   },
   Event: {
-    name: 'event',
-    controller: 'events',
+    oneName: 'event',
+    manyName: 'events',
   },
   EventDate: {
-    name: 'event_date',
-    controller: 'event_dates',
+    oneName: 'event_date',
+    manyName: 'event_dates',
   },
   Export: {
-    name: 'export',
-    controller: 'exports',
+    oneName: 'export',
+    manyName: 'exports',
   },
   Medium: {
-    name: 'medium',
-    controller: 'media',
+    oneName: 'medium',
+    manyName: 'media',
   },
   Note: {
-    name: 'note',
-    controller: 'notes',
+    oneName: 'note',
+    manyName: 'notes',
   },
   Person: {
-    name: 'person',
-    controller: 'people',
+    oneName: 'person',
+    manyName: 'people',
   },
   Reference: {
-    name: 'reference',
-    controller: 'references',
+    oneName: 'reference',
+    manyName: 'references',
   },
   Relationship: {
-    name: 'relationship',
-    controller: 'relationships',
+    oneName: 'relationship',
+    manyName: 'relationships',
   },
   Thing: {
-    name: 'thing',
-    controller: 'things',
+    oneName: 'thing',
+    manyName: 'things',
   },
   Transfer: {
-    name: 'transfer',
-    controller: 'transfers',
+    oneName: 'transfer',
+    manyName: 'transfers',
   },
   User: {
-    name: 'user',
-    controller: 'users',
+    oneName: 'user',
+    manyName: 'users',
   },
 };
 
-const objectName = (_type_) => mappings[_type_].name;
+const oneName = (_type_) => mappings[_type_].oneName;
 
-const controller = (_type_) => mappings[_type_].controller;
+const manyName = (_type_) => mappings[_type_].manyName;
 
 const url = (baseUrl, _type_, id, action) => {
   if (id == null) {
-    return `${baseUrl}/${mappings[_type_].controller}`;
+    return `${baseUrl}/${mappings[_type_].manyName}`;
   }
   if (action == null) {
-    return `${baseUrl}/${mappings[_type_].controller}/${id}`;
+    return `${baseUrl}/${mappings[_type_].manyName}/${id}`;
   }
-  return `${baseUrl}/${mappings[_type_].controller}/${id}/${action}`;
+  return `${baseUrl}/${mappings[_type_].manyName}/${id}/${action}`;
 };
 
 const apiUrl = (_type_, id, action) => url('/api/v1', _type_, id, action);
@@ -70,5 +70,5 @@ const apiUrl = (_type_, id, action) => url('/api/v1', _type_, id, action);
 const webUrl = (_type_, id, action) => url('/r', _type_, id, action);
 
 export {
-  objectName, controller, apiUrl, webUrl,
+  oneName, manyName, apiUrl, webUrl,
 };

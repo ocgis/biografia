@@ -3,14 +3,14 @@ import { Alert } from 'antd';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
 import { ShowReferences } from './Reference';
-import { apiUrl, objectName } from './Mappings';
+import { apiUrl, oneName } from './Mappings';
 
 class Show extends LoadData {
   constructor(props, showObject, _type_) {
     super(props);
     this._type_ = _type_;
     this.showObject = showObject;
-    this.objectName = objectName(this._type_);
+    this.objectName = oneName(this._type_);
   }
 
   url = () => {
@@ -22,7 +22,7 @@ class Show extends LoadData {
   render = () => {
     const { _type_, state } = this;
     const { currentUser, error, showMode } = state;
-    const object = state[objectName(_type_)];
+    const object = state[oneName(_type_)];
     const ShowObject = this.showObject;
     let alertElement = null;
 

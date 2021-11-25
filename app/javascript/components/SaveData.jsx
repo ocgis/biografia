@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import { apiUrl, objectName } from './Mappings';
+import { apiUrl, oneName } from './Mappings';
 
 class SaveData extends React.Component {
   constructor(props, _type_) {
@@ -35,20 +35,20 @@ class SaveData extends React.Component {
     const { _type_, state } = this;
 
     const sendData = {};
-    sendData[objectName(_type_)] = railsify(state[objectName(_type_)]);
+    sendData[oneName(_type_)] = railsify(state[oneName(_type_)]);
     sendData.referFrom = state.referFrom;
 
     let url = apiUrl(_type_);
     let axiosCall = axios.post;
 
-    if (sendData[objectName(_type_)].id != null) {
-      url = apiUrl(_type_, sendData[objectName(_type_)].id);
+    if (sendData[oneName(_type_)].id != null) {
+      url = apiUrl(_type_, sendData[oneName(_type_)].id);
       axiosCall = axios.patch;
     }
 
     axiosCall(url, sendData).then((response) => {
       const result = {};
-      result[objectName(_type_)] = response.data[objectName(_type_)];
+      result[oneName(_type_)] = response.data[oneName(_type_)];
       handleResult(result);
     }).catch((error) => {
       if (error.response) {

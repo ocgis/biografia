@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Remove from './Remove';
-import { objectName } from './Mappings';
+import { oneName } from './Mappings';
 
 class RemoveObject extends Remove {
   constructor(props) {
     const _type_ = props.object.type_;
     super(props, _type_);
     this.state = {};
-    this.state[objectName(_type_)] = this.props.object;
+    this.state[oneName(_type_)] = this.props.object;
   }
 
   render = () => {

@@ -7,14 +7,14 @@ import Person from './Person';
 import EventDate from './EventDate';
 import Address from './Address';
 import Note from './Note';
-import { controller, webUrl } from './Mappings';
+import { manyName, webUrl } from './Mappings';
 
 const ListObjects = (props) => {
   const { object } = props;
   const { relatedType } = props;
   const { output: Output } = props;
   const { currentUser } = props;
-  const relObjs = object.related[controller(relatedType)];
+  const relObjs = object.related[manyName(relatedType)];
 
   if (relObjs.length === 0) {
     return null;

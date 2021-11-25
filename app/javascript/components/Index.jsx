@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
-import { apiUrl, controller, webUrl } from './Mappings';
+import { apiUrl, manyName, webUrl } from './Mappings';
 
 class Index extends LoadData {
   constructor(props, showObject, _type_) {
     super(props);
     this._type_ = _type_;
     this.showObject = showObject;
-    this.objectName = controller(this._type_);
+    this.objectName = manyName(this._type_);
   }
 
   url = () => apiUrl(this._type_);
