@@ -16,7 +16,7 @@ class TagMedium extends SaveData {
       value: null,
       descriptionOptions: [],
       reference: {
-        type1: props.referFrom.type_,
+        type1: props.referFrom._type_,
         id1: props.referFrom.id,
         type2: null,
         id2: null,
@@ -80,7 +80,7 @@ class TagMedium extends SaveData {
 
     const onSelect = (index, object) => {
       const option = this.state.descriptionOptions[index];
-      this.state.reference.type2 = option.key.type_;
+      this.state.reference.type2 = option.key._type_;
       this.state.reference.id2 = option.key.id;
       this.setState({
         reference: this.state.reference,
@@ -156,7 +156,7 @@ TagMedium.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   referFrom: PropTypes.shape({
-    type_: PropTypes.string.isRequired,
+    _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
   }).isRequired,
 };

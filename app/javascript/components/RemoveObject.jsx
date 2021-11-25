@@ -6,7 +6,7 @@ import { oneName } from './Mappings';
 
 class RemoveObject extends Remove {
   constructor(props) {
-    const _type_ = props.object.type_;
+    const { _type_ } = props.object;
     super(props, _type_);
     this.state = {};
     this.state[oneName(_type_)] = this.props.object;
@@ -55,7 +55,7 @@ class RemoveObject extends Remove {
 }
 RemoveObject.propTypes = {
   object: PropTypes.shape({
-    type_: PropTypes.string,
+    _type_: PropTypes.string,
     id: PropTypes.number,
   }).isRequired,
   onOk: PropTypes.func.isRequired,

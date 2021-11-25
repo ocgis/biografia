@@ -69,7 +69,7 @@ class Address < ActiveRecord::Base
 
   def all_attributes
     attributes.update({
-                        type_: 'Address',
+                        _type_: 'Address',
                         maps_address: maps_address
                       }).update(extras)
   end

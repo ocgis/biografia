@@ -52,6 +52,6 @@ class Relationship < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes.update({ type_: 'Relationship' }).update(extras)
+    attributes.update({ _type_: 'Relationship' }).update(extras)
   end
 end

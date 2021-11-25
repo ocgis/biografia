@@ -15,7 +15,7 @@ class SaveData extends React.Component {
         updated_at,
         version,
         related,
-        type_,
+        _type_,
         ...outdata
       } = indata;
       Object.entries(outdata).forEach((entry) => {

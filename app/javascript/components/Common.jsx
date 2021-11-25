@@ -198,7 +198,7 @@ const Modifier = (props) => {
 };
 Modifier.propTypes = {
   mainObject: PropTypes.shape({
-    type_: PropTypes.string.isRequired,
+    _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     reference: PropTypes.shape({}),
   }).isRequired,
@@ -239,7 +239,7 @@ const VersionInfo = (props) => {
 
   if (version != null) {
     return (
-      <Link to={webUrl(object.type_, object.id, 'examine')}>
+      <Link to={webUrl(object._type_, object.id, 'examine')}>
         <span className="latest_update">
           {`Ändrad av ${version.name}`}
           <br />
@@ -257,7 +257,7 @@ const VersionInfo = (props) => {
 VersionInfo.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
-    type_: PropTypes.string,
+    _type_: PropTypes.string,
     version: PropTypes.shape({
       date: PropTypes.string,
       name: PropTypes.string,

@@ -74,6 +74,6 @@ class EventDate < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes.update({ type_: 'EventDate' }).update(extras)
+    attributes.update({ _type_: 'EventDate' }).update(extras)
   end
 end

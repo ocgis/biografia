@@ -47,7 +47,7 @@ module Api
         if object.save
           refer_from = params[:referFrom]
           unless refer_from.nil?
-            refer_from_object = find_by_object_name("#{refer_from[:type_]}_#{refer_from[:id]}")
+            refer_from_object = find_by_object_name("#{refer_from[:_type_]}_#{refer_from[:id]}")
             refer_from_object.add_reference(object)
           end
           object_attributes = object.all_attributes

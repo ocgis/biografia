@@ -12,7 +12,7 @@ class EditRelationship extends SaveData {
     this.state = { relationship: JSON.parse(JSON.stringify(relationship)) };
     if (referFrom != null) {
       this.state.referFrom = {
-        type_: referFrom.type_,
+        _type_: referFrom._type_,
         id: referFrom.id,
       };
     }
@@ -70,7 +70,7 @@ EditRelationship.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   referFrom: PropTypes.shape({
-    type_: PropTypes.string,
+    _type_: PropTypes.string,
     id: PropTypes.number,
   }),
 };

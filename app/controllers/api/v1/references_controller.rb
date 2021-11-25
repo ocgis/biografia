@@ -28,7 +28,7 @@ module Api
           {
             value: f.decorate.one_line,
             key: {
-              type_: f.class.name,
+              _type_: f.class.name,
               id: f.id
             }
           }

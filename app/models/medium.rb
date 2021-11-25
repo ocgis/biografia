@@ -74,7 +74,7 @@ class Medium < ActiveRecord::Base
       pio
     end
     attributes.update({
-                        type_: 'Medium',
+                        _type_: 'Medium',
                         positions_in_object: pio_attributes
                       }).update(extras)
   end

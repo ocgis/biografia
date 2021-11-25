@@ -12,7 +12,7 @@ class EditPerson extends SaveData {
     this.state = { person: JSON.parse(JSON.stringify(person)) };
     if (referFrom != null) {
       this.state.referFrom = {
-        type_: referFrom.type_,
+        _type_: referFrom._type_,
         id: referFrom.id,
       };
     }
@@ -140,7 +140,7 @@ EditPerson.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   referFrom: PropTypes.shape({
-    type_: PropTypes.string,
+    _type_: PropTypes.string,
     id: PropTypes.number,
   }),
 };
