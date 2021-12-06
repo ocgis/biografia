@@ -27,7 +27,12 @@ const ListRelated = (props) => {
 
   parts = parts.concat(relObjs.map((relObj) => (
     <Link to={webUrl(relatedType, relObj.id)} key={relObj.id}>
-      <ShowObject object={relObj} currentUser={currentUser} mode="oneLine" />
+      <ShowObject
+        object={relObj}
+        currentUser={currentUser}
+        mode="oneLine"
+        reload={() => alert('Unexpected: Implement reload() for ListRelated()')}
+      />
       {' '}
     </Link>
   )));
