@@ -179,7 +179,10 @@ const TopMenu = (props) => {
   );
 };
 TopMenu.propTypes = {
-  currentUser: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
+  currentUser: PropTypes.shape({ name: PropTypes.string.isRequired }),
+};
+TopMenu.defaultProps = {
+  currentUser: { name: '' },
 };
 
 export default TopMenu;
