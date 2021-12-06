@@ -40,7 +40,12 @@ class Index extends LoadData {
     return (
       <React.Fragment key={object.id}>
         <Link to={webUrl(_type_, object.id)}>
-          <ShowObject object={object} mode="oneLine" currentUser={currentUser} />
+          <ShowObject
+            object={object}
+            mode="oneLine"
+            currentUser={currentUser}
+            reload={() => alert('Unexpected: Implement reload() for Index()')}
+          />
         </Link>
         <br />
       </React.Fragment>
