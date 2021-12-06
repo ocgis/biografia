@@ -9,7 +9,7 @@ class EditEventDate extends SaveData {
     super(props, 'EventDate');
 
     const { object: eventDate, referFrom } = props;
-    this.state = { eventDate: JSON.parse(JSON.stringify(eventDate)) };
+    this.state = { event_date: JSON.parse(JSON.stringify(eventDate)) };
     if (referFrom != null) {
       this.state.referFrom = {
         _type_: referFrom._type_,
@@ -37,7 +37,7 @@ class EditEventDate extends SaveData {
       onCancel();
     };
 
-    const { eventDate, error } = this.state;
+    const { event_date: eventDate, error } = this.state;
 
     return (
       <div>
