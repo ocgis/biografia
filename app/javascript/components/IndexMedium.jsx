@@ -1,10 +1,12 @@
+import React from 'react';
 import Index from './Index';
 import Medium from './Medium';
 
-class IndexMedium extends Index {
-  constructor(props) {
-    super(props, Medium, 'Medium');
-  }
-}
+const IndexMedium = () => (
+  <Index
+    showObject={Medium}
+    _type_="Medium"
+  />
+);
 
 export default IndexMedium;

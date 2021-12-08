@@ -1,10 +1,12 @@
+import React from 'react';
 import Index from './Index';
 import User from './User';
 
-class IndexUser extends Index {
-  constructor(props) {
-    super(props, User, 'User');
-  }
-}
+const IndexUser = () => (
+  <Index
+    showObject={User}
+    _type_="User"
+  />
+);
 
 export default IndexUser;

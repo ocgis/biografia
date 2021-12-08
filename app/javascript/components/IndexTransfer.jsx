@@ -1,10 +1,12 @@
+import React from 'react';
 import Index from './Index';
 import Transfer from './Transfer';
 
-class IndexTransfer extends Index {
-  constructor(props) {
-    super(props, Transfer, 'Transfer');
-  }
-}
+const IndexTransfer = () => (
+  <Index
+    showObject={Transfer}
+    _type_="Transfer"
+  />
+);
 
 export default IndexTransfer;

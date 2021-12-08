@@ -1,10 +1,12 @@
+import React from 'react';
 import Index from './Index';
 import Address from './Address';
 
-class IndexAddress extends Index {
-  constructor(props) {
-    super(props, Address, 'Address');
-  }
-}
+const IndexAddress = () => (
+  <Index
+    showObject={Address}
+    _type_="Address"
+  />
+);
 
 export default IndexAddress;
