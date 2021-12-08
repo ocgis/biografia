@@ -35,6 +35,7 @@ class SaveData extends React.Component {
     const { _type_, state } = this;
 
     const sendData = {};
+
     sendData[oneName(_type_)] = railsify(state[oneName(_type_)]);
     sendData.referFrom = state.referFrom;
 

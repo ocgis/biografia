@@ -4,12 +4,17 @@ import LoadData from './LoadData';
 import TopMenu from './TopMenu';
 import { apiUrl, manyName, webUrl } from './Mappings';
 
-class Index extends LoadData {
+class Index extends React.Component {
   constructor(props, showObject, _type_) {
     super(props);
     this._type_ = _type_;
     this.showObject = showObject;
     this.objectName = manyName(this._type_);
+
+    this.state = {
+      currentUser: null,
+    };
+    this.state[this.objectName] = null;
   }
 
   url = () => apiUrl(this._type_);
@@ -19,20 +24,31 @@ class Index extends LoadData {
     const { currentUser } = state;
     const objects = state[objectName];
 
-    if (objects == null) {
-      return (
-        <TopMenu />
-      );
-    }
+    const onLoaded = (data) => {
+      this.setState(data);
+    };
+
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        {this.renderObjects(objects)}
+        <LoadData
+          url={this.url()}
+          objectName={this.objectName}
+          onLoaded={onLoaded}
+          loadMany
+        >
+          {this.renderObjects(objects)}
+        </LoadData>
       </div>
     );
   }
 
-  renderObjects = (objects) => objects.map((object) => this.renderObject(object));
+  renderObjects = (objects) => {
+    if (objects == null) {
+      return null;
+    }
+    return objects.map((object) => this.renderObject(object));
+  }
 
   renderObject = (object) => {
     const { _type_, showObject: ShowObject } = this;

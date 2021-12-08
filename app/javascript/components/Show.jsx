@@ -1,17 +1,35 @@
 import React from 'react';
-import { Alert } from 'antd';
+import PropTypes from 'prop-types';
 import LoadData from './LoadData';
 import TopMenu from './TopMenu';
 import { ShowReferences } from './Reference';
 import { apiUrl, oneName } from './Mappings';
 
-class Show extends LoadData {
+class Show extends React.Component {
   constructor(props, showObject, _type_) {
     super(props);
     this._type_ = _type_;
     this.showObject = showObject;
     this.objectName = oneName(this._type_);
+    this.state = {
+      loadKey: 1,
+      currentUser: null,
+    };
+    this.state[this.objectName] = null;
   }
+
+  componentDidUpdate(prevProps) {
+    const { location: { pathname, search } } = this.props;
+    if (pathname !== prevProps.location.pathname
+        || search !== prevProps.location.search) {
+      this.reload();
+    }
+  }
+
+  reload = () => {
+    const { loadKey } = this.state;
+    this.setState({ loadKey: loadKey + 1 });
+  };
 
   url = () => {
     const { match: { params: { id } } } = this.props;
@@ -21,54 +39,59 @@ class Show extends LoadData {
 
   render = () => {
     const { _type_, state } = this;
-    const { currentUser, error, showMode } = state;
+    const { currentUser, showMode, loadKey } = this.state;
     const object = state[oneName(_type_)];
     const ShowObject = this.showObject;
-    let alertElement = null;
 
-    if (error != null) {
-      alertElement = <Alert message={error} type="error" showIcon />;
-    }
+    const onLoaded = (data) => {
+      this.setState(data);
+    };
 
-    if (object == null) {
-      return (
-        <TopMenu />
-      );
-    }
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        { alertElement }
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <ShowObject
-                  object={object}
-                  currentUser={currentUser}
-                  mode={showMode}
-                  reload={() => {
-                    this.loadData();
-                  }}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <ShowReferences
-                  related={object.related}
-                  currentUser={currentUser}
-                  reload={() => {
-                    this.loadData();
-                  }}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <LoadData
+          key={loadKey}
+          url={this.url()}
+          objectName={this.objectName}
+          onLoaded={onLoaded}
+        />
+        { object != null
+          && (
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <ShowObject
+                      object={object}
+                      currentUser={currentUser}
+                      mode={showMode}
+                      reload={this.reload}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <ShowReferences
+                      related={object.related}
+                      currentUser={currentUser}
+                      reload={this.reload}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
       </div>
     );
   }
 }
+Show.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default Show;

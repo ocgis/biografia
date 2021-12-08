@@ -20,7 +20,7 @@ module Api
       end
 
       def all_objects
-        Transfer.all.limit(50)
+        Transfer.all
       end
 
       def set_object

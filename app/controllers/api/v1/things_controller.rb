@@ -25,7 +25,7 @@ module Api
       end
 
       def all_objects
-        Thing.all.limit(50)
+        Thing.all
       end
 
       private

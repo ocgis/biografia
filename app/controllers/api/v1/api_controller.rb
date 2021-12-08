@@ -23,8 +23,12 @@ module Api
       def index
         objects_name = self.class.name.underscore.split('/')[-1].split('_')[..-2].join('_').to_sym
 
+        objects = all_objects
+        objects = objects.offset(params[:offset]) unless params[:offset].nil?
+        objects = objects.limit(params[:limit]) unless params[:limit].nil?
+
         r = {}
-        r[objects_name] = all_objects.map(&:all_attributes)
+        r[objects_name] = objects.map(&:all_attributes)
         r[:current_user] = @current_user_hash
 
         render json: r

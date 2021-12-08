@@ -20,7 +20,7 @@ class Api::V1::PeopleController < Api::V1::ApiController
   end
 
   def all_objects
-    Person.all.preload(:person_names).limit(50)
+    Person.all.preload(:person_names)
   end
 
   private

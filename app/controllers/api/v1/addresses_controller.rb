@@ -25,7 +25,7 @@ module Api
       end
 
       def all_objects
-        Address.all.limit(50)
+        Address.all
       end
 
       private

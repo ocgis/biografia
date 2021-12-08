@@ -14,6 +14,7 @@ const ListObjects = (props) => {
   const { relatedType } = props;
   const { output: Output } = props;
   const { currentUser } = props;
+  const { reload } = props;
   const relObjs = object.related[manyName(relatedType)];
 
   if (relObjs.length === 0) {
@@ -23,7 +24,11 @@ const ListObjects = (props) => {
   const parts = relObjs.map((relObj) => (
     <li key={relObj.id}>
       <Link to={webUrl(relatedType, relObj.id)} key={relObj.id}>
-        <Output object={relObj} currentUser={currentUser} />
+        <Output
+          object={relObj}
+          currentUser={currentUser}
+          reload={reload}
+        />
         {' '}
       </Link>
     </li>
@@ -41,6 +46,7 @@ ListObjects.propTypes = {
   relatedType: PropTypes.string.isRequired,
   output: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
 };
 
 const OneLine = (props) => {
@@ -95,10 +101,34 @@ const Relationship = (props) => {
 
   const appendElements = (
     <div>
-      <ListObjects object={relationship} relatedType="Person" output={Person} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedType="EventDate" output={EventDate} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedType="Address" output={Address} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedType="Note" output={Note} currentUser={currentUser} />
+      <ListObjects
+        object={relationship}
+        relatedType="Person"
+        output={Person}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="EventDate"
+        output={EventDate}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="Address"
+        output={Address}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="Note"
+        output={Note}
+        currentUser={currentUser}
+        reload={reload}
+      />
     </div>
   );
 
