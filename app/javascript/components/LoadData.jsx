@@ -19,7 +19,6 @@ class LoadData extends React.Component {
       offset: 0,
       limit: 200,
       currentUser: null,
-      showMode: 'full',
       error: null,
     };
     this.state[objectName] = null;

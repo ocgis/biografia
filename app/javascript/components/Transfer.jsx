@@ -44,7 +44,7 @@ const Transfer = (props) => {
           </tbody>
         </table>
 
-        <Link to={webUrl(`new?transfer_id=${transfer.id}`)}>
+        <Link to={webUrl('Import', `new?transfer_id=${transfer.id}`)}>
           Import this file
         </Link>
       </div>

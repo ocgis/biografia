@@ -17,6 +17,10 @@ const mappings = {
     oneName: 'export',
     manyName: 'exports',
   },
+  Import: {
+    oneName: 'import',
+    manyName: 'imports',
+  },
   Medium: {
     oneName: 'medium',
     manyName: 'media',

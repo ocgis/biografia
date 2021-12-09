@@ -6,16 +6,16 @@ import { ShowReferences } from './Reference';
 import { apiUrl, oneName } from './Mappings';
 
 class Show extends React.Component {
-  constructor(props, showObject, _type_) {
+  constructor(props) {
     super(props);
-    this._type_ = _type_;
-    this.showObject = showObject;
-    this.objectName = oneName(this._type_);
+
+    const { _type_ } = this.props;
+    const objectName = oneName(_type_);
     this.state = {
       loadKey: 1,
       currentUser: null,
     };
-    this.state[this.objectName] = null;
+    this.state[objectName] = null;
   }
 
   componentDidUpdate(prevProps) {
@@ -32,16 +32,18 @@ class Show extends React.Component {
   };
 
   url = () => {
-    const { match: { params: { id } } } = this.props;
-    const { _type_ } = this;
+    const { match: { params: { id } }, _type_ } = this.props;
     return apiUrl(_type_, id);
   }
 
   render = () => {
-    const { _type_, state } = this;
-    const { currentUser, showMode, loadKey } = this.state;
-    const object = state[oneName(_type_)];
-    const ShowObject = this.showObject;
+    const { state } = this;
+    const { _type_, showObject: ShowObject, noReferences } = this.props;
+    const {
+      currentUser, loadKey,
+    } = state;
+    const objectName = oneName(_type_);
+    const object = state[objectName];
 
     const onLoaded = (data) => {
       this.setState(data);
@@ -53,7 +55,7 @@ class Show extends React.Component {
         <LoadData
           key={loadKey}
           url={this.url()}
-          objectName={this.objectName}
+          objectName={objectName}
           onLoaded={onLoaded}
         />
         { object != null
@@ -65,20 +67,23 @@ class Show extends React.Component {
                     <ShowObject
                       object={object}
                       currentUser={currentUser}
-                      mode={showMode}
+                      mode="full"
                       reload={this.reload}
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <ShowReferences
-                      related={object.related}
-                      currentUser={currentUser}
-                      reload={this.reload}
-                    />
-                  </td>
-                </tr>
+                { !noReferences
+                  && (
+                    <tr>
+                      <td>
+                        <ShowReferences
+                          related={object.related}
+                          currentUser={currentUser}
+                          reload={this.reload}
+                        />
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
           )}
@@ -87,11 +92,17 @@ class Show extends React.Component {
   }
 }
 Show.propTypes = {
+  _type_: PropTypes.string.isRequired,
+  showObject: PropTypes.func.isRequired,
+  noReferences: PropTypes.bool,
   match: PropTypes.shape().isRequired,
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
   }).isRequired,
+};
+Show.defaultProps = {
+  noReferences: false,
 };
 
 export default Show;

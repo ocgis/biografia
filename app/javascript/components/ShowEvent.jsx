@@ -1,10 +1,19 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import Show from './Show';
 import Event from './Event';
 
-class ShowEvent extends Show {
-  constructor(props) {
-    super(props, Event, 'Event');
-  }
-}
+const ShowEvent = ({ match, location }) => (
+  <Show
+    showObject={Event}
+    _type_="Event"
+    match={match}
+    location={location}
+  />
+);
+ShowEvent.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
 
 export default ShowEvent;
