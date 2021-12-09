@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditEventDate from './EditEventDate';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: eventDate } = props;
@@ -28,37 +30,32 @@ const EventDate = (props) => {
     );
   } else {
     name = (
-      <Link to={`/r/event_dates/${eventDate.id}`}>
+      <Link to={webUrl('EventDate', eventDate.id)}>
         <OneLine object={eventDate} />
       </Link>
     );
   }
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {name}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={eventDate}
-              reload={reload}
-            />
-            <td>
-              <VersionInfo object={eventDate} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={eventDate}
+      editComponent={EditEventDate}
+      editTitle="Ändra datum"
+      modifierProps={{
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {name}
+    </Base>
   );
 };
 
 EventDate.propTypes = {
   object: PropTypes.shape({}).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.number,
+    roles: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
 };

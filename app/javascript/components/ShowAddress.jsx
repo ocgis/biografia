@@ -1,13 +1,19 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import Show from './Show';
 import Address from './Address';
 
-class ShowAddress extends Show {
-  constructor(props) {
-    super(props);
-    this.showObject = Address;
-    this.objectName = 'address';
-    this.apiUrl = '/api/v1/addresses';
-  }
-}
+const ShowAddress = ({ match, location }) => (
+  <Show
+    showObject={Address}
+    _type_="Address"
+    match={match}
+    location={location}
+  />
+);
+ShowAddress.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
 
 export default ShowAddress;

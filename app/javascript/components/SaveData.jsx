@@ -1,8 +1,13 @@
 import axios from 'axios';
 import React from 'react';
-import PropTypes from 'prop-types';
+import { apiUrl, oneName } from './Mappings';
 
 class SaveData extends React.Component {
+  constructor(props, _type_) {
+    super(props);
+    this._type_ = _type_;
+  }
+
   saveData(handleResult) {
     const railsify = (indata) => {
       const {
@@ -10,7 +15,7 @@ class SaveData extends React.Component {
         updated_at,
         version,
         related,
-        type_,
+        _type_,
         ...outdata
       } = indata;
       Object.entries(outdata).forEach((entry) => {
@@ -27,38 +32,34 @@ class SaveData extends React.Component {
     const csrfToken = document.querySelector('[name=csrf-token]').content;
     axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
-    const { objectName, state } = this;
+    const { _type_, state } = this;
 
     const sendData = {};
-    sendData[objectName] = railsify(state[objectName]);
+
+    sendData[oneName(_type_)] = railsify(state[oneName(_type_)]);
     sendData.referFrom = state.referFrom;
 
-    let url = this.apiUrl;
+    let url = apiUrl(_type_);
     let axiosCall = axios.post;
 
-    if (sendData[objectName].id != null) {
-      url = `${this.apiUrl}/${sendData[objectName].id}`;
+    if (sendData[oneName(_type_)].id != null) {
+      url = apiUrl(_type_, sendData[oneName(_type_)].id);
       axiosCall = axios.patch;
     }
 
     axiosCall(url, sendData).then((response) => {
       const result = {};
-      result[objectName] = response.data[objectName];
+      result[oneName(_type_)] = response.data[oneName(_type_)];
       handleResult(result);
     }).catch((error) => {
       if (error.response) {
         handleResult({ error: `${error.response.status} ${error.response.statusText}` });
       } else {
-        const { history } = this.props;
         console.log(error);
-        console.log('Push /');
-        history.push('/');
+        handleResult({ error: 'An exception was raised. Check the console.' });
       }
     });
   }
 }
-SaveData.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
 
 export default SaveData;

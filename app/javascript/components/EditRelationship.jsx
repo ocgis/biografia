@@ -4,12 +4,12 @@ import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import SaveData from './SaveData';
 
-class EditEvent extends SaveData {
+class EditRelationship extends SaveData {
   constructor(props) {
-    super(props, 'Event');
+    super(props, 'Relationship');
 
-    const { object: event, referFrom } = props;
-    this.state = { event: JSON.parse(JSON.stringify(event)) };
+    const { object: relationship, referFrom } = props;
+    this.state = { relationship: JSON.parse(JSON.stringify(relationship)) };
     if (referFrom != null) {
       this.state.referFrom = {
         _type_: referFrom._type_,
@@ -37,7 +37,7 @@ class EditEvent extends SaveData {
       onCancel();
     };
 
-    const { event, error } = this.state;
+    const { relationship, error } = this.state;
 
     return (
       <div>
@@ -49,9 +49,9 @@ class EditEvent extends SaveData {
               </td>
               <td>
                 <Input
-                  defaultValue={event.name}
-                  onChange={(e) => {
-                    event.name = e.target.value;
+                  defaultValue={relationship.name}
+                  onChange={(event) => {
+                    relationship.name = event.target.value;
                   }}
                 />
               </td>
@@ -65,7 +65,7 @@ class EditEvent extends SaveData {
     );
   }
 }
-EditEvent.propTypes = {
+EditRelationship.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
@@ -74,12 +74,11 @@ EditEvent.propTypes = {
     id: PropTypes.number,
   }),
 };
-EditEvent.defaultProps = {
+EditRelationship.defaultProps = {
   object: {
     name: null,
-    source: null,
   },
   referFrom: null,
 };
 
-export default EditEvent;
+export default EditRelationship;

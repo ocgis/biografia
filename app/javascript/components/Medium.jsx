@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: medium } = props;
@@ -21,14 +22,20 @@ class Medium extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      imgHeight: 1,
-      imgWidth: 1,
+      naturalSize: false,
+      naturalWidth: null,
+      naturalHeight: null,
     };
   }
 
   onImgLoad = (event) => {
-    const { clientWidth: imgWidth, clientHeight: imgHeight } = event.target;
-    this.setState({ imgWidth, imgHeight });
+    const {
+      naturalWidth, naturalHeight,
+    } = event.target;
+    this.setState({
+      naturalWidth,
+      naturalHeight,
+    });
   }
 
   showTag = (event) => {
@@ -54,90 +61,131 @@ class Medium extends React.Component {
       currentUser, mode, object: medium, reload,
     } = this.props;
 
+    const { naturalSize } = this.state;
+
     if (mode === 'oneLine') {
       return (
         <OneLine object={medium} />
       );
     }
 
+    let modalWidth = null;
     let mediaTag = null;
 
     if (mode === 'full') {
-      const positionTags = medium.positions_in_object.map((pio) => {
-        const { imgWidth, imgHeight } = this.state;
-        const x = (pio.position.x * imgWidth) / 1000;
-        const y = (pio.position.y * imgHeight) / 1000;
-        const width = (pio.position.width * imgWidth) / 1000;
-        const height = (pio.position.height * imgHeight) / 1000;
-        return (
-          <span
-            style={{
-              position: 'absolute',
-              top: `${y}px`,
-              left: `${x}px`,
-              width: `${width}px`,
-              height: `${height}px`,
-              backgroundColor: 'transparent',
-              border: 'none',
-            }}
-            onMouseOver={this.showTag}
-            onFocus={this.showTag}
-            onMouseOut={this.hideTag}
-            onBlur={this.hideTag}
-            key={pio.position.id}
-          >
-            <span style={{
-              position: 'absolute',
-              bottom: '0px',
-              left: '0px',
-              width: '100%',
-              backgroundColor: 'blue',
-              display: 'none',
-            }}
-            >
-              {pio.object.name}
-            </span>
-          </span>
+      const { naturalWidth, naturalHeight } = this.state;
+
+      if (naturalWidth == null || naturalHeight == null) {
+        mediaTag = (
+          <div style={{ position: 'relative' }}>
+            <img
+              src={`/media/${medium.id}/image`}
+              alt={medium.file_name}
+              onLoad={this.onImgLoad}
+            />
+          </div>
         );
-      });
-      mediaTag = (
-        <div style={{ position: 'relative' }}>
-          <img
-            src={`/media/${medium.id}/image`}
-            alt={medium.file_name}
-            onLoad={this.onImgLoad}
-          />
-          { positionTags }
-        </div>
-      );
+      } else {
+        modalWidth = naturalWidth;
+        let imgWidth = naturalWidth;
+        let imgHeight = naturalHeight;
+
+        if (!naturalSize) {
+          if (imgWidth > window.innerWidth) {
+            imgHeight = (imgHeight * window.innerWidth) / imgWidth;
+            imgWidth = window.innerWidth;
+            modalWidth = imgWidth;
+          }
+
+          if (imgHeight > window.innerHeight) {
+            imgWidth = (imgWidth * window.innerHeight) / imgHeight;
+            imgHeight = window.innerHeight;
+            modalWidth = imgWidth;
+          }
+        }
+
+        const positionTags = medium.positions_in_object.map((pio) => {
+          const x = (pio.position.x * imgWidth) / 1000;
+          const y = (pio.position.y * imgHeight) / 1000;
+          const width = (pio.position.width * imgWidth) / 1000;
+          const height = (pio.position.height * imgHeight) / 1000;
+          return (
+            <span
+              style={{
+                position: 'absolute',
+                top: `${y}px`,
+                left: `${x}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                backgroundColor: 'transparent',
+                border: 'none',
+              }}
+              onMouseOver={this.showTag}
+              onFocus={this.showTag}
+              onMouseOut={this.hideTag}
+              onBlur={this.hideTag}
+              key={pio.position.id}
+            >
+              <span style={{
+                position: 'absolute',
+                bottom: '0px',
+                left: '0px',
+                width: '100%',
+                backgroundColor: 'blue',
+                display: 'none',
+              }}
+              >
+                {pio.object.name}
+              </span>
+            </span>
+          );
+        });
+        mediaTag = (
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => this.setState({ naturalSize: !naturalSize })}
+              style={{
+                border: 'none',
+                padding: 0,
+              }}
+            >
+              <img
+                src={`/media/${medium.id}/image`}
+                alt={medium.file_name}
+                width={imgWidth}
+                height={imgHeight}
+              />
+            </button>
+            { positionTags }
+          </div>
+        );
+      }
     } else {
       mediaTag = (
-        <Link to={`/r/media/${medium.id}`}>
+        <Link to={webUrl('Medium', medium.id)}>
           <OneLine object={medium} />
         </Link>
       );
     }
 
     return (
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <Modifier
-                currentUser={currentUser}
-                mainObject={medium}
-                reload={reload}
-                showAddPerson
-              />
-              <td>
-                <VersionInfo object={medium} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {mediaTag}
-        <br />
-      </div>
+      <Base
+        object={medium}
+        appendElements={mediaTag}
+        modifierProps={{
+          showAddAddress: true,
+          showAddEvent: true,
+          showAddEventDate: true,
+          showAddNote: true,
+          showAddPerson: true,
+          showAddThing: true,
+          showTagMedium: true,
+        }}
+        modalWidth={modalWidth}
+        currentUser={currentUser}
+        reload={reload}
+      />
     );
   };
 }

@@ -10,12 +10,29 @@ module Api
 
       protected
 
+      def create_object
+        Address.new(address_params)
+      end
+
       def find_object
         Address.find(params.require(:id))
       end
 
+      def find_object_and_update_attrs
+        object = Address.find(params.require(:id))
+        object.attributes = address_params
+        object
+      end
+
       def all_objects
-        Address.all.limit(50)
+        Address.all
+      end
+
+      private
+
+      def address_params
+        params.require(:address).permit(:id, :street, :town, :zipcode, :parish,
+                                        :country, :latitude, :lognitude, :source)
       end
     end
   end

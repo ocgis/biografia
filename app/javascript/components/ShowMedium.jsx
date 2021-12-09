@@ -1,13 +1,19 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import Show from './Show';
 import Medium from './Medium';
 
-class ShowMedium extends Show {
-  constructor(props) {
-    super(props);
-    this.showObject = Medium;
-    this.objectName = 'medium';
-    this.apiUrl = '/api/v1/media';
-  }
-}
+const ShowMedium = ({ match, location }) => (
+  <Show
+    showObject={Medium}
+    _type_="Medium"
+    match={match}
+    location={location}
+  />
+);
+ShowMedium.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
 
 export default ShowMedium;

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditNote from './EditNote';
+import { webUrl } from './Mappings';
 
 const Note = (props) => {
   const {
@@ -21,36 +23,34 @@ const Note = (props) => {
       title = note.title;
     } else {
       title = (
-        <Link to={`/r/notes/${note.id}`}>
+        <Link to={webUrl('Note', note.id)}>
           {note.title}
         </Link>
       );
     }
   }
 
+  const appendElements = (
+    <pre>
+      {note.note}
+    </pre>
+  );
+
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {title}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={note}
-              reload={reload}
-            />
-            <td>
-              <VersionInfo object={note} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pre>
-        {note.note}
-      </pre>
-    </div>
+    <Base
+      object={note}
+      appendElements={appendElements}
+      editComponent={EditNote}
+      editTitle="Ändra kommentar"
+      modifierProps={{
+        showAddPerson: true,
+        showAddEventDate: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {title}
+    </Base>
   );
 };
 

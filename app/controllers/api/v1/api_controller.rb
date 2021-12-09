@@ -16,16 +16,19 @@ module Api
       # For APIs, you may want to use :null_session instead.
       protect_from_forgery with: :exception
 
-      # FIXME: Don't redirect
-      rescue_from CanCan::AccessDenied do |exception|
-        redirect_to root_url, alert: exception.message
+      rescue_from CanCan::AccessDenied do
+        render status: :unauthorized, json: { error: 'Access denied' }
       end
 
       def index
         objects_name = self.class.name.underscore.split('/')[-1].split('_')[..-2].join('_').to_sym
 
+        objects = all_objects
+        objects = objects.offset(params[:offset]) unless params[:offset].nil?
+        objects = objects.limit(params[:limit]) unless params[:limit].nil?
+
         r = {}
-        r[objects_name] = all_objects.map(&:all_attributes)
+        r[objects_name] = objects.map(&:all_attributes)
         r[:current_user] = @current_user_hash
 
         render json: r
@@ -48,7 +51,7 @@ module Api
         if object.save
           refer_from = params[:referFrom]
           unless refer_from.nil?
-            refer_from_object = find_by_object_name("#{refer_from[:type_]}_#{refer_from[:id]}")
+            refer_from_object = find_by_object_name("#{refer_from[:_type_]}_#{refer_from[:id]}")
             refer_from_object.add_reference(object)
           end
           object_attributes = object.all_attributes
@@ -73,13 +76,19 @@ module Api
         end
       end
 
+      def destroy
+        object = find_object
+        object.destroy_with_references
+        render json: {}
+      end
+
       protected
 
       def find_by_object_name(object_name)
         a = object_name.split('_')
-        if a.length != 2
-          raise StandardError, "Not a valid object name: #{object_name}."
-        end
+
+        raise StandardError, "Not a valid object name: #{object_name}." if a.length != 2
+
         Kernel.const_get(a[0]).find(a[1].to_i)
       end
 
@@ -96,9 +105,11 @@ module Api
 
       def set_object_attributes
         @object_attributes = @object.all_attributes
-        @object_attributes.update({ version: @object.version_info,
-                                    related: fetch_related_attributes(@object.related_objects,
-                                                                      %i[events relationships]) })
+        @object_attributes[:version] = @object.version_info if @object.respond_to?(:version_info)
+        return unless @object.respond_to?(:related_objects)
+
+        @object_attributes[:related] = fetch_related_attributes(@object.related_objects,
+                                                                %i[events relationships])
       end
 
       def fetch_related_attributes(related_objects, deep_keys)

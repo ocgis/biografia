@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditRelationship from './EditRelationship';
 import Person from './Person';
 import EventDate from './EventDate';
 import Address from './Address';
 import Note from './Note';
+import { manyName, webUrl } from './Mappings';
 
 const ListObjects = (props) => {
   const { object } = props;
-  const { relatedName } = props;
+  const { relatedType } = props;
   const { output: Output } = props;
   const { currentUser } = props;
-  const relObjs = object.related[relatedName];
+  const { reload } = props;
+  const relObjs = object.related[manyName(relatedType)];
 
   if (relObjs.length === 0) {
     return null;
@@ -20,8 +23,12 @@ const ListObjects = (props) => {
 
   const parts = relObjs.map((relObj) => (
     <li key={relObj.id}>
-      <Link to={`/r/${relatedName}/${relObj.id}`} key={relObj.id}>
-        <Output object={relObj} currentUser={currentUser} />
+      <Link to={webUrl(relatedType, relObj.id)} key={relObj.id}>
+        <Output
+          object={relObj}
+          currentUser={currentUser}
+          reload={reload}
+        />
         {' '}
       </Link>
     </li>
@@ -36,9 +43,10 @@ const ListObjects = (props) => {
 
 ListObjects.propTypes = {
   object: PropTypes.shape({ related: PropTypes.shape({}) }).isRequired,
-  relatedName: PropTypes.string.isRequired,
+  relatedType: PropTypes.string.isRequired,
   output: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({}).isRequired,
+  reload: PropTypes.func.isRequired,
 };
 
 const OneLine = (props) => {
@@ -85,38 +93,61 @@ const Relationship = (props) => {
     );
   } else {
     element = (
-      <Link to={`/r/relationships/${relationship.id}`}>
+      <Link to={webUrl('Relationship', relationship.id)}>
         <OneLine object={relationship} />
       </Link>
     );
   }
 
-  return (
+  const appendElements = (
     <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {element}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={relationship}
-              reload={reload}
-              showAddEvent
-              showAddPerson
-            />
-            <td>
-              <VersionInfo object={relationship} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <ListObjects object={relationship} relatedName="people" output={Person} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="event_dates" output={EventDate} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="addresses" output={Address} currentUser={currentUser} />
-      <ListObjects object={relationship} relatedName="notes" output={Note} currentUser={currentUser} />
+      <ListObjects
+        object={relationship}
+        relatedType="Person"
+        output={Person}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="EventDate"
+        output={EventDate}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="Address"
+        output={Address}
+        currentUser={currentUser}
+        reload={reload}
+      />
+      <ListObjects
+        object={relationship}
+        relatedType="Note"
+        output={Note}
+        currentUser={currentUser}
+        reload={reload}
+      />
     </div>
+  );
+
+  return (
+    <Base
+      object={relationship}
+      appendElements={appendElements}
+      editComponent={EditRelationship}
+      editTitle="Ändra förhållande"
+      modifierProps={{
+        showAddEvent: true,
+        showAddNote: true,
+        showAddPerson: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {element}
+    </Base>
   );
 };
 

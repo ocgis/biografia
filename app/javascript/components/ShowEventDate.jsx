@@ -1,13 +1,19 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import Show from './Show';
 import EventDate from './EventDate';
 
-class ShowEventDate extends Show {
-  constructor(props) {
-    super(props);
-    this.showObject = EventDate;
-    this.objectName = 'event_date';
-    this.apiUrl = '/api/v1/event_dates';
-  }
-}
+const ShowEventDate = ({ match, location }) => (
+  <Show
+    showObject={EventDate}
+    _type_="EventDate"
+    match={match}
+    location={location}
+  />
+);
+ShowEventDate.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
 
 export default ShowEventDate;

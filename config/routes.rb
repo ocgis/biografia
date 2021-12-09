@@ -5,14 +5,19 @@ Biografia::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :people, only: %i[index show create update]
-      resources :notes, only: %i[show]
-      resources :media, only: %i[index show]
-      resources :events, only: %i[index show create update]
-      resources :event_dates, only: %i[show]
-      resources :addresses, only: %i[index show]
-      resources :things, only: %i[index show]
-      resources :relationships, only: %i[show]
+      resources :people, only: %i[index show create update destroy]
+      resources :notes, only: %i[show create update destroy]
+      resources :media, only: %i[index show destroy] do
+        collection do
+          get :search
+          post :register
+        end
+      end
+      resources :events, only: %i[index show create update destroy]
+      resources :event_dates, only: %i[show create update destroy]
+      resources :addresses, only: %i[index show create update destroy]
+      resources :things, only: %i[index show create update destroy]
+      resources :relationships, only: %i[show create update destroy]
       resources :transfers, only: %i[index show]
       resources :exports, only: %i[index show] do
         collection do

@@ -4,12 +4,12 @@ import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import SaveData from './SaveData';
 
-class EditEvent extends SaveData {
+class EditEventDate extends SaveData {
   constructor(props) {
-    super(props, 'Event');
+    super(props, 'EventDate');
 
-    const { object: event, referFrom } = props;
-    this.state = { event: JSON.parse(JSON.stringify(event)) };
+    const { object: eventDate, referFrom } = props;
+    this.state = { event_date: JSON.parse(JSON.stringify(eventDate)) };
     if (referFrom != null) {
       this.state.referFrom = {
         _type_: referFrom._type_,
@@ -37,7 +37,7 @@ class EditEvent extends SaveData {
       onCancel();
     };
 
-    const { event, error } = this.state;
+    const { event_date: eventDate, error } = this.state;
 
     return (
       <div>
@@ -45,13 +45,13 @@ class EditEvent extends SaveData {
           <tbody>
             <tr>
               <td>
-                Namn:
+                Datum:
               </td>
               <td>
                 <Input
-                  defaultValue={event.name}
-                  onChange={(e) => {
-                    event.name = e.target.value;
+                  defaultValue={eventDate.date}
+                  onChange={(event) => {
+                    eventDate.date = event.target.value;
                   }}
                 />
               </td>
@@ -65,7 +65,7 @@ class EditEvent extends SaveData {
     );
   }
 }
-EditEvent.propTypes = {
+EditEventDate.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
@@ -74,12 +74,12 @@ EditEvent.propTypes = {
     id: PropTypes.number,
   }),
 };
-EditEvent.defaultProps = {
+EditEventDate.defaultProps = {
   object: {
-    name: null,
+    date: null,
     source: null,
   },
   referFrom: null,
 };
 
-export default EditEvent;
+export default EditEventDate;

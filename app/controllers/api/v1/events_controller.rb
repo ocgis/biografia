@@ -25,7 +25,7 @@ module Api
       end
 
       def all_objects
-        Event.all.limit(50)
+        Event.all
       end
 
       private

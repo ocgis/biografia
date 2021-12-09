@@ -98,10 +98,10 @@ function initAutocompleters() {
   }
 
   function select(event, ui) {
-    const connect2Id = $(this).siblings('#form_connect2Id')[0];
-    const form = $(this.form);
-    $(connect2Id).val(ui.item.value);
-    $(form).submit();
+    const form = event.target.parentNode;
+    const connect2Id = form.querySelector('#form_connect2Id');
+    connect2Id.value = ui.item.value;
+    Rails.fire(form, 'submit');
   }
 
   function open() {

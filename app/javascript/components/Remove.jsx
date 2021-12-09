@@ -1,34 +1,34 @@
 import axios from 'axios';
 import React from 'react';
-import PropTypes from 'prop-types';
+import { apiUrl, oneName } from './Mappings';
 
 class Remove extends React.Component {
+  constructor(props, _type_) {
+    super(props);
+    this._type_ = _type_;
+  }
+
   removeData(handleResult) {
     const csrfToken = document.querySelector('[name=csrf-token]').content;
     axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
-    const { objectName, state } = this;
+    const { _type_, state } = this;
 
-    const url = `${this.apiUrl}/${state[objectName].id}`;
+    const url = apiUrl(_type_, state[oneName(_type_)].id);
 
     axios.delete(url).then((response) => {
       const result = {};
-      result[objectName] = response.data[objectName];
+      result[oneName(_type_)] = response.data[oneName(_type_)];
       handleResult(result);
     }).catch((error) => {
       if (error.response) {
         handleResult({ error: `${error.response.status} ${error.response.statusText}` });
       } else {
-        const { history } = this.props;
         console.log(error);
-        console.log('Push /');
-        history.push('/');
+        this.setState({ error: 'An exception was raised. Check the console.' });
       }
     });
   }
 }
-Remove.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
 
 export default Remove;

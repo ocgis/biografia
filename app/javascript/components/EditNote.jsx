@@ -4,12 +4,12 @@ import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import SaveData from './SaveData';
 
-class EditEvent extends SaveData {
+class EditNote extends SaveData {
   constructor(props) {
-    super(props, 'Event');
+    super(props, 'Note');
 
-    const { object: event, referFrom } = props;
-    this.state = { event: JSON.parse(JSON.stringify(event)) };
+    const { object: note, referFrom } = props;
+    this.state = { note: JSON.parse(JSON.stringify(note)) };
     if (referFrom != null) {
       this.state.referFrom = {
         _type_: referFrom._type_,
@@ -37,7 +37,7 @@ class EditEvent extends SaveData {
       onCancel();
     };
 
-    const { event, error } = this.state;
+    const { note, error } = this.state;
 
     return (
       <div>
@@ -45,14 +45,30 @@ class EditEvent extends SaveData {
           <tbody>
             <tr>
               <td>
-                Namn:
+                Rubrik:
               </td>
               <td>
                 <Input
-                  defaultValue={event.name}
-                  onChange={(e) => {
-                    event.name = e.target.value;
+                  defaultValue={note.title}
+                  onChange={(event) => {
+                    note.title = event.target.value;
                   }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Kommentar:
+              </td>
+              <td>
+                <Input.TextArea
+                  rows={40}
+                  cols={120}
+                  defaultValue={note.note}
+                  onChange={(event) => {
+                    note.note = event.target.value;
+                  }}
+                  style={{ fontFamily: 'monospace' }}
                 />
               </td>
             </tr>
@@ -65,7 +81,7 @@ class EditEvent extends SaveData {
     );
   }
 }
-EditEvent.propTypes = {
+EditNote.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
@@ -74,12 +90,14 @@ EditEvent.propTypes = {
     id: PropTypes.number,
   }),
 };
-EditEvent.defaultProps = {
+EditNote.defaultProps = {
   object: {
-    name: null,
+    category: null,
+    title: null,
+    note: null,
     source: null,
   },
   referFrom: null,
 };
 
-export default EditEvent;
+export default EditNote;

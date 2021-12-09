@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modal } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
 import EditPerson from './EditPerson';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: { person_names: pns } } = props;
 
-  const renderPersonName = (personName, index) => {
+  const renderPersonName = (personName) => {
     if (personName.calling_name != null) {
-      let parts = personName.given_name.split(personName.calling_name);
-      for (let i = parts.length - 1; i > 0; i -= 1) {
-        parts.splice(i, 0, <strong key={index}>{personName.calling_name}</strong>);
-      }
+      let parts = personName.given_name.split(/( )/g).map((s) => {
+        if (s === personName.calling_name) {
+          return (
+            <strong key={personName.id}>
+              {personName.calling_name}
+            </strong>
+          );
+        }
+        return s;
+      });
       parts = parts.concat(` ${personName.surname}`);
 
       return parts;
@@ -22,7 +27,7 @@ const OneLine = (props) => {
     return `${personName.given_name} ${personName.surname}`;
   };
 
-  const personNames = pns.map((personName, i) => renderPersonName(personName, i));
+  const personNames = pns.map((personName) => renderPersonName(personName));
 
   if (personNames.length === 1) {
     return personNames[0];
@@ -55,92 +60,45 @@ const Person = (props) => {
     );
   }
 
-  if (mode === 'full') {
-    const [modalIsVisible, modalSetVisible] = useState(false);
-    const editPersonClicked = () => {
-      modalSetVisible(true);
-    };
-    const okButtonClicked = () => {
-      modalSetVisible(false);
-      reload();
-    };
-    const cancelButtonClicked = () => {
-      modalSetVisible(false);
-    };
+  let personElements = null;
 
-    return (
+  if (mode === 'full') {
+    personElements = (
       <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <OneLine object={person} />
-                {' '}
-                {person.sex}
-              </td>
-              {
-                currentUser.roles.includes('editor')
-                && (
-                  <td>
-                    <EditOutlined onClick={editPersonClicked} />
-                  </td>
-                )
-              }
-              <Modifier
-                currentUser={currentUser}
-                mainObject={person}
-                reload={reload}
-                showAddEvent
-              />
-              <td>
-                <VersionInfo object={person} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {
-          modalIsVisible && (
-            <Modal
-              title="Ändra person"
-              visible
-              closable={false}
-              footer={null}
-            >
-              <EditPerson
-                person={person}
-                onOk={(response) => { okButtonClicked(response); }}
-                onCancel={(response) => { cancelButtonClicked(response); }}
-              />
-            </Modal>
-          )
-        }
+        <OneLine object={person} />
+        {' '}
+        {person.sex}
+      </div>
+    );
+  } else {
+    personElements = (
+      <div>
+        <Link to={webUrl('Person', person.id)}>
+          <OneLine object={person} />
+        </Link>
+        {' '}
+        {person.sex}
       </div>
     );
   }
 
   return (
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <Link to={`/r/people/${person.id}`}>
-              <OneLine object={person} />
-            </Link>
-            {' '}
-            {person.sex}
-          </td>
-          <Modifier
-            currentUser={currentUser}
-            mainObject={person}
-            reload={reload}
-            showAddEvent
-          />
-          <td>
-            <VersionInfo object={person} />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <Base
+      object={person}
+      editComponent={EditPerson}
+      editTitle="Ändra person"
+      modifierProps={{
+        showAddAddress: true,
+        showAddEvent: true,
+        showAddNote: true,
+        showAddRelationship: true,
+        showAddThing: true,
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {personElements}
+    </Base>
   );
 };
 

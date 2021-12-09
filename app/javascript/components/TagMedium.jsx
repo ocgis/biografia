@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import SaveData from './SaveData';
 import { apiUrl } from './Mappings';
 
-class AddReference extends SaveData {
+class TagMedium extends SaveData {
   constructor(props) {
     super(props, 'Reference');
     this.state = {
@@ -18,7 +20,12 @@ class AddReference extends SaveData {
         id1: props.referFrom.id,
         type2: null,
         id2: null,
+        position_in_pictures: null,
       },
+      crop: {
+        unit: '%',
+      },
+      error: null,
     };
   }
 
@@ -34,7 +41,12 @@ class AddReference extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      const { type2, id2, position_in_pictures } = this.state.reference;
+      if (type2 == null || id2 == null || position_in_pictures == null) {
+        this.setState({ error: 'Välj referens och position' });
+      } else {
+        this.saveData(handleResult);
+      }
     };
 
     const closeButtonClicked = () => {
@@ -49,8 +61,10 @@ class AddReference extends SaveData {
       const encodedSearch = encodeURIComponent(searchString);
       const { _type_ } = this;
       axios.get(apiUrl(_type_, `list?q=${encodedSearch}`)).then((response) => {
-        this.state.descriptionOptions = response.data.result;
-        this.setState(this.state);
+        this.setState({
+          descriptionOptions: response.data.result,
+          error: null,
+        });
       }).catch((error) => {
         console.log(error);
         this.setState({ error: 'An exception was raised. Check the console.' });
@@ -58,7 +72,10 @@ class AddReference extends SaveData {
     });
 
     const onChange = (value) => {
-      this.setState({ value });
+      this.setState({
+        value,
+        error: null,
+      });
     };
 
     const onSelect = (index, object) => {
@@ -71,16 +88,46 @@ class AddReference extends SaveData {
       });
     };
 
-    const { descriptionOptions, error, value } = this.state;
+    const {
+      descriptionOptions, crop, error, value,
+    } = this.state;
+    const { referFrom } = this.props;
 
     const options = descriptionOptions.map((val, index) => ({
       value: index,
       label: val.value,
     }));
 
+    const onCropChange = (_, newCrop) => {
+      if (newCrop.width > 0 && newCrop.height > 0) {
+        this.state.reference.position_in_pictures = [{
+          x: newCrop.x * 10.0,
+          y: newCrop.y * 10.0,
+          width: newCrop.width * 10.0,
+          height: newCrop.height * 10.0,
+        }];
+      } else {
+        this.state.reference.position_in_pictures = null;
+      }
+      this.setState({
+        reference: this.state.reference,
+        crop: newCrop,
+        error: null,
+      });
+    };
+
     return (
       <table>
         <tbody>
+          <tr>
+            <td>
+              <ReactCrop
+                src={`/media/${referFrom.id}/image`}
+                crop={crop}
+                onChange={onCropChange}
+              />
+            </td>
+          </tr>
           <tr>
             <td>
               <AutoComplete
@@ -105,7 +152,7 @@ class AddReference extends SaveData {
     );
   }
 }
-AddReference.propTypes = {
+TagMedium.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   referFrom: PropTypes.shape({
@@ -113,7 +160,7 @@ AddReference.propTypes = {
     id: PropTypes.number.isRequired,
   }).isRequired,
 };
-AddReference.defaultProps = {
+TagMedium.defaultProps = {
 };
 
-export default AddReference;
+export default TagMedium;

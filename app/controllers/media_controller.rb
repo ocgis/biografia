@@ -105,22 +105,22 @@ class MediaController < ApplicationController
 
   def image
     medium = Medium.find(params.require(:id))
-    send_file(medium.get_fullsize)
+    send_file(medium.fullsize)
   end
 
   def thumb
     medium = Medium.find(params.require(:id))
-    send_file(medium.get_thumbnail)
+    send_file(medium.thumbnail)
   end
 
   def file_thumb
     file_name = params.require(:file)
-    send_file(Medium.get_thumbnail_for(file_name))
+    send_file(Medium.thumbnail_for(file_name))
   end
 
   def file_image
     file_name = params.require(:file)
-    send_file(Medium.get_fullsize_for(file_name))
+    send_file(Medium.fullsize_for(file_name))
   end
 
   protected

@@ -1,14 +1,12 @@
+import React from 'react';
 import Index from './Index';
 import Event from './Event';
 
-class IndexEvent extends Index {
-  constructor(props) {
-    super(props);
-    this.showObject = Event;
-    this.objectName = 'events';
-    this.objectsUrl = '/r/events';
-    this.apiUrl = '/api/v1/events';
-  }
-}
+const IndexEvent = () => (
+  <Index
+    showObject={Event}
+    _type_="Event"
+  />
+);
 
 export default IndexEvent;

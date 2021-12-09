@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Remove from './Remove';
+import { oneName } from './Mappings';
 
-class RemoveReference extends Remove {
+class RemoveObject extends Remove {
   constructor(props) {
-    super(props, 'Reference');
-    this.state = { reference: this.props.reference };
+    const { _type_ } = props.object;
+    super(props, _type_);
+    this.state = {};
+    this.state[oneName(_type_)] = this.props.object;
   }
 
   render = () => {
@@ -35,7 +38,7 @@ class RemoveReference extends Remove {
         <tbody>
           <tr>
             <td>
-              Skall referensen tas bort?
+              Skall objektet tas bort?
             </td>
           </tr>
           <tr>
@@ -50,12 +53,15 @@ class RemoveReference extends Remove {
     );
   }
 }
-RemoveReference.propTypes = {
+RemoveObject.propTypes = {
+  object: PropTypes.shape({
+    _type_: PropTypes.string,
+    id: PropTypes.number,
+  }).isRequired,
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  reference: PropTypes.shape({}).isRequired,
 };
-RemoveReference.defaultProps = {
+RemoveObject.defaultProps = {
 };
 
-export default RemoveReference;
+export default RemoveObject;

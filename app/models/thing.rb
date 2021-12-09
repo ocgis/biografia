@@ -39,6 +39,6 @@ class Thing < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes.update({ type_: 'Thing' }).update(extras)
+    attributes.update({ _type_: 'Thing' }).update(extras)
   end
 end

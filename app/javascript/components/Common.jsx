@@ -4,9 +4,17 @@ import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import EditEvent from './EditEvent';
+import EditEventDate from './EditEventDate';
+import EditAddress from './EditAddress';
 import EditPerson from './EditPerson';
+import EditNote from './EditNote';
+import EditRelationship from './EditRelationship';
+import EditThing from './EditThing';
 import AddReference from './AddReference';
+import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
+import RemoveObject from './RemoveObject';
+import { webUrl } from './Mappings';
 
 const Modifier = (props) => {
   const { currentUser } = props;
@@ -15,7 +23,9 @@ const Modifier = (props) => {
   }
 
   const {
-    mainObject, reload, showAddPerson, showAddEvent,
+    mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
+    showAddNote, showAddEventDate, showAddRelationship, showAddThing,
+    showTagMedium, editComponent, editTitle, modalWidth,
   } = props;
 
   const itemList = [];
@@ -24,6 +34,42 @@ const Modifier = (props) => {
       key: 'event',
       text: 'lägg till händelse',
       component: EditEvent,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddNote) {
+    itemList.push({
+      key: 'note',
+      text: 'kommentera',
+      component: EditNote,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddEventDate) {
+    itemList.push({
+      key: 'eventDate',
+      text: 'lägg till datum',
+      component: EditEventDate,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddAddress) {
+    itemList.push({
+      key: 'address',
+      text: 'lägg till adress',
+      component: EditAddress,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showAddRelationship) {
+    itemList.push({
+      key: 'relationship',
+      text: 'lägg till förhållande',
+      component: EditRelationship,
       props: { referFrom: mainObject },
     });
   }
@@ -37,12 +83,40 @@ const Modifier = (props) => {
     });
   }
 
+  if (showAddThing) {
+    itemList.push({
+      key: 'thing',
+      text: 'lägg till sak',
+      component: EditThing,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (editComponent != null && editTitle != null) {
+    itemList.push({
+      key: 'update',
+      text: 'ändra',
+      title: editTitle,
+      component: editComponent,
+      props: { object: mainObject },
+    });
+  }
+
   itemList.push({
     key: 'reference',
     text: 'referera till',
     component: AddReference,
     props: { referFrom: mainObject },
   });
+
+  if (showTagMedium) {
+    itemList.push({
+      key: 'tagMedium',
+      text: 'tagga',
+      component: TagMedium,
+      props: { referFrom: mainObject },
+    });
+  }
 
   if (mainObject.reference != null) {
     itemList.push({
@@ -52,6 +126,13 @@ const Modifier = (props) => {
       props: { reference: mainObject.reference },
     });
   }
+
+  itemList.push({
+    key: 'remove',
+    text: 'radera',
+    component: RemoveObject,
+    props: { object: mainObject },
+  });
 
   const [modalKey, setModalKey] = useState(null);
 
@@ -74,15 +155,20 @@ const Modifier = (props) => {
     }
     return itemList.map((item) => {
       if (item.key === modalKey) {
+        let { title } = item;
+        if (title == null) {
+          title = item.text;
+        }
         /* eslint-disable react/jsx-props-no-spreading */
         const Component = item.component;
         return (
           <Modal
-            title={item.text}
+            title={title}
             visible
             closable={false}
             footer={null}
             key={item.key}
+            width={modalWidth}
           >
             <Component
               {...item.props}
@@ -112,7 +198,7 @@ const Modifier = (props) => {
 };
 Modifier.propTypes = {
   mainObject: PropTypes.shape({
-    type_: PropTypes.string.isRequired,
+    _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     reference: PropTypes.shape({}),
   }).isRequired,
@@ -121,12 +207,30 @@ Modifier.propTypes = {
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  showAddAddress: PropTypes.bool,
   showAddPerson: PropTypes.bool,
   showAddEvent: PropTypes.bool,
+  showAddEventDate: PropTypes.bool,
+  showAddNote: PropTypes.bool,
+  showAddRelationship: PropTypes.bool,
+  showAddThing: PropTypes.bool,
+  showTagMedium: PropTypes.bool,
+  editComponent: PropTypes.func,
+  editTitle: PropTypes.string,
+  modalWidth: PropTypes.number,
 };
 Modifier.defaultProps = {
+  showAddAddress: false,
   showAddPerson: false,
   showAddEvent: false,
+  showAddEventDate: false,
+  showAddNote: false,
+  showAddRelationship: false,
+  showAddThing: false,
+  showTagMedium: false,
+  editComponent: null,
+  editTitle: null,
+  modalWidth: null,
 };
 
 const VersionInfo = (props) => {
@@ -135,7 +239,7 @@ const VersionInfo = (props) => {
 
   if (version != null) {
     return (
-      <Link to={`/r/controller/${object.id}/examine`}>
+      <Link to={webUrl(object._type_, object.id, 'examine')}>
         <span className="latest_update">
           {`Ändrad av ${version.name}`}
           <br />
@@ -153,6 +257,7 @@ const VersionInfo = (props) => {
 VersionInfo.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
+    _type_: PropTypes.string,
     version: PropTypes.shape({
       date: PropTypes.string,
       name: PropTypes.string,

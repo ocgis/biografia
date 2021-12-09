@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Modifier, VersionInfo } from './Common';
+import Base from './Base';
+import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: address } = props;
@@ -59,31 +61,23 @@ const Address = (props) => {
     }
   } else {
     name = (
-      <Link to={`/r/addresses/${address.id}`}>
+      <Link to={webUrl('Address', address.id)}>
         <OneLine object={address} />
       </Link>
     );
   }
   return (
-    <div>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              {name}
-            </td>
-            <Modifier
-              currentUser={currentUser}
-              mainObject={address}
-              reload={reload}
-            />
-            <td>
-              <VersionInfo object={address} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Base
+      object={address}
+      editComponent={EditAddress}
+      editTitle="Ändra adress"
+      modifierProps={{
+      }}
+      currentUser={currentUser}
+      reload={reload}
+    >
+      {name}
+    </Base>
   );
 };
 

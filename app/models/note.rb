@@ -19,6 +19,6 @@ class Note < ActiveRecord::Base
   end
 
   def all_attributes
-    attributes.update({ type_: 'Note' }).update(extras)
+    attributes.update({ _type_: 'Note' }).update(extras)
   end
 end

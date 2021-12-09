@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { webUrl } from './Mappings';
 
 const OneLine = (props) => {
   const { object: transfer } = props;
@@ -43,7 +44,7 @@ const Transfer = (props) => {
           </tbody>
         </table>
 
-        <Link to={`/r/imports/new?transfer_id=${transfer.id}`}>
+        <Link to={webUrl('Import', `new?transfer_id=${transfer.id}`)}>
           Import this file
         </Link>
       </div>
