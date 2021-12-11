@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 import { apiUrl } from './Mappings';
 
-class AddReference extends SaveData {
+class AddReference extends React.Component {
   constructor(props) {
-    super(props, 'Reference');
+    super(props);
     this.state = {
       value: null,
       descriptionOptions: [],
@@ -34,7 +34,7 @@ class AddReference extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      saveData('Reference', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {
@@ -47,10 +47,9 @@ class AddReference extends SaveData {
       axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
       const encodedSearch = encodeURIComponent(searchString);
-      const { _type_ } = this;
-      axios.get(apiUrl(_type_, `list?q=${encodedSearch}`)).then((response) => {
-        this.state.descriptionOptions = response.data.result;
-        this.setState(this.state);
+      axios.get(apiUrl('Reference', `list?q=${encodedSearch}`)).then((response) => {
+        const descriptionOptions = response.data.result;
+        this.setState({ descriptionOptions });
       }).catch((error) => {
         console.log(error);
         this.setState({ error: 'An exception was raised. Check the console.' });
@@ -62,11 +61,11 @@ class AddReference extends SaveData {
     };
 
     const onSelect = (index, object) => {
-      const option = this.state.descriptionOptions[index];
-      this.state.reference.type2 = option.key._type_;
-      this.state.reference.id2 = option.key.id;
+      const { descriptionOptions: { [index]: option }, reference } = this.state;
+      reference.type2 = option.key._type_;
+      reference.id2 = option.key.id;
       this.setState({
-        reference: this.state.reference,
+        reference,
         value: object.label,
       });
     };

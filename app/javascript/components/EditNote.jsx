@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 
-class EditNote extends SaveData {
+class EditNote extends React.Component {
   constructor(props) {
-    super(props, 'Note');
+    super(props);
 
     const { object: note, referFrom } = props;
     this.state = { note: JSON.parse(JSON.stringify(note)) };
@@ -29,7 +29,7 @@ class EditNote extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      saveData('Note', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

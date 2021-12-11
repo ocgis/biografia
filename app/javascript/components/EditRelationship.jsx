@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 
-class EditRelationship extends SaveData {
+class EditRelationship extends React.Component {
   constructor(props) {
-    super(props, 'Relationship');
+    super(props);
 
     const { object: relationship, referFrom } = props;
     this.state = { relationship: JSON.parse(JSON.stringify(relationship)) };
@@ -29,7 +29,7 @@ class EditRelationship extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      saveData('Relationship', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

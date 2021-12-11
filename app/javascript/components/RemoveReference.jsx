@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import Remove from './Remove';
+import { removeData } from './Requests';
 
-class RemoveReference extends Remove {
+class RemoveReference extends React.Component {
   constructor(props) {
-    super(props, 'Reference');
-    this.state = { reference: this.props.reference };
+    super(props);
+    const { reference } = this.props;
+    this.state = { reference };
   }
 
   render = () => {
@@ -20,7 +21,7 @@ class RemoveReference extends Remove {
     };
 
     const okButtonClicked = () => {
-      this.removeData(handleResult);
+      removeData('Reference', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

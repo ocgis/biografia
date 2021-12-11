@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 
-class EditEventDate extends SaveData {
+class EditEventDate extends React.Component {
   constructor(props) {
-    super(props, 'EventDate');
+    super(props);
 
     const { object: eventDate, referFrom } = props;
     this.state = { event_date: JSON.parse(JSON.stringify(eventDate)) };
@@ -29,7 +29,7 @@ class EditEventDate extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      saveData('EventDate', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

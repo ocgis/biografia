@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 
-class EditAddress extends SaveData {
+class EditAddress extends React.Component {
   constructor(props) {
-    super(props, 'Address');
+    super(props);
 
     const { object: address, referFrom } = props;
     this.state = { address: JSON.parse(JSON.stringify(address)) };
@@ -29,7 +29,7 @@ class EditAddress extends SaveData {
     };
 
     const okButtonClicked = () => {
-      this.saveData(handleResult);
+      saveData('Address', this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

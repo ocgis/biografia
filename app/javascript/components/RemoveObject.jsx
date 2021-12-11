@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import Remove from './Remove';
+import { removeData } from './Requests';
 import { oneName } from './Mappings';
 
-class RemoveObject extends Remove {
+class RemoveObject extends React.Component {
   constructor(props) {
+    super(props);
     const { _type_ } = props.object;
-    super(props, _type_);
     this.state = {};
-    this.state[oneName(_type_)] = this.props.object;
+    this.state[oneName(_type_)] = props.object;
   }
 
   render = () => {
@@ -23,7 +23,8 @@ class RemoveObject extends Remove {
     };
 
     const okButtonClicked = () => {
-      this.removeData(handleResult);
+      const { object: { _type_ } } = this.props;
+      removeData(_type_, this.state, handleResult);
     };
 
     const closeButtonClicked = () => {

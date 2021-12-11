@@ -6,12 +6,12 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import SaveData from './SaveData';
+import { saveData } from './Requests';
 import { apiUrl } from './Mappings';
 
-class TagMedium extends SaveData {
+class TagMedium extends React.Component {
   constructor(props) {
-    super(props, 'Reference');
+    super(props);
     this.state = {
       value: null,
       descriptionOptions: [],
@@ -41,11 +41,11 @@ class TagMedium extends SaveData {
     };
 
     const okButtonClicked = () => {
-      const { type2, id2, position_in_pictures } = this.state.reference;
+      const { reference: { type2, id2, position_in_pictures } } = this.state;
       if (type2 == null || id2 == null || position_in_pictures == null) {
         this.setState({ error: 'Välj referens och position' });
       } else {
-        this.saveData(handleResult);
+        saveData('Reference', this.state, handleResult);
       }
     };
 
@@ -59,8 +59,7 @@ class TagMedium extends SaveData {
       axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
       const encodedSearch = encodeURIComponent(searchString);
-      const { _type_ } = this;
-      axios.get(apiUrl(_type_, `list?q=${encodedSearch}`)).then((response) => {
+      axios.get(apiUrl('Reference', `list?q=${encodedSearch}`)).then((response) => {
         this.setState({
           descriptionOptions: response.data.result,
           error: null,
@@ -79,11 +78,11 @@ class TagMedium extends SaveData {
     };
 
     const onSelect = (index, object) => {
-      const option = this.state.descriptionOptions[index];
-      this.state.reference.type2 = option.key._type_;
-      this.state.reference.id2 = option.key.id;
+      const { descriptionOptions: { [index]: option }, reference } = this.state;
+      reference.type2 = option.key._type_;
+      reference.id2 = option.key.id;
       this.setState({
-        reference: this.state.reference,
+        reference,
         value: object.label,
       });
     };
@@ -99,18 +98,19 @@ class TagMedium extends SaveData {
     }));
 
     const onCropChange = (_, newCrop) => {
+      const { reference } = this.state;
       if (newCrop.width > 0 && newCrop.height > 0) {
-        this.state.reference.position_in_pictures = [{
+        reference.position_in_pictures = [{
           x: newCrop.x * 10.0,
           y: newCrop.y * 10.0,
           width: newCrop.width * 10.0,
           height: newCrop.height * 10.0,
         }];
       } else {
-        this.state.reference.position_in_pictures = null;
+        reference.position_in_pictures = null;
       }
       this.setState({
-        reference: this.state.reference,
+        reference,
         crop: newCrop,
         error: null,
       });
