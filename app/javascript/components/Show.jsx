@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LoadData from './LoadData';
+import { Alert } from 'antd';
 import TopMenu from './TopMenu';
+import { loadData } from './Requests';
 import { ShowReferences } from './Reference';
 import { apiUrl, oneName } from './Mappings';
 
@@ -12,10 +13,13 @@ class Show extends React.Component {
     const { _type_ } = this.props;
     const objectName = oneName(_type_);
     this.state = {
-      loadKey: 1,
       currentUser: null,
     };
     this.state[objectName] = null;
+  }
+
+  componentDidMount() {
+    this.reload();
   }
 
   componentDidUpdate(prevProps) {
@@ -27,8 +31,14 @@ class Show extends React.Component {
   }
 
   reload = () => {
-    const { loadKey } = this.state;
-    this.setState({ loadKey: loadKey + 1 });
+    const { _type_ } = this.props;
+    const objectName = oneName(_type_);
+
+    const onLoaded = (data) => {
+      this.setState(data);
+    };
+
+    loadData(this.url(), objectName, onLoaded, false);
   };
 
   url = () => {
@@ -40,24 +50,18 @@ class Show extends React.Component {
     const { state } = this;
     const { _type_, showObject: ShowObject, noReferences } = this.props;
     const {
-      currentUser, loadKey,
+      currentUser, error,
     } = state;
     const objectName = oneName(_type_);
     const object = state[objectName];
 
-    const onLoaded = (data) => {
-      this.setState(data);
-    };
-
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        <LoadData
-          key={loadKey}
-          url={this.url()}
-          objectName={objectName}
-          onLoaded={onLoaded}
-        />
+        { error != null
+          && (
+            <Alert message={error} type="error" showIcon />
+          )}
         { object != null
           && (
             <table>

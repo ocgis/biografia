@@ -1,6 +1,50 @@
 import axios from 'axios';
 import { apiUrl, oneName } from './Mappings';
 
+const loadData = (url, objectName, onLoaded, loadMany, state) => {
+  const csrfToken = document.querySelector('[name=csrf-token]').content;
+  axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+
+  let newState = state;
+  let loadUrl = url;
+  if (loadMany) {
+    if (newState == null) {
+      newState = { offset: 0, limit: 200 };
+    }
+    const { offset, limit } = newState;
+    loadUrl = `${url}?offset=${offset}&limit=${limit}`;
+  }
+
+  axios.get(loadUrl).then((response) => {
+    const data = {
+      currentUser: response.data.current_user,
+      error: null,
+    };
+    data[objectName] = response.data[objectName];
+    onLoaded(data);
+
+    if (loadMany) {
+      const { offset, limit } = newState;
+      if (response.data[objectName].length === limit
+          && offset < 1000000) {
+        newState.offset = limit + offset;
+        newState.limit = limit * 100;
+        loadData(url, objectName, onLoaded, loadMany, newState);
+      }
+    }
+  }).catch((error) => {
+    const data = {};
+    data[objectName] = null;
+    if (error.response) {
+      data.error = `${error.response.status} ${error.response.statusText}`;
+    } else {
+      console.log(error);
+      data.error = 'An exception was raised. Check the console.';
+    }
+    onLoaded(data);
+  });
+};
+
 const saveData = (_type_, data, handleResult) => {
   const railsify = (indata) => {
     const {
@@ -72,4 +116,4 @@ const removeData = (_type_, data, handleResult) => {
   });
 };
 
-export { saveData, removeData };
+export { loadData, saveData, removeData };

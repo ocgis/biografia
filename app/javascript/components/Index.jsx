@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import LoadData from './LoadData';
+import { Alert } from 'antd';
+import { loadData } from './Requests';
 import TopMenu from './TopMenu';
 import { apiUrl, manyName, webUrl } from './Mappings';
 
@@ -13,32 +14,46 @@ class Index extends React.Component {
     const objectName = manyName(_type_);
     this.state = {
       currentUser: null,
-      objectName,
     };
     this.state[objectName] = null;
   }
 
+  componentDidMount() {
+    this.reload();
+  }
+
+  reload = () => {
+    const { _type_ } = this.props;
+
+    const onLoaded = (data) => {
+      const { state } = this;
+      const objectName = manyName(_type_);
+      if (state[objectName] == null) {
+        this.setState(data);
+      } else {
+        state[objectName] = state[objectName].concat(data[objectName]);
+        this.setState(state);
+      }
+    };
+
+    loadData(apiUrl(_type_), manyName(_type_), onLoaded, true);
+  };
+
   render = () => {
     const { _type_ } = this.props;
     const { state } = this;
-    const { currentUser, objectName } = state;
-    const objects = state[objectName];
-
-    const onLoaded = (data) => {
-      this.setState(data);
-    };
+    const { currentUser, error } = state;
+    const objects = state[manyName(_type_)];
 
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        <LoadData
-          url={apiUrl(_type_)}
-          objectName={objectName}
-          onLoaded={onLoaded}
-          loadMany
-        >
-          {this.renderObjects(objects)}
-        </LoadData>
+        { error != null
+          && (
+            <Alert message={error} type="error" showIcon />
+          )}
+        { objects != null
+          && this.renderObjects(objects) }
       </div>
     );
   }
