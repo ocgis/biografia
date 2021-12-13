@@ -96,7 +96,7 @@ const saveData = (_type_, data, handleResult) => {
   };
 
   const handleError = (error) => {
-    handleResult(errorText(error));
+    handleResult({ error: errorText(error) });
   };
 
   sendRequest(axiosCall, url, sendData, handleResponse, handleError);
@@ -112,7 +112,7 @@ const removeData = (_type_, data, handleResult) => {
   };
 
   const handleError = (error) => {
-    handleResult(errorText(error));
+    handleResult({ error: errorText(error) });
   };
 
   sendRequest(axios.delete, url, null, handleResponse, handleError);
