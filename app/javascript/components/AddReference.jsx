@@ -1,10 +1,9 @@
-import axios from 'axios';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { AutoComplete } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
-import { saveData } from './Requests';
+import { errorText, getRequest, saveData } from './Requests';
 import { apiUrl } from './Mappings';
 
 class AddReference extends React.Component {
@@ -43,17 +42,17 @@ class AddReference extends React.Component {
     };
 
     const searchObject = throttle(500, (searchString) => {
-      const csrfToken = document.querySelector('[name=csrf-token]').content;
-      axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
-      const encodedSearch = encodeURIComponent(searchString);
-      axios.get(apiUrl('Reference', `list?q=${encodedSearch}`)).then((response) => {
+      const handleResponse = (response) => {
         const descriptionOptions = response.data.result;
         this.setState({ descriptionOptions });
-      }).catch((error) => {
-        console.log(error);
-        this.setState({ error: 'An exception was raised. Check the console.' });
-      });
+      };
+
+      const handleError = (error) => {
+        this.setState({ error: errorText(error) });
+      };
+
+      const encodedSearch = encodeURIComponent(searchString);
+      getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
     });
 
     const onChange = (value) => {

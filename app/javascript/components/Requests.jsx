@@ -8,6 +8,14 @@ const sendRequest = (requestFunction, url, data, handleResponse, handleError) =>
   requestFunction(url, data).then(handleResponse).catch(handleError);
 };
 
+const getRequest = (url, handleResponse, handleError) => {
+  sendRequest(axios.get, url, null, handleResponse, handleError);
+};
+
+const postRequest = (url, data, handleResponse, handleError) => {
+  sendRequest(axios.post, url, data, handleResponse, handleError);
+};
+
 const errorText = (error) => {
   if (error.response) {
     return `${error.response.status} ${error.response.statusText}`;
@@ -52,7 +60,7 @@ const loadData = (url, objectName, onLoaded, loadMany, state) => {
     onLoaded(data);
   };
 
-  sendRequest(axios.get, loadUrl, null, handleResponse, handleError);
+  getRequest(loadUrl, handleResponse, handleError);
 };
 
 const saveData = (_type_, data, handleResult) => {
@@ -118,4 +126,6 @@ const removeData = (_type_, data, handleResult) => {
   sendRequest(axios.delete, url, null, handleResponse, handleError);
 };
 
-export { loadData, saveData, removeData };
+export {
+  errorText, getRequest, postRequest, loadData, saveData, removeData,
+};

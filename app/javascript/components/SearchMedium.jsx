@@ -1,9 +1,9 @@
-import axios from 'axios';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import TopMenu from './TopMenu';
 import { apiUrl, webUrl } from './Mappings';
+import { errorText, getRequest, postRequest } from './Requests';
 
 class SearchMedium extends React.Component {
   constructor(props) {
@@ -73,11 +73,7 @@ class SearchMedium extends React.Component {
   }
 
   registerImage = (path) => {
-    const csrfToken = document.querySelector('[name=csrf-token]').content;
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
-    const data = { file_name: path };
-    axios.post(`${this.apiUrl}/register`, data).then((response) => {
+    const handleResponse = (response) => {
       const { data: { medium } } = response;
       const { history } = this.props;
 
@@ -90,35 +86,32 @@ class SearchMedium extends React.Component {
         }
         this.setState({ error });
       }
-    }).catch((error) => {
-      if (error.response) {
-        this.setState({ error: `${error.response.status} ${error.response.statusText}` });
-      } else {
-        console.log(error);
-        this.setState({ error: 'Exception caught' });
-      }
-    });
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+
+    const data = { file_name: path };
+    postRequest(`${this.apiUrl}/register`, data, handleResponse, handleError);
   }
 
   loadData() {
     const { location: { search } } = this.props;
-    const csrfToken = document.querySelector('[name=csrf-token]').content;
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
-    axios.get(`${this.apiUrl}/search${search}`).then((response) => {
+    const handleResponse = (response) => {
       const newState = {
         currentUser: response.data.current_user,
       };
       newState.nodes = response.data.nodes;
       this.setState(newState);
-    }).catch((error) => {
-      if (error.response) {
-        this.setState({ error: `${error.response.status} ${error.response.statusText}` });
-      } else {
-        console.log(error);
-        this.setState({ error: 'Exception caught' });
-      }
-    });
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+
+    getRequest(`${this.apiUrl}/search${search}`, handleResponse, handleError);
   }
 
   resetState() {
