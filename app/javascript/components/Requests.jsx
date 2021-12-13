@@ -1,10 +1,22 @@
 import axios from 'axios';
 import { apiUrl, oneName } from './Mappings';
 
-const loadData = (url, objectName, onLoaded, loadMany, state) => {
+const sendRequest = (requestFunction, url, data, handleResponse, handleError) => {
   const csrfToken = document.querySelector('[name=csrf-token]').content;
   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
 
+  requestFunction(url, data).then(handleResponse).catch(handleError);
+};
+
+const errorText = (error) => {
+  if (error.response) {
+    return `${error.response.status} ${error.response.statusText}`;
+  }
+  console.log(error);
+  return 'An exception was raised. Check the console.';
+};
+
+const loadData = (url, objectName, onLoaded, loadMany, state) => {
   let newState = state;
   let loadUrl = url;
   if (loadMany) {
@@ -15,7 +27,7 @@ const loadData = (url, objectName, onLoaded, loadMany, state) => {
     loadUrl = `${url}?offset=${offset}&limit=${limit}`;
   }
 
-  axios.get(loadUrl).then((response) => {
+  const handleResponse = (response) => {
     const data = {
       currentUser: response.data.current_user,
       error: null,
@@ -32,17 +44,15 @@ const loadData = (url, objectName, onLoaded, loadMany, state) => {
         loadData(url, objectName, onLoaded, loadMany, newState);
       }
     }
-  }).catch((error) => {
-    const data = {};
+  };
+
+  const handleError = (error) => {
+    const data = { error: errorText(error) };
     data[objectName] = null;
-    if (error.response) {
-      data.error = `${error.response.status} ${error.response.statusText}`;
-    } else {
-      console.log(error);
-      data.error = 'An exception was raised. Check the console.';
-    }
     onLoaded(data);
-  });
+  };
+
+  sendRequest(axios.get, loadUrl, null, handleResponse, handleError);
 };
 
 const saveData = (_type_, data, handleResult) => {
@@ -66,9 +76,6 @@ const saveData = (_type_, data, handleResult) => {
     return outdata;
   };
 
-  const csrfToken = document.querySelector('[name=csrf-token]').content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
   const sendData = {};
 
   sendData[oneName(_type_)] = railsify(data[oneName(_type_)]);
@@ -82,38 +89,33 @@ const saveData = (_type_, data, handleResult) => {
     axiosCall = axios.patch;
   }
 
-  axiosCall(url, sendData).then((response) => {
+  const handleResponse = (response) => {
     const result = {};
     result[oneName(_type_)] = response.data[oneName(_type_)];
     handleResult(result);
-  }).catch((error) => {
-    if (error.response) {
-      handleResult({ error: `${error.response.status} ${error.response.statusText}` });
-    } else {
-      console.log(error);
-      handleResult({ error: 'An exception was raised. Check the console.' });
-    }
-  });
+  };
+
+  const handleError = (error) => {
+    handleResult(errorText(error));
+  };
+
+  sendRequest(axiosCall, url, sendData, handleResponse, handleError);
 };
 
 const removeData = (_type_, data, handleResult) => {
-  const csrfToken = document.querySelector('[name=csrf-token]').content;
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
-
   const url = apiUrl(_type_, data[oneName(_type_)].id);
 
-  axios.delete(url).then((response) => {
+  const handleResponse = (response) => {
     const result = {};
     result[oneName(_type_)] = response.data[oneName(_type_)];
     handleResult(result);
-  }).catch((error) => {
-    if (error.response) {
-      handleResult({ error: `${error.response.status} ${error.response.statusText}` });
-    } else {
-      console.log(error);
-      this.setState({ error: 'An exception was raised. Check the console.' });
-    }
-  });
+  };
+
+  const handleError = (error) => {
+    handleResult(errorText(error));
+  };
+
+  sendRequest(axios.delete, url, null, handleResponse, handleError);
 };
 
 export { loadData, saveData, removeData };
