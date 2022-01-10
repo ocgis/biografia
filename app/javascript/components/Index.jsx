@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
+import { FixedSizeList as List } from 'react-window';
 import { loadData } from './Requests';
 import TopMenu from './TopMenu';
 import { apiUrl, manyName, webUrl } from './Mappings';
@@ -14,13 +15,45 @@ class Index extends React.Component {
     const objectName = manyName(_type_);
     this.state = {
       currentUser: null,
+      divRef: createRef(),
+      elementHeight: null,
+      listHeight: null,
     };
     this.state[objectName] = null;
   }
 
   componentDidMount() {
     this.reload();
+    window.addEventListener('resize', this.updateHeights);
   }
+
+  componentDidUpdate() {
+    this.updateHeights();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateHeights);
+  }
+
+  updateHeights = () => {
+    const { divRef } = this.state;
+    const { top, height } = divRef.current.getBoundingClientRect();
+    const { listHeight: oldListHeight } = this.state;
+    const heights = {};
+
+    const listHeight = window.innerHeight - top;
+    if (listHeight !== oldListHeight) {
+      heights.listHeight = listHeight;
+    }
+
+    if (oldListHeight == null) {
+      heights.elementHeight = height;
+    }
+
+    if (Object.entries(heights).length > 0) {
+      this.setState(heights);
+    }
+  };
 
   reload = () => {
     const { _type_ } = this.props;
@@ -59,10 +92,33 @@ class Index extends React.Component {
   }
 
   renderObjects = (objects) => {
-    if (objects == null) {
+    const { elementHeight, listHeight, divRef } = this.state;
+
+    if (objects == null || objects.length === 0) {
       return null;
     }
-    return objects.map((object) => this.renderObject(object));
+
+    const Row = ({ index, style }) => (
+      <div style={style}>
+        {this.renderObject(objects[index])}
+      </div>
+    );
+
+    return (
+      <div ref={divRef}>
+        { listHeight != null
+          ? (
+            <List
+              height={listHeight}
+              itemCount={objects.length}
+              itemSize={elementHeight}
+            >
+              {Row}
+            </List>
+          )
+          : this.renderObject(objects[0])}
+      </div>
+    );
   }
 
   renderObject = (object) => {
@@ -78,7 +134,6 @@ class Index extends React.Component {
             reload={() => alert('Unexpected: Implement reload() for Index()')}
           />
         </Link>
-        <br />
       </React.Fragment>
     );
   }

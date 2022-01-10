@@ -8,7 +8,17 @@ const OneLine = (props) => {
   const { object: medium } = props;
 
   return (
-    <img src={`/media/${medium.id}/thumb`} alt={medium.file_name} />
+    <div
+      style={{
+        width: '110px',
+        height: '110px',
+      }}
+    >
+      <img
+        src={`/media/${medium.id}/thumb`}
+        alt={medium.file_name}
+      />
+    </div>
   );
 };
 
