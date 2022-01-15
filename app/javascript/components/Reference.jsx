@@ -1,15 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import Person from './Person';
-import Event from './Event';
-import Note from './Note';
-import Relationship from './Relationship';
-import Medium from './Medium';
-import Address from './Address';
-import EventDate from './EventDate';
-import Thing from './Thing';
-import { setMapping } from './Mappings';
+import { setMapping, showObject } from './Mappings';
 
 setMapping('Reference', 'oneName', 'reference');
 setMapping('Reference', 'manyName', 'references');
@@ -21,17 +13,7 @@ const RenderElement = (props) => {
     currentUser, element, kind, reload,
   } = props;
 
-  const componentMap = {
-    addresses: Address,
-    event_dates: EventDate,
-    events: Event,
-    media: Medium,
-    notes: Note,
-    people: Person,
-    relationships: Relationship,
-    things: Thing,
-  };
-  const Component = componentMap[kind];
+  const Component = showObject(kind);
 
   if (Component == null) {
     console.log(kind, element);
@@ -105,4 +87,5 @@ ShowReferences.defaultProps = {
   reload: () => alert('Missing reload callback'),
 };
 
+/* eslint-disable import/prefer-default-export */
 export { ShowReferences };

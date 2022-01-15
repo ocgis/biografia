@@ -4,7 +4,7 @@ import { Alert } from 'antd';
 import TopMenu from './TopMenu';
 import { loadData } from './Requests';
 import { ShowReferences } from './Reference';
-import { apiUrl, oneName } from './Mappings';
+import { apiUrl, oneName, showObject } from './Mappings';
 
 class Show extends React.Component {
   constructor(props) {
@@ -48,10 +48,11 @@ class Show extends React.Component {
 
   render = () => {
     const { state } = this;
-    const { _type_, showObject: ShowObject, noReferences } = this.props;
+    const { _type_, noReferences } = this.props;
     const {
       currentUser, error,
     } = state;
+    const ShowObject = showObject(_type_);
     const objectName = oneName(_type_);
     const object = state[objectName];
 
@@ -97,7 +98,6 @@ class Show extends React.Component {
 }
 Show.propTypes = {
   _type_: PropTypes.string.isRequired,
-  showObject: PropTypes.func.isRequired,
   noReferences: PropTypes.bool,
   match: PropTypes.shape().isRequired,
   location: PropTypes.shape({

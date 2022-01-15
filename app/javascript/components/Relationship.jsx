@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
+import Show from './Show';
 import EditRelationship from './EditRelationship';
-import Person from './Person';
-import EventDate from './EventDate';
-import Address from './Address';
-import Note from './Note';
-import { setMapping, manyName, webUrl } from './Mappings';
+import {
+  setMapping, showObject, manyName, webUrl,
+} from './Mappings';
 
 setMapping('Relationship', 'oneName', 'relationship');
 setMapping('Relationship', 'manyName', 'relationships');
@@ -15,7 +14,7 @@ setMapping('Relationship', 'manyName', 'relationships');
 const ListObjects = (props) => {
   const { object } = props;
   const { relatedType } = props;
-  const { output: Output } = props;
+  const Output = showObject(relatedType);
   const { currentUser } = props;
   const { reload } = props;
   const relObjs = object.related[manyName(relatedType)];
@@ -47,7 +46,6 @@ const ListObjects = (props) => {
 ListObjects.propTypes = {
   object: PropTypes.shape({ related: PropTypes.shape({}) }).isRequired,
   relatedType: PropTypes.string.isRequired,
-  output: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   reload: PropTypes.func.isRequired,
 };
@@ -107,28 +105,24 @@ const Relationship = (props) => {
       <ListObjects
         object={relationship}
         relatedType="Person"
-        output={Person}
         currentUser={currentUser}
         reload={reload}
       />
       <ListObjects
         object={relationship}
         relatedType="EventDate"
-        output={EventDate}
         currentUser={currentUser}
         reload={reload}
       />
       <ListObjects
         object={relationship}
         relatedType="Address"
-        output={Address}
         currentUser={currentUser}
         reload={reload}
       />
       <ListObjects
         object={relationship}
         relatedType="Note"
-        output={Note}
         currentUser={currentUser}
         reload={reload}
       />
@@ -169,4 +163,19 @@ Relationship.defaultProps = {
   mode: '',
 };
 
-export default Relationship;
+setMapping('Relationship', 'showObject', Relationship);
+
+const ShowRelationship = ({ match, location }) => (
+  <Show
+    _type_="Relationship"
+    match={match}
+    location={location}
+  />
+);
+ShowRelationship.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+/* eslint-disable import/prefer-default-export */
+export { ShowRelationship };

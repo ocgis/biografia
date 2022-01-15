@@ -5,7 +5,9 @@ import { Alert } from 'antd';
 import { FixedSizeList as List } from 'react-window';
 import { loadData } from './Requests';
 import TopMenu from './TopMenu';
-import { apiUrl, manyName, webUrl } from './Mappings';
+import {
+  apiUrl, manyName, showObject, webUrl,
+} from './Mappings';
 
 class Index extends React.Component {
   constructor(props) {
@@ -122,8 +124,9 @@ class Index extends React.Component {
   }
 
   renderObject = (object) => {
-    const { _type_, showObject: ShowObject } = this.props;
+    const { _type_ } = this.props;
     const { currentUser } = this.state;
+    const ShowObject = showObject(_type_);
     return (
       <React.Fragment key={object.id}>
         <Link to={webUrl(_type_, object.id)}>
@@ -141,7 +144,6 @@ class Index extends React.Component {
 
 Index.propTypes = {
   _type_: PropTypes.string.isRequired,
-  showObject: PropTypes.func.isRequired,
 };
 
 export default Index;

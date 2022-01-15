@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Index from './Index';
+import Show from './Show';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('User', 'oneName', 'user');
@@ -99,4 +101,25 @@ User.defaultProps = {
   mode: '',
 };
 
-export default User;
+setMapping('User', 'showObject', User);
+
+const IndexUser = () => (
+  <Index
+    _type_="User"
+  />
+);
+
+const ShowUser = ({ match, location }) => (
+  <Show
+    _type_="User"
+    match={match}
+    location={location}
+    noReferences
+  />
+);
+ShowUser.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexUser, ShowUser };

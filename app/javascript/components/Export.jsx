@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Index from './Index';
+import Show from './Show';
 import { setMapping } from './Mappings';
 
 setMapping('Export', 'oneName', 'export');
@@ -67,4 +69,25 @@ Export.defaultProps = {
   mode: '',
 };
 
-export default Export;
+setMapping('Export', 'showObject', Export);
+
+const IndexExport = () => (
+  <Index
+    _type_="Export"
+  />
+);
+
+const ShowExport = ({ match, location }) => (
+  <Show
+    _type_="Export"
+    match={match}
+    location={location}
+    noReferences
+  />
+);
+ShowExport.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexExport, ShowExport };

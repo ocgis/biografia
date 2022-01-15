@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
-import EventDate from './EventDate';
-import Person from './Person';
-import Address from './Address';
+import Index from './Index';
+import Show from './Show';
 import EditEvent from './EditEvent';
-import { setMapping, manyName, webUrl } from './Mappings';
+import {
+  setMapping, showObject, manyName, webUrl,
+} from './Mappings';
 
 setMapping('Event', 'oneName', 'event');
 setMapping('Event', 'manyName', 'events');
@@ -15,7 +16,7 @@ const ListRelated = (props) => {
   const { object } = props;
   const { relatedType } = props;
   const { prefix } = props;
-  const { showObject: ShowObject } = props;
+  const ShowObject = showObject(relatedType);
   const { currentUser } = props;
   const relObjs = object.related[manyName(relatedType)];
 
@@ -77,10 +78,10 @@ const Event = (props) => {
       currentUser={currentUser}
       reload={reload}
     >
-      <ListRelated object={event} showObject={EventDate} relatedType="EventDate" currentUser={currentUser} />
+      <ListRelated object={event} relatedType="EventDate" currentUser={currentUser} />
       {name}
-      <ListRelated object={event} showObject={Person} relatedType="Person" currentUser={currentUser} prefix=" med " />
-      <ListRelated object={event} showObject={Address} relatedType="Address" currentUser={currentUser} prefix=" vid " />
+      <ListRelated object={event} relatedType="Person" currentUser={currentUser} prefix=" med " />
+      <ListRelated object={event} relatedType="Address" currentUser={currentUser} prefix=" vid " />
     </Base>
   );
 };
@@ -103,4 +104,24 @@ Event.defaultProps = {
   mode: '',
 };
 
-export default Event;
+setMapping('Event', 'showObject', Event);
+
+const IndexEvent = () => (
+  <Index
+    _type_="Event"
+  />
+);
+
+const ShowEvent = ({ match, location }) => (
+  <Show
+    _type_="Event"
+    match={match}
+    location={location}
+  />
+);
+ShowEvent.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexEvent, ShowEvent };

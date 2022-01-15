@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Index from './Index';
+import Show from './Show';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Transfer', 'oneName', 'transfer');
@@ -83,4 +85,25 @@ Transfer.defaultProps = {
   mode: '',
 };
 
-export default Transfer;
+setMapping('Transfer', 'showObject', Transfer);
+
+const IndexTransfer = () => (
+  <Index
+    _type_="Transfer"
+  />
+);
+
+const ShowTransfer = ({ match, location }) => (
+  <Show
+    _type_="Transfer"
+    match={match}
+    location={location}
+    noReferences
+  />
+);
+ShowTransfer.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexTransfer, ShowTransfer };

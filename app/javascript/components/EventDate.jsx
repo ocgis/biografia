@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Base from './Base';
+import Show from './Show';
 import EditEventDate from './EditEventDate';
 import { setMapping, webUrl } from './Mappings';
 
@@ -67,4 +68,19 @@ EventDate.defaultProps = {
   mode: '',
 };
 
-export default EventDate;
+setMapping('EventDate', 'showObject', EventDate);
+
+const ShowEventDate = ({ match, location }) => (
+  <Show
+    _type_="EventDate"
+    match={match}
+    location={location}
+  />
+);
+ShowEventDate.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+/* eslint-disable import/prefer-default-export */
+export { ShowEventDate };

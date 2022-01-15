@@ -1,25 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import IndexPerson from './IndexPerson';
-import ShowPerson from './ShowPerson';
-import ShowNote from './ShowNote';
+import { IndexPerson, ShowPerson } from './Person';
+import { ShowNote } from './Note';
 import SearchMedium from './SearchMedium';
-import IndexMedium from './IndexMedium';
-import ShowMedium from './ShowMedium';
-import IndexEvent from './IndexEvent';
-import ShowEvent from './ShowEvent';
-import ShowEventDate from './ShowEventDate';
-import IndexAddress from './IndexAddress';
-import ShowAddress from './ShowAddress';
-import IndexThing from './IndexThing';
-import ShowThing from './ShowThing';
-import ShowRelationship from './ShowRelationship';
-import IndexTransfer from './IndexTransfer';
-import ShowTransfer from './ShowTransfer';
-import IndexExport from './IndexExport';
-import ShowExport from './ShowExport';
-import IndexUser from './IndexUser';
-import ShowUser from './ShowUser';
+import { IndexMedium, ShowMedium } from './Medium';
+import { IndexEvent, ShowEvent } from './Event';
+import { ShowEventDate } from './EventDate';
+import { IndexAddress, ShowAddress } from './Address';
+import { IndexThing, ShowThing } from './Thing';
+import { ShowRelationship } from './Relationship';
+import { IndexTransfer, ShowTransfer } from './Transfer';
+import { IndexExport, ShowExport } from './Export';
+import { IndexUser, ShowUser } from './User';
 import { webUrl } from './Mappings';
 
 export default (

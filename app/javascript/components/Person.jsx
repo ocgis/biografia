@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Base from './Base';
+import Show from './Show';
+import Index from './Index';
 import EditPerson from './EditPerson';
 import { setMapping, webUrl } from './Mappings';
 
@@ -123,4 +125,24 @@ Person.defaultProps = {
   mode: '',
 };
 
-export default Person;
+setMapping('Person', 'showObject', Person);
+
+const ShowPerson = ({ match, location }) => (
+  <Show
+    _type_="Person"
+    match={match}
+    location={location}
+  />
+);
+ShowPerson.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+const IndexPerson = () => (
+  <Index
+    _type_="Person"
+  />
+);
+
+export { ShowPerson, IndexPerson };

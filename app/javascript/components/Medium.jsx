@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
+import Index from './Index';
+import Show from './Show';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Medium', 'oneName', 'medium');
@@ -217,4 +219,24 @@ Medium.defaultProps = {
   mode: '',
 };
 
-export default Medium;
+setMapping('Medium', 'showObject', Medium);
+
+const IndexMedium = () => (
+  <Index
+    _type_="Medium"
+  />
+);
+
+const ShowMedium = ({ match, location }) => (
+  <Show
+    _type_="Medium"
+    match={match}
+    location={location}
+  />
+);
+ShowMedium.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexMedium, ShowMedium };

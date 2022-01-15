@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Base from './Base';
+import Index from './Index';
+import Show from './Show';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
 import { setMapping, webUrl } from './Mappings';
@@ -95,4 +97,24 @@ Address.defaultProps = {
   mode: '',
 };
 
-export default Address;
+setMapping('Address', 'showObject', Address);
+
+const IndexAddress = () => (
+  <Index
+    _type_="Address"
+  />
+);
+
+const ShowAddress = ({ match, location }) => (
+  <Show
+    _type_="Address"
+    match={match}
+    location={location}
+  />
+);
+ShowAddress.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexAddress, ShowAddress };

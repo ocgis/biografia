@@ -12,6 +12,11 @@ const setMapping = (name, key, value) => {
     mappings[name] = {};
   }
   mappings[name][key] = value;
+
+  if (key === 'manyName') {
+    // Setup a reverse mapping
+    mappings[value] = { _type_: name };
+  }
 };
 
 const getMapping = (name, key) => {
@@ -19,13 +24,16 @@ const getMapping = (name, key) => {
     if (key in mappings[name]) {
       return mappings[name][key];
     }
+    // Try reverse mapping
+    if ('_type_' in mappings[name]) {
+      return getMapping(mappings[name]._type_, key);
+    }
   }
-  console.log(`ERROR: mapping was not set for type ${name} with key ${key}`);
-  return null;
+  throw Error(`ERROR: mapping was not set for type ${name} with key ${key}`);
 };
 
+const showObject = (_type_) => getMapping(_type_, 'showObject');
 const oneName = (_type_) => getMapping(_type_, 'oneName');
-
 const manyName = (_type_) => getMapping(_type_, 'manyName');
 
 const url = (baseUrl, _type_, id, action) => {
@@ -43,5 +51,5 @@ const apiUrl = (_type_, id, action) => url('/api/v1', _type_, id, action);
 const webUrl = (_type_, id, action) => url('/r', _type_, id, action);
 
 export {
-  setMapping, getMapping, oneName, manyName, apiUrl, webUrl,
+  setMapping, getMapping, showObject, oneName, manyName, apiUrl, webUrl,
 };

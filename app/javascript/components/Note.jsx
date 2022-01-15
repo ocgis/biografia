@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
+import Show from './Show';
 import EditNote from './EditNote';
 import { setMapping, webUrl } from './Mappings';
 
@@ -72,4 +73,19 @@ Note.defaultProps = {
   mode: '',
 };
 
-export default Note;
+setMapping('Note', 'showObject', Note);
+
+const ShowNote = ({ match, location }) => (
+  <Show
+    _type_="Note"
+    match={match}
+    location={location}
+  />
+);
+ShowNote.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+/* eslint-disable import/prefer-default-export */
+export { ShowNote };

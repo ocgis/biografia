@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
+import Index from './Index';
+import Show from './Show';
 import EditThing from './EditThing';
 import { setMapping, webUrl } from './Mappings';
 
@@ -112,4 +114,24 @@ Thing.defaultProps = {
   mode: '',
 };
 
-export default Thing;
+setMapping('Thing', 'showObject', Thing);
+
+const IndexThing = () => (
+  <Index
+    _type_="Thing"
+  />
+);
+
+const ShowThing = ({ match, location }) => (
+  <Show
+    _type_="Thing"
+    match={match}
+    location={location}
+  />
+);
+ShowThing.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexThing, ShowThing };
