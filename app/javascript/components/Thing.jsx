@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import EditThing from './EditThing';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Thing', 'oneName', 'thing');
+setMapping('Thing', 'manyName', 'things');
 
 const OneLine = (props) => {
   const { object: thing } = props;

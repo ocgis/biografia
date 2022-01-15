@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Transfer', 'oneName', 'transfer');
+setMapping('Transfer', 'manyName', 'transfers');
 
 const OneLine = (props) => {
   const { object: transfer } = props;

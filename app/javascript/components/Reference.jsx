@@ -9,6 +9,10 @@ import Medium from './Medium';
 import Address from './Address';
 import EventDate from './EventDate';
 import Thing from './Thing';
+import { setMapping } from './Mappings';
+
+setMapping('Reference', 'oneName', 'reference');
+setMapping('Reference', 'manyName', 'references');
 
 const { TabPane } = Tabs;
 

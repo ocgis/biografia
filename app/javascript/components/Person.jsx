@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Base from './Base';
 import EditPerson from './EditPerson';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Person', 'oneName', 'person');
+setMapping('Person', 'manyName', 'people');
 
 const OneLine = (props) => {
   const { object: { person_names: pns } } = props;

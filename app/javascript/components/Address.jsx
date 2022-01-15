@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import Base from './Base';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Address', 'oneName', 'address');
+setMapping('Address', 'manyName', 'addresses');
 
 const OneLine = (props) => {
   const { object: address } = props;

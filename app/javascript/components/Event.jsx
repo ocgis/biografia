@@ -6,7 +6,10 @@ import EventDate from './EventDate';
 import Person from './Person';
 import Address from './Address';
 import EditEvent from './EditEvent';
-import { manyName, webUrl } from './Mappings';
+import { setMapping, manyName, webUrl } from './Mappings';
+
+setMapping('Event', 'oneName', 'event');
+setMapping('Event', 'manyName', 'events');
 
 const ListRelated = (props) => {
   const { object } = props;

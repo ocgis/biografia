@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import EditNote from './EditNote';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Note', 'oneName', 'note');
+setMapping('Note', 'manyName', 'notes');
 
 const Note = (props) => {
   const {

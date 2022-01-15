@@ -7,7 +7,10 @@ import Person from './Person';
 import EventDate from './EventDate';
 import Address from './Address';
 import Note from './Note';
-import { manyName, webUrl } from './Mappings';
+import { setMapping, manyName, webUrl } from './Mappings';
+
+setMapping('Relationship', 'oneName', 'relationship');
+setMapping('Relationship', 'manyName', 'relationships');
 
 const ListObjects = (props) => {
   const { object } = props;

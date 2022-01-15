@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('User', 'oneName', 'user');
+setMapping('User', 'manyName', 'users');
 
 const OneLine = (props) => {
   const { object } = props;

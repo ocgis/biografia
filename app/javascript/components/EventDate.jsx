@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Base from './Base';
 import EditEventDate from './EditEventDate';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('EventDate', 'oneName', 'event_date');
+setMapping('EventDate', 'manyName', 'event_dates');
 
 const OneLine = (props) => {
   const { object: eventDate } = props;

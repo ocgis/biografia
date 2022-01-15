@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
-import { webUrl } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
+
+setMapping('Medium', 'oneName', 'medium');
+setMapping('Medium', 'manyName', 'media');
 
 const OneLine = (props) => {
   const { object: medium } = props;

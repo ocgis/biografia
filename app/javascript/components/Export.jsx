@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { setMapping } from './Mappings';
+
+setMapping('Export', 'oneName', 'export');
+setMapping('Export', 'manyName', 'exports');
 
 const OneLine = (props) => {
   const { object } = props;
