@@ -90,7 +90,6 @@ const Person = (props) => {
   return (
     <Base
       object={person}
-      editComponent={EditPerson}
       editTitle="Ändra person"
       modifierProps={{
         showAddAddress: true,
@@ -126,6 +125,8 @@ Person.defaultProps = {
 };
 
 setMapping('Person', 'showObject', Person);
+
+setMapping('Person', 'editObject', EditPerson);
 
 const ShowPerson = ({ match, location }) => (
   <Show

@@ -33,6 +33,7 @@ const getMapping = (name, key) => {
 };
 
 const showObject = (_type_) => getMapping(_type_, 'showObject');
+const editObject = (_type_) => getMapping(_type_, 'editObject');
 const oneName = (_type_) => getMapping(_type_, 'oneName');
 const manyName = (_type_) => getMapping(_type_, 'manyName');
 
@@ -51,5 +52,5 @@ const apiUrl = (_type_, id, action) => url('/api/v1', _type_, id, action);
 const webUrl = (_type_, id, action) => url('/r', _type_, id, action);
 
 export {
-  setMapping, getMapping, showObject, oneName, manyName, apiUrl, webUrl,
+  setMapping, getMapping, showObject, editObject, oneName, manyName, apiUrl, webUrl,
 };

@@ -133,7 +133,6 @@ const Relationship = (props) => {
     <Base
       object={relationship}
       appendElements={appendElements}
-      editComponent={EditRelationship}
       editTitle="Ändra förhållande"
       modifierProps={{
         showAddEvent: true,
@@ -164,6 +163,8 @@ Relationship.defaultProps = {
 };
 
 setMapping('Relationship', 'showObject', Relationship);
+
+setMapping('Relationship', 'editObject', EditRelationship);
 
 const ShowRelationship = ({ match, location }) => (
   <Show

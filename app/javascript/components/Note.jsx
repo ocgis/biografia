@@ -44,7 +44,6 @@ const Note = (props) => {
     <Base
       object={note}
       appendElements={appendElements}
-      editComponent={EditNote}
       editTitle="Ändra kommentar"
       modifierProps={{
         showAddPerson: true,
@@ -74,6 +73,8 @@ Note.defaultProps = {
 };
 
 setMapping('Note', 'showObject', Note);
+
+setMapping('Note', 'editObject', EditNote);
 
 const ShowNote = ({ match, location }) => (
   <Show

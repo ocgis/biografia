@@ -42,7 +42,6 @@ const EventDate = (props) => {
   return (
     <Base
       object={eventDate}
-      editComponent={EditEventDate}
       editTitle="Ändra datum"
       modifierProps={{
       }}
@@ -69,6 +68,8 @@ EventDate.defaultProps = {
 };
 
 setMapping('EventDate', 'showObject', EventDate);
+
+setMapping('EventDate', 'editObject', EditEventDate);
 
 const ShowEventDate = ({ match, location }) => (
   <Show

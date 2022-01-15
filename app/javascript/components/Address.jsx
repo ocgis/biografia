@@ -74,7 +74,6 @@ const Address = (props) => {
   return (
     <Base
       object={address}
-      editComponent={EditAddress}
       editTitle="Ändra adress"
       modifierProps={{
       }}
@@ -98,6 +97,8 @@ Address.defaultProps = {
 };
 
 setMapping('Address', 'showObject', Address);
+
+setMapping('Address', 'editObject', EditAddress);
 
 const IndexAddress = () => (
   <Index

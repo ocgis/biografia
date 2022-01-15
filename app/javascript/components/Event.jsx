@@ -66,7 +66,6 @@ const Event = (props) => {
   return (
     <Base
       object={event}
-      editComponent={EditEvent}
       editTitle="Ändra händelse"
       modifierProps={{
         showAddAddress: true,
@@ -105,6 +104,8 @@ Event.defaultProps = {
 };
 
 setMapping('Event', 'showObject', Event);
+
+setMapping('Event', 'editObject', EditEvent);
 
 const IndexEvent = () => (
   <Index

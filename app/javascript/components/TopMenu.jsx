@@ -8,11 +8,7 @@ import {
   Modal,
   Row,
 } from 'antd';
-import EditAddress from './EditAddress';
-import EditEvent from './EditEvent';
-import EditPerson from './EditPerson';
-import EditThing from './EditThing';
-import { oneName, webUrl } from './Mappings';
+import { editObject, oneName, webUrl } from './Mappings';
 
 const { SubMenu } = Menu;
 
@@ -25,22 +21,22 @@ const TopMenu = (props) => {
     const modals = {
       addPerson: {
         title: 'Lägg till person',
-        component: EditPerson,
+        component: editObject('Person'),
         _type_: 'Person',
       },
       addEvent: {
         title: 'Lägg till händelse',
-        component: EditEvent,
+        component: editObject('Event'),
         _type_: 'Event',
       },
       addAddress: {
         title: 'Lägg till adress',
-        component: EditAddress,
+        component: editObject('Address'),
         _type_: 'Address',
       },
       addThing: {
         title: 'Lägg till sak',
-        component: EditThing,
+        component: editObject('Thing'),
         _type_: 'Thing',
       },
     };

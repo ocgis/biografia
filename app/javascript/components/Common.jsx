@@ -3,18 +3,11 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
-import EditEvent from './EditEvent';
-import EditEventDate from './EditEventDate';
-import EditAddress from './EditAddress';
-import EditPerson from './EditPerson';
-import EditNote from './EditNote';
-import EditRelationship from './EditRelationship';
-import EditThing from './EditThing';
 import AddReference from './AddReference';
 import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
 import RemoveObject from './RemoveObject';
-import { webUrl } from './Mappings';
+import { editObject, webUrl } from './Mappings';
 
 const Modifier = (props) => {
   const { currentUser } = props;
@@ -25,7 +18,7 @@ const Modifier = (props) => {
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, editComponent, editTitle, modalWidth,
+    showTagMedium, editTitle, modalWidth,
   } = props;
 
   const itemList = [];
@@ -33,7 +26,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'event',
       text: 'lägg till händelse',
-      component: EditEvent,
+      component: editObject('Event'),
       props: { referFrom: mainObject },
     });
   }
@@ -42,7 +35,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'note',
       text: 'kommentera',
-      component: EditNote,
+      component: editObject('Note'),
       props: { referFrom: mainObject },
     });
   }
@@ -51,7 +44,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'eventDate',
       text: 'lägg till datum',
-      component: EditEventDate,
+      component: editObject('EventDate'),
       props: { referFrom: mainObject },
     });
   }
@@ -60,7 +53,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'address',
       text: 'lägg till adress',
-      component: EditAddress,
+      component: editObject('Address'),
       props: { referFrom: mainObject },
     });
   }
@@ -69,7 +62,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'relationship',
       text: 'lägg till förhållande',
-      component: EditRelationship,
+      component: editObject('Relationship'),
       props: { referFrom: mainObject },
     });
   }
@@ -78,7 +71,7 @@ const Modifier = (props) => {
     itemList.push({
       key: 'person',
       text: 'lägg till person',
-      component: EditPerson,
+      component: editObject('Person'),
       props: { referFrom: mainObject },
     });
   }
@@ -87,17 +80,17 @@ const Modifier = (props) => {
     itemList.push({
       key: 'thing',
       text: 'lägg till sak',
-      component: EditThing,
+      component: editObject('Thing'),
       props: { referFrom: mainObject },
     });
   }
 
-  if (editComponent != null && editTitle != null) {
+  if (editTitle != null) {
     itemList.push({
       key: 'update',
       text: 'ändra',
       title: editTitle,
-      component: editComponent,
+      component: editObject(mainObject._type_),
       props: { object: mainObject },
     });
   }
@@ -215,7 +208,6 @@ Modifier.propTypes = {
   showAddRelationship: PropTypes.bool,
   showAddThing: PropTypes.bool,
   showTagMedium: PropTypes.bool,
-  editComponent: PropTypes.func,
   editTitle: PropTypes.string,
   modalWidth: PropTypes.number,
 };
@@ -228,7 +220,6 @@ Modifier.defaultProps = {
   showAddRelationship: false,
   showAddThing: false,
   showTagMedium: false,
-  editComponent: null,
   editTitle: null,
   modalWidth: null,
 };
