@@ -76,7 +76,6 @@ module Api
             merge_objects = merge_ids.map do |merge_id|
               Kernel.const_get(@object.class.name).find(merge_id.to_i)
             end
-            puts merge_objects.inspect
             @object.merge_references_destroy_others(merge_objects)
           end
 
