@@ -29,7 +29,7 @@ module ApplicationHelper
       out << '<br />'.html_safe
       out << '<br />'.html_safe
 
-      object = object.previous_version
+      object = object.paper_trail.previous_version
       version = version.previous
     end
     return out
