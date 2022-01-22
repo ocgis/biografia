@@ -27,7 +27,7 @@ const Modifier = (props) => {
       key: 'event',
       text: 'lägg till händelse',
       component: editObject('Event'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -36,7 +36,7 @@ const Modifier = (props) => {
       key: 'note',
       text: 'kommentera',
       component: editObject('Note'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -45,7 +45,7 @@ const Modifier = (props) => {
       key: 'eventDate',
       text: 'lägg till datum',
       component: editObject('EventDate'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -54,7 +54,7 @@ const Modifier = (props) => {
       key: 'address',
       text: 'lägg till adress',
       component: editObject('Address'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -63,7 +63,7 @@ const Modifier = (props) => {
       key: 'relationship',
       text: 'lägg till förhållande',
       component: editObject('Relationship'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -72,7 +72,7 @@ const Modifier = (props) => {
       key: 'person',
       text: 'lägg till person',
       component: editObject('Person'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 
@@ -81,7 +81,7 @@ const Modifier = (props) => {
       key: 'thing',
       text: 'lägg till sak',
       component: editObject('Thing'),
-      props: { referFrom: mainObject },
+      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
     });
   }
 

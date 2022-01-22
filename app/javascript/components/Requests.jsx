@@ -84,23 +84,27 @@ const saveData = (_type_, data, handleResult) => {
     return outdata;
   };
 
+  const name = oneName(_type_);
   const sendData = {};
 
-  sendData[oneName(_type_)] = railsify(data[oneName(_type_)]);
-  sendData.referFrom = data.referFrom;
+  Object.keys(data).forEach((key) => {
+    if (key === name) {
+      sendData[key] = railsify(data[key]);
+    } else {
+      sendData[key] = data[key];
+    }
+  });
 
   let url = apiUrl(_type_);
   let axiosCall = axios.post;
 
-  if (sendData[oneName(_type_)].id != null) {
-    url = apiUrl(_type_, sendData[oneName(_type_)].id);
+  if (sendData[name].id != null) {
+    url = apiUrl(_type_, sendData[name].id);
     axiosCall = axios.patch;
   }
 
   const handleResponse = (response) => {
-    const result = {};
-    result[oneName(_type_)] = response.data[oneName(_type_)];
-    handleResult(result);
+    handleResult(response.data);
   };
 
   const handleError = (error) => {
