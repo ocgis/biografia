@@ -9,6 +9,7 @@ import { setMapping, webUrl } from './Mappings';
 
 setMapping('Person', 'oneName', 'person');
 setMapping('Person', 'manyName', 'people');
+setMapping('Person', 'filterFields', [{ person_names: ['given_name', 'surname'] }]);
 
 const OneLine = (props) => {
   const { object: { person_names: pns } } = props;
@@ -97,6 +98,7 @@ const Person = (props) => {
         showAddNote: true,
         showAddRelationship: true,
         showAddThing: true,
+        showMergeWith: true,
       }}
       currentUser={currentUser}
       reload={reload}

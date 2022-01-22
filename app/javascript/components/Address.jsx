@@ -10,6 +10,7 @@ import { setMapping, webUrl } from './Mappings';
 
 setMapping('Address', 'oneName', 'address');
 setMapping('Address', 'manyName', 'addresses');
+setMapping('Address', 'filterFields', ['street', 'town', 'zipcode', 'parish', 'country']);
 
 const OneLine = (props) => {
   const { object: address } = props;
@@ -76,6 +77,7 @@ const Address = (props) => {
       object={address}
       editTitle="Ändra adress"
       modifierProps={{
+        showMergeWith: true,
       }}
       currentUser={currentUser}
       reload={reload}

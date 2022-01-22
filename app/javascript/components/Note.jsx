@@ -8,6 +8,7 @@ import { setMapping, webUrl } from './Mappings';
 
 setMapping('Note', 'oneName', 'note');
 setMapping('Note', 'manyName', 'notes');
+setMapping('Note', 'filterFields', ['category', 'title', 'note']);
 
 const Note = (props) => {
   const {
@@ -48,6 +49,7 @@ const Note = (props) => {
       modifierProps={{
         showAddPerson: true,
         showAddEventDate: true,
+        showMergeWith: true,
       }}
       currentUser={currentUser}
       reload={reload}

@@ -11,6 +11,7 @@ import {
 
 setMapping('Event', 'oneName', 'event');
 setMapping('Event', 'manyName', 'events');
+setMapping('Event', 'filterFields', ['name']);
 
 const ListRelated = (props) => {
   const { object } = props;
@@ -73,6 +74,7 @@ const Event = (props) => {
         showAddNote: true,
         showAddThing: true,
         showAddEventDate: true,
+        showMergeWith: true,
       }}
       currentUser={currentUser}
       reload={reload}

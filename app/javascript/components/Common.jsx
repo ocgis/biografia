@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import AddReference from './AddReference';
+import Merge from './Merge';
 import TagMedium from './TagMedium';
 import RemoveReference from './RemoveReference';
 import RemoveObject from './RemoveObject';
@@ -18,7 +19,7 @@ const Modifier = (props) => {
   const {
     mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, editTitle, modalWidth,
+    showTagMedium, showMergeWith, editTitle, modalWidth,
   } = props;
 
   const itemList = [];
@@ -101,6 +102,17 @@ const Modifier = (props) => {
     component: AddReference,
     props: { referFrom: mainObject },
   });
+
+  if (showMergeWith) {
+    itemList.push({
+      key: 'mergeWith',
+      text: 'slå ihop med',
+      component: Merge,
+      props: {
+        object: mainObject,
+      },
+    });
+  }
 
   if (showTagMedium) {
     itemList.push({
@@ -208,6 +220,7 @@ Modifier.propTypes = {
   showAddRelationship: PropTypes.bool,
   showAddThing: PropTypes.bool,
   showTagMedium: PropTypes.bool,
+  showMergeWith: PropTypes.bool,
   editTitle: PropTypes.string,
   modalWidth: PropTypes.number,
 };
@@ -220,6 +233,7 @@ Modifier.defaultProps = {
   showAddRelationship: false,
   showAddThing: false,
   showTagMedium: false,
+  showMergeWith: false,
   editTitle: null,
   modalWidth: null,
 };

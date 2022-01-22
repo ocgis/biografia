@@ -70,6 +70,16 @@ module Api
           object_attributes = @object.all_attributes
           r = {}
           r[@object.class.name.underscore.to_sym] = object_attributes
+
+          merge_ids = params[:merge_ids]
+          unless merge_ids.nil?
+            merge_objects = merge_ids.map do |merge_id|
+              Kernel.const_get(@object.class.name).find(merge_id.to_i)
+            end
+            puts merge_objects.inspect
+            @object.merge_references_destroy_others(merge_objects)
+          end
+
           render json: {}
         else
           render json: { error: 'Object could not be created' }

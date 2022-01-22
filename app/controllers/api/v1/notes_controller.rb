@@ -24,6 +24,10 @@ module Api
         object
       end
 
+      def all_objects
+        Note.all
+      end
+
       private
 
       def note_params

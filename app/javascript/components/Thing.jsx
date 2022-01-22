@@ -9,6 +9,7 @@ import { setMapping, webUrl } from './Mappings';
 
 setMapping('Thing', 'oneName', 'thing');
 setMapping('Thing', 'manyName', 'things');
+setMapping('Thing', 'filterFields', ['name', 'kind', 'make', 'model', 'serial']);
 
 const OneLine = (props) => {
   const { object: thing } = props;
@@ -88,6 +89,7 @@ const Thing = (props) => {
       modifierProps={{
         showAddEvent: true,
         showAddPerson: true,
+        showMergeWith: true,
       }}
       currentUser={currentUser}
       reload={reload}
