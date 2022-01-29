@@ -8,6 +8,10 @@ module Api
 
       load_and_authorize_resource
 
+      def initialize
+        super(Reference)
+      end
+
       def list
         filter = params.require(:q)
         search_models =
