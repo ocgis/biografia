@@ -82,7 +82,7 @@ class Show extends React.Component {
                     <tr>
                       <td>
                         <ShowReferences
-                          related={object.related}
+                          object={object}
                           currentUser={currentUser}
                           reload={this.reload}
                         />

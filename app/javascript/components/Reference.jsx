@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import { setMapping, showObject } from './Mappings';
+import { setMapping, showObject, webUrl } from './Mappings';
 
 setMapping('Reference', 'oneName', 'reference');
 setMapping('Reference', 'manyName', 'references');
@@ -16,7 +17,6 @@ const RenderElement = (props) => {
   const Component = showObject(kind);
 
   if (Component == null) {
-    console.log(kind, element);
     return null;
   }
 
@@ -32,8 +32,110 @@ RenderElement.propTypes = {
   reload: PropTypes.func.isRequired,
 };
 
+const FamilyRole = (familyRefName, personRefName, personSex) => {
+  switch (familyRefName) {
+    case 'Child':
+      switch (personRefName) {
+        case 'Child':
+          switch (personSex) {
+            case 'M':
+              return 'Bror';
+            case 'F':
+              return 'Syster';
+            default:
+              return 'Syskon';
+          }
+        case 'Spouse':
+          switch (personSex) {
+            case 'M':
+              return 'Far';
+            case 'F':
+              return 'Mor';
+            default:
+              return 'Förälder';
+          }
+        default:
+      }
+      break;
+    case 'Spouse':
+      switch (personRefName) {
+        case 'Child':
+          switch (personSex) {
+            case 'M':
+              return 'Son';
+            case 'F':
+              return 'Dotter';
+            default:
+              return 'Barn';
+          }
+        case 'Spouse':
+          switch (personSex) {
+            case 'M':
+              return 'Make';
+            case 'F':
+              return 'Maka';
+            default:
+              return 'Partner';
+          }
+        default:
+      }
+      break;
+    default:
+  }
+  return 'Okänd roll';
+};
+
+const FamilyMembers = (props) => {
+  const {
+    object, object: { related: { relationships } }, currentUser,
+  } = props;
+  const rows = [];
+  const ShowObject = showObject('Person');
+  relationships.forEach((relationship) => {
+    const { reference: { name: familyRefName } } = relationship;
+
+    const { related: { people } } = relationship;
+    people.forEach((person) => {
+      if (object.id !== person.id) {
+        const { reference: { name: personRefName }, sex: personSex } = person;
+
+        const familyRole = FamilyRole(familyRefName, personRefName, personSex);
+        rows.push((
+          <tr key={person.id}>
+            <td>
+              <Link to={webUrl(person._type_, person.id)}>
+                <ShowObject
+                  object={person}
+                  mode="oneLine"
+                  currentUser={currentUser}
+                  reload={() => alert('Unexpected: Implement reload() for FamilyMembers()')}
+                />
+              </Link>
+            </td>
+            <td>{familyRole}</td>
+          </tr>
+        ));
+      }
+    });
+  });
+  return (
+    <table>
+      <tbody>
+        {rows}
+      </tbody>
+    </table>
+  );
+};
+
+FamilyMembers.propTypes = {
+  object: PropTypes.shape().isRequired,
+  currentUser: PropTypes.shape({}).isRequired,
+};
+
 const ShowReferences = (props) => {
-  const { currentUser, related, reload } = props;
+  const {
+    currentUser, object, object: { related }, reload,
+  } = props;
   const tabHeader = (key) => {
     const header = {
       people: 'Personer',
@@ -53,6 +155,15 @@ const ShowReferences = (props) => {
 
   return (
     <Tabs>
+      { object._type_ === 'Person'
+      && (
+        <TabPane tab="Familjemedlemmar" key="familyMembers">
+          <FamilyMembers
+            object={object}
+            currentUser={currentUser}
+          />
+        </TabPane>
+      )}
       {Object.keys(related).map((key) => {
         if (related[key].length > 0) {
           return (
@@ -76,10 +187,10 @@ const ShowReferences = (props) => {
 };
 
 ShowReferences.propTypes = {
-  related: PropTypes.shape({
-    notes: PropTypes.arrayOf(PropTypes.shape({})),
-    reload: PropTypes.func,
-  }).isRequired,
+  object: PropTypes.shape().isRequired,
+  /* related: PropTypes.shape({
+   *   notes: PropTypes.arrayOf(PropTypes.shape({})),
+   * }).isRequired, */
   reload: PropTypes.func,
   currentUser: PropTypes.shape({}).isRequired,
 };
