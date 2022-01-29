@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
+import Version from './Version';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Medium', 'oneName', 'medium');
@@ -239,4 +240,16 @@ ShowMedium.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-export { IndexMedium, ShowMedium };
+const VersionMedium = ({ match, location }) => (
+  <Version
+    _type_="Medium"
+    match={match}
+    location={location}
+  />
+);
+VersionMedium.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexMedium, ShowMedium, VersionMedium };

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import Show from './Show';
+import Version from './Version';
 import EditRelationship from './EditRelationship';
 import {
   setMapping, showObject, manyName, webUrl,
@@ -13,6 +14,11 @@ setMapping('Relationship', 'manyName', 'relationships');
 
 const ListObjects = (props) => {
   const { object } = props;
+
+  if (object.related == null) {
+    return null;
+  }
+
   const { relatedType } = props;
   const Output = showObject(relatedType);
   const { currentUser } = props;
@@ -52,7 +58,7 @@ ListObjects.propTypes = {
 
 const OneLine = (props) => {
   const { object: relationship } = props;
-  const { object: { related: { people } } } = props;
+  const { object: { related } } = props;
 
   const parts = [];
 
@@ -62,15 +68,19 @@ const OneLine = (props) => {
     parts.push(relationship.name);
   }
 
-  if (people.length === 1) {
-    parts.push(` bestående av ${people[0].name}`);
-  } else if (people.length === 2) {
-    parts.push(` bestående av ${people[0].name} och ${people[1].name}`);
-  } else if (people.length === 3) {
-    parts.push(` bestående av ${people[0].name}, ${people[1].name} och en person till`);
-  } else if (people.length > 3) {
-    const extraPeople = people.length - 2;
-    parts.push(` bestående av ${people[0].name}, ${people[1].name} och ${extraPeople} personer till`);
+  if (related != null) {
+    const { people } = related;
+
+    if (people.length === 1) {
+      parts.push(` bestående av ${people[0].name}`);
+    } else if (people.length === 2) {
+      parts.push(` bestående av ${people[0].name} och ${people[1].name}`);
+    } else if (people.length === 3) {
+      parts.push(` bestående av ${people[0].name}, ${people[1].name} och en person till`);
+    } else if (people.length > 3) {
+      const extraPeople = people.length - 2;
+      parts.push(` bestående av ${people[0].name}, ${people[1].name} och ${extraPeople} personer till`);
+    }
   }
 
   return parts;
@@ -178,5 +188,16 @@ ShowRelationship.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-/* eslint-disable import/prefer-default-export */
-export { ShowRelationship };
+const VersionRelationship = ({ match, location }) => (
+  <Version
+    _type_="Relationship"
+    match={match}
+    location={location}
+  />
+);
+VersionRelationship.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { ShowRelationship, VersionRelationship };

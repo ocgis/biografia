@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { IndexPerson, ShowPerson } from './Person';
-import { ShowNote } from './Note';
+import { IndexPerson, ShowPerson, VersionPerson } from './Person';
+import { ShowNote, VersionNote } from './Note';
 import SearchMedium from './SearchMedium';
-import { IndexMedium, ShowMedium } from './Medium';
-import { IndexEvent, ShowEvent } from './Event';
-import { ShowEventDate } from './EventDate';
-import { IndexAddress, ShowAddress } from './Address';
-import { IndexThing, ShowThing } from './Thing';
-import { ShowRelationship } from './Relationship';
+import { IndexMedium, ShowMedium, VersionMedium } from './Medium';
+import { IndexEvent, ShowEvent, VersionEvent } from './Event';
+import { ShowEventDate, VersionEventDate } from './EventDate';
+import { IndexAddress, ShowAddress, VersionAddress } from './Address';
+import { IndexThing, ShowThing, VersionThing } from './Thing';
+import { ShowRelationship, VersionRelationship } from './Relationship';
 import { IndexTransfer, ShowTransfer } from './Transfer';
 import { IndexExport, ShowExport } from './Export';
 import { IndexUser, ShowUser } from './User';
@@ -18,6 +18,11 @@ export default (
   <Router>
     <Switch>
       <Route
+        path={webUrl('Person', ':id', 'examine')}
+        exact
+        component={VersionPerson}
+      />
+      <Route
         path={webUrl('Person', ':id')}
         exact
         component={ShowPerson}
@@ -26,6 +31,11 @@ export default (
         path={webUrl('Person')}
         exact
         component={IndexPerson}
+      />
+      <Route
+        path={webUrl('Note', ':id', 'examine')}
+        exact
+        component={VersionNote}
       />
       <Route
         path={webUrl('Note', ':id')}
@@ -38,6 +48,11 @@ export default (
         component={SearchMedium}
       />
       <Route
+        path={webUrl('Medium', ':id', 'examine')}
+        exact
+        component={VersionMedium}
+      />
+      <Route
         path={webUrl('Medium', ':id')}
         exact
         component={ShowMedium}
@@ -46,6 +61,11 @@ export default (
         path={webUrl('Medium')}
         exact
         component={IndexMedium}
+      />
+      <Route
+        path={webUrl('Event', ':id', 'examine')}
+        exact
+        component={VersionEvent}
       />
       <Route
         path={webUrl('Event', ':id')}
@@ -58,9 +78,19 @@ export default (
         component={IndexEvent}
       />
       <Route
+        path={webUrl('EventDate', ':id', 'examine')}
+        exact
+        component={VersionEventDate}
+      />
+      <Route
         path={webUrl('EventDate', ':id')}
         exact
         component={ShowEventDate}
+      />
+      <Route
+        path={webUrl('Address', ':id', 'examine')}
+        exact
+        component={VersionAddress}
       />
       <Route
         path={webUrl('Address', ':id')}
@@ -73,6 +103,11 @@ export default (
         component={IndexAddress}
       />
       <Route
+        path={webUrl('Thing', ':id', 'examine')}
+        exact
+        component={VersionThing}
+      />
+      <Route
         path={webUrl('Thing', ':id')}
         exact
         component={ShowThing}
@@ -81,6 +116,11 @@ export default (
         path={webUrl('Thing')}
         exact
         component={IndexThing}
+      />
+      <Route
+        path={webUrl('Relationship', ':id', 'examine')}
+        exact
+        component={VersionRelationship}
       />
       <Route
         path={webUrl('Relationship', ':id')}

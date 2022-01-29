@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
+import Version from './Version';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
 import { setMapping, webUrl } from './Mappings';
@@ -120,4 +121,16 @@ ShowAddress.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-export { IndexAddress, ShowAddress };
+const VersionAddress = ({ match, location }) => (
+  <Version
+    _type_="Address"
+    match={match}
+    location={location}
+  />
+);
+VersionAddress.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexAddress, ShowAddress, VersionAddress };

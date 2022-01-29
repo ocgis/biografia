@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
+import Version from './Version';
 import EditEvent from './EditEvent';
 import {
   setMapping, showObject, manyName, webUrl,
@@ -15,6 +16,11 @@ setMapping('Event', 'filterFields', ['name']);
 
 const ListRelated = (props) => {
   const { object } = props;
+
+  if (object.related == null) {
+    return null;
+  }
+
   const { relatedType } = props;
   const { prefix } = props;
   const ShowObject = showObject(relatedType);
@@ -127,4 +133,16 @@ ShowEvent.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-export { IndexEvent, ShowEvent };
+const VersionEvent = ({ match, location }) => (
+  <Version
+    _type_="Event"
+    match={match}
+    location={location}
+  />
+);
+VersionEvent.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexEvent, ShowEvent, VersionEvent };

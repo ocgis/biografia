@@ -10,6 +10,10 @@ module Api
 
       load_and_authorize_resource
 
+      def initialize
+        super(Medium)
+      end
+
       def search
         path = params[:path] || 'files'
 

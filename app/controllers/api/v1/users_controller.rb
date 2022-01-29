@@ -8,6 +8,10 @@ module Api
 
       load_and_authorize_resource
 
+      def initialize
+        super(User)
+      end
+
       def show
         render json: { user: @object.all_attributes,
                        current_user: @current_user_hash }

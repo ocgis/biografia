@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
+import Version from './Version';
 import EditThing from './EditThing';
 import { setMapping, webUrl } from './Mappings';
 
@@ -137,4 +138,16 @@ ShowThing.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-export { IndexThing, ShowThing };
+const VersionThing = ({ match, location }) => (
+  <Version
+    _type_="Thing"
+    match={match}
+    location={location}
+  />
+);
+VersionThing.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { IndexThing, ShowThing, VersionThing };

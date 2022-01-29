@@ -8,6 +8,10 @@ module Api
 
       load_and_authorize_resource
 
+      def initialize
+        super(Thing)
+      end
+
       protected
 
       def create_object

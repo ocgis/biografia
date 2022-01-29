@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Base from './Base';
 import Show from './Show';
+import Version from './Version';
 import EditNote from './EditNote';
 import { setMapping, webUrl } from './Mappings';
 
@@ -90,5 +91,16 @@ ShowNote.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-/* eslint-disable import/prefer-default-export */
-export { ShowNote };
+const VersionNote = ({ match, location }) => (
+  <Version
+    _type_="Note"
+    match={match}
+    location={location}
+  />
+);
+VersionNote.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { ShowNote, VersionNote };

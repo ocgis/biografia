@@ -1,33 +1,45 @@
-class Api::V1::PeopleController < Api::V1::ApiController
-  layout false
+# frozen_string_literal: true
 
-  load_and_authorize_resource
+module Api
+  module V1
+    # People API controller
+    class PeopleController < Api::V1::ApiController
+      layout false
 
-  protected
+      load_and_authorize_resource
 
-  def create_object
-    Person.new(person_params)
-  end
+      def initialize
+        super(Person)
+      end
 
-  def find_object
-    Person.find(params.require(:id))
-  end
+      protected
 
-  def find_object_and_update_attrs
-    object = Person.find(params.require(:id))
-    object.attributes = person_params
-    object
-  end
+      def create_object
+        Person.new(person_params)
+      end
 
-  def all_objects
-    Person.all.preload(:person_names)
-  end
+      def find_object
+        Person.find(params.require(:id))
+      end
 
-  private
+      def find_object_and_update_attrs
+        object = Person.find(params.require(:id))
+        object.attributes = person_params
+        object
+      end
 
-  def person_params
-    params.require(:person).permit(:id, :sex, :source,
-                                   person_names_attributes: %i[id given_name calling_name surname position
-                                                               person_id _destroy])
+      def all_objects
+        Person.all.preload(:person_names)
+      end
+
+      private
+
+      def person_params
+        params.require(:person).permit(:id, :sex, :source,
+                                       person_names_attributes: %i[id given_name calling_name
+                                                                   surname position person_id
+                                                                   _destroy])
+      end
+    end
   end
 end

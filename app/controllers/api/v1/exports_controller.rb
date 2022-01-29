@@ -8,6 +8,10 @@ module Api
 
       load_and_authorize_resource
 
+      def initialize
+        super(Export)
+      end
+
       def show
         render json: { export: @object,
                        current_user: @current_user_hash }

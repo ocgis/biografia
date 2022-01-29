@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Base from './Base';
 import Show from './Show';
 import Index from './Index';
+import Version from './Version';
 import EditPerson from './EditPerson';
 import { setMapping, webUrl } from './Mappings';
 
@@ -148,4 +149,16 @@ const IndexPerson = () => (
   />
 );
 
-export { ShowPerson, IndexPerson };
+const VersionPerson = ({ match, location }) => (
+  <Version
+    _type_="Person"
+    match={match}
+    location={location}
+  />
+);
+VersionPerson.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { ShowPerson, IndexPerson, VersionPerson };

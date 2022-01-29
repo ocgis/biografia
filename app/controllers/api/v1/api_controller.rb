@@ -8,8 +8,8 @@ module Api
     class ApiController < ActionController::Base
       # Log user on commit
       before_action :set_paper_trail_whodunnit
-      before_action :set_current_user, only: %i[show index]
-      before_action :set_object, only: [:show]
+      before_action :set_current_user, only: %i[show index examine]
+      before_action :set_object, only: %i[show]
       before_action :set_object_attributes, only: [:show]
 
       # Prevent CSRF attacks by raising an exception.
@@ -18,6 +18,11 @@ module Api
 
       rescue_from CanCan::AccessDenied do
         render status: :unauthorized, json: { error: 'Access denied' }
+      end
+
+      def initialize(model)
+        super()
+        @model = model
       end
 
       def index
@@ -89,6 +94,43 @@ module Api
         object = find_object
         object.destroy_with_references
         render json: {}
+      end
+
+      def examine
+        search = @model.where(id: params[:id])
+        found =
+          if search.length.positive?
+            search[0]
+          else
+            @model.new(id: params[:id])
+          end
+
+        object = found
+        versions = found.versions.reverse.map do |version|
+          r =
+            if object.nil?
+              {}
+            else
+              object.all_attributes
+            end
+
+          date =
+            if object.nil?
+              version.created_at
+            else
+              object.updated_at
+            end
+
+          object = version.reify
+
+          r.update(version: { name: User.find(version.whodunnit).name,
+                              date: date.strftime('%Y-%m-%d %H:%M'),
+                              event: version.event,
+                              id: version.id })
+        end
+
+        render json: { versions: versions,
+                       current_user: @current_user_hash }
       end
 
       protected

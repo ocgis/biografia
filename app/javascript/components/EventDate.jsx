@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Base from './Base';
 import Show from './Show';
+import Version from './Version';
 import EditEventDate from './EditEventDate';
 import { setMapping, webUrl } from './Mappings';
 
@@ -83,5 +84,16 @@ ShowEventDate.propTypes = {
   location: PropTypes.shape().isRequired,
 };
 
-/* eslint-disable import/prefer-default-export */
-export { ShowEventDate };
+const VersionEventDate = ({ match, location }) => (
+  <Version
+    _type_="EventDate"
+    match={match}
+    location={location}
+  />
+);
+VersionEventDate.propTypes = {
+  match: PropTypes.shape().isRequired,
+  location: PropTypes.shape().isRequired,
+};
+
+export { ShowEventDate, VersionEventDate };
