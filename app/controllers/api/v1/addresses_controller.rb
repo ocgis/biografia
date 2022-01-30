@@ -36,7 +36,7 @@ module Api
 
       def address_params
         params.require(:address).permit(:id, :street, :town, :zipcode, :parish,
-                                        :country, :latitude, :lognitude, :source)
+                                        :country, :latitude, :longitude, :source)
       end
     end
   end
