@@ -34,6 +34,10 @@ const Export = (props) => {
         <a href={`/exports/${object.id}/file`}>
           {object.file_name}
         </a>
+
+        <div id="status">
+          {object.status}
+        </div>
       </div>
     );
   } else {
@@ -60,6 +64,7 @@ Export.propTypes = {
     id: PropTypes.number,
     file_name: PropTypes.string,
     content_type: PropTypes.string,
+    status: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   mode: PropTypes.string,
@@ -83,6 +88,7 @@ const ShowExport = ({ match, location }) => (
     match={match}
     location={location}
     noReferences
+    reloadInterval={3000}
   />
 );
 ShowExport.propTypes = {

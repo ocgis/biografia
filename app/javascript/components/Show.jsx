@@ -14,6 +14,7 @@ class Show extends React.Component {
     const objectName = oneName(_type_);
     this.state = {
       currentUser: null,
+      timerHandle: null,
     };
     this.state[objectName] = null;
   }
@@ -26,12 +27,23 @@ class Show extends React.Component {
     const { location: { pathname, search } } = this.props;
     if (pathname !== prevProps.location.pathname
         || search !== prevProps.location.search) {
+      const { timerHandle } = this.state;
+      if (timerHandle !== null) {
+        clearTimeout(timerHandle);
+      }
       this.reload();
     }
   }
 
+  componentWillUnmount() {
+    const { timerHandle } = this.state;
+    if (timerHandle !== null) {
+      clearTimeout(timerHandle);
+    }
+  }
+
   reload = () => {
-    const { _type_ } = this.props;
+    const { _type_, reloadInterval } = this.props;
     const objectName = oneName(_type_);
 
     const onLoaded = (data) => {
@@ -39,6 +51,10 @@ class Show extends React.Component {
     };
 
     loadData(this.url(), objectName, onLoaded, false);
+
+    if (reloadInterval > 0) {
+      this.state.timerHandle = setTimeout(this.reload, reloadInterval);
+    }
   };
 
   url = () => {
@@ -104,9 +120,11 @@ Show.propTypes = {
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
   }).isRequired,
+  reloadInterval: PropTypes.number,
 };
 Show.defaultProps = {
   noReferences: false,
+  reloadInterval: 0,
 };
 
 export default Show;
