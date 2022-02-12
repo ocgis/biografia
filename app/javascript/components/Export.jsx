@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Index from './Index';
 import Show from './Show';
+import Edit from './Edit';
+import FormExport from './FormExport';
 import { setMapping } from './Mappings';
 
 setMapping('Export', 'oneName', 'export');
@@ -75,6 +77,35 @@ Export.defaultProps = {
 };
 
 setMapping('Export', 'showObject', Export);
+
+const EditExport = (props) => {
+  const {
+    object, extraData, onOk, onCancel,
+  } = props;
+
+  return (
+    <Edit
+      _type_="Export"
+      object={object}
+      formObject={FormExport}
+      onOk={onOk}
+      onCancel={onCancel}
+      extraData={extraData}
+    />
+  );
+};
+EditExport.propTypes = {
+  onOk: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  object: PropTypes.shape(),
+  extraData: PropTypes.shape(),
+};
+EditExport.defaultProps = {
+  object: undefined,
+  extraData: undefined,
+};
+
+setMapping('Export', 'editObject', EditExport);
 
 const IndexExport = () => (
   <Index

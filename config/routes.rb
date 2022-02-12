@@ -50,7 +50,7 @@ Biografia::Application.routes.draw do
         end
       end
       resources :transfers, only: %i[index show]
-      resources :exports, only: %i[index show] do
+      resources :exports, only: %i[index show create] do
         collection do
           get :file
         end

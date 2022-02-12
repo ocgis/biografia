@@ -39,6 +39,11 @@ const TopMenu = (props) => {
         component: editObject('Thing'),
         _type_: 'Thing',
       },
+      addExport: {
+        title: 'Exportera fil',
+        component: editObject('Export'),
+        _type_: 'Export',
+      },
     };
 
     const modal = modals[modalKey];
@@ -151,8 +156,13 @@ const TopMenu = (props) => {
                 Överför fil
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Exporter" onTitleClick={() => history.push(webUrl('Export'))}>
-              <Menu.Item>
+            <SubMenu
+              key="exports"
+              title="Exporter"
+              onTitleClick={() => history.push(webUrl('Export'))}
+              onClick={menuClicked}
+            >
+              <Menu.Item key="addExport">
                 Exportera fil
               </Menu.Item>
             </SubMenu>

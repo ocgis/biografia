@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
 
-class EditEvent extends React.Component {
+class FormEvent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -36,15 +36,15 @@ class EditEvent extends React.Component {
     );
   }
 }
-EditEvent.propTypes = {
+FormEvent.propTypes = {
   onChange: PropTypes.func.isRequired,
   object: PropTypes.shape(),
 };
-EditEvent.defaultProps = {
+FormEvent.defaultProps = {
   object: {
     name: null,
     source: null,
   },
 };
 
-export default EditEvent;
+export default FormEvent;
