@@ -789,7 +789,7 @@ class XmlFile
 
   def export_p(fd)
     i = 1
-    people = Person.all
+    people = Person.all.preload(:person_names)
     people.each do |person|
       export_person(fd, person, i)
       i = i + 1
@@ -798,7 +798,7 @@ class XmlFile
 
   def export_a(fd)
     i = 1
-    people = Person.all
+    people = Person.all.preload(:person_names)
     people.each do |person|
       export_person_remarks(fd, person, i)
       i = i + 1
@@ -1078,15 +1078,18 @@ class XmlFile
   end
 
   def get_given_name(person)
-    if person.person_names.length == 1
+    case person.person_names.length
+    when 0
+      given_name = ''
+    when 1
       given_name = person.person_names.first.given_name
     else
       given_name = person.person_names.first.given_name
-      unless person.person_names.all? {|person_name| person_name.given_name == given_name}
+      unless person.person_names.all? { |person_name| person_name.given_name == given_name }
         raise StandardError, "Unhandled number of names #{person.person_names.length}"
       end
     end
-    return given_name
+    given_name
   end
 
   def get_surname(person)
@@ -1095,19 +1098,17 @@ class XmlFile
   end
 
   def get_calling_name_end_index(person)
+    return '0' if person.person_names.size.zero?
+
     calling_name = person.person_names.last.calling_name
-    last = 0
-    unless calling_name.nil?
-      first = person.person_names.last.given_name.index(calling_name)
-      unless first.nil?
-        last = first + person.person_names.last.calling_name.length
-        if person.person_names.last.given_name[last].nil? or (person.person_names.last.given_name[last] == ' ')
-          last = last + 1
-        end
-      end
-    end
-    end_index = (last + '0'.ord).chr
-    return end_index
+    return '0' if calling_name.nil?
+
+    first = person.person_names.last.given_name.index(calling_name)
+    return '0' if first.nil?
+
+    last = first + person.person_names.last.calling_name.length
+    last += 1 if person.person_names.last.given_name[last].nil? || (person.person_names.last.given_name[last] == ' ')
+    (last + '0'.ord).chr
   end
 
   def get_dates_of(event)
