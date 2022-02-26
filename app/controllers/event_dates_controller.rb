@@ -1,41 +1,40 @@
-# -*- coding: utf-8 -*-
-class EventDatesController < ApplicationController
+# frozen_string_literal: true
 
+# Implementation of the event dates controller class
+class EventDatesController < ApplicationController
   load_and_authorize_resource
 
   protected
 
-  def new_object(options={})
-    @event_date = EventDate.new()
-    if not options[:reference].nil?
-      @event_date.set_extra(:reference, options[:reference])
-    end
+  def new_object(options = {})
+    @event_date = EventDate.new
+    return if options[:reference].nil?
+
+    @event_date.set_extra(:reference, options[:reference])
   end
 
   def create_object
-    p = ActionController::Parameters.new(event_date_params)
-    object = EventDate.new()
-    object.set_date(p[:date])
-    return object
+    object = EventDate.new
+    object.set_date(event_date_params[:date])
+    object
   end
 
   def find_object
-    return EventDate.find(params.require(:id))
+    EventDate.find(params.require(:id))
   end
 
   def find_object_and_update_attrs
     object = EventDate.find(params.require(:id))
-    p = ActionController::Parameters.new(event_date_params)
-    object.set_date(p[:date])
-    return object
+    object.set_date(event_date_params[:date])
+    object
   end
 
   def all_objects
-    return EventDate.all
+    EventDate.all
   end
 
   def index_title
-    return "Index över datum"
+    'Index över datum'
   end
 
   private
@@ -43,5 +42,4 @@ class EventDatesController < ApplicationController
   def event_date_params
     params.require(:event_date).permit(:date)
   end
-
 end
