@@ -21,6 +21,6 @@ class ActiveSupport::TestCase
     user.roles << role
     user.save
     session[:user_id] = user.id
+    user
   end
-
 end
