@@ -21,7 +21,7 @@ class PeopleControllerTest < ActionController::TestCase
     sign_in make_user(:editor)
     post :create,
          params: {
-           person: { sex: 'Sex' },
+           person: { sex: 'S' },
            person_name_0: { given_name: 'Given Name', calling_name: 'Calling name', surname: 'Surname' }
          }
     assert_response :redirect
@@ -58,7 +58,7 @@ class PeopleControllerTest < ActionController::TestCase
     post :update,
          params: {
            id: people(:person1).id,
-           person: { sex: 'Sex' },
+           person: { sex: 'S' },
            person_name_0: {
              id: person_names(:person_name1).id,
              given_name: 'Given Name',
