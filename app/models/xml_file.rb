@@ -218,10 +218,10 @@ class XmlFile
     return object
   end
 
-  def find_by_source_or_new(model, source)
+  def find_by_source_or_new(model, source, new_attributes = {})
     object = find_by_source(model, source)
     if object.nil?
-      object = model.new
+      object = model.new(new_attributes)
       object[:source] = source
     end
     return object
@@ -246,7 +246,7 @@ class XmlFile
   end
 
   def make_person(v)
-    person = find_by_source_or_new(Person, person_source(v['p']))
+    person = find_by_source_or_new(Person, person_source(v['p']), { id: v['p'].to_i }) # Try to keep the id
     if v['efternamn'].nil?
       surnames = [nil]
     else
@@ -395,7 +395,7 @@ class XmlFile
         end
       end
       children.each do |role, child|
-        puts "Role: #{role} Child: #{child.inspect}"
+        # puts "Role: #{role} Child: #{child.inspect}"
         object.get_or_add_reference(child, role: role, ts_by_objects: true) unless child.nil?
       end
     else
@@ -643,7 +643,7 @@ class XmlFile
     end
 
     if rel.nil? and spouses.length > 0
-      rel = Relationship.new
+      rel = Relationship.new(id: v['v'].to_i) # Try to keep the id
       ts = get_object_with_latest_timestamps(spouses)
       unless ts.nil?
         rel.created_at = ts.created_at
@@ -907,11 +907,18 @@ class XmlFile
       yrke = profession.note
     end
       
-    address = get_address_of(person)
-    unless address.nil?
-      updated_at = [updated_at, address.updated_at].max
-      hemort = address.street
-      hemfs = address.parish
+    accomodation_refs = person.get_references.where(name: ACCOMMODATION_ROLE)
+    if accomodation_refs.length == 1
+      accomodation = accomodation_refs[0].other_object(person)
+      updated_at = [updated_at, accomodation.updated_at].max
+      address = get_address_of(accomodation)
+      unless address.nil?
+        updated_at = [updated_at, address.updated_at].max
+        hemort = address.street
+        hemfs = address.parish
+      end
+    elsif accomodation_refs.length > 1
+      raise StandardError, "More than one address for person #{person.inspect}"
     end
 
     note1 = get_note_for(person, "Holger:Anm1")
