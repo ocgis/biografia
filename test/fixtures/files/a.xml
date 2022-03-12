@@ -1,0 +1,29 @@
+<dump>
+  <row>
+    <number name="p">1.000000</number>
+    <alpha name="fktabell">P</alpha>
+    <number name="r">1.000000</number>
+    <memoblob name="anmtext">Anmärkningstext 1.
+Fortsättning.</memoblob>
+    <alpha name="typ"></alpha>
+    <alpha name="status">A</alpha>
+  </row>
+  <row>
+    <number name="p">1.000000</number>
+    <alpha name="fktabell">P</alpha>
+    <number name="r">2.000000</number>
+    <memoblob name="anmtext">Anmärkningstext 2.
+Fortsättning.</memoblob>
+    <alpha name="typ"></alpha>
+    <alpha name="status">A</alpha>
+  </row>
+  <row>
+    <number name="p">2.000000</number>
+    <alpha name="fktabell">P</alpha>
+    <number name="r">1.000000</number>
+    <memoblob name="anmtext">Anmärkningstext 3.
+Fortsättning.</memoblob>
+    <alpha name="typ"></alpha>
+    <alpha name="status">A</alpha>
+  </row>
+</dump>

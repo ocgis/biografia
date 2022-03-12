@@ -1,0 +1,16 @@
+<dump>
+  <row>
+    <number name="v">1.000000</number>
+    <number name="f">2.000000</number>
+    <number name="m">3.000000</number>
+    <number name="p">0.000000</number>
+    <alpha name="vigdat">2022-02-22</alpha>
+    <alpha name="vigort"></alpha>
+    <alpha name="vigfs">Vigförsamling 1</alpha>
+    <alpha name="slutdat"></alpha>
+    <alpha name="anm"></alpha>
+    <number name="eventtyp">0.000000</number>
+    <alpha name="typ">1</alpha>
+    <alpha name="status"></alpha>
+  </row>
+</dump>
