@@ -1100,8 +1100,7 @@ class XmlFile
   end
 
   def get_surname(person)
-    surname = person.person_names.collect{|person_name| person_name.surname}.reverse.join(" f.")
-    return surname
+    person.person_names.collect(&:surname).reverse.join(' f. ')
   end
 
   def get_calling_name_end_index(person)

@@ -5,7 +5,7 @@
     <number name="m">3.000000</number>
     <alpha name="fornamn">Förnamn Ett</alpha>
     <alpha name="patronym"></alpha>
-    <alpha name="efternamn">Efternamn Ett</alpha>
+    <alpha name="efternamn">Efternamn f. Födelsenamn</alpha>
     <alpha name="kon">k</alpha>
     <alpha name="fodat">1922-02-21</alpha>
     <alpha name="dopdat">1922-02-23</alpha>

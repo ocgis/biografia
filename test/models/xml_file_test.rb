@@ -51,7 +51,12 @@ class XmlFileTest < ActiveSupport::TestCase
         objects: [{ position: 1,
                     given_name: 'Förnamn Ett',
                     calling_name: 'Förnamn',
-                    surname: 'Efternamn Ett',
+                    surname: 'Födelsenamn',
+                    person_id: 1 },
+                  { position: 2,
+                    given_name: 'Förnamn Ett',
+                    calling_name: 'Förnamn',
+                    surname: 'Efternamn',
                     person_id: 1 },
                   { position: 1,
                     given_name: 'Förnamn Två',
@@ -122,10 +127,14 @@ class XmlFileTest < ActiveSupport::TestCase
     end
 
     files.each do |file_type, paths|
-      import_file = paths[:import]
       export_file = paths[:export]
       xml_file.export(export_file, type: file_type)
       assert_equal("Done exporting XML file #{export_file}", status_object.status)
+    end
+
+    files.each do |_, paths|
+      import_file = paths[:import]
+      export_file = paths[:export]
 
       assert FileUtils.compare_file(import_file, export_file), "Files #{import_file} and #{export_file} differ"
     end
