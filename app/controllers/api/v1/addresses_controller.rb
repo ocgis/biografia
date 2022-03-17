@@ -29,7 +29,7 @@ module Api
       end
 
       def all_objects
-        Address.all
+        Address.all.order(:street, :town, :zipcode, :parish, :country)
       end
 
       private
