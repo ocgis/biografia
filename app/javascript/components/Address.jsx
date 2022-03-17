@@ -30,10 +30,10 @@ const OneLine = (props) => {
     parts.push(`${address.parish} församling`);
   }
 
-  if (parts.size === 0 && address.latitude != null && address.longitude != null) {
+  if (parts.length === 0 && address.latitude != null && address.longitude != null) {
     parts.push(`${address.latitude},${address.longitude}`);
   }
-  if (parts.size === 0) {
+  if (parts.length === 0) {
     return 'Empty address';
   }
 
