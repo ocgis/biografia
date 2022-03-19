@@ -1,13 +1,15 @@
 import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Alert } from 'antd';
+import { Alert, Input } from 'antd';
 import { FixedSizeList as List } from 'react-window';
 import { loadData } from './Requests';
 import TopMenu from './TopMenu';
 import {
-  apiUrl, manyName, showObject, webUrl,
+  apiUrl, filterObject, manyName, showObject, webUrl,
 } from './Mappings';
+
+const { Search } = Input;
 
 class Index extends React.Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class Index extends React.Component {
       divRef: createRef(),
       elementHeight: null,
       listHeight: null,
+      filter: '',
     };
     this.state[objectName] = null;
   }
@@ -39,21 +42,23 @@ class Index extends React.Component {
 
   updateHeights = () => {
     const { divRef } = this.state;
-    const { top, height } = divRef.current.getBoundingClientRect();
-    const { listHeight: oldListHeight } = this.state;
-    const heights = {};
+    if (divRef != null && divRef.current != null) {
+      const { top, height } = divRef.current.getBoundingClientRect();
+      const { listHeight: oldListHeight } = this.state;
+      const heights = {};
 
-    const listHeight = window.innerHeight - top;
-    if (listHeight !== oldListHeight) {
-      heights.listHeight = listHeight;
-    }
+      const listHeight = window.innerHeight - top;
+      if (listHeight !== oldListHeight) {
+        heights.listHeight = listHeight;
+      }
 
-    if (oldListHeight == null) {
-      heights.elementHeight = height;
-    }
+      if (oldListHeight == null) {
+        heights.elementHeight = height;
+      }
 
-    if (Object.entries(heights).length > 0) {
-      this.setState(heights);
+      if (Object.entries(heights).length > 0) {
+        this.setState(heights);
+      }
     }
   };
 
@@ -77,12 +82,24 @@ class Index extends React.Component {
   render = () => {
     const { _type_ } = this.props;
     const { state } = this;
-    const { currentUser, error } = state;
-    const objects = state[manyName(_type_)];
+    const {
+      currentUser, error, filter, listHeight,
+    } = state;
+
+    const updateFilter = (data) => {
+      this.setState({ filter: data.target.value });
+    };
+
+    let objects = state[manyName(_type_)];
+
+    if (objects != null && listHeight != null && filter !== '') {
+      objects = objects.filter((object) => filterObject(object, filter));
+    }
 
     return (
       <div>
         <TopMenu currentUser={currentUser} />
+        <Search placeholder="filtrera" onChange={updateFilter} />
         { error != null
           && (
             <Alert message={error} type="error" showIcon />
