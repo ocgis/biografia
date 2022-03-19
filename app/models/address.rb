@@ -35,7 +35,8 @@ class Address < ActiveRecord::Base
     if latitude.nil? || longitude.nil?
       parts << street unless street.nil?
       parts << town unless town.nil?
-      parts << parish unless parish.nil?
+      parts << parish if town.nil? && !parish.nil?
+      parts << country unless country.nil?
     else
       parts << "#{latitude},#{longitude}"
     end
