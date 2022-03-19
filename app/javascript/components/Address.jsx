@@ -18,19 +18,27 @@ const OneLine = (props) => {
 
   const parts = [];
 
-  if (address.street != null) {
+  if (address.street) {
     parts.push(address.street);
   }
 
-  if (address.town != null) {
+  if (address.town && address.zipcode) {
+    parts.push(`${address.zipcode} ${address.town}`);
+  } else if (address.town) {
     parts.push(address.town);
+  } else if (address.zipcode) {
+    parts.push(address.zipcode);
   }
 
-  if (address.parish != null) {
+  if (address.parish) {
     parts.push(`${address.parish} församling`);
   }
 
-  if (parts.length === 0 && address.latitude != null && address.longitude != null) {
+  if (address.country) {
+    parts.push(`${address.country}`);
+  }
+
+  if (parts.length === 0 && address.latitude && address.longitude) {
     parts.push(`${address.latitude},${address.longitude}`);
   }
   if (parts.length === 0) {
