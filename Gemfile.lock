@@ -209,7 +209,7 @@ GEM
       pry (~> 0.11)
       yard (~> 0.9.11)
     racc (1.6.0)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rack-protection (2.1.0)
       rack
     rack-proxy (0.7.0)
