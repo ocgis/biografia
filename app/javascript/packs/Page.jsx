@@ -1,14 +1,14 @@
-import "../stylesheets/Page.css";
-import React from "react";
-import { render } from "react-dom";
-import App from "../components/App";
+import '../stylesheets/Page.css';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import Rails from '@rails/ujs';
+import App from '../components/App';
 
 Rails.start();
 
-document.addEventListener("DOMContentLoaded", () => {
-  render(
+document.addEventListener('DOMContentLoaded', () => {
+  const root = createRoot(document.body.appendChild(document.createElement('div')));
+  root.render(
     <App />,
-    document.body.appendChild(document.createElement("div"))
   );
 });
