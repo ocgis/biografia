@@ -3,20 +3,16 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0'
+gem 'rails'
 
 # Use draper for decorations
 gem 'draper'
-
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
 
 # Use mysql2 as the database for Active Record
 gem 'mysql2'
 
 # Use puma to get web server threads
 gem 'puma', '>= 5.5.1'
-# gem 'thin'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -66,7 +62,7 @@ gem 'exiftool'
 gem 'bcrypt'
 
 # gem 'devise'
-gem 'devise', github: 'heartcombo/devise', branch: 'ca-omniauth-2'
+gem 'devise'
 
 # gem 'omniauth'
 gem 'omniauth-facebook'
@@ -93,4 +89,4 @@ gem 'pry-doc'
 # Export db data
 gem 'yaml_db'
 
-gem 'webpacker', '~> 5.2'
+gem 'webpacker'
