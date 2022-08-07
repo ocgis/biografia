@@ -93,4 +93,5 @@ gem 'yaml_db'
 
 gem 'webpacker'
 
+gem 'stringio', '= 3.0.1'
 gem 'strscan', '= 3.0.1'
