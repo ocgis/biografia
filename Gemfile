@@ -92,3 +92,5 @@ gem 'pry-doc'
 gem 'yaml_db'
 
 gem 'webpacker'
+
+gem 'strscan', '= 3.0.1'
