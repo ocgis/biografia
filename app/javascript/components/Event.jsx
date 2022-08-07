@@ -121,28 +121,16 @@ const IndexEvent = () => (
   />
 );
 
-const ShowEvent = ({ match, location }) => (
+const ShowEvent = () => (
   <Show
     _type_="Event"
-    match={match}
-    location={location}
   />
 );
-ShowEvent.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionEvent = ({ match, location }) => (
+const VersionEvent = () => (
   <Version
     _type_="Event"
-    match={match}
-    location={location}
   />
 );
-VersionEvent.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexEvent, ShowEvent, VersionEvent };

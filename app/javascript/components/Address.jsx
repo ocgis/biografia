@@ -117,28 +117,16 @@ const IndexAddress = () => (
   />
 );
 
-const ShowAddress = ({ match, location }) => (
+const ShowAddress = () => (
   <Show
     _type_="Address"
-    match={match}
-    location={location}
   />
 );
-ShowAddress.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionAddress = ({ match, location }) => (
+const VersionAddress = () => (
   <Version
     _type_="Address"
-    match={match}
-    location={location}
   />
 );
-VersionAddress.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexAddress, ShowAddress, VersionAddress };

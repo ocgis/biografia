@@ -79,28 +79,16 @@ setMapping('Note', 'showObject', Note);
 
 setMapping('Note', 'editObject', EditNote);
 
-const ShowNote = ({ match, location }) => (
+const ShowNote = () => (
   <Show
     _type_="Note"
-    match={match}
-    location={location}
   />
 );
-ShowNote.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionNote = ({ match, location }) => (
+const VersionNote = () => (
   <Version
     _type_="Note"
-    match={match}
-    location={location}
   />
 );
-VersionNote.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { ShowNote, VersionNote };

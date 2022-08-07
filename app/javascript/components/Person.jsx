@@ -131,17 +131,11 @@ setMapping('Person', 'showObject', Person);
 
 setMapping('Person', 'editObject', EditPerson);
 
-const ShowPerson = ({ match, location }) => (
+const ShowPerson = () => (
   <Show
     _type_="Person"
-    match={match}
-    location={location}
   />
 );
-ShowPerson.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 const IndexPerson = () => (
   <Index
@@ -149,16 +143,10 @@ const IndexPerson = () => (
   />
 );
 
-const VersionPerson = ({ match, location }) => (
+const VersionPerson = () => (
   <Version
     _type_="Person"
-    match={match}
-    location={location}
   />
 );
-VersionPerson.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { ShowPerson, IndexPerson, VersionPerson };

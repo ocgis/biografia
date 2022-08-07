@@ -113,18 +113,12 @@ const IndexExport = () => (
   />
 );
 
-const ShowExport = ({ match, location }) => (
+const ShowExport = () => (
   <Show
     _type_="Export"
-    match={match}
-    location={location}
     noReferences
     reloadInterval={3000}
   />
 );
-ShowExport.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexExport, ShowExport };

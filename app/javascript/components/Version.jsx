@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import TopMenu from './TopMenu';
@@ -37,7 +38,7 @@ class Version extends React.Component {
   };
 
   url = () => {
-    const { match: { params: { id } }, _type_ } = this.props;
+    const { params: { id }, _type_ } = this.props;
     return apiUrl(_type_, id, 'examine');
   }
 
@@ -82,11 +83,19 @@ class Version extends React.Component {
 }
 Version.propTypes = {
   _type_: PropTypes.string.isRequired,
-  match: PropTypes.shape().isRequired,
+  params: PropTypes.shape().isRequired,
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default Version;
+export default function wrapper(props) {
+  return (
+    <Version
+      {...props}
+      params={useParams()}
+      location={useLocation()}
+    />
+  );
+}

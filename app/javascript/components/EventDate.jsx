@@ -72,28 +72,16 @@ setMapping('EventDate', 'showObject', EventDate);
 
 setMapping('EventDate', 'editObject', EditEventDate);
 
-const ShowEventDate = ({ match, location }) => (
+const ShowEventDate = () => (
   <Show
     _type_="EventDate"
-    match={match}
-    location={location}
   />
 );
-ShowEventDate.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionEventDate = ({ match, location }) => (
+const VersionEventDate = () => (
   <Version
     _type_="EventDate"
-    match={match}
-    location={location}
   />
 );
-VersionEventDate.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { ShowEventDate, VersionEventDate };

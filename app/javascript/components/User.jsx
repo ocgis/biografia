@@ -109,17 +109,11 @@ const IndexUser = () => (
   />
 );
 
-const ShowUser = ({ match, location }) => (
+const ShowUser = () => (
   <Show
     _type_="User"
-    match={match}
-    location={location}
     noReferences
   />
 );
-ShowUser.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexUser, ShowUser };

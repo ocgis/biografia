@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { IndexPerson, ShowPerson, VersionPerson } from './Person';
 import { ShowNote, VersionNote } from './Note';
 import SearchMedium from './SearchMedium';
@@ -16,147 +16,147 @@ import { webUrl } from './Mappings';
 
 export default (
   <Router>
-    <Switch>
+    <Routes>
       <Route
         path={webUrl('Person', ':id', 'examine')}
         exact
-        component={VersionPerson}
+        element={<VersionPerson />}
       />
       <Route
         path={webUrl('Person', ':id')}
         exact
-        component={ShowPerson}
+        element={<ShowPerson />}
       />
       <Route
         path={webUrl('Person')}
         exact
-        component={IndexPerson}
+        element={<IndexPerson />}
       />
       <Route
         path={webUrl('Note', ':id', 'examine')}
         exact
-        component={VersionNote}
+        element={<VersionNote />}
       />
       <Route
         path={webUrl('Note', ':id')}
         exact
-        component={ShowNote}
+        element={<ShowNote />}
       />
       <Route
         path={webUrl('Medium', 'search')}
         exact
-        component={SearchMedium}
+        element={<SearchMedium />}
       />
       <Route
         path={webUrl('Medium', ':id', 'examine')}
         exact
-        component={VersionMedium}
+        element={<VersionMedium />}
       />
       <Route
         path={webUrl('Medium', ':id')}
         exact
-        component={ShowMedium}
+        element={<ShowMedium />}
       />
       <Route
         path={webUrl('Medium')}
         exact
-        component={IndexMedium}
+        element={<IndexMedium />}
       />
       <Route
         path={webUrl('Event', ':id', 'examine')}
         exact
-        component={VersionEvent}
+        element={<VersionEvent />}
       />
       <Route
         path={webUrl('Event', ':id')}
         exact
-        component={ShowEvent}
+        element={<ShowEvent />}
       />
       <Route
         path={webUrl('Event')}
         exact
-        component={IndexEvent}
+        element={<IndexEvent />}
       />
       <Route
         path={webUrl('EventDate', ':id', 'examine')}
         exact
-        component={VersionEventDate}
+        element={<VersionEventDate />}
       />
       <Route
         path={webUrl('EventDate', ':id')}
         exact
-        component={ShowEventDate}
+        element={<ShowEventDate />}
       />
       <Route
         path={webUrl('Address', ':id', 'examine')}
         exact
-        component={VersionAddress}
+        element={<VersionAddress />}
       />
       <Route
         path={webUrl('Address', ':id')}
         exact
-        component={ShowAddress}
+        element={<ShowAddress />}
       />
       <Route
         path={webUrl('Address')}
         exact
-        component={IndexAddress}
+        element={<IndexAddress />}
       />
       <Route
         path={webUrl('Thing', ':id', 'examine')}
         exact
-        component={VersionThing}
+        element={<VersionThing />}
       />
       <Route
         path={webUrl('Thing', ':id')}
         exact
-        component={ShowThing}
+        element={<ShowThing />}
       />
       <Route
         path={webUrl('Thing')}
         exact
-        component={IndexThing}
+        element={<IndexThing />}
       />
       <Route
         path={webUrl('Relationship', ':id', 'examine')}
         exact
-        component={VersionRelationship}
+        element={<VersionRelationship />}
       />
       <Route
         path={webUrl('Relationship', ':id')}
         exact
-        component={ShowRelationship}
+        element={<ShowRelationship />}
       />
       <Route
         path={webUrl('Transfer', ':id')}
         exact
-        component={ShowTransfer}
+        element={<ShowTransfer />}
       />
       <Route
         path={webUrl('Transfer')}
         exact
-        component={IndexTransfer}
+        element={<IndexTransfer />}
       />
       <Route
         path={webUrl('Export', ':id')}
         exact
-        component={ShowExport}
+        element={<ShowExport />}
       />
       <Route
         path={webUrl('Export')}
         exact
-        component={IndexExport}
+        element={<IndexExport />}
       />
       <Route
         path={webUrl('User', ':id')}
         exact
-        component={ShowUser}
+        element={<ShowUser />}
       />
       <Route
         path={webUrl('User')}
         exact
-        component={IndexUser}
+        element={<IndexUser />}
       />
-    </Switch>
+    </Routes>
   </Router>
 );

@@ -176,28 +176,16 @@ setMapping('Relationship', 'showObject', Relationship);
 
 setMapping('Relationship', 'editObject', EditRelationship);
 
-const ShowRelationship = ({ match, location }) => (
+const ShowRelationship = () => (
   <Show
     _type_="Relationship"
-    match={match}
-    location={location}
   />
 );
-ShowRelationship.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionRelationship = ({ match, location }) => (
+const VersionRelationship = () => (
   <Version
     _type_="Relationship"
-    match={match}
-    location={location}
   />
 );
-VersionRelationship.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { ShowRelationship, VersionRelationship };

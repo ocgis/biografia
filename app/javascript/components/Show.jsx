@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import TopMenu from './TopMenu';
@@ -58,7 +59,7 @@ class Show extends React.Component {
   };
 
   url = () => {
-    const { match: { params: { id } }, _type_ } = this.props;
+    const { params: { id }, _type_ } = this.props;
     return apiUrl(_type_, id);
   }
 
@@ -115,7 +116,7 @@ class Show extends React.Component {
 Show.propTypes = {
   _type_: PropTypes.string.isRequired,
   noReferences: PropTypes.bool,
-  match: PropTypes.shape().isRequired,
+  params: PropTypes.shape().isRequired,
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
@@ -127,4 +128,12 @@ Show.defaultProps = {
   reloadInterval: 0,
 };
 
-export default Show;
+export default function wrapper(props) {
+  return (
+    <Show
+      {...props}
+      params={useParams()}
+      location={useLocation()}
+    />
+  );
+}

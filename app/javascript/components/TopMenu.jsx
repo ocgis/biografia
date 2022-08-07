@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Col,
@@ -14,7 +14,7 @@ const { SubMenu } = Menu;
 
 const TopMenu = (props) => {
   const { currentUser } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const [modalKey, setModalKey] = useState(null);
 
   const showModal = () => {
@@ -54,7 +54,7 @@ const TopMenu = (props) => {
     const onCancel = () => setModalKey(null);
     const onOk = (result) => {
       setModalKey(null);
-      history.push(webUrl(modal._type_, result[oneName(modal._type_)].id));
+      navigate(webUrl(modal._type_, result[oneName(modal._type_)].id));
     };
 
     const Component = modal.component;
@@ -76,7 +76,7 @@ const TopMenu = (props) => {
   const menuClicked = (object) => {
     switch (object.key) {
       case 'searchMediaLocally':
-        history.push(webUrl('Medium', 'search'));
+        navigate(webUrl('Medium', 'search'));
         break;
 
       default:
@@ -102,7 +102,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="people"
               title="Personer"
-              onTitleClick={() => history.push(webUrl('Person'))}
+              onTitleClick={() => navigate(webUrl('Person'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addPerson">
@@ -111,7 +111,7 @@ const TopMenu = (props) => {
             </SubMenu>
             <SubMenu
               title="Händelser"
-              onTitleClick={() => history.push(webUrl('Event'))}
+              onTitleClick={() => navigate(webUrl('Event'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addEvent">
@@ -121,7 +121,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="media"
               title="Media"
-              onTitleClick={() => history.push(webUrl('Medium'))}
+              onTitleClick={() => navigate(webUrl('Medium'))}
               onClick={menuClicked}
             >
               <Menu.Item>
@@ -134,7 +134,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="addresses"
               title="Adresser"
-              onTitleClick={() => history.push(webUrl('Address'))}
+              onTitleClick={() => navigate(webUrl('Address'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addAddress">
@@ -144,14 +144,14 @@ const TopMenu = (props) => {
             <SubMenu
               key="things"
               title="Saker"
-              onTitleClick={() => history.push(webUrl('Thing'))}
+              onTitleClick={() => navigate(webUrl('Thing'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addThing">
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Överföringar" onTitleClick={() => history.push(webUrl('Transfer'))}>
+            <SubMenu title="Överföringar" onTitleClick={() => navigate(webUrl('Transfer'))}>
               <Menu.Item>
                 Överför fil
               </Menu.Item>
@@ -159,7 +159,7 @@ const TopMenu = (props) => {
             <SubMenu
               key="exports"
               title="Exporter"
-              onTitleClick={() => history.push(webUrl('Export'))}
+              onTitleClick={() => navigate(webUrl('Export'))}
               onClick={menuClicked}
             >
               <Menu.Item key="addExport">

@@ -93,17 +93,11 @@ const IndexTransfer = () => (
   />
 );
 
-const ShowTransfer = ({ match, location }) => (
+const ShowTransfer = () => (
   <Show
     _type_="Transfer"
-    match={match}
-    location={location}
     noReferences
   />
 );
-ShowTransfer.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexTransfer, ShowTransfer };

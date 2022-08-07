@@ -228,28 +228,16 @@ const IndexMedium = () => (
   />
 );
 
-const ShowMedium = ({ match, location }) => (
+const ShowMedium = () => (
   <Show
     _type_="Medium"
-    match={match}
-    location={location}
   />
 );
-ShowMedium.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionMedium = ({ match, location }) => (
+const VersionMedium = () => (
   <Version
     _type_="Medium"
-    match={match}
-    location={location}
   />
 );
-VersionMedium.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexMedium, ShowMedium, VersionMedium };

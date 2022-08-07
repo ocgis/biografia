@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import TopMenu from './TopMenu';
 import { apiUrl, webUrl } from './Mappings';
 import { errorText, getRequest, postRequest } from './Requests';
@@ -75,10 +75,10 @@ class SearchMedium extends React.Component {
   registerImage = (path) => {
     const handleResponse = (response) => {
       const { data: { medium } } = response;
-      const { history } = this.props;
+      const { navigate } = this.props;
 
       if (medium != null) {
-        history.push(webUrl('Medium', medium.id));
+        navigate(webUrl('Medium', medium.id));
       } else {
         let { data: { error } } = response;
         if (error == null) {
@@ -126,7 +126,14 @@ SearchMedium.propTypes = {
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
   }).isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
-export default SearchMedium;
+export default function wrapper() {
+  return (
+    <SearchMedium
+      location={useLocation()}
+      navigate={useNavigate()}
+    />
+  );
+}

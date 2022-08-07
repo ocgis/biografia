@@ -126,28 +126,16 @@ const IndexThing = () => (
   />
 );
 
-const ShowThing = ({ match, location }) => (
+const ShowThing = () => (
   <Show
     _type_="Thing"
-    match={match}
-    location={location}
   />
 );
-ShowThing.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
-const VersionThing = ({ match, location }) => (
+const VersionThing = () => (
   <Version
     _type_="Thing"
-    match={match}
-    location={location}
   />
 );
-VersionThing.propTypes = {
-  match: PropTypes.shape().isRequired,
-  location: PropTypes.shape().isRequired,
-};
 
 export { IndexThing, ShowThing, VersionThing };
