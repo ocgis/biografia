@@ -43,6 +43,8 @@ gem 'capistrano-rails', group: :development
 # Add this if you're using rbenv
 gem 'capistrano-rbenv', github: 'capistrano/rbenv'
 
+gem 'capistrano-yarn'
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
