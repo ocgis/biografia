@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Navigate, Route, Routes,
+} from 'react-router-dom';
 import { IndexPerson, ShowPerson, VersionPerson } from './Person';
 import { ShowNote, VersionNote } from './Note';
 import SearchMedium from './SearchMedium';
@@ -156,6 +158,10 @@ export default (
         path={webUrl('User')}
         exact
         element={<IndexUser />}
+      />
+      <Route
+        path="*"
+        element={<Navigate to={webUrl('Person')} replace />}
       />
     </Routes>
   </Router>
