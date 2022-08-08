@@ -24,28 +24,9 @@ class SearchMedium extends React.Component {
     }
   }
 
-  render = () => {
-    const { currentUser, error, nodes } = this.state;
-
-    if (nodes == null) {
-      return (
-        <TopMenu />
-      );
-    }
-    return (
-      <div>
-        <TopMenu currentUser={currentUser} />
-        {this.renderNodes(nodes)}
-        { error
-          && (
-            { error }
-          )}
-      </div>
-    );
-  }
-
-  renderNodes =
-    (nodes) => Object.entries(nodes).map(([path, number]) => this.renderNode(path, number));
+  renderNodes = (nodes) => (
+    Object.entries(nodes).map(([path, number]) => this.renderNode(path, number))
+  );
 
   renderNode = (path, number) => {
     if (number == null) {
@@ -56,7 +37,7 @@ class SearchMedium extends React.Component {
           onClick={() => this.registerImage(path)}
         >
           <img
-            src={`/media/file_thumb?file=${path}`}
+            src={apiUrl('Medium', `file_thumb?file=${path}`)}
             alt={path}
           />
         </button>
@@ -70,7 +51,7 @@ class SearchMedium extends React.Component {
         <br />
       </React.Fragment>
     );
-  }
+  };
 
   registerImage = (path) => {
     const handleResponse = (response) => {
@@ -94,7 +75,7 @@ class SearchMedium extends React.Component {
 
     const data = { file_name: path };
     postRequest(`${this.apiUrl}/register`, data, handleResponse, handleError);
-  }
+  };
 
   loadData() {
     const { location: { search } } = this.props;
@@ -119,6 +100,26 @@ class SearchMedium extends React.Component {
       currentUser: null,
       error: null,
     };
+  }
+
+  render() {
+    const { currentUser, error, nodes } = this.state;
+
+    if (nodes == null) {
+      return (
+        <TopMenu />
+      );
+    }
+    return (
+      <div>
+        <TopMenu currentUser={currentUser} />
+        {this.renderNodes(nodes)}
+        { error
+          && (
+            { error }
+          )}
+      </div>
+    );
   }
 }
 SearchMedium.propTypes = {

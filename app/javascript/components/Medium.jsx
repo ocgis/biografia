@@ -5,7 +5,7 @@ import Base from './Base';
 import Index from './Index';
 import Show from './Show';
 import Version from './Version';
-import { setMapping, webUrl } from './Mappings';
+import { apiUrl, setMapping, webUrl } from './Mappings';
 
 setMapping('Medium', 'oneName', 'medium');
 setMapping('Medium', 'manyName', 'media');
@@ -21,7 +21,7 @@ function OneLine(props) {
       }}
     >
       <img
-        src={`/media/${medium.id}/thumb`}
+        src={apiUrl('Medium', medium.id, 'thumb')}
         alt={medium.file_name}
       />
     </div>
@@ -95,7 +95,7 @@ class Medium extends React.Component {
         mediaTag = (
           <div style={{ position: 'relative' }}>
             <img
-              src={`/media/${medium.id}/image`}
+              src={apiUrl('Medium', medium.id, 'image')}
               alt={medium.file_name}
               onLoad={this.onImgLoad}
             />
@@ -167,7 +167,7 @@ class Medium extends React.Component {
               }}
             >
               <img
-                src={`/media/${medium.id}/image`}
+                src={apiUrl('Medium', medium.id, 'image')}
                 alt={medium.file_name}
                 width={imgWidth}
                 height={imgHeight}
@@ -210,7 +210,7 @@ Medium.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
     file_name: PropTypes.string,
-    positions_in_object: PropTypes.arrayOf().isRequired,
+    positions_in_object: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   reload: PropTypes.func.isRequired,

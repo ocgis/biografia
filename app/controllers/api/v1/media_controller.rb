@@ -45,11 +45,11 @@ module Api
 
       def register
         file_name = params.require(:file_name)
-        media = Medium.where(file_name: file_name)
+        media = Medium.where(file_name:)
         if media.length >= 1 # Prevent double registration
           render json: { medium: { id: media[0].id } }
         else
-          medium = Medium.new(file_name: file_name)
+          medium = Medium.new(file_name:)
           if medium.save
             medium.handle_extra_info
             render json: { medium: { id: medium.id } }
@@ -57,6 +57,21 @@ module Api
             render json: { error: 'Could not create medium' }
           end
         end
+      end
+
+      def image
+        medium = Medium.find(params.require(:id))
+        send_file(medium.fullsize)
+      end
+
+      def thumb
+        medium = Medium.find(params.require(:id))
+        send_file(medium.thumbnail)
+      end
+
+      def file_thumb
+        file_name = params.require(:file)
+        send_file(Medium.thumbnail_for(file_name))
       end
 
       protected

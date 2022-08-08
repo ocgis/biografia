@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BrowserRouter as Router, Navigate, Route, Routes,
+  BrowserRouter as Router, Link, Navigate, Route, Routes,
 } from 'react-router-dom';
 import { IndexPerson, ShowPerson, VersionPerson } from './Person';
 import { ShowNote, VersionNote } from './Note';
@@ -15,6 +15,18 @@ import { IndexTransfer, ShowTransfer } from './Transfer';
 import { IndexExport, ShowExport } from './Export';
 import { IndexUser, ShowUser } from './User';
 import { webUrl } from './Mappings';
+
+function NotFound() {
+  return (
+    <div>
+      <h1 style={{ color: 'red', fontSize: 100 }}>404</h1>
+      <h3>Page Not Found</h3>
+      <p>
+        <Link to="/">Go Home</Link>
+      </p>
+    </div>
+  );
+}
 
 export default (
   <Router>
@@ -160,8 +172,12 @@ export default (
         element={<IndexUser />}
       />
       <Route
-        path="*"
+        path="/"
         element={<Navigate to={webUrl('Person')} replace />}
+      />
+      <Route
+        path="*"
+        element={<NotFound />}
       />
     </Routes>
   </Router>

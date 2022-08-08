@@ -28,7 +28,7 @@ class TagMedium extends React.Component {
     };
   }
 
-  render = () => {
+  render() {
     const handleResult = (result) => {
       const { onOk } = this.props;
 
@@ -121,7 +121,7 @@ class TagMedium extends React.Component {
           <tr>
             <td>
               <ReactCrop
-                src={`/media/${referFrom.id}/image`}
+                src={apiUrl('Medium', referFrom.id, 'image')}
                 crop={crop}
                 onChange={onCropChange}
               />
