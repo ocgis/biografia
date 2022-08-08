@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'RMagick'
+require 'rmagick'
 
 # Implementation of the medium class
 class Medium < ActiveRecord::Base
@@ -158,6 +158,6 @@ class Medium < ActiveRecord::Base
     else
       raise StandardError, "Found several matching things: #{things.pretty_inspect}"
     end
-    add_reference(thing, role: role)
+    add_reference(thing, role:)
   end
 end
