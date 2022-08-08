@@ -10,7 +10,7 @@ import { setMapping, webUrl } from './Mappings';
 setMapping('Medium', 'oneName', 'medium');
 setMapping('Medium', 'manyName', 'media');
 
-const OneLine = (props) => {
+function OneLine(props) {
   const { object: medium } = props;
 
   return (
@@ -26,10 +26,10 @@ const OneLine = (props) => {
       />
     </div>
   );
-};
-
+}
 OneLine.propTypes = {
   object: PropTypes.shape({
+    file_name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
   }).isRequired,
 };
@@ -52,27 +52,27 @@ class Medium extends React.Component {
       naturalWidth,
       naturalHeight,
     });
-  }
+  };
 
-  showTag = (event) => {
-    const { target } = event;
-    const { children } = target;
-    target.style.border = 'black solid 1px';
-    for (let i = 0; i < children.length; i += 1) {
-      children[i].style.display = 'block';
-    }
-  }
+  render() {
+    const showTag = (event) => {
+      const { target } = event;
+      const { children } = target;
+      target.style.border = 'black solid 1px';
+      for (let i = 0; i < children.length; i += 1) {
+        children[i].style.display = 'block';
+      }
+    };
 
-  hideTag = (event) => {
-    const { target } = event;
-    const { children } = target;
-    target.style.border = 'none';
-    for (let i = 0; i < children.length; i += 1) {
-      children[i].style.display = 'none';
-    }
-  }
+    const hideTag = (event) => {
+      const { target } = event;
+      const { children } = target;
+      target.style.border = 'none';
+      for (let i = 0; i < children.length; i += 1) {
+        children[i].style.display = 'none';
+      }
+    };
 
-  render = () => {
     const {
       currentUser, mode, object: medium, reload,
     } = this.props;
@@ -136,10 +136,10 @@ class Medium extends React.Component {
                 backgroundColor: 'transparent',
                 border: 'none',
               }}
-              onMouseOver={this.showTag}
-              onFocus={this.showTag}
-              onMouseOut={this.hideTag}
-              onBlur={this.hideTag}
+              onMouseOver={showTag}
+              onFocus={showTag}
+              onMouseOut={hideTag}
+              onBlur={hideTag}
               key={pio.position.id}
             >
               <span style={{
@@ -203,13 +203,14 @@ class Medium extends React.Component {
         reload={reload}
       />
     );
-  };
+  }
 }
 
 Medium.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
     file_name: PropTypes.string,
+    positions_in_object: PropTypes.arrayOf().isRequired,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   reload: PropTypes.func.isRequired,
@@ -222,22 +223,28 @@ Medium.defaultProps = {
 
 setMapping('Medium', 'showObject', Medium);
 
-const IndexMedium = () => (
-  <Index
-    _type_="Medium"
-  />
-);
+function IndexMedium() {
+  return (
+    <Index
+      _type_="Medium"
+    />
+  );
+}
 
-const ShowMedium = () => (
-  <Show
-    _type_="Medium"
-  />
-);
+function ShowMedium() {
+  return (
+    <Show
+      _type_="Medium"
+    />
+  );
+}
 
-const VersionMedium = () => (
-  <Version
-    _type_="Medium"
-  />
-);
+function VersionMedium() {
+  return (
+    <Version
+      _type_="Medium"
+    />
+  );
+}
 
 export { IndexMedium, ShowMedium, VersionMedium };
