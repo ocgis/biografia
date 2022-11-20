@@ -15,7 +15,9 @@ module Api
       protected
 
       def create_object
-        EventDate.new(event_date_params)
+        object = EventDate.new(event_date_params)
+        object.set_date(event_date_params[:date])
+        object
       end
 
       def find_object
@@ -24,7 +26,7 @@ module Api
 
       def find_object_and_update_attrs
         object = EventDate.find(params.require(:id))
-        object.attributes = event_date_params
+        object.set_date(event_date_params[:date])
         object
       end
 
