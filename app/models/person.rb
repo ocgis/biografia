@@ -5,7 +5,7 @@
 class Person < ActiveRecord::Base
   has_paper_trail
 
-  has_many :person_names, -> { order('position ASC') }
+  has_many :person_names, -> { order('position ASC') }, inverse_of: :person
   accepts_nested_attributes_for :person_names, allow_destroy: true
 
   extend CommonClassMethods
