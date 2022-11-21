@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { LinkOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import AddReference from './AddReference';
 import Merge from './Merge';
@@ -10,7 +10,7 @@ import RemoveReference from './RemoveReference';
 import RemoveObject from './RemoveObject';
 import { editObject, webUrl } from './Mappings';
 
-const Modifier = (props) => {
+function Modifier(props) {
   const { currentUser } = props;
   if (!currentUser.roles.includes('editor')) {
     return null;
@@ -145,6 +145,10 @@ const Modifier = (props) => {
     setModalKey(event.key);
   };
 
+  const addReferenceClicked = () => {
+    setModalKey('reference');
+  };
+
   const okButtonClicked = () => {
     setModalKey(null);
     reload();
@@ -197,10 +201,11 @@ const Modifier = (props) => {
       <Dropdown overlay={menu} trigger="click">
         <PlusCircleOutlined />
       </Dropdown>
+      <LinkOutlined onClick={addReferenceClicked} />
       { showModal() }
     </td>
   );
-};
+}
 Modifier.propTypes = {
   mainObject: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
@@ -238,7 +243,7 @@ Modifier.defaultProps = {
   modalWidth: null,
 };
 
-const VersionInfo = (props) => {
+function VersionInfo(props) {
   const { object } = props;
   const { object: { version } } = props;
 
@@ -258,7 +263,7 @@ const VersionInfo = (props) => {
       Could not determine latest updater
     </span>
   );
-};
+}
 VersionInfo.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
