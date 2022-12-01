@@ -13,7 +13,6 @@ module Api
       end
 
       def list
-        filter = params.require(:q)
         search_models =
           if params[:searchModel].nil?
             [Person, Event, Address, Thing]
@@ -22,25 +21,35 @@ module Api
             [params[:searchModel].constantize]
           end
 
-        filters = filter.split(' ')
+        if params[:q].present?
+          filter = params.require(:q)
+          filters = filter.split(' ')
 
-        found = []
-        search_models.each do |search_model|
-          found += search_model.filtered_search(filters)
+          found = []
+          search_models.each do |search_model|
+            found += search_model.filtered_search(filters)
+          end
+          objects = found.collect(&:all_attributes)
+
+          params[:ignoreName].nil? ||
+            objects.reject! { |object| object[:value] == params[:ignoreName] }
+        else
+          ids = []
+          objects = []
+          references = Reference.order(updated_at: :desc).limit(30)
+          references.each do |reference|
+            id = "#{reference.type1}_#{reference.id1}"
+            unless ids.include? id
+              ids.append(id)
+              objects.append(reference.type1.constantize.find(reference.id1).all_attributes)
+            end
+            id = "#{reference.type2}_#{reference.id2}"
+            unless ids.include? id
+              ids.append(id)
+              objects.append(reference.type2.constantize.find(reference.id2).all_attributes)
+            end
+          end
         end
-        objects = found.collect do |f|
-          {
-            value: f.decorate.one_line,
-            key: {
-              _type_: f.class.name,
-              id: f.id
-            }
-          }
-        end
-
-        params[:ignoreName].nil? ||
-          objects.reject! { |object| object[:value] == params[:ignoreName] }
-
         render json: { result: objects }
       end
 

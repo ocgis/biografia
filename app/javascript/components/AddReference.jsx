@@ -1,93 +1,162 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AutoComplete } from 'antd';
+import { Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
 import { errorText, getRequest, saveData } from './Requests';
-import { apiUrl } from './Mappings';
+import { apiUrl, showObject } from './Mappings';
 
 class AddReference extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: null,
-      descriptionOptions: [],
-      reference: {
-        type1: props.referFrom._type_,
-        id1: props.referFrom.id,
-        type2: null,
-        id2: null,
-      },
+      found: [],
+      selected: [],
     };
   }
 
-  render = () => {
-    const handleResult = (result) => {
-      const { onOk } = this.props;
+  componentDidMount() {
+    this.search('');
+  }
 
-      if (result.error == null) {
-        onOk(result);
+  search = (searchString) => {
+    const handleResponse = (response) => {
+      const found = response.data.result;
+      this.setState({ found });
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+    const encodedSearch = encodeURIComponent(searchString);
+    getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
+  };
+
+  render() {
+    const okButtonClicked = () => {
+      const handleResult = (result) => {
+        if (result.error == null) {
+          okButtonClicked();
+        } else {
+          this.setState({ error: result.error });
+        }
+      };
+
+      const { onOk, referFrom } = this.props;
+      const { selected } = this.state;
+
+      if (selected.length === 0) {
+        onOk();
       } else {
-        this.setState({ error: result.error });
+        const saveValue = {
+          reference: {
+            type1: referFrom._type_,
+            id1: referFrom.id,
+            type2: selected[0]._type_,
+            id2: selected[0].id,
+          },
+        };
+        this.setState((prevState) => ({
+          selected: prevState.selected.slice(1),
+        }));
+        saveData('Reference', saveValue, handleResult);
       }
     };
 
-    const okButtonClicked = () => {
-      saveData('Reference', this.state, handleResult);
-    };
+    const searchObject = throttle(500, this.search);
 
     const closeButtonClicked = () => {
       const { onCancel } = this.props;
       onCancel();
     };
 
-    const searchObject = throttle(500, (searchString) => {
-      const handleResponse = (response) => {
-        const descriptionOptions = response.data.result;
-        this.setState({ descriptionOptions });
-      };
+    const addItemToSelected = (item) => {
+      this.setState((prevState) => ({
+        selected: [item, ...prevState.selected],
+      }));
+    };
 
-      const handleError = (error) => {
-        this.setState({ error: errorText(error) });
-      };
+    const renderItem = (item) => {
+      const ShowObject = showObject(item._type_);
+      return (
+        <List.Item onClick={() => addItemToSelected(item)}>
+          <ShowObject
+            object={item}
+            mode="oneLine"
+            currentUser={{}}
+            reload={() => {}}
+          />
+        </List.Item>
+      );
+    };
 
-      const encodedSearch = encodeURIComponent(searchString);
-      getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
-    });
+    const renderSelectedItem = (item) => {
+      const ShowObject = showObject(item._type_);
+      return (
+        <List.Item>
+          <ShowObject
+            object={item}
+            mode="oneLine"
+            currentUser={{}}
+            reload={() => {}}
+          />
+        </List.Item>
+      );
+    };
 
     const onChange = (value) => {
-      this.setState({ value });
+      searchObject(value.target.value);
     };
 
-    const onSelect = (index, object) => {
-      const { descriptionOptions: { [index]: option }, reference } = this.state;
-      reference.type2 = option.key._type_;
-      reference.id2 = option.key.id;
-      this.setState({
-        reference,
-        value: object.label,
-      });
-    };
+    const { Search } = Input;
+    const {
+      found, error, selected,
+    } = this.state;
+    const { referFrom } = this.props;
 
-    const { descriptionOptions, error, value } = this.state;
+    let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
+    Object.keys(referFrom.related).forEach((key) => {
+      ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
+    });
 
-    const options = descriptionOptions.map((val, index) => ({
-      value: index,
-      label: val.value,
-    }));
+    ignoredKeys = ignoredKeys.concat(selected.map((x) => `${x._type_}_${x.id}`));
 
+    const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
     return (
       <table>
         <tbody>
           <tr>
             <td>
-              <AutoComplete
-                value={value}
-                style={{ width: '50ch' }}
-                options={options}
-                onSearch={(search) => searchObject(search)}
+              <Search
                 onChange={onChange}
-                onSelect={onSelect}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <List
+                bordered
+                size="small"
+                dataSource={filtered}
+                renderItem={renderItem}
+                style={{
+                  overflow: 'auto',
+                  height: '300px',
+                  width: '500px',
+                }}
+              />
+            </td>
+            <td>
+              <List
+                bordered
+                size="small"
+                dataSource={selected}
+                renderItem={renderSelectedItem}
+                style={{
+                  overflow: 'auto',
+                  height: '300px',
+                  width: '500px',
+                }}
               />
             </td>
           </tr>
@@ -109,6 +178,7 @@ AddReference.propTypes = {
   referFrom: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
+    related: PropTypes.shape().isRequired,
   }).isRequired,
 };
 AddReference.defaultProps = {
