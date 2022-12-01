@@ -6,7 +6,7 @@ import { throttle } from 'throttle-debounce';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { errorText, getRequest, saveData } from './Requests';
-import { apiUrl } from './Mappings';
+import { apiUrl, showObject } from './Mappings';
 
 class TagMedium extends React.Component {
   constructor(props) {
@@ -76,14 +76,14 @@ class TagMedium extends React.Component {
       });
     };
 
-    const onSelect = (index, object) => {
+    const onSelect = (index) => {
       const { descriptionOptions: { [index]: option }, reference } = this.state;
-      reference.type2 = option.key._type_;
-      reference.id2 = option.key.id;
+      reference.type2 = option._type_;
+      reference.id2 = option.id;
       this.setState({
         reference,
-        value: object.label,
       });
+      okButtonClicked();
     };
 
     const {
@@ -91,10 +91,20 @@ class TagMedium extends React.Component {
     } = this.state;
     const { referFrom } = this.props;
 
-    const options = descriptionOptions.map((val, index) => ({
-      value: index,
-      label: val.value,
-    }));
+    const options = descriptionOptions.map((item, index) => {
+      const ShowObject = showObject(item._type_);
+      return ({
+        value: index,
+        label: (
+          <ShowObject
+            object={item}
+            mode="oneLine"
+            currentUser={{}}
+            reload={() => {}}
+          />
+        ),
+      });
+    });
 
     const onCropChange = (_, newCrop) => {
       const { reference } = this.state;
