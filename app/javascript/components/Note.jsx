@@ -11,7 +11,7 @@ setMapping('Note', 'oneName', 'note');
 setMapping('Note', 'manyName', 'notes');
 setMapping('Note', 'filterFields', ['category', 'title', 'note']);
 
-const Note = (props) => {
+function Note(props) {
   const {
     currentUser, mode, object: note, reload,
   } = props;
@@ -58,7 +58,7 @@ const Note = (props) => {
       {title}
     </Base>
   );
-};
+}
 
 Note.propTypes = {
   object: PropTypes.shape({
@@ -79,16 +79,20 @@ setMapping('Note', 'showObject', Note);
 
 setMapping('Note', 'editObject', EditNote);
 
-const ShowNote = () => (
-  <Show
-    _type_="Note"
-  />
-);
+function ShowNote() {
+  return (
+    <Show
+      _type_="Note"
+    />
+  );
+}
 
-const VersionNote = () => (
-  <Version
-    _type_="Note"
-  />
-);
+function VersionNote() {
+  return (
+    <Version
+      _type_="Note"
+    />
+  );
+}
 
 export { ShowNote, VersionNote };

@@ -9,7 +9,7 @@ setMapping('Reference', 'manyName', 'references');
 
 const { TabPane } = Tabs;
 
-const RenderElement = (props) => {
+function RenderElement(props) {
   const {
     currentUser, element, kind, reload,
   } = props;
@@ -23,7 +23,7 @@ const RenderElement = (props) => {
   return (
     <Component object={element} currentUser={currentUser} reload={reload} />
   );
-};
+}
 
 RenderElement.propTypes = {
   kind: PropTypes.string.isRequired,
@@ -85,7 +85,7 @@ const FamilyRole = (familyRefName, personRefName, personSex) => {
   return 'Okänd roll';
 };
 
-const FamilyMembers = (props) => {
+function FamilyMembers(props) {
   const {
     object, object: { related: { relationships } }, currentUser,
   } = props;
@@ -125,14 +125,14 @@ const FamilyMembers = (props) => {
       </tbody>
     </table>
   );
-};
+}
 
 FamilyMembers.propTypes = {
   object: PropTypes.shape().isRequired,
   currentUser: PropTypes.shape({}).isRequired,
 };
 
-const ShowReferences = (props) => {
+function ShowReferences(props) {
   const {
     currentUser, object, object: { related }, reload,
   } = props;
@@ -184,7 +184,7 @@ const ShowReferences = (props) => {
       })}
     </Tabs>
   );
-};
+}
 
 ShowReferences.propTypes = {
   object: PropTypes.shape().isRequired,

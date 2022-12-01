@@ -48,7 +48,7 @@ const OneLine = (props) => {
   return parts.join(', ');
 };
 
-const Address = (props) => {
+function Address(props) {
   const {
     currentUser, mode, object: address, reload,
   } = props;
@@ -94,10 +94,13 @@ const Address = (props) => {
       {name}
     </Base>
   );
-};
+}
 
 Address.propTypes = {
-  object: PropTypes.shape({}).isRequired,
+  object: PropTypes.shape({
+    id: PropTypes.number,
+    maps_address: PropTypes.string,
+  }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   reload: PropTypes.func.isRequired,
   mode: PropTypes.string,
@@ -111,22 +114,28 @@ setMapping('Address', 'showObject', Address);
 
 setMapping('Address', 'editObject', EditAddress);
 
-const IndexAddress = () => (
-  <Index
-    _type_="Address"
-  />
-);
+function IndexAddress() {
+  return (
+    <Index
+      _type_="Address"
+    />
+  );
+}
 
-const ShowAddress = () => (
-  <Show
-    _type_="Address"
-  />
-);
+function ShowAddress() {
+  return (
+    <Show
+      _type_="Address"
+    />
+  );
+}
 
-const VersionAddress = () => (
-  <Version
-    _type_="Address"
-  />
-);
+function VersionAddress() {
+  return (
+    <Version
+      _type_="Address"
+    />
+  );
+}
 
 export { IndexAddress, ShowAddress, VersionAddress };

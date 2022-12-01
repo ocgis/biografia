@@ -14,7 +14,7 @@ setMapping('Event', 'oneName', 'event');
 setMapping('Event', 'manyName', 'events');
 setMapping('Event', 'filterFields', ['name']);
 
-const ListRelated = (props) => {
+function ListRelated(props) {
   const { object } = props;
 
   if (object.related == null) {
@@ -49,9 +49,20 @@ const ListRelated = (props) => {
   )));
 
   return parts;
+}
+
+ListRelated.propTypes = {
+  object: PropTypes.shape().isRequired,
+  relatedType: PropTypes.string.isRequired,
+  currentUser: PropTypes.shape().isRequired,
+  prefix: PropTypes.string,
 };
 
-const Event = (props) => {
+ListRelated.defaultProps = {
+  prefix: null,
+};
+
+function Event(props) {
   const {
     currentUser, mode, object: event, reload,
   } = props;
@@ -91,7 +102,7 @@ const Event = (props) => {
       <ListRelated object={event} relatedType="Address" currentUser={currentUser} prefix=" vid " />
     </Base>
   );
-};
+}
 
 Event.propTypes = {
   object: PropTypes.shape({
@@ -115,22 +126,28 @@ setMapping('Event', 'showObject', Event);
 
 setMapping('Event', 'editObject', EditEvent);
 
-const IndexEvent = () => (
-  <Index
-    _type_="Event"
-  />
-);
+function IndexEvent() {
+  return (
+    <Index
+      _type_="Event"
+    />
+  );
+}
 
-const ShowEvent = () => (
-  <Show
-    _type_="Event"
-  />
-);
+function ShowEvent() {
+  return (
+    <Show
+      _type_="Event"
+    />
+  );
+}
 
-const VersionEvent = () => (
-  <Version
-    _type_="Event"
-  />
-);
+function VersionEvent() {
+  return (
+    <Version
+      _type_="Event"
+    />
+  );
+}
 
 export { IndexEvent, ShowEvent, VersionEvent };

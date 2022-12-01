@@ -61,9 +61,9 @@ class Show extends React.Component {
   url = () => {
     const { params: { id }, _type_ } = this.props;
     return apiUrl(_type_, id);
-  }
+  };
 
-  render = () => {
+  render() {
     const { state } = this;
     const { _type_, noReferences } = this.props;
     const {

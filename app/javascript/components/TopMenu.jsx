@@ -12,7 +12,7 @@ import { editObject, oneName, webUrl } from './Mappings';
 
 const { SubMenu } = Menu;
 
-const TopMenu = (props) => {
+function TopMenu(props) {
   const { currentUser } = props;
   const navigate = useNavigate();
   const [modalKey, setModalKey] = useState(null);
@@ -183,7 +183,7 @@ const TopMenu = (props) => {
       </Row>
     </div>
   );
-};
+}
 TopMenu.propTypes = {
   currentUser: PropTypes.shape({ name: PropTypes.string.isRequired }),
 };

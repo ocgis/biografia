@@ -35,7 +35,7 @@ const OneLine = (props) => {
   return parts.join(', ');
 };
 
-const Thing = (props) => {
+function Thing(props) {
   const {
     currentUser, mode, object: thing, reload,
   } = props;
@@ -98,7 +98,7 @@ const Thing = (props) => {
       {element}
     </Base>
   );
-};
+}
 
 Thing.propTypes = {
   object: PropTypes.shape({
@@ -106,6 +106,8 @@ Thing.propTypes = {
     name: PropTypes.string,
     model: PropTypes.string,
     make: PropTypes.string,
+    kind: PropTypes.string,
+    serial: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   reload: PropTypes.func.isRequired,
@@ -120,22 +122,28 @@ setMapping('Thing', 'showObject', Thing);
 
 setMapping('Thing', 'editObject', EditThing);
 
-const IndexThing = () => (
-  <Index
-    _type_="Thing"
-  />
-);
+function IndexThing() {
+  return (
+    <Index
+      _type_="Thing"
+    />
+  );
+}
 
-const ShowThing = () => (
-  <Show
-    _type_="Thing"
-  />
-);
+function ShowThing() {
+  return (
+    <Show
+      _type_="Thing"
+    />
+  );
+}
 
-const VersionThing = () => (
-  <Version
-    _type_="Thing"
-  />
-);
+function VersionThing() {
+  return (
+    <Version
+      _type_="Thing"
+    />
+  );
+}
 
 export { IndexThing, ShowThing, VersionThing };

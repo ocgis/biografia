@@ -12,7 +12,7 @@ import {
 setMapping('Relationship', 'oneName', 'relationship');
 setMapping('Relationship', 'manyName', 'relationships');
 
-const ListObjects = (props) => {
+function ListObjects(props) {
   const { object } = props;
 
   if (object.related == null) {
@@ -47,7 +47,7 @@ const ListObjects = (props) => {
       {parts}
     </ul>
   );
-};
+}
 
 ListObjects.propTypes = {
   object: PropTypes.shape({ related: PropTypes.shape({}) }).isRequired,
@@ -86,7 +86,7 @@ const OneLine = (props) => {
   return parts;
 };
 
-const Relationship = (props) => {
+function Relationship(props) {
   const {
     currentUser, mode, object: relationship, reload,
   } = props;
@@ -155,7 +155,7 @@ const Relationship = (props) => {
       {element}
     </Base>
   );
-};
+}
 
 Relationship.propTypes = {
   object: PropTypes.shape({
@@ -176,16 +176,20 @@ setMapping('Relationship', 'showObject', Relationship);
 
 setMapping('Relationship', 'editObject', EditRelationship);
 
-const ShowRelationship = () => (
-  <Show
-    _type_="Relationship"
-  />
-);
+function ShowRelationship() {
+  return (
+    <Show
+      _type_="Relationship"
+    />
+  );
+}
 
-const VersionRelationship = () => (
-  <Version
-    _type_="Relationship"
-  />
-);
+function VersionRelationship() {
+  return (
+    <Version
+      _type_="Relationship"
+    />
+  );
+}
 
 export { ShowRelationship, VersionRelationship };

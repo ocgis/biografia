@@ -17,7 +17,7 @@ const OneLine = (props) => {
   return moment(eventDate.date).format(eventDate.mask);
 };
 
-const EventDate = (props) => {
+function EventDate(props) {
   const {
     currentUser, mode, object: eventDate, reload,
   } = props;
@@ -52,10 +52,12 @@ const EventDate = (props) => {
       {name}
     </Base>
   );
-};
+}
 
 EventDate.propTypes = {
-  object: PropTypes.shape({}).isRequired,
+  object: PropTypes.shape({
+    id: PropTypes.number,
+  }).isRequired,
   currentUser: PropTypes.shape({
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
@@ -72,16 +74,20 @@ setMapping('EventDate', 'showObject', EventDate);
 
 setMapping('EventDate', 'editObject', EditEventDate);
 
-const ShowEventDate = () => (
-  <Show
-    _type_="EventDate"
-  />
-);
+function ShowEventDate() {
+  return (
+    <Show
+      _type_="EventDate"
+    />
+  );
+}
 
-const VersionEventDate = () => (
-  <Version
-    _type_="EventDate"
-  />
-);
+function VersionEventDate() {
+  return (
+    <Version
+      _type_="EventDate"
+    />
+  );
+}
 
 export { ShowEventDate, VersionEventDate };

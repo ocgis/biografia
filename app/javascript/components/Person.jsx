@@ -53,7 +53,7 @@ const OneLine = (props) => {
   return '!!!Error in DB: person name missing!!!';
 };
 
-const Person = (props) => {
+function Person(props) {
   const {
     object: person,
     currentUser,
@@ -107,7 +107,7 @@ const Person = (props) => {
       {personElements}
     </Base>
   );
-};
+}
 
 Person.propTypes = {
   object: PropTypes.shape({
@@ -131,22 +131,28 @@ setMapping('Person', 'showObject', Person);
 
 setMapping('Person', 'editObject', EditPerson);
 
-const ShowPerson = () => (
-  <Show
-    _type_="Person"
-  />
-);
+function ShowPerson() {
+  return (
+    <Show
+      _type_="Person"
+    />
+  );
+}
 
-const IndexPerson = () => (
-  <Index
-    _type_="Person"
-  />
-);
+function IndexPerson() {
+  return (
+    <Index
+      _type_="Person"
+    />
+  );
+}
 
-const VersionPerson = () => (
-  <Version
-    _type_="Person"
-  />
-);
+function VersionPerson() {
+  return (
+    <Version
+      _type_="Person"
+    />
+  );
+}
 
 export { ShowPerson, IndexPerson, VersionPerson };
