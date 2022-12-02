@@ -28,6 +28,26 @@ class TagMedium extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.search('');
+  }
+
+  search = (searchString) => {
+    const handleResponse = (response) => {
+      this.setState({
+        descriptionOptions: response.data.result,
+        error: null,
+      });
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+
+    const encodedSearch = encodeURIComponent(searchString);
+    getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
+  };
+
   render() {
     const handleResult = (result) => {
       const { onOk } = this.props;
@@ -53,21 +73,7 @@ class TagMedium extends React.Component {
       onCancel();
     };
 
-    const searchObject = throttle(500, (searchString) => {
-      const handleResponse = (response) => {
-        this.setState({
-          descriptionOptions: response.data.result,
-          error: null,
-        });
-      };
-
-      const handleError = (error) => {
-        this.setState({ error: errorText(error) });
-      };
-
-      const encodedSearch = encodeURIComponent(searchString);
-      getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
-    });
+    const searchObject = throttle(500, this.search);
 
     const onChange = (value) => {
       this.setState({
