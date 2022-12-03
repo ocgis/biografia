@@ -114,8 +114,9 @@ class Medium extends React.Component {
           }
 
           if (imgHeight > window.innerHeight) {
-            imgWidth = (imgWidth * window.innerHeight) / imgHeight;
-            imgHeight = window.innerHeight;
+            const targetHeight = window.innerHeight / 2;
+            imgWidth = (imgWidth * targetHeight) / imgHeight;
+            imgHeight = targetHeight;
             modalWidth = imgWidth;
           }
         }
