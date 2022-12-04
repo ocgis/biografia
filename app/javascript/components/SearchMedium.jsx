@@ -32,6 +32,7 @@ class SearchMedium extends React.Component {
     if (number == null) {
       return (
         <button
+          title={path}
           key={path}
           type="button"
           onClick={() => this.registerImage(path)}
