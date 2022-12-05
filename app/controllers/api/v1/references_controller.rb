@@ -34,21 +34,7 @@ module Api
           params[:ignoreName].nil? ||
             objects.reject! { |object| object[:value] == params[:ignoreName] }
         else
-          ids = []
-          objects = []
-          references = Reference.order(updated_at: :desc).limit(30)
-          references.each do |reference|
-            id = "#{reference.type1}_#{reference.id1}"
-            unless ids.include? id
-              ids.append(id)
-              objects.append(reference.type1.constantize.find(reference.id1).all_attributes)
-            end
-            id = "#{reference.type2}_#{reference.id2}"
-            unless ids.include? id
-              ids.append(id)
-              objects.append(reference.type2.constantize.find(reference.id2).all_attributes)
-            end
-          end
+          objects = latest_referenced(search_models.map(&:name))
         end
         render json: { result: objects }
       end
@@ -76,6 +62,22 @@ module Api
                                           :id2,
                                           position_in_pictures_attributes:
                                             %i[x y width height])
+      end
+
+      def latest_referenced(search_models)
+        sids = []
+        objects = []
+        references = Reference.order(updated_at: :desc).limit(50)
+        references.each do |reference|
+          [[reference.type1, reference.id1], [reference.type2, reference.id2]].each do |type, id|
+            sid = "#{type}_#{id}"
+            next if (!search_models.include? type) || (sids.include? sid)
+
+            sids.append(sid)
+            objects.append(type.constantize.find(id).all_attributes)
+          end
+        end
+        objects
       end
     end
   end
