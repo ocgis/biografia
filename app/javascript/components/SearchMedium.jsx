@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FixedSizeGrid as Grid } from 'react-window';
 import TopMenu from './TopMenu';
 import { apiUrl, webUrl } from './Mappings';
 import { errorText, getRequest, postRequest } from './Requests';
@@ -24,13 +25,45 @@ class SearchMedium extends React.Component {
     }
   }
 
-  renderLeafs = (nodes) => (
-    Object.entries(nodes).filter(
+  renderLeafs = (nodes) => {
+    const leafs = Object.entries(nodes).filter(
       (item) => (item[1] == null),
-    ).map(
-      ([path, number]) => this.renderNode(path, number),
-    )
-  );
+    );
+
+    const mediumWidth = 120;
+    const mediumHeight = 120;
+    const height = window.innerHeight;
+    const width = window.innerWidth;
+    const columnCount = Math.trunc(width / mediumWidth);
+    const rowCount = Math.trunc((leafs.length + columnCount - 1) / columnCount);
+
+    const renderCell = ({ columnIndex, rowIndex, style }) => {
+      const index = columnIndex + rowIndex * columnCount;
+      return (
+        <div
+          style={style}
+        >
+          {
+            index < leafs.length
+            && this.renderNode(leafs[index][0], leafs[index][1])
+          }
+        </div>
+      );
+    };
+
+    return (
+      <Grid
+        columnCount={columnCount}
+        columnWidth={mediumWidth}
+        height={height}
+        rowCount={rowCount}
+        rowHeight={mediumHeight}
+        width={window.innerWidth}
+      >
+        {renderCell}
+      </Grid>
+    );
+  };
 
   renderNodes = (nodes) => (
     Object.entries(nodes).filter(
