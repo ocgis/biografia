@@ -24,8 +24,20 @@ class SearchMedium extends React.Component {
     }
   }
 
+  renderLeafs = (nodes) => (
+    Object.entries(nodes).filter(
+      (item) => (item[1] == null),
+    ).map(
+      ([path, number]) => this.renderNode(path, number),
+    )
+  );
+
   renderNodes = (nodes) => (
-    Object.entries(nodes).map(([path, number]) => this.renderNode(path, number))
+    Object.entries(nodes).filter(
+      (item) => (item[1] != null),
+    ).map(
+      ([path, number]) => this.renderNode(path, number),
+    )
   );
 
   renderNode = (path, number) => {
@@ -115,6 +127,7 @@ class SearchMedium extends React.Component {
       <div>
         <TopMenu currentUser={currentUser} />
         {this.renderNodes(nodes)}
+        {this.renderLeafs(nodes)}
         { error
           && (
             { error }
