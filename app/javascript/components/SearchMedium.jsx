@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
@@ -15,6 +15,7 @@ class SearchMedium extends React.Component {
 
   componentDidMount() {
     this.loadData();
+    window.addEventListener('resize', this.updateHeights);
   }
 
   componentDidUpdate(prevProps) {
@@ -23,16 +24,35 @@ class SearchMedium extends React.Component {
         || search !== prevProps.location.search) {
       this.loadData();
     }
+
+    this.updateHeights();
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateHeights);
+  }
+
+  updateHeights = () => {
+    const { divRef } = this.state;
+    if (divRef != null && divRef.current != null) {
+      const { top } = divRef.current.getBoundingClientRect();
+      const { height: oldHeight } = this.state;
+
+      const height = window.innerHeight - top;
+      if (height !== oldHeight) {
+        this.setState({ height });
+      }
+    }
+  };
+
   renderLeafs = (nodes) => {
+    const { divRef, height } = this.state;
     const leafs = Object.entries(nodes).filter(
       (item) => (item[1] == null),
     );
 
     const mediumWidth = 120;
     const mediumHeight = 120;
-    const height = window.innerHeight;
     const width = window.innerWidth;
     const columnCount = Math.trunc(width / mediumWidth);
     const rowCount = Math.trunc((leafs.length + columnCount - 1) / columnCount);
@@ -52,16 +72,21 @@ class SearchMedium extends React.Component {
     };
 
     return (
-      <Grid
-        columnCount={columnCount}
-        columnWidth={mediumWidth}
-        height={height}
-        rowCount={rowCount}
-        rowHeight={mediumHeight}
-        width={window.innerWidth}
-      >
-        {renderCell}
-      </Grid>
+      <div ref={divRef}>
+        { height != null
+          && (
+            <Grid
+              columnCount={columnCount}
+              columnWidth={mediumWidth}
+              height={height}
+              rowCount={rowCount}
+              rowHeight={mediumHeight}
+              width={window.innerWidth}
+            >
+              {renderCell}
+            </Grid>
+          )}
+      </div>
     );
   };
 
@@ -144,6 +169,7 @@ class SearchMedium extends React.Component {
   resetState() {
     this.state = {
       currentUser: null,
+      divRef: createRef(),
       error: null,
     };
   }
