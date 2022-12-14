@@ -79,7 +79,55 @@ class Index extends React.Component {
     loadData(apiUrl(_type_), manyName(_type_), onLoaded, true);
   };
 
-  render = () => {
+  renderObjects = (objects) => {
+    const { elementHeight, listHeight, divRef } = this.state;
+
+    if (objects == null || objects.length === 0) {
+      return null;
+    }
+
+    const renderRow = ({ index, style }) => (
+      <div style={style}>
+        {this.renderObject(objects[index])}
+      </div>
+    );
+
+    return (
+      <div ref={divRef}>
+        { listHeight != null
+          ? (
+            <List
+              height={listHeight}
+              itemCount={objects.length}
+              itemSize={elementHeight}
+            >
+              {renderRow}
+            </List>
+          )
+          : this.renderObject(objects[0])}
+      </div>
+    );
+  };
+
+  renderObject = (object) => {
+    const { _type_ } = this.props;
+    const { currentUser } = this.state;
+    const ShowObject = showObject(_type_);
+    return (
+      <React.Fragment key={object.id}>
+        <Link to={webUrl(_type_, object.id)}>
+          <ShowObject
+            object={object}
+            mode="oneLine"
+            currentUser={currentUser}
+            reload={() => alert('Unexpected: Implement reload() for Index()')}
+          />
+        </Link>
+      </React.Fragment>
+    );
+  };
+
+  render() {
     const { _type_ } = this.props;
     const { state } = this;
     const {
@@ -107,54 +155,6 @@ class Index extends React.Component {
         { objects != null
           && this.renderObjects(objects) }
       </div>
-    );
-  }
-
-  renderObjects = (objects) => {
-    const { elementHeight, listHeight, divRef } = this.state;
-
-    if (objects == null || objects.length === 0) {
-      return null;
-    }
-
-    const Row = ({ index, style }) => (
-      <div style={style}>
-        {this.renderObject(objects[index])}
-      </div>
-    );
-
-    return (
-      <div ref={divRef}>
-        { listHeight != null
-          ? (
-            <List
-              height={listHeight}
-              itemCount={objects.length}
-              itemSize={elementHeight}
-            >
-              {Row}
-            </List>
-          )
-          : this.renderObject(objects[0])}
-      </div>
-    );
-  }
-
-  renderObject = (object) => {
-    const { _type_ } = this.props;
-    const { currentUser } = this.state;
-    const ShowObject = showObject(_type_);
-    return (
-      <React.Fragment key={object.id}>
-        <Link to={webUrl(_type_, object.id)}>
-          <ShowObject
-            object={object}
-            mode="oneLine"
-            currentUser={currentUser}
-            reload={() => alert('Unexpected: Implement reload() for Index()')}
-          />
-        </Link>
-      </React.Fragment>
     );
   }
 }
