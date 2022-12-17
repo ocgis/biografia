@@ -33,6 +33,7 @@ const getMapping = (name, key) => {
 };
 
 const showObject = (_type_) => getMapping(_type_, 'showObject');
+const showObjects = (_type_) => getMapping(_type_, 'showObjects');
 const editObject = (_type_) => getMapping(_type_, 'editObject');
 const oneName = (_type_) => getMapping(_type_, 'oneName');
 const manyName = (_type_) => getMapping(_type_, 'manyName');
@@ -93,6 +94,6 @@ const filterObject = (object, filterValue) => {
 };
 
 export {
-  setMapping, getMapping, showObject, editObject, oneName, manyName, apiUrl, webUrl,
+  setMapping, getMapping, showObject, showObjects, editObject, oneName, manyName, apiUrl, webUrl,
   filterFields, filterObject,
 };

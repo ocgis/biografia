@@ -5,6 +5,7 @@ import Base from './Base';
 import Index from './Index';
 import Show from './Show';
 import Version from './Version';
+import ListObjects from './ListObjects';
 import { apiUrl, setMapping, webUrl } from './Mappings';
 
 setMapping('Medium', 'oneName', 'medium');
@@ -223,6 +224,22 @@ Medium.defaultProps = {
 };
 
 setMapping('Medium', 'showObject', Medium);
+
+function ShowMedia(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Medium" objects={objects} />
+  );
+}
+
+ShowMedia.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowMedia.defaultProps = {
+  objects: [],
+};
+
+setMapping('Medium', 'showObjects', ShowMedia);
 
 function IndexMedium() {
   return (

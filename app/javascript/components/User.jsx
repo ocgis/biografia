@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Index from './Index';
 import Show from './Show';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('User', 'oneName', 'user');
@@ -14,7 +15,7 @@ const OneLine = (props) => {
   return `${object.name}`;
 };
 
-const ShowRoles = (props) => {
+function ShowRoles(props) {
   const { roles } = props;
 
   const roleList = Object.keys(roles).map((role) => (
@@ -35,12 +36,12 @@ const ShowRoles = (props) => {
       </tbody>
     </table>
   );
-};
+}
 ShowRoles.propTypes = {
   roles: PropTypes.shape({}).isRequired,
 };
 
-const User = (props) => {
+function User(props) {
   const { object } = props;
   const { mode } = props;
 
@@ -83,7 +84,7 @@ const User = (props) => {
       <Link to={webUrl('User', object.id, 'edit')}>Ändra</Link>
     </div>
   );
-};
+}
 
 User.propTypes = {
   object: PropTypes.shape({
@@ -103,17 +104,37 @@ User.defaultProps = {
 
 setMapping('User', 'showObject', User);
 
-const IndexUser = () => (
-  <Index
-    _type_="User"
-  />
-);
+function ShowUsers(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="User" objects={objects} />
+  );
+}
 
-const ShowUser = () => (
-  <Show
-    _type_="User"
-    noReferences
-  />
-);
+ShowUsers.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowUsers.defaultProps = {
+  objects: [],
+};
+
+setMapping('User', 'showObjects', ShowUsers);
+
+function IndexUser() {
+  return (
+    <Index
+      _type_="User"
+    />
+  );
+}
+
+function ShowUser() {
+  return (
+    <Show
+      _type_="User"
+      noReferences
+    />
+  );
+}
 
 export { IndexUser, ShowUser };

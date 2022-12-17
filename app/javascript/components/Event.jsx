@@ -6,6 +6,7 @@ import Index from './Index';
 import Show from './Show';
 import Version from './Version';
 import EditEvent from './EditEvent';
+import ListObjects from './ListObjects';
 import {
   setMapping, showObject, manyName, webUrl,
 } from './Mappings';
@@ -123,6 +124,22 @@ Event.defaultProps = {
 };
 
 setMapping('Event', 'showObject', Event);
+
+function ShowEvents(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Event" objects={objects} />
+  );
+}
+
+ShowEvents.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowEvents.defaultProps = {
+  objects: [],
+};
+
+setMapping('Event', 'showObjects', ShowEvents);
 
 setMapping('Event', 'editObject', EditEvent);
 

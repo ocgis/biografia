@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Alert, Input } from 'antd';
 import { loadData } from './Requests';
 import TopMenu from './TopMenu';
-import ListObjects from './ListObjects';
 import {
-  apiUrl, filterObject, manyName,
+  apiUrl, filterObject, manyName, showObjects,
 } from './Mappings';
 
 const { Search } = Input;
@@ -50,6 +49,7 @@ class Index extends React.Component {
     const {
       currentUser, error, filter,
     } = state;
+    const ShowObjects = showObjects(_type_);
 
     const updateFilter = (data) => {
       this.setState({ filter: data.target.value });
@@ -69,8 +69,7 @@ class Index extends React.Component {
           && (
             <Alert message={error} type="error" showIcon />
           )}
-        <ListObjects
-          _type_={_type_}
+        <ShowObjects
           objects={objects}
           currentUser={currentUser}
         />

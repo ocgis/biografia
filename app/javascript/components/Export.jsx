@@ -4,6 +4,7 @@ import Index from './Index';
 import Show from './Show';
 import Edit from './Edit';
 import FormExport from './FormExport';
+import ListObjects from './ListObjects';
 import { setMapping } from './Mappings';
 
 setMapping('Export', 'oneName', 'export');
@@ -15,7 +16,7 @@ const OneLine = (props) => {
   return `${object.file_name} (${object.content_type})`;
 };
 
-const Export = (props) => {
+function Export(props) {
   const { object } = props;
   const { mode } = props;
 
@@ -59,7 +60,7 @@ const Export = (props) => {
       </table>
     </div>
   );
-};
+}
 
 Export.propTypes = {
   object: PropTypes.shape({
@@ -78,7 +79,23 @@ Export.defaultProps = {
 
 setMapping('Export', 'showObject', Export);
 
-const EditExport = (props) => {
+function ShowExports(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Export" objects={objects} />
+  );
+}
+
+ShowExports.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowExports.defaultProps = {
+  objects: [],
+};
+
+setMapping('Export', 'showObjects', ShowExports);
+
+function EditExport(props) {
   const {
     object, extraData, onOk, onCancel,
   } = props;
@@ -93,7 +110,7 @@ const EditExport = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditExport.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -107,18 +124,22 @@ EditExport.defaultProps = {
 
 setMapping('Export', 'editObject', EditExport);
 
-const IndexExport = () => (
-  <Index
-    _type_="Export"
-  />
-);
+function IndexExport() {
+  return (
+    <Index
+      _type_="Export"
+    />
+  );
+}
 
-const ShowExport = () => (
-  <Show
-    _type_="Export"
-    noReferences
-    reloadInterval={3000}
-  />
-);
+function ShowExport() {
+  return (
+    <Show
+      _type_="Export"
+      noReferences
+      reloadInterval={3000}
+    />
+  );
+}
 
 export { IndexExport, ShowExport };

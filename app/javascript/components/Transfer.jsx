@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Index from './Index';
 import Show from './Show';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Transfer', 'oneName', 'transfer');
@@ -14,7 +15,7 @@ const OneLine = (props) => {
   return transfer.file_name;
 };
 
-const Transfer = (props) => {
+function Transfer(props) {
   const { object: transfer } = props;
   const { mode } = props;
 
@@ -71,11 +72,14 @@ const Transfer = (props) => {
       </table>
     </div>
   );
-};
+}
 
 Transfer.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
+    file_name: PropTypes.string,
+    content_type: PropTypes.string,
+    created_at: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
   mode: PropTypes.string,
@@ -87,17 +91,37 @@ Transfer.defaultProps = {
 
 setMapping('Transfer', 'showObject', Transfer);
 
-const IndexTransfer = () => (
-  <Index
-    _type_="Transfer"
-  />
-);
+function ShowTransfers(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Transfer" objects={objects} />
+  );
+}
 
-const ShowTransfer = () => (
-  <Show
-    _type_="Transfer"
-    noReferences
-  />
-);
+ShowTransfers.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowTransfers.defaultProps = {
+  objects: [],
+};
+
+setMapping('Transfer', 'showObjects', ShowTransfers);
+
+function IndexTransfer() {
+  return (
+    <Index
+      _type_="Transfer"
+    />
+  );
+}
+
+function ShowTransfer() {
+  return (
+    <Show
+      _type_="Transfer"
+      noReferences
+    />
+  );
+}
 
 export { IndexTransfer, ShowTransfer };

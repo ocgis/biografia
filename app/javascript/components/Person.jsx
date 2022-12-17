@@ -6,6 +6,7 @@ import Show from './Show';
 import Index from './Index';
 import Version from './Version';
 import EditPerson from './EditPerson';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Person', 'oneName', 'person');
@@ -128,6 +129,22 @@ Person.defaultProps = {
 };
 
 setMapping('Person', 'showObject', Person);
+
+function ShowPersons(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Person" objects={objects} />
+  );
+}
+
+ShowPersons.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowPersons.defaultProps = {
+  objects: [],
+};
+
+setMapping('Person', 'showObjects', ShowPersons);
 
 setMapping('Person', 'editObject', EditPerson);
 

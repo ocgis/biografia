@@ -7,6 +7,7 @@ import Show from './Show';
 import Version from './Version';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Address', 'oneName', 'address');
@@ -111,6 +112,22 @@ Address.defaultProps = {
 };
 
 setMapping('Address', 'showObject', Address);
+
+function ShowAddresses(props) {
+  const { objects } = props;
+  return (
+    <ListObjects _type_="Address" objects={objects} />
+  );
+}
+
+ShowAddresses.propTypes = {
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+};
+ShowAddresses.defaultProps = {
+  objects: [],
+};
+
+setMapping('Address', 'showObjects', ShowAddresses);
 
 setMapping('Address', 'editObject', EditAddress);
 
