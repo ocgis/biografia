@@ -1,12 +1,11 @@
-import React, { createRef } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Input } from 'antd';
-import { FixedSizeList as List } from 'react-window';
 import { loadData } from './Requests';
 import TopMenu from './TopMenu';
+import ListObjects from './ListObjects';
 import {
-  apiUrl, filterObject, manyName, showObject, webUrl,
+  apiUrl, filterObject, manyName,
 } from './Mappings';
 
 const { Search } = Input;
@@ -19,9 +18,6 @@ class Index extends React.Component {
     const objectName = manyName(_type_);
     this.state = {
       currentUser: null,
-      divRef: createRef(),
-      elementHeight: null,
-      listHeight: null,
       filter: '',
     };
     this.state[objectName] = null;
@@ -29,38 +25,7 @@ class Index extends React.Component {
 
   componentDidMount() {
     this.reload();
-    window.addEventListener('resize', this.updateHeights);
   }
-
-  componentDidUpdate() {
-    this.updateHeights();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateHeights);
-  }
-
-  updateHeights = () => {
-    const { divRef } = this.state;
-    if (divRef != null && divRef.current != null) {
-      const { top, height } = divRef.current.getBoundingClientRect();
-      const { listHeight: oldListHeight } = this.state;
-      const heights = {};
-
-      const listHeight = window.innerHeight - top;
-      if (listHeight !== oldListHeight) {
-        heights.listHeight = listHeight;
-      }
-
-      if (oldListHeight == null) {
-        heights.elementHeight = height;
-      }
-
-      if (Object.entries(heights).length > 0) {
-        this.setState(heights);
-      }
-    }
-  };
 
   reload = () => {
     const { _type_ } = this.props;
@@ -79,59 +44,11 @@ class Index extends React.Component {
     loadData(apiUrl(_type_), manyName(_type_), onLoaded, true);
   };
 
-  renderObjects = (objects) => {
-    const { elementHeight, listHeight, divRef } = this.state;
-
-    if (objects == null || objects.length === 0) {
-      return null;
-    }
-
-    const renderRow = ({ index, style }) => (
-      <div style={style}>
-        {this.renderObject(objects[index])}
-      </div>
-    );
-
-    return (
-      <div ref={divRef}>
-        { listHeight != null
-          ? (
-            <List
-              height={listHeight}
-              itemCount={objects.length}
-              itemSize={elementHeight}
-            >
-              {renderRow}
-            </List>
-          )
-          : this.renderObject(objects[0])}
-      </div>
-    );
-  };
-
-  renderObject = (object) => {
-    const { _type_ } = this.props;
-    const { currentUser } = this.state;
-    const ShowObject = showObject(_type_);
-    return (
-      <React.Fragment key={object.id}>
-        <Link to={webUrl(_type_, object.id)}>
-          <ShowObject
-            object={object}
-            mode="oneLine"
-            currentUser={currentUser}
-            reload={() => alert('Unexpected: Implement reload() for Index()')}
-          />
-        </Link>
-      </React.Fragment>
-    );
-  };
-
   render() {
     const { _type_ } = this.props;
     const { state } = this;
     const {
-      currentUser, error, filter, listHeight,
+      currentUser, error, filter,
     } = state;
 
     const updateFilter = (data) => {
@@ -140,7 +57,7 @@ class Index extends React.Component {
 
     let objects = state[manyName(_type_)];
 
-    if (objects != null && listHeight != null && filter !== '') {
+    if (objects != null && filter !== '') {
       objects = objects.filter((object) => filterObject(object, filter));
     }
 
@@ -152,8 +69,11 @@ class Index extends React.Component {
           && (
             <Alert message={error} type="error" showIcon />
           )}
-        { objects != null
-          && this.renderObjects(objects) }
+        <ListObjects
+          _type_={_type_}
+          objects={objects}
+          currentUser={currentUser}
+        />
       </div>
     );
   }
