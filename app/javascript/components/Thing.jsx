@@ -47,6 +47,14 @@ function Thing(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Thing', thing.id)}>
+        <OneLine object={thing} />
+      </Link>
+    );
+  }
+
   let element = null;
   if (mode === 'full') {
     element = [];
@@ -122,16 +130,29 @@ Thing.defaultProps = {
 setMapping('Thing', 'showObject', Thing);
 
 function ShowThings(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Thing" objects={objects} />
+    <ListObjects
+      _type_="Thing"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowThings.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowThings.defaultProps = {
+  mode: '',
   objects: [],
 };
 

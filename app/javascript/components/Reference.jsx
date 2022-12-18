@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import { setMapping, showObject, webUrl } from './Mappings';
+import {
+  setMapping, showObject, showObjects, webUrl,
+} from './Mappings';
 
 setMapping('Reference', 'oneName', 'reference');
 setMapping('Reference', 'manyName', 'references');
@@ -156,27 +158,25 @@ function ShowReferences(props) {
   return (
     <Tabs>
       { object._type_ === 'Person'
-      && (
-        <TabPane tab="Familjemedlemmar" key="familyMembers">
-          <FamilyMembers
-            object={object}
-            currentUser={currentUser}
-          />
-        </TabPane>
-      )}
+        && (
+          <TabPane tab="Familjemedlemmar" key="familyMembers">
+            <FamilyMembers
+              object={object}
+              currentUser={currentUser}
+            />
+          </TabPane>
+        )}
       {Object.keys(related).map((key) => {
         if (related[key].length > 0) {
+          const ShowObjects = showObjects(key);
+
           return (
             <TabPane tab={tabHeader(key)} key={key}>
-              {related[key].map((element) => (
-                <RenderElement
-                  kind={key}
-                  element={element}
-                  key={element.id}
-                  reload={reload}
-                  currentUser={currentUser}
-                />
-              ))}
+              <ShowObjects
+                objects={related[key]}
+                reload={reload}
+                currentUser={currentUser}
+              />
             </TabPane>
           );
         }

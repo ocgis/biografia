@@ -16,7 +16,7 @@ class Index extends React.Component {
     const { _type_ } = this.props;
     const objectName = manyName(_type_);
     this.state = {
-      currentUser: null,
+      currentUser: { name: '' },
       filter: '',
     };
     this.state[objectName] = null;
@@ -70,8 +70,10 @@ class Index extends React.Component {
             <Alert message={error} type="error" showIcon />
           )}
         <ShowObjects
+          mode="oneLineLinked"
           objects={objects}
           currentUser={currentUser}
+          reload={() => alert('Implement reload for Index')}
         />
       </div>
     );

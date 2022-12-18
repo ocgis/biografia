@@ -60,6 +60,14 @@ function Address(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Address', address.id)}>
+        <OneLine object={address} />
+      </Link>
+    );
+  }
+
   let name = null;
   if (mode === 'full') {
     if (address.maps_address == null) {
@@ -114,16 +122,29 @@ Address.defaultProps = {
 setMapping('Address', 'showObject', Address);
 
 function ShowAddresses(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Address" objects={objects} />
+    <ListObjects
+      _type_="Address"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowAddresses.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowAddresses.defaultProps = {
+  mode: '',
   objects: [],
 };
 

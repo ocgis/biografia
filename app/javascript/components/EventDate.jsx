@@ -6,6 +6,7 @@ import Base from './Base';
 import Show from './Show';
 import Version from './Version';
 import EditEventDate from './EditEventDate';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('EventDate', 'oneName', 'event_date');
@@ -71,6 +72,35 @@ EventDate.defaultProps = {
 };
 
 setMapping('EventDate', 'showObject', EventDate);
+
+function ShowEventDates(props) {
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
+  return (
+    <ListObjects
+      _type_="EventDate"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
+  );
+}
+
+ShowEventDates.propTypes = {
+  mode: PropTypes.string,
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
+};
+
+ShowEventDates.defaultProps = {
+  mode: '',
+  objects: [],
+};
+
+setMapping('EventDate', 'showObjects', ShowEventDates);
 
 setMapping('EventDate', 'editObject', EditEventDate);
 

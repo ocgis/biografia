@@ -1,9 +1,8 @@
-import React, { createRef } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FixedSizeList as List } from 'react-window';
 import {
-  showObject, webUrl,
+  showObject,
 } from './Mappings';
 
 class ListObjects extends React.Component {
@@ -11,14 +10,14 @@ class ListObjects extends React.Component {
     super(props);
 
     this.state = {
-      divRef: createRef(),
+      elementTop: null,
       elementHeight: null,
       listHeight: null,
     };
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.updateHeights);
+    window.addEventListener('resize', this.resizeHeights);
   }
 
   componentDidUpdate() {
@@ -26,51 +25,64 @@ class ListObjects extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.updateHeights);
+    window.removeEventListener('resize', this.resizeHeights);
   }
 
-  updateHeights = () => {
-    const { divRef } = this.state;
-    if (divRef != null && divRef.current != null) {
-      const { top, height } = divRef.current.getBoundingClientRect();
-      const { listHeight: oldListHeight } = this.state;
-      const heights = {};
+  updateHeights = (element) => {
+    const heights = {};
 
-      const listHeight = window.innerHeight - top;
+    let { elementTop, elementHeight } = this.state;
+    if (element != null) {
+      const { top, height } = element.getBoundingClientRect();
+
+      if (top !== elementTop) {
+        elementTop = top;
+        heights.elementTop = top;
+      }
+
+      if (height !== elementHeight) {
+        elementHeight = height;
+        heights.elementHeight = height;
+      }
+    }
+
+    if ((elementHeight !== null) && (elementTop !== null)) {
+      const { listHeight: oldListHeight } = this.state;
+
+      const listHeight = window.innerHeight - elementTop;
       if (listHeight !== oldListHeight) {
         heights.listHeight = listHeight;
       }
+    }
 
-      if (oldListHeight == null) {
-        heights.elementHeight = height;
-      }
-
-      if (Object.entries(heights).length > 0) {
-        this.setState(heights);
-      }
+    if (Object.entries(heights).length > 0) {
+      this.setState(heights);
     }
   };
 
+  resizeHeights = () => {
+    this.updateHeights(null);
+  };
+
   renderObject = (object) => {
-    const { currentUser, _type_ } = this.props;
+    const {
+      currentUser, mode, reload, _type_,
+    } = this.props;
     const ShowObject = showObject(_type_);
     return (
-      <React.Fragment key={object.id}>
-        <Link to={webUrl(_type_, object.id)}>
-          <ShowObject
-            object={object}
-            mode="oneLine"
-            currentUser={currentUser}
-            reload={() => alert('Unexpected: Implement reload() for Index()')}
-          />
-        </Link>
-      </React.Fragment>
+      <ShowObject
+        key={object.id}
+        object={object}
+        mode={mode}
+        currentUser={currentUser}
+        reload={reload}
+      />
     );
   };
 
   render() {
     const { objects } = this.props;
-    const { elementHeight, listHeight, divRef } = this.state;
+    const { elementHeight, listHeight } = this.state;
 
     if (objects == null || objects.length === 0) {
       return null;
@@ -83,7 +95,7 @@ class ListObjects extends React.Component {
     );
 
     return (
-      <div ref={divRef}>
+      <div ref={this.updateHeights}>
         { listHeight != null
           ? (
             <List
@@ -103,10 +115,13 @@ class ListObjects extends React.Component {
 ListObjects.propTypes = {
   currentUser: PropTypes.shape(),
   _type_: PropTypes.string.isRequired,
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  reload: PropTypes.func.isRequired,
 };
 ListObjects.defaultProps = {
   currentUser: { name: '' },
+  mode: '',
   objects: [],
 };
 

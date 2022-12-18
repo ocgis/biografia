@@ -86,6 +86,14 @@ class Medium extends React.Component {
       );
     }
 
+    if (mode === 'oneLineLinked') {
+      return (
+        <Link to={webUrl('Medium', medium.id)}>
+          <OneLine object={medium} />
+        </Link>
+      );
+    }
+
     let modalWidth = null;
     let mediaTag = null;
 
@@ -226,16 +234,29 @@ Medium.defaultProps = {
 setMapping('Medium', 'showObject', Medium);
 
 function ShowMedia(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Medium" objects={objects} />
+    <ListObjects
+      _type_="Medium"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowMedia.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowMedia.defaultProps = {
+  mode: '',
   objects: [],
 };
 

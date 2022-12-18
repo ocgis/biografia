@@ -5,6 +5,7 @@ import Base from './Base';
 import Show from './Show';
 import Version from './Version';
 import EditNote from './EditNote';
+import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
 setMapping('Note', 'oneName', 'note');
@@ -76,6 +77,35 @@ Note.defaultProps = {
 };
 
 setMapping('Note', 'showObject', Note);
+
+function ShowNotes(props) {
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
+  return (
+    <ListObjects
+      _type_="Note"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
+  );
+}
+
+ShowNotes.propTypes = {
+  mode: PropTypes.string,
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
+};
+
+ShowNotes.defaultProps = {
+  mode: '',
+  objects: [],
+};
+
+setMapping('Note', 'showObjects', ShowNotes);
 
 setMapping('Note', 'editObject', EditNote);
 

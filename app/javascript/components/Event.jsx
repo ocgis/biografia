@@ -72,6 +72,14 @@ function Event(props) {
     return event.name;
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Event', event.id)}>
+        {event.name}
+      </Link>
+    );
+  }
+
   let name = null;
   if (mode === 'full') {
     name = event.name;
@@ -126,16 +134,29 @@ Event.defaultProps = {
 setMapping('Event', 'showObject', Event);
 
 function ShowEvents(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Event" objects={objects} />
+    <ListObjects
+      _type_="Event"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowEvents.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowEvents.defaultProps = {
+  mode: '',
   objects: [],
 };
 

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Index from './Index';
 import Show from './Show';
 import Edit from './Edit';
 import FormExport from './FormExport';
 import ListObjects from './ListObjects';
-import { setMapping } from './Mappings';
+import { setMapping, webUrl } from './Mappings';
 
 setMapping('Export', 'oneName', 'export');
 setMapping('Export', 'manyName', 'exports');
@@ -23,6 +24,14 @@ function Export(props) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={object} />
+    );
+  }
+
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Export', object.id)}>
+        <OneLine object={object} />
+      </Link>
     );
   }
 
@@ -80,16 +89,29 @@ Export.defaultProps = {
 setMapping('Export', 'showObject', Export);
 
 function ShowExports(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Export" objects={objects} />
+    <ListObjects
+      _type_="Export"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowExports.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowExports.defaultProps = {
+  mode: '',
   objects: [],
 };
 

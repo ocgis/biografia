@@ -5,6 +5,7 @@ import Base from './Base';
 import Show from './Show';
 import Version from './Version';
 import EditRelationship from './EditRelationship';
+import ListObjects from './ListObjects';
 import {
   setMapping, showObject, manyName, webUrl,
 } from './Mappings';
@@ -12,7 +13,7 @@ import {
 setMapping('Relationship', 'oneName', 'relationship');
 setMapping('Relationship', 'manyName', 'relationships');
 
-function ListObjects(props) {
+function ListRelated(props) {
   const { object } = props;
 
   if (object.related == null) {
@@ -49,7 +50,7 @@ function ListObjects(props) {
   );
 }
 
-ListObjects.propTypes = {
+ListRelated.propTypes = {
   object: PropTypes.shape({ related: PropTypes.shape({}) }).isRequired,
   relatedType: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({}).isRequired,
@@ -97,6 +98,14 @@ function Relationship(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Relationship', relationship.id)}>
+        <OneLine object={relationship} />
+      </Link>
+    );
+  }
+
   let element = null;
   if (mode === 'full') {
     element = (
@@ -112,25 +121,25 @@ function Relationship(props) {
 
   const appendElements = (
     <div>
-      <ListObjects
+      <ListRelated
         object={relationship}
         relatedType="Person"
         currentUser={currentUser}
         reload={reload}
       />
-      <ListObjects
+      <ListRelated
         object={relationship}
         relatedType="EventDate"
         currentUser={currentUser}
         reload={reload}
       />
-      <ListObjects
+      <ListRelated
         object={relationship}
         relatedType="Address"
         currentUser={currentUser}
         reload={reload}
       />
-      <ListObjects
+      <ListRelated
         object={relationship}
         relatedType="Note"
         currentUser={currentUser}
@@ -173,6 +182,35 @@ Relationship.defaultProps = {
 };
 
 setMapping('Relationship', 'showObject', Relationship);
+
+function ShowRelationships(props) {
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
+  return (
+    <ListObjects
+      _type_="Relationship"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
+  );
+}
+
+ShowRelationships.propTypes = {
+  mode: PropTypes.string,
+  objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
+};
+
+ShowRelationships.defaultProps = {
+  mode: '',
+  objects: [],
+};
+
+setMapping('Relationship', 'showObjects', ShowRelationships);
 
 setMapping('Relationship', 'editObject', EditRelationship);
 

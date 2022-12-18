@@ -25,6 +25,14 @@ function Transfer(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Transfer', transfer.id)}>
+        <OneLine object={transfer} />
+      </Link>
+    );
+  }
+
   let element = null;
   if (mode === 'full') {
     element = (
@@ -92,16 +100,29 @@ Transfer.defaultProps = {
 setMapping('Transfer', 'showObject', Transfer);
 
 function ShowTransfers(props) {
-  const { objects } = props;
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Transfer" objects={objects} />
+    <ListObjects
+      _type_="Transfer"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
 ShowTransfers.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
+
 ShowTransfers.defaultProps = {
+  mode: '',
   objects: [],
 };
 

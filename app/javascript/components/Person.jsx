@@ -68,6 +68,14 @@ function Person(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('Person', person.id)}>
+        <OneLine object={person} />
+      </Link>
+    );
+  }
+
   let personElements = null;
 
   if (mode === 'full') {
@@ -130,21 +138,34 @@ Person.defaultProps = {
 
 setMapping('Person', 'showObject', Person);
 
-function ShowPersons(props) {
-  const { objects } = props;
+function ShowPeople(props) {
+  const {
+    mode, objects, currentUser, reload,
+  } = props;
   return (
-    <ListObjects _type_="Person" objects={objects} />
+    <ListObjects
+      _type_="Person"
+      objects={objects}
+      mode={mode}
+      currentUser={currentUser}
+      reload={reload}
+    />
   );
 }
 
-ShowPersons.propTypes = {
+ShowPeople.propTypes = {
+  mode: PropTypes.string,
   objects: PropTypes.arrayOf(PropTypes.shape()),
+  currentUser: PropTypes.shape().isRequired,
+  reload: PropTypes.func.isRequired,
 };
-ShowPersons.defaultProps = {
+
+ShowPeople.defaultProps = {
+  mode: '',
   objects: [],
 };
 
-setMapping('Person', 'showObjects', ShowPersons);
+setMapping('Person', 'showObjects', ShowPeople);
 
 setMapping('Person', 'editObject', EditPerson);
 
