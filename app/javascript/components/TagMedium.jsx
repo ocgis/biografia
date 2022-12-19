@@ -5,22 +5,28 @@ import { CheckOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { errorText, getRequest, saveData } from './Requests';
-import { apiUrl, showObject } from './Mappings';
+import {
+  errorText, getRequest, loadData, saveData,
+} from './Requests';
+import { apiUrl, oneName, showObject } from './Mappings';
 
 class TagMedium extends React.Component {
   constructor(props) {
     super(props);
+
+    const { referFrom } = props;
+
     this.state = {
       value: null,
       descriptionOptions: [],
       reference: {
-        type1: props.referFrom._type_,
-        id1: props.referFrom.id,
+        type1: referFrom._type_,
+        id1: referFrom.id,
         type2: null,
         id2: null,
         position_in_pictures: null,
       },
+      referFrom,
       selected: [],
       crop: {
         unit: '%',
@@ -30,7 +36,18 @@ class TagMedium extends React.Component {
   }
 
   componentDidMount() {
+    const onLoaded = (data) => {
+      const { referFrom } = this.state;
+      this.setState({ referFrom: data[oneName(referFrom._type_)] });
+    };
+
+    const { referFrom } = this.state;
+
     this.search('');
+
+    if (referFrom.related == null) {
+      loadData(apiUrl(referFrom._type_, referFrom.id), oneName(referFrom._type_), onLoaded, false);
+    }
   }
 
   search = (searchString) => {
@@ -65,12 +82,12 @@ class TagMedium extends React.Component {
     };
 
     const handleResult = (result) => {
-      const { props } = this;
+      const { referFrom } = this.state;
       if (result.error == null) {
         this.setState({
           reference: {
-            type1: props.referFrom._type_,
-            id1: props.referFrom.id,
+            type1: referFrom._type_,
+            id1: referFrom.id,
             type2: null,
             id2: null,
             position_in_pictures: null,
@@ -91,7 +108,7 @@ class TagMedium extends React.Component {
       this.setState((prevState) => ({
         selected: [...prevState.selected, option],
       }));
-      saveData('Reference', this.state, handleResult);
+      saveData('Reference', { reference }, handleResult);
     };
 
     const onCropChange = (_, newCrop) => {
@@ -116,12 +133,14 @@ class TagMedium extends React.Component {
     const {
       descriptionOptions, crop, error, reference, selected, value,
     } = this.state;
-    const { referFrom } = this.props;
+    const { referFrom } = this.state;
 
     let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
-    Object.keys(referFrom.related).forEach((key) => {
-      ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
-    });
+    if (referFrom.related != null) {
+      Object.keys(referFrom.related).forEach((key) => {
+        ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
+      });
+    }
 
     ignoredKeys = ignoredKeys.concat(selected.map((x) => `${x._type_}_${x.id}`));
 
@@ -186,7 +205,7 @@ TagMedium.propTypes = {
   referFrom: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    related: PropTypes.shape().isRequired,
+    related: PropTypes.shape(),
   }).isRequired,
 };
 TagMedium.defaultProps = {

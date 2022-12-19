@@ -3,20 +3,37 @@ import PropTypes from 'prop-types';
 import { Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
-import { errorText, getRequest, saveData } from './Requests';
-import { apiUrl, showObject } from './Mappings';
+import {
+  errorText, getRequest, loadData, saveData,
+} from './Requests';
+import { apiUrl, oneName, showObject } from './Mappings';
 
 class AddReference extends React.Component {
   constructor(props) {
     super(props);
+
+    const { referFrom } = props;
+
     this.state = {
       found: [],
       selected: [],
+      referFrom,
     };
   }
 
   componentDidMount() {
+    const onLoaded = (data) => {
+      const { referFrom } = this.state;
+      this.setState({ referFrom: data[oneName(referFrom._type_)] });
+    };
+
+    const { referFrom } = this.state;
+
     this.search('');
+
+    if (referFrom.related == null) {
+      loadData(apiUrl(referFrom._type_, referFrom.id), oneName(referFrom._type_), onLoaded, false);
+    }
   }
 
   search = (searchString) => {
@@ -42,8 +59,8 @@ class AddReference extends React.Component {
         }
       };
 
-      const { onOk, referFrom } = this.props;
-      const { selected } = this.state;
+      const { onOk } = this.props;
+      const { referFrom, selected } = this.state;
 
       if (selected.length === 0) {
         onOk();
@@ -112,12 +129,14 @@ class AddReference extends React.Component {
     const {
       found, error, selected,
     } = this.state;
-    const { referFrom } = this.props;
+    const { referFrom } = this.state;
 
     let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
-    Object.keys(referFrom.related).forEach((key) => {
-      ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
-    });
+    if (referFrom.related != null) {
+      Object.keys(referFrom.related).forEach((key) => {
+        ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
+      });
+    }
 
     ignoredKeys = ignoredKeys.concat(selected.map((x) => `${x._type_}_${x.id}`));
 
@@ -178,7 +197,7 @@ AddReference.propTypes = {
   referFrom: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    related: PropTypes.shape().isRequired,
+    related: PropTypes.shape(),
   }).isRequired,
 };
 AddReference.defaultProps = {
