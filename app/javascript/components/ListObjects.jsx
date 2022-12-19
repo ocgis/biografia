@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FixedSizeList as List } from 'react-window';
+import { VariableSizeList as List } from 'react-window';
 import {
   showObject,
 } from './Mappings';
@@ -10,10 +10,13 @@ class ListObjects extends React.Component {
     super(props);
 
     this.state = {
-      elementTop: null,
-      elementHeight: null,
       listHeight: null,
     };
+
+    this.itemSizes = [];
+    this.updateItemsAfter = -1;
+    this.listElement = null;
+    this.divElement = null;
   }
 
   componentDidMount() {
@@ -21,47 +24,30 @@ class ListObjects extends React.Component {
   }
 
   componentDidUpdate() {
-    this.updateHeights();
+    this.updateListHeight(this.divElement);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resizeHeights);
   }
 
-  updateHeights = (element) => {
-    const heights = {};
-
-    let { elementTop, elementHeight } = this.state;
+  updateListHeight = (element) => {
     if (element != null) {
       const { top, height } = element.getBoundingClientRect();
 
-      if (top !== elementTop) {
-        elementTop = top;
-        heights.elementTop = top;
-      }
-
-      if (height !== elementHeight) {
-        elementHeight = height;
-        heights.elementHeight = height;
-      }
-    }
-
-    if ((elementHeight !== null) && (elementTop !== null)) {
       const { listHeight: oldListHeight } = this.state;
 
-      const listHeight = window.innerHeight - elementTop;
+      const listHeight = window.innerHeight - top;
       if (listHeight !== oldListHeight) {
-        heights.listHeight = listHeight;
+        this.setState({ listHeight });
       }
-    }
 
-    if (Object.entries(heights).length > 0) {
-      this.setState(heights);
+      this.divElement = element;
     }
   };
 
   resizeHeights = () => {
-    this.updateHeights(null);
+    this.updateListHeight(this.divElement);
   };
 
   renderObject = (object) => {
@@ -81,8 +67,40 @@ class ListObjects extends React.Component {
   };
 
   render() {
+    const updateItemSizes = (listElement) => {
+      if (listElement != null) {
+        listElement.resetAfterIndex(this.updateItemsAfter);
+        this.updateItemsAfter = -1;
+        this.listElement = listElement;
+      }
+    };
+
+    const setItemSize = (index, element) => {
+      if (element != null) {
+        const { top, height } = element.getBoundingClientRect();
+
+        if (height !== this.itemSizes[index]) {
+          this.itemSizes[index] = height;
+          if ((this.updateItemsAfter === -1) || (this.updateItemsAfter > index)) {
+            this.updateItemsAfter = index;
+
+            if (this.listElement != null) {
+              updateItemSizes(this.listElement);
+            }
+          }
+        }
+      }
+    };
+
+    const getItemSize = (index) => {
+      if (this.itemSizes[index] == null) {
+        return 150;
+      }
+      return this.itemSizes[index];
+    };
+
     const { objects } = this.props;
-    const { elementHeight, listHeight } = this.state;
+    const { listHeight } = this.state;
 
     if (objects == null || objects.length === 0) {
       return null;
@@ -90,18 +108,21 @@ class ListObjects extends React.Component {
 
     const renderRow = ({ index, style }) => (
       <div style={style}>
-        {this.renderObject(objects[index])}
+        <div ref={(element) => setItemSize(index, element)}>
+          {this.renderObject(objects[index])}
+        </div>
       </div>
     );
 
     return (
-      <div ref={this.updateHeights}>
+      <div ref={this.updateListHeight}>
         { listHeight != null
           ? (
             <List
+              ref={updateItemSizes}
               height={listHeight}
               itemCount={objects.length}
-              itemSize={elementHeight}
+              itemSize={getItemSize}
             >
               {renderRow}
             </List>
