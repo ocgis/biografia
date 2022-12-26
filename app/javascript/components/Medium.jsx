@@ -42,8 +42,25 @@ class Medium extends React.Component {
       naturalSize: false,
       naturalWidth: null,
       naturalHeight: null,
+      windowWidth: null,
+      windowHeight: null,
     };
   }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateHeights);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateHeights);
+  }
+
+  updateHeights = () => {
+    this.setState({
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+    });
+  };
 
   onImgLoad = (event) => {
     const {
@@ -52,6 +69,8 @@ class Medium extends React.Component {
     this.setState({
       naturalWidth,
       naturalHeight,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
     });
   };
 
@@ -114,16 +133,17 @@ class Medium extends React.Component {
         modalWidth = naturalWidth;
         let imgWidth = naturalWidth;
         let imgHeight = naturalHeight;
+        const { windowWidth, windowHeight } = this.state;
 
         if (!naturalSize) {
-          if (imgWidth > window.innerWidth) {
-            imgHeight = (imgHeight * window.innerWidth) / imgWidth;
-            imgWidth = window.innerWidth;
+          if (imgWidth > windowWidth) {
+            imgHeight = (imgHeight * windowWidth) / imgWidth;
+            imgWidth = windowWidth;
             modalWidth = imgWidth;
           }
 
-          if (imgHeight > window.innerHeight) {
-            const targetHeight = window.innerHeight / 2;
+          if (imgHeight > windowHeight / 2) {
+            const targetHeight = windowHeight / 2;
             imgWidth = (imgWidth * targetHeight) / imgHeight;
             imgHeight = targetHeight;
             modalWidth = imgWidth;
