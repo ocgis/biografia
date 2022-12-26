@@ -85,6 +85,7 @@ class TagMedium extends React.Component {
       const { referFrom } = this.state;
       if (result.error == null) {
         this.setState({
+          value: null,
           reference: {
             type1: referFrom._type_,
             id1: referFrom.id,
@@ -96,6 +97,7 @@ class TagMedium extends React.Component {
             unit: '%',
           },
         });
+        this.search('');
       } else {
         this.setState({ error: result.error });
       }
