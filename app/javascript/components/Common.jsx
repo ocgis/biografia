@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { LinkOutlined, MessageOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+  LinkOutlined, MessageOutlined, PlusCircleOutlined, TagOutlined,
+} from '@ant-design/icons';
 import { Dropdown, Menu, Modal } from 'antd';
 import AddReference from './AddReference';
 import Merge from './Merge';
@@ -153,6 +155,10 @@ function Modifier(props) {
     setModalKey('note');
   };
 
+  const tagMediumClicked = () => {
+    setModalKey('tagMedium');
+  };
+
   const okButtonClicked = () => {
     setModalKey(null);
     reload();
@@ -209,6 +215,10 @@ function Modifier(props) {
       { showAddNote
         && (
           <MessageOutlined onClick={addNoteClicked} />
+        ) }
+      { showTagMedium
+        && (
+          <TagOutlined onClick={tagMediumClicked} />
         ) }
       { showModal() }
     </td>
