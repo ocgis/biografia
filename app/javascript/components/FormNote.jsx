@@ -10,7 +10,7 @@ class FormNote extends React.Component {
     this.state = { note: JSON.parse(JSON.stringify(note)) };
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { note } = this.state;
 
@@ -37,7 +37,7 @@ class FormNote extends React.Component {
             </td>
             <td>
               <Input.TextArea
-                rows={40}
+                rows={10}
                 cols={120}
                 defaultValue={note.note}
                 onChange={(event) => {
