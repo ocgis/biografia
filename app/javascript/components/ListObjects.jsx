@@ -69,9 +69,11 @@ class ListObjects extends React.Component {
   render() {
     const updateItemSizes = (listElement) => {
       if (listElement != null) {
-        listElement.resetAfterIndex(this.updateItemsAfter);
-        this.updateItemsAfter = -1;
         this.listElement = listElement;
+        if (this.updateItemsAfter !== -1) {
+          listElement.resetAfterIndex(this.updateItemsAfter);
+          this.updateItemsAfter = -1;
+        }
       }
     };
 
