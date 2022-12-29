@@ -6,11 +6,12 @@ class FormRelationship extends React.Component {
   constructor(props) {
     super(props);
 
-    const { object: relationship } = props;
+    const { object: relationship, onChange } = props;
     this.state = { relationship: JSON.parse(JSON.stringify(relationship)) };
+    onChange(this.state);
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { relationship } = this.state;
 

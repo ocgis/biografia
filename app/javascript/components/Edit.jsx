@@ -14,7 +14,7 @@ class Edit extends React.Component {
     }
   }
 
-  render = () => {
+  render() {
     const handleResult = (result) => {
       const { onOk } = this.props;
       if (result.error == null) {
