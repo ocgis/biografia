@@ -122,13 +122,15 @@ Event.propTypes = {
   currentUser: PropTypes.shape({
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  reload: PropTypes.func.isRequired,
+  }),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 Event.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Event', 'showObject', Event);
