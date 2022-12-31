@@ -37,8 +37,8 @@ function ListRelated(props) {
           object={relObj}
           currentUser={currentUser}
           reload={reload}
+          mode="oneLine"
         />
-        {' '}
       </Link>
     </li>
   ));
