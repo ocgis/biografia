@@ -127,13 +127,15 @@ Person.propTypes = {
   currentUser: PropTypes.shape({
     id: PropTypes.number,
     roles: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
+  }),
   mode: PropTypes.string,
-  reload: PropTypes.func.isRequired,
+  reload: PropTypes.func,
 };
 
 Person.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Person', 'showObject', Person);
