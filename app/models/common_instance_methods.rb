@@ -45,7 +45,7 @@ module CommonInstanceMethods
     referenced.each do |type, ids_refs|
       objects = type.find(ids_refs.keys)
       objects.each do |object|
-        object.set_extra(:parent, self)
+        object.set_extra(:parent, all_attributes)
         object.set_extra(:reference, ids_refs[object.id])
         retval[object.controller.to_sym].append(object)
       end

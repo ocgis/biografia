@@ -6,8 +6,9 @@ class FormNote extends React.Component {
   constructor(props) {
     super(props);
 
-    const { object: note } = props;
+    const { object: note, onChange } = props;
     this.state = { note: JSON.parse(JSON.stringify(note)) };
+    onChange(this.state);
   }
 
   render() {

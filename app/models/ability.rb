@@ -12,7 +12,7 @@ class Ability
     if user.has_role? :editor
       can %i[delete destroy newp createp edit update selmerge edmerge domerge examine],
           [Address, Event, EventDate, Note, Person, Relationship, Thing]
-      can %i[create delete destroy connection_choose connection_add], Reference
+      can %i[create delete destroy connection_choose connection_add update], Reference
       can %i[create new], Transfer
       can %i[new create], [Address, Event, EventDate, Note, Person, Relationship, Thing]
       can %i[new create delete destroy tag search show_file register file_image file_thumb examine],

@@ -53,10 +53,17 @@ module Api
         Reference.new(reference_params)
       end
 
+      def find_object_and_update_attrs
+        object = Reference.find(params.require(:id))
+        object.attributes = reference_params
+        object
+      end
+
       private
 
       def reference_params
-        params.require(:reference).permit(:type1,
+        params.require(:reference).permit(:name,
+                                          :type1,
                                           :id1,
                                           :type2,
                                           :id2,

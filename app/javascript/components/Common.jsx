@@ -30,7 +30,7 @@ function Modifier(props) {
       key: 'event',
       text: 'lägg till händelse',
       component: editObject('Event'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -39,7 +39,7 @@ function Modifier(props) {
       key: 'note',
       text: 'kommentera',
       component: editObject('Note'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -48,7 +48,7 @@ function Modifier(props) {
       key: 'eventDate',
       text: 'lägg till datum',
       component: editObject('EventDate'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -57,7 +57,7 @@ function Modifier(props) {
       key: 'address',
       text: 'lägg till adress',
       component: editObject('Address'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -66,7 +66,7 @@ function Modifier(props) {
       key: 'relationship',
       text: 'lägg till förhållande',
       component: editObject('Relationship'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -75,7 +75,7 @@ function Modifier(props) {
       key: 'person',
       text: 'lägg till person',
       component: editObject('Person'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -84,7 +84,7 @@ function Modifier(props) {
       key: 'thing',
       text: 'lägg till sak',
       component: editObject('Thing'),
-      props: { extraData: { referFrom: { _type_: mainObject._type_, id: mainObject.id } } },
+      props: { extraData: { referFrom: mainObject } },
     });
   }
 
@@ -94,7 +94,13 @@ function Modifier(props) {
       text: 'ändra',
       title: editTitle,
       component: editObject(mainObject._type_),
-      props: { object: mainObject },
+      props: {
+        object: mainObject,
+        extraData: {
+          reference: mainObject.reference,
+          referFrom: mainObject.parent,
+        },
+      },
     });
   }
 
@@ -229,6 +235,7 @@ Modifier.propTypes = {
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     reference: PropTypes.shape({}),
+    parent: PropTypes.shape({}),
   }).isRequired,
   reload: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({
