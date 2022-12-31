@@ -7,13 +7,13 @@ class FormPerson extends React.Component {
   constructor(props) {
     super(props);
 
-    const { object: person } = props;
+    const { object: person, onChange } = props;
     this.state = { person: JSON.parse(JSON.stringify(person)) };
+    onChange(this.state);
   }
 
-  render = () => {
+  render() {
     const renderPersonName = (pn, index, setProperty) => {
-      const { onChange } = this.props;
       const { person } = this.state;
 
       if (pn._destroy) {
