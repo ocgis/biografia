@@ -36,10 +36,8 @@ class Edit extends React.Component {
     };
 
     const handleObjectSaveResult = (result) => {
-      console.log('result', result);
       if (result.error == null) {
         const { reference } = this.state;
-        console.log('reference', reference);
         if (reference != null) {
           const { _type_ } = this.props;
           reference.id2 = result[oneName(_type_)].id;
@@ -55,7 +53,6 @@ class Edit extends React.Component {
     };
 
     const okButtonClicked = () => {
-      console.log(this.state);
       const { _type_ } = this.props;
       saveData(_type_, this.state, handleObjectSaveResult);
     };
