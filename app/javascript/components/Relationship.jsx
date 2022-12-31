@@ -172,13 +172,15 @@ Relationship.propTypes = {
     name: PropTypes.string,
     related: PropTypes.shape({}),
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({}),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 Relationship.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Relationship', 'showObject', Relationship);
