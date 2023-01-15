@@ -110,13 +110,15 @@ Address.propTypes = {
     id: PropTypes.number,
     maps_address: PropTypes.string,
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({}),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 Address.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Address', 'showObject', Address);

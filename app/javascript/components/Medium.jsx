@@ -6,7 +6,9 @@ import Index from './Index';
 import Show from './Show';
 import Version from './Version';
 import ListObjects from './ListObjects';
-import { apiUrl, setMapping, webUrl } from './Mappings';
+import {
+  apiUrl, setMapping, showObject, webUrl,
+} from './Mappings';
 
 setMapping('Medium', 'oneName', 'medium');
 setMapping('Medium', 'manyName', 'media');
@@ -33,6 +35,94 @@ OneLine.propTypes = {
     file_name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
   }).isRequired,
+};
+
+function Overview({ object: medium, currentUser, reload }) {
+  const objectsInPicture = medium.positions_in_object.sort(
+    (a, b) => a.position.x - b.position.x,
+  ).map(({ object }) => {
+    const ShowObject = showObject(object._type_);
+    return (
+      <ShowObject
+        key={`${object._type_}_${object.id}`}
+        object={object}
+        mode="oneLineLinked"
+      />
+    );
+  }).flatMap((e) => [e, ', ']).slice(0, -1);
+  if (objectsInPicture.length > 2) {
+    objectsInPicture[objectsInPicture.length - 2] = ' och ';
+  }
+
+  if (medium.related.events.length > 0) {
+    if (objectsInPicture.length > 0) {
+      objectsInPicture.push(', ');
+    }
+    const ShowObject = showObject('Event');
+    objectsInPicture.push(...medium.related.events.map((event) => (
+      <ShowObject
+        key={`${event._type_}_${event.id}`}
+        object={event}
+        mode="oneLineLinked"
+      />
+    )));
+  }
+
+  if (medium.related.addresses.length > 0) {
+    if (objectsInPicture.length > 0) {
+      objectsInPicture.push(', ');
+    }
+    const ShowObject = showObject('Address');
+    objectsInPicture.push(...medium.related.addresses.map((address) => (
+      <ShowObject
+        key={`${address._type_}_${address.id}`}
+        object={address}
+        mode="oneLineLinked"
+      />
+    )));
+  }
+
+  if (medium.related.event_dates.length > 0) {
+    if (objectsInPicture.length > 0) {
+      objectsInPicture.push(', ');
+    }
+    const ShowObject = showObject('EventDate');
+    objectsInPicture.push(...medium.related.event_dates.map((eventDate) => (
+      <ShowObject
+        key={`${eventDate._type_}_${eventDate.id}`}
+        object={eventDate}
+        mode="oneLine"
+      />
+    )));
+  }
+
+  if (objectsInPicture.length > 0) {
+    objectsInPicture.push('.');
+  }
+
+  if (medium.related.notes.length > 0) {
+    const ShowObject = showObject('Note');
+    objectsInPicture.push(...medium.related.notes.map((note) => (
+      <ShowObject
+        key={`${note._type_}_${note.id}`}
+        object={note}
+        mode="full"
+        currentUser={currentUser}
+        reload={reload}
+      />
+    )));
+  }
+
+  return objectsInPicture;
+}
+
+Overview.propTypes = {
+  object: PropTypes.shape({
+    positions_in_object: PropTypes.arrayOf(PropTypes.shape({})),
+    related: PropTypes.shape(),
+  }).isRequired,
+  currentUser: PropTypes.shape(),
+  reload: PropTypes.func,
 };
 
 class Medium extends React.Component {
@@ -98,6 +188,16 @@ class Medium extends React.Component {
     } = this.props;
 
     const { naturalSize } = this.state;
+
+    if (mode === 'overview') {
+      return (
+        <Overview
+          object={medium}
+          currentUser={currentUser}
+          reload={reload}
+        />
+      );
+    }
 
     if (mode === 'oneLine') {
       return (
@@ -242,13 +342,15 @@ Medium.propTypes = {
     file_name: PropTypes.string,
     positions_in_object: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({}),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 Medium.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Medium', 'showObject', Medium);

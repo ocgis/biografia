@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modifier, VersionInfo } from './Common';
 
-const Base = (props) => {
+function Base(props) {
   const {
     currentUser, object, reload, children, appendElements,
     editTitle, modifierProps, modalWidth,
@@ -34,7 +34,7 @@ const Base = (props) => {
       {appendElements}
     </div>
   );
-};
+}
 
 Base.propTypes = {
   children: PropTypes.node,
@@ -43,11 +43,8 @@ Base.propTypes = {
   editTitle: PropTypes.string,
   modifierProps: PropTypes.shape(),
   modalWidth: PropTypes.number,
-  currentUser: PropTypes.shape({
-    id: PropTypes.number,
-    roles: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape(),
+  reload: PropTypes.func,
 };
 
 Base.defaultProps = {
@@ -56,6 +53,8 @@ Base.defaultProps = {
   editTitle: null,
   modifierProps: {},
   modalWidth: null,
+  currentUser: null,
+  reload: null,
 };
 
 export default Base;

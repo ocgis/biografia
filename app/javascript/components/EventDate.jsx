@@ -59,16 +59,15 @@ EventDate.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
   }).isRequired,
-  currentUser: PropTypes.shape({
-    id: PropTypes.number,
-    roles: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape(),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 EventDate.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('EventDate', 'showObject', EventDate);

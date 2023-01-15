@@ -67,13 +67,15 @@ Note.propTypes = {
     title: PropTypes.string,
     note: PropTypes.string,
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape(),
+  reload: PropTypes.func,
   mode: PropTypes.string,
 };
 
 Note.defaultProps = {
+  currentUser: null,
   mode: '',
+  reload: null,
 };
 
 setMapping('Note', 'showObject', Note);

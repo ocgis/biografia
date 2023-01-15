@@ -7,7 +7,7 @@ import Index from './Index';
 import Version from './Version';
 import EditPerson from './EditPerson';
 import ListObjects from './ListObjects';
-import { setMapping, webUrl } from './Mappings';
+import { setMapping, showObject, webUrl } from './Mappings';
 
 setMapping('Person', 'oneName', 'person');
 setMapping('Person', 'manyName', 'people');
@@ -54,6 +54,110 @@ const OneLine = (props) => {
   return '!!!Error in DB: person name missing!!!';
 };
 
+const FamilyRole = (familyRefName, personRefName, personSex) => {
+  switch (familyRefName) {
+    case 'Child':
+      switch (personRefName) {
+        case 'Child':
+          switch (personSex) {
+            case 'M':
+              return 'Bror';
+            case 'F':
+              return 'Syster';
+            default:
+              return 'Syskon';
+          }
+        case 'Spouse':
+          switch (personSex) {
+            case 'M':
+              return 'Far';
+            case 'F':
+              return 'Mor';
+            default:
+              return 'Förälder';
+          }
+        default:
+      }
+      break;
+    case 'Spouse':
+      switch (personRefName) {
+        case 'Child':
+          switch (personSex) {
+            case 'M':
+              return 'Son';
+            case 'F':
+              return 'Dotter';
+            default:
+              return 'Barn';
+          }
+        case 'Spouse':
+          switch (personSex) {
+            case 'M':
+              return 'Make';
+            case 'F':
+              return 'Maka';
+            default:
+              return 'Partner';
+          }
+        default:
+      }
+      break;
+    default:
+  }
+  return 'Okänd roll';
+};
+
+function Overview(props) {
+  const {
+    object, object: { related: { relationships } }, currentUser,
+  } = props;
+  const rows = [];
+  const ShowObject = showObject('Person');
+  relationships.forEach((relationship) => {
+    const { reference: { name: familyRefName } } = relationship;
+
+    const { related: { people } } = relationship;
+    people.forEach((person) => {
+      if (object.id !== person.id) {
+        const { reference: { name: personRefName }, sex: personSex } = person;
+
+        const familyRole = FamilyRole(familyRefName, personRefName, personSex);
+        rows.push((
+          <tr key={person.id}>
+            <td>
+              <Link to={webUrl(person._type_, person.id)}>
+                <ShowObject
+                  object={person}
+                  mode="oneLine"
+                  currentUser={currentUser}
+                  reload={() => alert('Unexpected: Implement reload() for FamilyMembers()')}
+                />
+              </Link>
+            </td>
+            <td>{familyRole}</td>
+          </tr>
+        ));
+      }
+    });
+  });
+  return (
+    <table>
+      <tbody>
+        {rows}
+      </tbody>
+    </table>
+  );
+}
+
+Overview.propTypes = {
+  object: PropTypes.shape().isRequired,
+  currentUser: PropTypes.shape({}),
+};
+
+Overview.defaultProps = {
+  currentUser: null,
+};
+
 function Person(props) {
   const {
     object: person,
@@ -65,6 +169,15 @@ function Person(props) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={person} />
+    );
+  }
+
+  if (mode === 'overview') {
+    return (
+      <Overview
+        object={person}
+        currentUser={currentUser}
+      />
     );
   }
 
