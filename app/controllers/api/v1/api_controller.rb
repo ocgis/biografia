@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
+require 'related'
+
 # Base class for the API level
 module Api
   # Base class for the V1 level
   module V1
     # Base class for the V1 of the API controller
     class ApiController < ActionController::Base
+      include Related
+
       # Log user on commit
       before_action :set_paper_trail_whodunnit
       before_action :set_current_user, only: %i[show index examine]
-      before_action :set_object, only: %i[show]
-      before_action :set_object_attributes, only: [:show]
 
       # Prevent CSRF attacks by raising an exception.
       # For APIs, you may want to use :null_session instead.
@@ -41,12 +43,8 @@ module Api
 
       def show
         r = {}
-        r[@object.class.name.underscore.to_sym] = @object_attributes
-        r[:options] = { topName: @object.object_name,
-                        showFull: true,
-                        enclosedById: false,
-                        showModifier: true }
         r[:current_user] = @current_user_hash
+        r[controller_name.singularize] = related(controller_name.singularize.camelize, params[:id].to_i)
 
         render json: r
       end
@@ -124,7 +122,7 @@ module Api
                               id: version.id })
         end
 
-        render json: { versions: versions,
+        render json: { versions:,
                        current_user: @current_user_hash }
       end
 
@@ -143,40 +141,6 @@ module Api
       def set_current_user
         @current_user_hash = { name: current_user.name,
                                roles: current_user.roles }
-      end
-
-      def set_object
-        @object = find_object
-      end
-
-      def set_object_attributes
-        @object_attributes = @object.all_attributes
-        @object_attributes[:version] = @object.version_info if @object.respond_to?(:version_info)
-        return unless @object.respond_to?(:related_objects)
-
-        @object_attributes[:related] = fetch_related_attributes(@object.related_objects,
-                                                                %i[events relationships])
-      end
-
-      def fetch_related_attributes(related_objects, deep_keys)
-        related_attributes = {}
-
-        related_objects.each do |key, objects|
-          next if key == :object
-
-          related_attributes[key] = objects.map do |object|
-            object_attributes = object.all_attributes
-            object_attributes.update({ version: object.version_info })
-
-            if deep_keys.include? key
-              object_attributes.update({ related: fetch_related_attributes(object.related_objects, []) })
-            end
-
-            object_attributes
-          end
-        end
-
-        related_attributes
       end
     end
   end

@@ -79,6 +79,10 @@ class Medium < ActiveRecord::Base
                       }).update(extras)
   end
 
+  def self.with_associations
+    self
+  end
+
   private
 
   def exif_read_info

@@ -74,4 +74,8 @@ class Address < ActiveRecord::Base
                         maps_address: maps_address
                       }).update(extras)
   end
+
+  def self.with_associations
+    self
+  end
 end

@@ -169,4 +169,8 @@ class Person < ActiveRecord::Base
                         person_names: person_names_attr,
                         name: name }).update(extras)
   end
+
+  def self.with_associations
+    preload(:person_names)
+  end
 end

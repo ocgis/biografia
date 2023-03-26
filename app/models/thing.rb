@@ -41,4 +41,8 @@ class Thing < ActiveRecord::Base
   def all_attributes
     attributes.update({ _type_: 'Thing' }).update(extras)
   end
+
+  def self.with_associations
+    self
+  end
 end

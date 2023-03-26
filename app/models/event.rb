@@ -29,4 +29,8 @@ class Event < ActiveRecord::Base
   def all_attributes
     attributes.update({ _type_: 'Event' }).update(extras)
   end
+
+  def self.with_associations
+    self
+  end
 end

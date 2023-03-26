@@ -283,11 +283,7 @@ function VersionInfo(props) {
       </Link>
     );
   }
-  return (
-    <span className="latest_update">
-      Could not determine latest updater
-    </span>
-  );
+  return null;
 }
 VersionInfo.propTypes = {
   object: PropTypes.shape({
