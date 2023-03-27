@@ -17,6 +17,9 @@ class ListObjects extends React.Component {
     this.updateItemsAfter = -1;
     this.listElement = null;
     this.divElement = null;
+    this.totalHeight = 0;
+    this.totalItems = 0;
+    this.averageHeight = 150;
   }
 
   componentDidMount() {
@@ -82,6 +85,14 @@ class ListObjects extends React.Component {
         const { top, height } = element.getBoundingClientRect();
 
         if (height !== this.itemSizes[index]) {
+          if (this.itemSizes[index] !== undefined) {
+            this.totalHeight -= this.itemSizes[index];
+            this.totalItems -= 1;
+          }
+          this.totalHeight += height;
+          this.totalItems += 1;
+          this.averageHeight = this.totalHeight / this.totalItems;
+
           this.itemSizes[index] = height;
           if ((this.updateItemsAfter === -1) || (this.updateItemsAfter > index)) {
             this.updateItemsAfter = index;
@@ -96,7 +107,7 @@ class ListObjects extends React.Component {
 
     const getItemSize = (index) => {
       if (this.itemSizes[index] == null) {
-        return 150;
+        return this.averageHeight;
       }
       return this.itemSizes[index];
     };
