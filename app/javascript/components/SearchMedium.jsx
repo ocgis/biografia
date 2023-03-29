@@ -11,6 +11,9 @@ class SearchMedium extends React.Component {
     super(props);
     this.resetState();
     this.apiUrl = apiUrl('Medium');
+    if (props.location.state !== null) {
+      this.state.scrollTop = props.location.state.scrollTop;
+    }
   }
 
   componentDidMount() {
@@ -46,7 +49,8 @@ class SearchMedium extends React.Component {
   };
 
   renderLeafs = (nodes) => {
-    const { divRef, height } = this.state;
+    const { divRef, height, scrollTop } = this.state;
+    const { navigate } = this.props;
     const leafs = Object.entries(nodes).filter(
       (item) => (item[1] == null),
     );
@@ -82,6 +86,12 @@ class SearchMedium extends React.Component {
               rowCount={rowCount}
               rowHeight={mediumHeight}
               width={window.innerWidth}
+              onScroll={(p) => {
+                const { location } = this.props;
+                const url = location.pathname + location.search;
+                navigate(url, { state: { scrollTop: p.scrollTop }, replace: true });
+              }}
+              initialScrollTop={scrollTop}
             >
               {renderCell}
             </Grid>
@@ -171,6 +181,7 @@ class SearchMedium extends React.Component {
       currentUser: null,
       divRef: createRef(),
       error: null,
+      scrollTop: 0,
     };
   }
 
@@ -199,6 +210,7 @@ SearchMedium.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
+    state: PropTypes.shape().isRequired,
   }).isRequired,
   navigate: PropTypes.func.isRequired,
 };
