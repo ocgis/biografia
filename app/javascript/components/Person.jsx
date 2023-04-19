@@ -160,6 +160,7 @@ Overview.defaultProps = {
 
 function Person(props) {
   const {
+    parent,
     object: person,
     currentUser,
     mode,
@@ -213,6 +214,7 @@ function Person(props) {
 
   return (
     <Base
+      parent={parent}
       object={person}
       editTitle="Ändra person"
       modifierProps={{
@@ -232,6 +234,7 @@ function Person(props) {
 }
 
 Person.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     person_names: PropTypes.arrayOf(PropTypes.shape({})),
@@ -246,6 +249,7 @@ Person.propTypes = {
 };
 
 Person.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -255,11 +259,12 @@ setMapping('Person', 'showObject', Person);
 
 function ShowPeople(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Person"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -270,12 +275,14 @@ function ShowPeople(props) {
 
 ShowPeople.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
 };
 
 ShowPeople.defaultProps = {
+  parent: null,
   mode: '',
   objects: [],
 };

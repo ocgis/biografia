@@ -38,7 +38,7 @@ const OneLine = (props) => {
 
 function Thing(props) {
   const {
-    currentUser, mode, object: thing, reload,
+    currentUser, mode, parent, object: thing, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -94,6 +94,7 @@ function Thing(props) {
 
   return (
     <Base
+      parent={parent}
       object={thing}
       editTitle="Ändra sak"
       modifierProps={{
@@ -110,6 +111,7 @@ function Thing(props) {
 }
 
 Thing.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -124,6 +126,7 @@ Thing.propTypes = {
 };
 
 Thing.defaultProps = {
+  parent: null,
   mode: '',
 };
 
@@ -131,11 +134,12 @@ setMapping('Thing', 'showObject', Thing);
 
 function ShowThings(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Thing"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -146,6 +150,7 @@ function ShowThings(props) {
 
 ShowThings.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
@@ -153,6 +158,7 @@ ShowThings.propTypes = {
 
 ShowThings.defaultProps = {
   mode: '',
+  parent: null,
   objects: [],
 };
 

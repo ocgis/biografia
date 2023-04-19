@@ -14,7 +14,7 @@ setMapping('Note', 'filterFields', ['category', 'title', 'note']);
 
 function Note(props) {
   const {
-    currentUser, mode, object: note, reload,
+    currentUser, mode, parent, object: note, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -45,6 +45,7 @@ function Note(props) {
 
   return (
     <Base
+      parent={parent}
       object={note}
       appendElements={appendElements}
       editTitle="Ändra kommentar"
@@ -62,6 +63,7 @@ function Note(props) {
 }
 
 Note.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
@@ -73,6 +75,7 @@ Note.propTypes = {
 };
 
 Note.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -82,11 +85,12 @@ setMapping('Note', 'showObject', Note);
 
 function ShowNotes(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Note"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -97,6 +101,7 @@ function ShowNotes(props) {
 
 ShowNotes.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
@@ -104,6 +109,7 @@ ShowNotes.propTypes = {
 
 ShowNotes.defaultProps = {
   mode: '',
+  parent: null,
   objects: [],
 };
 

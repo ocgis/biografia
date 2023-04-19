@@ -55,12 +55,13 @@ class ListObjects extends React.Component {
 
   renderObject = (object) => {
     const {
-      currentUser, mode, reload, _type_,
+      parent, currentUser, mode, reload, _type_,
     } = this.props;
     const ShowObject = showObject(_type_);
     return (
       <ShowObject
         key={object.id}
+        parent={parent}
         object={object}
         mode={mode}
         currentUser={currentUser}
@@ -150,12 +151,14 @@ ListObjects.propTypes = {
   currentUser: PropTypes.shape(),
   _type_: PropTypes.string.isRequired,
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   reload: PropTypes.func.isRequired,
 };
 ListObjects.defaultProps = {
   currentUser: { name: '' },
   mode: '',
+  parent: null,
   objects: [],
 };
 

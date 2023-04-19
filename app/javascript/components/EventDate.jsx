@@ -20,7 +20,7 @@ const OneLine = (props) => {
 
 function EventDate(props) {
   const {
-    currentUser, mode, object: eventDate, reload,
+    currentUser, mode, parent, object: eventDate, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -43,6 +43,7 @@ function EventDate(props) {
   }
   return (
     <Base
+      parent={parent}
       object={eventDate}
       editTitle="Ändra datum"
       modifierProps={{
@@ -56,6 +57,7 @@ function EventDate(props) {
 }
 
 EventDate.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
   }).isRequired,
@@ -65,6 +67,7 @@ EventDate.propTypes = {
 };
 
 EventDate.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -74,11 +77,12 @@ setMapping('EventDate', 'showObject', EventDate);
 
 function ShowEventDates(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="EventDate"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -89,6 +93,7 @@ function ShowEventDates(props) {
 
 ShowEventDates.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
@@ -96,6 +101,7 @@ ShowEventDates.propTypes = {
 
 ShowEventDates.defaultProps = {
   mode: '',
+  parent: null,
   objects: [],
 };
 

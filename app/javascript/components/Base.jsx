@@ -4,7 +4,7 @@ import { Modifier, VersionInfo } from './Common';
 
 function Base(props) {
   const {
-    currentUser, object, reload, children, appendElements,
+    currentUser, object, parent, reload, children, appendElements,
     editTitle, modifierProps, modalWidth,
   } = props;
 
@@ -20,6 +20,7 @@ function Base(props) {
             <Modifier
               currentUser={currentUser}
               mainObject={object}
+              parent={parent}
               editTitle={editTitle}
               reload={reload}
               {...modifierProps}
@@ -40,6 +41,7 @@ Base.propTypes = {
   children: PropTypes.node,
   appendElements: PropTypes.node,
   object: PropTypes.shape().isRequired,
+  parent: PropTypes.shape(),
   editTitle: PropTypes.string,
   modifierProps: PropTypes.shape(),
   modalWidth: PropTypes.number,
@@ -48,6 +50,7 @@ Base.propTypes = {
 };
 
 Base.defaultProps = {
+  parent: null,
   children: null,
   appendElements: null,
   editTitle: null,

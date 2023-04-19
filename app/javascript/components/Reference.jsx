@@ -73,6 +73,7 @@ function ShowReferences(props) {
           return (
             <TabPane tab={tabHeader(key)} key={key}>
               <ShowObjects
+                parent={object}
                 objects={related[key]}
                 reload={reload}
                 currentUser={currentUser}

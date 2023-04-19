@@ -65,7 +65,7 @@ ListRelated.defaultProps = {
 
 function Event(props) {
   const {
-    currentUser, mode, object: event, reload,
+    currentUser, mode, parent, object: event, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -92,6 +92,7 @@ function Event(props) {
   }
   return (
     <Base
+      parent={parent}
       object={event}
       editTitle="Ändra händelse"
       modifierProps={{
@@ -114,6 +115,7 @@ function Event(props) {
 }
 
 Event.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -128,6 +130,7 @@ Event.propTypes = {
 };
 
 Event.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -137,11 +140,12 @@ setMapping('Event', 'showObject', Event);
 
 function ShowEvents(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Event"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -152,12 +156,14 @@ function ShowEvents(props) {
 
 ShowEvents.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
 };
 
 ShowEvents.defaultProps = {
+  parent: null,
   mode: '',
   objects: [],
 };

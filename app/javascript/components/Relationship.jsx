@@ -89,7 +89,7 @@ const OneLine = (props) => {
 
 function Relationship(props) {
   const {
-    currentUser, mode, object: relationship, reload,
+    currentUser, mode, parent, object: relationship, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -150,6 +150,7 @@ function Relationship(props) {
 
   return (
     <Base
+      parent={parent}
       object={relationship}
       appendElements={appendElements}
       editTitle="Ändra förhållande"
@@ -167,6 +168,7 @@ function Relationship(props) {
 }
 
 Relationship.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
@@ -178,6 +180,7 @@ Relationship.propTypes = {
 };
 
 Relationship.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -187,11 +190,12 @@ setMapping('Relationship', 'showObject', Relationship);
 
 function ShowRelationships(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Relationship"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -202,6 +206,7 @@ function ShowRelationships(props) {
 
 ShowRelationships.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
@@ -209,6 +214,7 @@ ShowRelationships.propTypes = {
 
 ShowRelationships.defaultProps = {
   mode: '',
+  parent: null,
   objects: [],
 };
 

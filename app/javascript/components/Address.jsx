@@ -51,7 +51,7 @@ const OneLine = (props) => {
 
 function Address(props) {
   const {
-    currentUser, mode, object: address, reload,
+    parent, currentUser, mode, object: address, reload,
   } = props;
 
   if (mode === 'oneLine') {
@@ -92,6 +92,7 @@ function Address(props) {
   }
   return (
     <Base
+      parent={parent}
       object={address}
       editTitle="Ändra adress"
       modifierProps={{
@@ -106,6 +107,7 @@ function Address(props) {
 }
 
 Address.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     maps_address: PropTypes.string,
@@ -116,6 +118,7 @@ Address.propTypes = {
 };
 
 Address.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -125,11 +128,12 @@ setMapping('Address', 'showObject', Address);
 
 function ShowAddresses(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Address"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -140,12 +144,14 @@ function ShowAddresses(props) {
 
 ShowAddresses.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
 };
 
 ShowAddresses.defaultProps = {
+  parent: null,
   mode: '',
   objects: [],
 };

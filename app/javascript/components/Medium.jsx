@@ -184,7 +184,7 @@ class Medium extends React.Component {
     };
 
     const {
-      currentUser, mode, object: medium, reload,
+      currentUser, mode, parent, object: medium, reload,
     } = this.props;
 
     const { naturalSize } = this.state;
@@ -249,6 +249,8 @@ class Medium extends React.Component {
             modalWidth = imgWidth;
           }
         }
+        // FIXME: Decide what to do with modalWidth
+        modalWidth = null;
 
         const positionTags = medium.positions_in_object.map((pio) => {
           const x = (pio.position.x * imgWidth) / 1000;
@@ -317,6 +319,7 @@ class Medium extends React.Component {
 
     return (
       <Base
+        parent={parent}
         object={medium}
         appendElements={mediaTag}
         modifierProps={{
@@ -337,6 +340,7 @@ class Medium extends React.Component {
 }
 
 Medium.propTypes = {
+  parent: PropTypes.shape(),
   object: PropTypes.shape({
     id: PropTypes.number,
     file_name: PropTypes.string,
@@ -348,6 +352,7 @@ Medium.propTypes = {
 };
 
 Medium.defaultProps = {
+  parent: null,
   currentUser: null,
   mode: '',
   reload: null,
@@ -357,11 +362,12 @@ setMapping('Medium', 'showObject', Medium);
 
 function ShowMedia(props) {
   const {
-    mode, objects, currentUser, reload,
+    mode, parent, objects, currentUser, reload,
   } = props;
   return (
     <ListObjects
       _type_="Medium"
+      parent={parent}
       objects={objects}
       mode={mode}
       currentUser={currentUser}
@@ -372,6 +378,7 @@ function ShowMedia(props) {
 
 ShowMedia.propTypes = {
   mode: PropTypes.string,
+  parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
@@ -379,6 +386,7 @@ ShowMedia.propTypes = {
 
 ShowMedia.defaultProps = {
   mode: '',
+  parent: null,
   objects: [],
 };
 

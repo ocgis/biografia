@@ -19,7 +19,7 @@ function Modifier(props) {
   }
 
   const {
-    mainObject, reload, showAddAddress, showAddPerson, showAddEvent,
+    mainObject, parent, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
     showTagMedium, showMergeWith, editTitle, modalWidth,
   } = props;
@@ -98,7 +98,7 @@ function Modifier(props) {
         object: mainObject,
         extraData: {
           reference: mainObject.reference,
-          referFrom: mainObject.parent,
+          referFrom: parent,
         },
       },
     });
@@ -108,7 +108,10 @@ function Modifier(props) {
     key: 'reference',
     text: 'referera till',
     component: AddReference,
-    props: { referFrom: mainObject },
+    props: {
+      referFrom: mainObject,
+      currentUser,
+    },
   });
 
   if (showMergeWith) {
@@ -237,6 +240,7 @@ Modifier.propTypes = {
     reference: PropTypes.shape({}),
     parent: PropTypes.shape({}),
   }).isRequired,
+  parent: PropTypes.shape(),
   reload: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({
     id: PropTypes.number,
@@ -255,6 +259,7 @@ Modifier.propTypes = {
   modalWidth: PropTypes.number,
 };
 Modifier.defaultProps = {
+  parent: null,
   showAddAddress: false,
   showAddPerson: false,
   showAddEvent: false,
