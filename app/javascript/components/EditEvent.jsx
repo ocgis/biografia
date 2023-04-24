@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormEvent from './FormEvent';
 
-const EditEvent = (props) => {
+function EditEvent(props) {
   const {
     object, extraData, onOk, onCancel,
   } = props;
@@ -18,7 +18,7 @@ const EditEvent = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditEvent.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
