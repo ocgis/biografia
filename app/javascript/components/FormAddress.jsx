@@ -16,7 +16,7 @@ class FormAddress extends React.Component {
     onChange({ address });
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { address } = this.state;
 
