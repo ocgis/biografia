@@ -10,7 +10,7 @@ class FormEvent extends React.Component {
     this.state = { event: JSON.parse(JSON.stringify(event)) };
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { event } = this.state;
 
