@@ -1,16 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Input } from 'antd';
 
-class EditEventDate extends React.Component {
+class FormEventDate extends React.Component {
   constructor(props) {
     super(props);
 
-    const { object: eventDate } = props;
-    this.state = { eventDate: JSON.parse(JSON.stringify(eventDate)) };
+    const { object } = props;
+    const eventDate = JSON.parse(JSON.stringify(object));
+    if (eventDate.date != null && eventDate.mask != null) {
+      eventDate.date = moment(eventDate.date).format(eventDate.mask);
+    }
+    this.state = { eventDate };
   }
 
-  render = () => {
+  componentDidMount() {
+    const { onChange } = this.props;
+    const { eventDate } = this.state;
+    onChange({ event_date: eventDate });
+  }
+
+  render() {
     const { onChange } = this.props;
     const { eventDate } = this.state;
 
@@ -36,15 +47,15 @@ class EditEventDate extends React.Component {
     );
   }
 }
-EditEventDate.propTypes = {
+FormEventDate.propTypes = {
   onChange: PropTypes.func.isRequired,
   object: PropTypes.shape(),
 };
-EditEventDate.defaultProps = {
+FormEventDate.defaultProps = {
   object: {
     date: null,
     source: null,
   },
 };
 
-export default EditEventDate;
+export default FormEventDate;
