@@ -15,10 +15,14 @@ class AddReference extends React.Component {
     const { referFrom } = props;
 
     this.state = {
+      searchString: '',
       found: [],
-      selected: [],
+      selectedItem: null,
       referFrom,
+      referenceName: '',
     };
+
+    this.clickTimer = null;
   }
 
   componentDidMount() {
@@ -27,9 +31,9 @@ class AddReference extends React.Component {
       this.setState({ referFrom: data[oneName(referFrom._type_)] });
     };
 
-    const { referFrom } = this.state;
+    const { referFrom, searchString } = this.state;
 
-    this.search('');
+    this.search(searchString);
 
     if (referFrom.related == null) {
       loadData(apiUrl(referFrom._type_, referFrom.id), oneName(referFrom._type_), onLoaded, false);
@@ -39,7 +43,7 @@ class AddReference extends React.Component {
   search = (searchString) => {
     const handleResponse = (response) => {
       const found = response.data.result;
-      this.setState({ found });
+      this.setState({ found, searchString });
     };
 
     const handleError = (error) => {
@@ -50,71 +54,80 @@ class AddReference extends React.Component {
   };
 
   render() {
-    const okButtonClicked = () => {
+    const addItemReference = (selectedItem, referenceName) => {
       const handleResult = (result) => {
         if (result.error == null) {
-          okButtonClicked();
+          const onLoaded = (data) => {
+            const { referFrom } = this.state;
+            this.setState({
+              referFrom: data[oneName(referFrom._type_)],
+              selectedItem: null,
+            });
+          };
+
+          const { referFrom } = this.state;
+
+          loadData(
+            apiUrl(referFrom._type_, referFrom.id),
+            oneName(referFrom._type_),
+            onLoaded,
+            false,
+          );
         } else {
           this.setState({ error: result.error });
         }
       };
 
-      const { onOk } = this.props;
-      const { referFrom, selected } = this.state;
+      const { referFrom } = this.state;
 
-      if (selected.length === 0) {
-        onOk();
-      } else {
-        const saveValue = {
-          reference: {
-            type1: referFrom._type_,
-            id1: referFrom.id,
-            type2: selected[0]._type_,
-            id2: selected[0].id,
-          },
-        };
-        this.setState((prevState) => ({
-          selected: prevState.selected.slice(1),
-        }));
-        saveData('Reference', saveValue, handleResult);
-      }
+      const saveValue = {
+        reference: {
+          name: referenceName,
+          type1: referFrom._type_,
+          id1: referFrom.id,
+          type2: selectedItem._type_,
+          id2: selectedItem.id,
+        },
+      };
+      saveData('Reference', saveValue, handleResult);
     };
 
     const searchObject = throttle(500, this.search);
 
     const closeButtonClicked = () => {
-      const { onCancel } = this.props;
-      onCancel();
+      const { onOk } = this.props;
+      onOk();
     };
 
-    const addItemToSelected = (item) => {
-      this.setState((prevState) => ({
-        selected: [item, ...prevState.selected],
-      }));
+    const onSingleClick = (item) => {
+      this.setState({
+        selectedItem: item,
+        referenceName: item._type_,
+      });
+    };
+
+    const onDoubleClick = (item) => {
+      addItemReference(item, item._type_);
+    };
+
+    const onClick = (event, item) => {
+      clearTimeout(this.clickTimer);
+      if (event.detail === 1) {
+        this.clickTimer = setTimeout(() => onSingleClick(item), 300);
+      } else if (event.detail === 2) {
+        onDoubleClick(item);
+      }
     };
 
     const renderItem = (item) => {
+      const { currentUser } = this.props;
       const ShowObject = showObject(item._type_);
       return (
-        <List.Item onClick={() => addItemToSelected(item)}>
+        <List.Item onClick={(event) => onClick(event, item)}>
           <ShowObject
             object={item}
             mode="oneLine"
-            currentUser={{}}
-            reload={() => {}}
-          />
-        </List.Item>
-      );
-    };
-
-    const renderSelectedItem = (item) => {
-      const ShowObject = showObject(item._type_);
-      return (
-        <List.Item>
-          <ShowObject
-            object={item}
-            mode="oneLine"
-            currentUser={{}}
+            currentUser={currentUser}
             reload={() => {}}
           />
         </List.Item>
@@ -127,9 +140,9 @@ class AddReference extends React.Component {
 
     const { Search } = Input;
     const {
-      found, error, selected,
+      found, error, searchString, referenceName,
     } = this.state;
-    const { referFrom } = this.state;
+    const { referFrom, selectedItem } = this.state;
 
     let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
     if (referFrom.related != null) {
@@ -138,51 +151,83 @@ class AddReference extends React.Component {
       });
     }
 
-    ignoredKeys = ignoredKeys.concat(selected.map((x) => `${x._type_}_${x.id}`));
+    if (selectedItem == null) {
+      const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <Search
+                  defaultValue={searchString}
+                  onChange={onChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <List
+                  bordered
+                  size="small"
+                  dataSource={filtered}
+                  renderItem={renderItem}
+                  style={{
+                    overflow: 'auto',
+                    height: '300px',
+                    width: '500px',
+                  }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <CloseOutlined onClick={closeButtonClicked} />
+                { error }
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }
 
-    const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
+    const { currentUser } = this.props;
+    const ShowObject = showObject(referFrom._type_);
     return (
       <table>
         <tbody>
           <tr>
             <td>
-              <Search
-                onChange={onChange}
+              { 'Refererar till ' }
+              <ShowObject object={referFrom} mode="oneLine" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Roll:
+            </td>
+            <td>
+              <Input
+                defaultValue={referenceName}
+                onChange={(event) => this.setState({
+                  referenceName: event.target.value,
+                })}
               />
             </td>
           </tr>
           <tr>
             <td>
-              <List
-                bordered
-                size="small"
-                dataSource={filtered}
-                renderItem={renderItem}
-                style={{
-                  overflow: 'auto',
-                  height: '300px',
-                  width: '500px',
-                }}
-              />
-            </td>
-            <td>
-              <List
-                bordered
-                size="small"
-                dataSource={selected}
-                renderItem={renderSelectedItem}
-                style={{
-                  overflow: 'auto',
-                  height: '300px',
-                  width: '500px',
-                }}
+              <ShowObject
+                object={selectedItem}
+                mode="full"
+                currentUser={currentUser}
+                reload={() => {}}
               />
             </td>
           </tr>
           <tr>
             <td>
-              <CheckOutlined onClick={okButtonClicked} />
-              <CloseOutlined onClick={closeButtonClicked} />
+              <CheckOutlined onClick={() => addItemReference(selectedItem, referenceName)} />
+              <CloseOutlined onClick={() => this.setState({ selectedItem: null })} />
               { error }
             </td>
           </tr>
@@ -199,6 +244,7 @@ AddReference.propTypes = {
     id: PropTypes.number.isRequired,
     related: PropTypes.shape(),
   }).isRequired,
+  currentUser: PropTypes.shape({}).isRequired,
 };
 AddReference.defaultProps = {
 };
