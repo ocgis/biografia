@@ -9,7 +9,7 @@ class Edit extends React.Component {
   constructor(props) {
     super(props);
 
-    const { extraData } = props;
+    const { extraData, _type_ } = props;
     this.state = {};
     if (extraData != null) {
       this.state = extraData;
@@ -18,7 +18,7 @@ class Edit extends React.Component {
     const { reference, referFrom } = this.state;
     if (referFrom != null && reference == null) {
       this.state.reference = {
-        name: null,
+        name: _type_,
         id1: referFrom.id,
         type1: referFrom._type_,
       };
