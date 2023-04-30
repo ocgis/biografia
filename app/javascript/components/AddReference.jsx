@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, List } from 'antd';
+import { Button, Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
 import {
   errorText, getRequest, loadData, saveData,
 } from './Requests';
-import { apiUrl, oneName, showObject } from './Mappings';
+import {
+  apiUrl, editObject, oneName, showObject,
+} from './Mappings';
 
 class AddReference extends React.Component {
   constructor(props) {
@@ -20,6 +22,7 @@ class AddReference extends React.Component {
       selectedItem: null,
       referFrom,
       referenceName: '',
+      addType: null,
     };
 
     this.clickTimer = null;
@@ -140,9 +143,8 @@ class AddReference extends React.Component {
 
     const { Search } = Input;
     const {
-      found, error, searchString, referenceName,
+      found, error, searchString, referenceName, referFrom, selectedItem, addType,
     } = this.state;
-    const { referFrom, selectedItem } = this.state;
 
     let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
     if (referFrom.related != null) {
@@ -151,37 +153,45 @@ class AddReference extends React.Component {
       });
     }
 
-    if (selectedItem == null) {
-      const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
+    if (selectedItem !== null) {
+      const { currentUser } = this.props;
+      const ShowObject = showObject(referFrom._type_);
       return (
         <table>
           <tbody>
             <tr>
               <td>
-                <Search
-                  defaultValue={searchString}
-                  onChange={onChange}
+                { 'Refererar till ' }
+                <ShowObject object={referFrom} mode="oneLine" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Roll:
+              </td>
+              <td>
+                <Input
+                  defaultValue={referenceName}
+                  onChange={(event) => this.setState({
+                    referenceName: event.target.value,
+                  })}
                 />
               </td>
             </tr>
             <tr>
               <td>
-                <List
-                  bordered
-                  size="small"
-                  dataSource={filtered}
-                  renderItem={renderItem}
-                  style={{
-                    overflow: 'auto',
-                    height: '300px',
-                    width: '500px',
-                  }}
+                <ShowObject
+                  object={selectedItem}
+                  mode="full"
+                  currentUser={currentUser}
+                  reload={() => {}}
                 />
               </td>
             </tr>
             <tr>
               <td>
-                <CloseOutlined onClick={closeButtonClicked} />
+                <CheckOutlined onClick={() => addItemReference(selectedItem, referenceName)} />
+                <CloseOutlined onClick={() => this.setState({ selectedItem: null })} />
                 { error }
               </td>
             </tr>
@@ -190,44 +200,65 @@ class AddReference extends React.Component {
       );
     }
 
-    const { currentUser } = this.props;
-    const ShowObject = showObject(referFrom._type_);
+    if (addType !== null) {
+      const EditObject = editObject(addType);
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <EditObject
+                  extraData={{ referFrom }}
+                  onOk={() => this.setState({ addType: null, referenceName: '' })}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }
+
+    const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
     return (
       <table>
         <tbody>
           <tr>
             <td>
-              { 'Refererar till ' }
-              <ShowObject object={referFrom} mode="oneLine" />
+              <Button onClick={() => this.setState({ addType: 'Person', referenceName: 'Person' })}>Ny person</Button>
+              <Button onClick={() => this.setState({ addType: 'Event', referenceName: 'Event' })}>Ny händelse</Button>
+              <Button onClick={() => this.setState({ addType: 'EventDate', referenceName: 'Date' })}>Nytt datum</Button>
+              <Button onClick={() => this.setState({ addType: 'Address', referenceName: 'Address' })}>Ny adress</Button>
+              <Button onClick={() => this.setState({ addType: 'Thing', referenceName: 'Thing' })}>Ny sak</Button>
+              <Button onClick={() => this.setState({ addType: 'Note', referenceName: 'Note' })}>Ny kommentar</Button>
+              <Button onClick={() => this.setState({ addType: 'Förhållande', referenceName: 'Relationship' })}>Nytt förhållande</Button>
             </td>
           </tr>
           <tr>
             <td>
-              Roll:
-            </td>
-            <td>
-              <Input
-                defaultValue={referenceName}
-                onChange={(event) => this.setState({
-                  referenceName: event.target.value,
-                })}
+              <Search
+                defaultValue={searchString}
+                onChange={onChange}
               />
             </td>
           </tr>
           <tr>
             <td>
-              <ShowObject
-                object={selectedItem}
-                mode="full"
-                currentUser={currentUser}
-                reload={() => {}}
+              <List
+                bordered
+                size="small"
+                dataSource={filtered}
+                renderItem={renderItem}
+                style={{
+                  overflow: 'auto',
+                  height: '300px',
+                  width: '500px',
+                }}
               />
             </td>
           </tr>
           <tr>
             <td>
-              <CheckOutlined onClick={() => addItemReference(selectedItem, referenceName)} />
-              <CloseOutlined onClick={() => this.setState({ selectedItem: null })} />
+              <CloseOutlined onClick={closeButtonClicked} />
               { error }
             </td>
           </tr>
@@ -238,7 +269,6 @@ class AddReference extends React.Component {
 }
 AddReference.propTypes = {
   onOk: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
   referFrom: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
