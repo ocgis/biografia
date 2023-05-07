@@ -15,7 +15,7 @@ module Api
       def list
         search_models =
           if params[:searchModel].nil?
-            [Person, Event, Address, Thing]
+            [Person, Event, Address, Thing, EventDate]
           else
             # FIXME: Check that model is allowed for search
             [params[:searchModel].constantize]

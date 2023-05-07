@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Button, Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { throttle } from 'throttle-debounce';
@@ -57,42 +58,76 @@ class AddReference extends React.Component {
   };
 
   render() {
-    const addItemReference = (selectedItem, referenceName) => {
-      const handleResult = (result) => {
-        if (result.error == null) {
-          const onLoaded = (data) => {
-            const { referFrom } = this.state;
-            this.setState({
-              referFrom: data[oneName(referFrom._type_)],
-              selectedItem: null,
-            });
-          };
-
+    const handleResult = (result) => {
+      if (result.error == null) {
+        const onLoaded = (data) => {
           const { referFrom } = this.state;
+          this.setState({
+            referFrom: data[oneName(referFrom._type_)],
+            selectedItem: null,
+            addType: null,
+            referenceName: '',
+          });
+        };
 
-          loadData(
-            apiUrl(referFrom._type_, referFrom.id),
-            oneName(referFrom._type_),
-            onLoaded,
-            false,
-          );
+        const { referFrom } = this.state;
+
+        loadData(
+          apiUrl(referFrom._type_, referFrom.id),
+          oneName(referFrom._type_),
+          onLoaded,
+          false,
+        );
+      } else {
+        this.setState({ error: result.error });
+      }
+    };
+
+    const addItemReference = (selectedItem, referenceName) => {
+      const saveReference = (item) => {
+        const { referFrom } = this.state;
+
+        const saveValue = {
+          reference: {
+            name: referenceName,
+            type1: referFrom._type_,
+            id1: referFrom.id,
+            type2: item._type_,
+            id2: item.id,
+          },
+        };
+        saveData('Reference', saveValue, handleResult);
+      };
+
+      const handleSaveNewItemResult = (attrName, result) => {
+        if (result.error == null) {
+          saveReference(result[attrName]);
         } else {
           this.setState({ error: result.error });
         }
       };
 
-      const { referFrom } = this.state;
-
-      const saveValue = {
-        reference: {
-          name: referenceName,
-          type1: referFrom._type_,
-          id1: referFrom.id,
-          type2: selectedItem._type_,
-          id2: selectedItem.id,
-        },
+      const saveNewItem = (item) => {
+        const {
+          id, created_at, updated_at, _type_, ...newItem
+        } = item;
+        const saveValue = {};
+        if (item._type_ === 'EventDate') {
+          newItem.date = moment(newItem.date).format(newItem.mask);
+        }
+        saveValue[oneName(_type_)] = newItem;
+        saveData(
+          _type_,
+          saveValue,
+          (result) => handleSaveNewItemResult(oneName(item._type_), result),
+        );
       };
-      saveData('Reference', saveValue, handleResult);
+
+      if (selectedItem._type_ === 'EventDate') {
+        saveNewItem(selectedItem);
+      } else {
+        saveReference(selectedItem);
+      }
     };
 
     const searchObject = throttle(500, this.search);
@@ -146,23 +181,54 @@ class AddReference extends React.Component {
       found, error, searchString, referenceName, referFrom, selectedItem, addType,
     } = this.state;
 
-    let ignoredKeys = [`${referFrom._type_}_${referFrom.id}`];
+    let ignoredItems = [{ _type_: referFrom._type_, id: referFrom.id }];
     if (referFrom.related != null) {
       Object.keys(referFrom.related).forEach((key) => {
-        ignoredKeys = ignoredKeys.concat(referFrom.related[key].map((obj) => `${obj._type_}_${obj.id}`));
+        ignoredItems = ignoredItems.concat(referFrom.related[key].map((obj) => {
+          if (obj._type_ === 'EventDate') {
+            const {
+              id, created_at, updated_at, reference, ...strippedItem
+            } = obj;
+            return strippedItem;
+          }
+          return { _type_: obj._type_, id: obj.id };
+        }));
       });
     }
 
     if (selectedItem !== null) {
+      if (selectedItem._type_ === 'EventDate') {
+        const editItem = JSON.parse(JSON.stringify(selectedItem));
+        editItem.id = undefined;
+        const EditObject = editObject(editItem._type_);
+        return (
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <EditObject
+                    object={editItem}
+                    extraData={{ referFrom }}
+                    onOk={handleResult}
+                    onCancel={() => this.setState({ addType: null, selectedItem: null, referenceName: '' })}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        );
+      }
+
       const { currentUser } = this.props;
-      const ShowObject = showObject(referFrom._type_);
+      const ShowReferredObject = showObject(referFrom._type_);
+      const ShowSelectedObject = showObject(selectedItem._type_);
       return (
         <table>
           <tbody>
             <tr>
               <td>
                 { 'Refererar till ' }
-                <ShowObject object={referFrom} mode="oneLine" />
+                <ShowReferredObject object={referFrom} mode="oneLine" />
               </td>
             </tr>
             <tr>
@@ -180,7 +246,7 @@ class AddReference extends React.Component {
             </tr>
             <tr>
               <td>
-                <ShowObject
+                <ShowSelectedObject
                   object={selectedItem}
                   mode="full"
                   currentUser={currentUser}
@@ -209,7 +275,8 @@ class AddReference extends React.Component {
               <td>
                 <EditObject
                   extraData={{ referFrom }}
-                  onOk={() => this.setState({ addType: null, referenceName: '' })}
+                  onOk={handleResult}
+                  onCancel={() => this.setState({ addType: null, selectedItem: null, referenceName: '' })}
                 />
               </td>
             </tr>
@@ -218,7 +285,25 @@ class AddReference extends React.Component {
       );
     }
 
-    const filtered = found.filter((x) => !ignoredKeys.includes(`${x._type_}_${x.id}`));
+    const filtered = found.filter((x) => {
+      const itemMatches = (i1, i2) => {
+        const keys1 = Object.keys(i1);
+        for (let i = 0; i < keys1.length; i += 1) {
+          const key = keys1[i];
+          if (i1[key] !== i2[key]) {
+            return false;
+          }
+        }
+        return true;
+      };
+
+      for (let i = 0; i < ignoredItems.length; i += 1) {
+        if (itemMatches(ignoredItems[i], x)) {
+          return false;
+        }
+      }
+      return true;
+    });
     return (
       <table>
         <tbody>
