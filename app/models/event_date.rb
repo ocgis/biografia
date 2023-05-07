@@ -15,6 +15,17 @@ class EventDate < ActiveRecord::Base
     get_date
   end
 
+  def self.filtered_search(filters)
+    events = EventDate.all
+
+    filters.each do |filter|
+      fields = ['date']
+      query = fields.collect { |field| "#{field} LIKE \"%#{filter}%\"" }.join(' OR ')
+      events = events.where(query)
+    end
+    events.first(100)
+  end
+
   def get_date
     return date.to_s if mask.nil?
 
