@@ -16,7 +16,9 @@ class Edit extends React.Component {
     }
 
     const { reference, referFrom } = this.state;
-    if (referFrom != null && reference == null) {
+    if (reference != null) {
+      this.state.reference = { ...reference };
+    } else if (referFrom != null) {
       this.state.reference = {
         name: _type_,
         id1: referFrom.id,

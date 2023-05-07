@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Button, Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import ReactCrop from 'react-image-crop';
 import { throttle } from 'throttle-debounce';
 import {
   errorText, getRequest, loadData, saveData,
@@ -22,8 +23,18 @@ class AddReference extends React.Component {
       found: [],
       selectedItem: null,
       referFrom,
-      referenceName: '',
+      reference: {
+        name: '',
+        type1: referFrom._type_,
+        id1: referFrom.id,
+        type2: null,
+        id2: null,
+        position_in_pictures: null,
+      },
       addType: null,
+      crop: {
+        unit: '%',
+      },
     };
 
     this.clickTimer = null;
@@ -62,12 +73,21 @@ class AddReference extends React.Component {
       if (result.error == null) {
         const onLoaded = (data) => {
           const { referFrom } = this.state;
-          this.setState({
+          this.setState((prevState) => ({
             referFrom: data[oneName(referFrom._type_)],
             selectedItem: null,
             addType: null,
-            referenceName: '',
-          });
+            reference: {
+              ...prevState.reference,
+              name: '',
+              type2: null,
+              id2: null,
+              position_in_pictures: null,
+            },
+            crop: {
+              unit: '%',
+            },
+          }));
         };
 
         const { referFrom } = this.state;
@@ -83,15 +103,13 @@ class AddReference extends React.Component {
       }
     };
 
-    const addItemReference = (selectedItem, referenceName) => {
+    const addItemReference = (selectedItem) => {
       const saveReference = (item) => {
-        const { referFrom } = this.state;
+        const { reference } = this.state;
 
         const saveValue = {
           reference: {
-            name: referenceName,
-            type1: referFrom._type_,
-            id1: referFrom.id,
+            ...reference,
             type2: item._type_,
             id2: item.id,
           },
@@ -138,10 +156,13 @@ class AddReference extends React.Component {
     };
 
     const onSingleClick = (item) => {
-      this.setState({
+      this.setState((prevState) => ({
         selectedItem: item,
-        referenceName: item._type_,
-      });
+        reference: {
+          ...prevState.reference,
+          name: item._type_,
+        },
+      }));
     };
 
     const onDoubleClick = (item) => {
@@ -155,6 +176,25 @@ class AddReference extends React.Component {
       } else if (event.detail === 2) {
         onDoubleClick(item);
       }
+    };
+
+    const onCropChange = (_, newCrop) => {
+      const { reference } = this.state;
+      if (newCrop.width > 0 && newCrop.height > 0) {
+        reference.position_in_pictures = [{
+          x: newCrop.x * 10.0,
+          y: newCrop.y * 10.0,
+          width: newCrop.width * 10.0,
+          height: newCrop.height * 10.0,
+        }];
+      } else {
+        reference.position_in_pictures = null;
+      }
+      this.setState({
+        reference,
+        crop: newCrop,
+        error: null,
+      });
     };
 
     const renderItem = (item) => {
@@ -178,7 +218,7 @@ class AddReference extends React.Component {
 
     const { Search } = Input;
     const {
-      found, error, searchString, referenceName, referFrom, selectedItem, addType,
+      crop, found, error, searchString, reference, referFrom, selectedItem, addType,
     } = this.state;
 
     let ignoredItems = [{ _type_: referFrom._type_, id: referFrom.id }];
@@ -187,7 +227,7 @@ class AddReference extends React.Component {
         ignoredItems = ignoredItems.concat(referFrom.related[key].map((obj) => {
           if (obj._type_ === 'EventDate') {
             const {
-              id, created_at, updated_at, reference, ...strippedItem
+              id, created_at, updated_at, reference: ref_, ...strippedItem
             } = obj;
             return strippedItem;
           }
@@ -210,7 +250,20 @@ class AddReference extends React.Component {
                     object={editItem}
                     extraData={{ referFrom }}
                     onOk={handleResult}
-                    onCancel={() => this.setState({ addType: null, selectedItem: null, referenceName: '' })}
+                    onCancel={() => this.setState((prevState) => ({
+                      addType: null,
+                      selectedItem: null,
+                      reference: {
+                        ...prevState.reference,
+                        name: '',
+                        type2: null,
+                        id2: null,
+                        position_in_pictures: null,
+                      },
+                      crop: {
+                        unit: '%',
+                      },
+                    }))}
                   />
                 </td>
               </tr>
@@ -237,10 +290,13 @@ class AddReference extends React.Component {
               </td>
               <td>
                 <Input
-                  defaultValue={referenceName}
-                  onChange={(event) => this.setState({
-                    referenceName: event.target.value,
-                  })}
+                  defaultValue={reference.name}
+                  onChange={(event) => this.setState((prevState) => ({
+                    reference: {
+                      ...prevState.reference,
+                      name: event.target.value,
+                    },
+                  }))}
                 />
               </td>
             </tr>
@@ -256,7 +312,7 @@ class AddReference extends React.Component {
             </tr>
             <tr>
               <td>
-                <CheckOutlined onClick={() => addItemReference(selectedItem, referenceName)} />
+                <CheckOutlined onClick={() => addItemReference(selectedItem)} />
                 <CloseOutlined onClick={() => this.setState({ selectedItem: null })} />
                 { error }
               </td>
@@ -274,9 +330,22 @@ class AddReference extends React.Component {
             <tr>
               <td>
                 <EditObject
-                  extraData={{ referFrom }}
+                  extraData={{ reference }}
                   onOk={handleResult}
-                  onCancel={() => this.setState({ addType: null, selectedItem: null, referenceName: '' })}
+                  onCancel={() => this.setState((prevState) => ({
+                    addType: null,
+                    selectedItem: null,
+                    reference: {
+                      ...prevState.reference,
+                      name: '',
+                      type2: null,
+                      id2: null,
+                      position_in_pictures: null,
+                    },
+                    crop: {
+                      unit: '%',
+                    },
+                  }))}
                 />
               </td>
             </tr>
@@ -309,13 +378,83 @@ class AddReference extends React.Component {
         <tbody>
           <tr>
             <td>
-              <Button onClick={() => this.setState({ addType: 'Person', referenceName: 'Person' })}>Ny person</Button>
-              <Button onClick={() => this.setState({ addType: 'Event', referenceName: 'Event' })}>Ny händelse</Button>
-              <Button onClick={() => this.setState({ addType: 'EventDate', referenceName: 'Date' })}>Nytt datum</Button>
-              <Button onClick={() => this.setState({ addType: 'Address', referenceName: 'Address' })}>Ny adress</Button>
-              <Button onClick={() => this.setState({ addType: 'Thing', referenceName: 'Thing' })}>Ny sak</Button>
-              <Button onClick={() => this.setState({ addType: 'Note', referenceName: 'Note' })}>Ny kommentar</Button>
-              <Button onClick={() => this.setState({ addType: 'Förhållande', referenceName: 'Relationship' })}>Nytt förhållande</Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Person',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Person',
+                  },
+                }))}
+              >
+                Ny person
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Event',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Event',
+                  },
+                }))}
+              >
+                Ny händelse
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'EventDate',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Date',
+                  },
+                }))}
+              >
+                Nytt datum
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Address',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Address',
+                  },
+                }))}
+              >
+                Ny adress
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Thing',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Thing',
+                  },
+                }))}
+              >
+                Ny sak
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Note',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Note',
+                  },
+                }))}
+              >
+                Ny kommentar
+              </Button>
+              <Button
+                onClick={() => this.setState((prevState) => ({
+                  addType: 'Relationship',
+                  reference: {
+                    ...prevState.reference,
+                    name: 'Relationship',
+                  },
+                }))}
+              >
+                Nytt förhållande
+              </Button>
             </td>
           </tr>
           <tr>
@@ -340,6 +479,16 @@ class AddReference extends React.Component {
                 }}
               />
             </td>
+            { referFrom._type_ === 'Medium'
+              && (
+                <td>
+                  <ReactCrop
+                    src={apiUrl('Medium', referFrom.id, 'image')}
+                    crop={crop}
+                    onChange={onCropChange}
+                  />
+                </td>
+              )}
           </tr>
           <tr>
             <td>
