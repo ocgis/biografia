@@ -95,7 +95,7 @@ class FormAddress extends React.Component {
           </tr>
           <tr>
             <td>
-              Latitude:
+              Latitud:
             </td>
             <td>
               <Input
@@ -109,13 +109,27 @@ class FormAddress extends React.Component {
           </tr>
           <tr>
             <td>
-              Longitude:
+              Longitud:
             </td>
             <td>
               <Input
                 defaultValue={address.longitude}
                 onChange={(event) => {
                   address.longitude = event.target.value;
+                  onChange({ address });
+                }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Källa:
+            </td>
+            <td>
+              <Input
+                defaultValue={address.source}
+                onChange={(event) => {
+                  address.source = event.target.value;
                   onChange({ address });
                 }}
               />
