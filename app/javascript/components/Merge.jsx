@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'antd';
+import { Button, Select } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import {
   loadData,
@@ -40,7 +40,7 @@ class Merge extends React.Component {
     loadData(apiUrl(_type_), manyName(_type_), onLoaded, true);
   };
 
-  render = () => {
+  render() {
     const okButtonClicked = () => {
       const { object: mergeObject } = this.props;
       const { selected, descriptionOptions } = this.state;
@@ -97,7 +97,39 @@ class Merge extends React.Component {
       this.setState({ selected: value });
     };
 
-    const { descriptionOptions, selectedDone, error } = this.state;
+    const selectIdentical = () => {
+      const itemMatches = (i1, i2) => {
+        const keys1 = Object.keys(i1);
+        for (let i = 0; i < keys1.length; i += 1) {
+          const key = keys1[i];
+          if (i1[key] !== i2[key]) {
+            return false;
+          }
+        }
+        return true;
+      };
+
+      const { object } = this.props;
+      const { descriptionOptions, selected } = this.state;
+      const {
+        id, created_at, updated_at, reference: ref_, _type_, related, source, ...strippedItem
+      } = object;
+      const newSelected = [...selected];
+
+      descriptionOptions.forEach((o, index) => {
+        if (itemMatches(strippedItem, o)) {
+          if (!newSelected.includes(index)) {
+            newSelected.push(index);
+          }
+        }
+      });
+
+      this.setState({ selected: newSelected });
+    };
+
+    const {
+      descriptionOptions, selectedDone, selected, error,
+    } = this.state;
     const { object: { _type_ } } = this.props;
     const ShowObject = showObject(_type_);
 
@@ -132,6 +164,7 @@ class Merge extends React.Component {
           <tr>
             <td>
               <Select
+                value={selected}
                 mode="multiple"
                 autoClearSearchValue={false}
                 style={{ width: '50ch' }}
@@ -139,6 +172,13 @@ class Merge extends React.Component {
                 filterOption={filterOptions}
                 onChange={onChange}
               />
+            </td>
+            <td>
+              <Button
+                onClick={selectIdentical}
+              >
+                Markera identiska
+              </Button>
             </td>
           </tr>
           <tr>
@@ -159,6 +199,11 @@ Merge.propTypes = {
   object: PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
+    created_at: PropTypes.string,
+    updated_at: PropTypes.string,
+    reference: PropTypes.shape(),
+    related: PropTypes.shape(),
+    source: PropTypes.string,
   }).isRequired,
 };
 Merge.defaultProps = {
