@@ -131,7 +131,7 @@ class AddReference extends React.Component {
         } = item;
         const saveValue = {};
         if (item._type_ === 'EventDate') {
-          newItem.date = moment(newItem.date).format(newItem.mask);
+          newItem.date = moment(newItem.date).utc().format(newItem.mask);
         }
         saveValue[oneName(_type_)] = newItem;
         saveData(

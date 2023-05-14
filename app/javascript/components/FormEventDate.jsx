@@ -10,7 +10,7 @@ class FormEventDate extends React.Component {
     const { object } = props;
     const eventDate = JSON.parse(JSON.stringify(object));
     if (eventDate.date != null && eventDate.mask != null) {
-      eventDate.date = moment(eventDate.date).format(eventDate.mask);
+      eventDate.date = moment(eventDate.date).utc().format(eventDate.mask);
     }
     this.state = { eventDate };
   }
