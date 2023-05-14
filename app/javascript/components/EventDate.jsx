@@ -15,7 +15,7 @@ setMapping('EventDate', 'manyName', 'event_dates');
 const OneLine = (props) => {
   const { object: eventDate } = props;
 
-  return moment(eventDate.date).format(eventDate.mask);
+  return moment(eventDate.date).utc().format(eventDate.mask);
 };
 
 function EventDate(props) {
