@@ -29,6 +29,14 @@ function EventDate(props) {
     );
   }
 
+  if (mode === 'oneLineLinked') {
+    return (
+      <Link to={webUrl('EventDate', eventDate.id)}>
+        <OneLine object={eventDate} />
+      </Link>
+    );
+  }
+
   let name = null;
   if (mode === 'full') {
     name = (
