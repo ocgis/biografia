@@ -126,6 +126,13 @@ module Api
                        current_user: @current_user_hash }
       end
 
+      def hint
+        hint = []
+        object = controller_name.singularize.camelize.constantize.find(params[:id])
+        hint = object.hint if object.respond_to? :hint
+        render json: { hint: }
+      end
+
       protected
 
       def find_by_object_name(object_name)

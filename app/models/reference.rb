@@ -95,6 +95,25 @@ class Reference < ActiveRecord::Base
                            object1.class.name, object1.id, object2.class.name, object2.id)
   end
 
+  def self.references_for_objects(objects)
+    query =
+      objects.map do |object|
+        "(type1 = '#{object.class.name}' AND id1 = #{object.id}) OR " \
+        "(type2 = '#{object.class.name}' AND id2 = #{object.id})"
+      end.join(' OR ')
+
+    Reference.where(query)
+  end
+
+  def self.ids_in_references(references)
+    references.map do |reference|
+      [
+        { _type_: reference.type1, id: reference.id1 },
+        { _type_: reference.type2, id: reference.id2 }
+      ]
+    end.flatten
+  end
+
   def all_attributes
     attributes
   end

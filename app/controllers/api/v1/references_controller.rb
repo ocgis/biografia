@@ -74,7 +74,7 @@ module Api
       def latest_referenced(search_models)
         sids = []
         objects = []
-        references = Reference.order(updated_at: :desc).limit(50)
+        references = Reference.order(updated_at: :desc).limit(200)
         references.each do |reference|
           [[reference.type1, reference.id1], [reference.type2, reference.id2]].each do |type, id|
             sid = "#{type}_#{id}"

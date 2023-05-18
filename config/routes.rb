@@ -8,11 +8,13 @@ Biografia::Application.routes.draw do
       resources :people, only: %i[index show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :notes, only: %i[index show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :media, only: %i[index show destroy] do
@@ -25,31 +27,37 @@ Biografia::Application.routes.draw do
           get :examine
           get :image
           get :thumb
+          get :hint
         end
       end
       resources :events, only: %i[index show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :event_dates, only: %i[show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :addresses, only: %i[index show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :things, only: %i[index show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :relationships, only: %i[show create update destroy] do
         member do
           get :examine
+          get :hint
         end
       end
       resources :transfers, only: %i[create index show]

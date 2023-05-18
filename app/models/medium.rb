@@ -83,7 +83,33 @@ class Medium < ActiveRecord::Base
     self
   end
 
+  def hint
+    path_name = file_name.split('/')[0..-2].join('/')
+    media = Medium.where('file_name LIKE ?', "#{path_name}%").order(:file_name)
+    self_index = media.index.with_index { |element, _| file_name == element.file_name }
+    start_index = (self_index - 5).clamp(0, media.length)
+    end_index = (self_index + 1 + 5).clamp(0, media.length)
+
+    references = Reference.references_for_objects(media[start_index..end_index])
+    ids = Reference.ids_in_references(references)
+    grouped_ids = ids.group_by { |id| id[:_type_] }
+    grouped_ids.delete('Medium')
+
+    objects = []
+    grouped_ids.each_key do |local_type|
+      objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:all_attributes)
+    end
+
+    objects
+  end
+
   private
+
+  def ids(id_list)
+    id_list.map do |elem|
+      elem[:id]
+    end
+  end
 
   def exif_read_info
     extra_info = {}

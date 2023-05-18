@@ -56,14 +56,27 @@ class AddReference extends React.Component {
   }
 
   search = (searchString) => {
-    const handleResponse = (response) => {
-      const found = response.data.result;
-      this.setState({ found, searchString });
-    };
-
     const handleError = (error) => {
       this.setState({ error: errorText(error) });
     };
+
+    const handleHintResponse = (response, prevFound) => {
+      const found = [...response.data.hint, ...prevFound];
+
+      this.setState({ found, searchString });
+    };
+
+    const handleResponse = (response) => {
+      const { referFrom } = this.props;
+      const found = response.data.result;
+
+      if (searchString === '') {
+        getRequest(apiUrl(referFrom._type_, referFrom.id, 'hint'), (r) => handleHintResponse(r, found), handleError);
+      } else {
+        this.setState({ found, searchString });
+      }
+    };
+
     const encodedSearch = encodeURIComponent(searchString);
     getRequest(apiUrl('Reference', `list?q=${encodedSearch}`), handleResponse, handleError);
   };

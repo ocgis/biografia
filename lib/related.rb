@@ -10,7 +10,7 @@ module Related
     deep_ids_level1 = ids_level1.select { |object| %w[Event Relationship].include? object[:_type_] }
     references_level2 = matching(deep_ids_level1)
 
-    all_ids = (main_ids + ids_in_references(references_level1 + references_level2)).uniq
+    all_ids = (main_ids + Reference.ids_in_references(references_level1 + references_level2)).uniq
 
     grouped_ids = all_ids.group_by { |local_id| local_id[:_type_] }
 
@@ -52,14 +52,6 @@ module Related
     elsif object[:_type_] == reference.type2 && object[:id] == reference.id2
       { _type_: reference.type1, id: reference.id1 }
     end
-  end
-
-  def ids_in_references(references)
-    references.map do |reference|
-      [
-        { _type_: reference.type1, id: reference.id1 }, { _type_: reference.type2, id: reference.id2 }
-      ]
-    end.flatten
   end
 
   def ids(id_list)
