@@ -21,6 +21,7 @@ module Api
             [params[:searchModel].constantize]
           end
 
+        filter = ''
         if params[:q].present?
           filter = params.require(:q)
           filters = filter.split(' ')
@@ -36,7 +37,7 @@ module Api
         else
           objects = latest_referenced(search_models.map(&:name))
         end
-        render json: { result: objects }
+        render json: { result: objects, filter: }
       end
 
       def destroy

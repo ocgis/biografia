@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Button, Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactCrop from 'react-image-crop';
-import { throttle } from 'throttle-debounce';
+import { debounce } from 'throttle-debounce';
 import {
   errorText, getRequest, loadData, saveData,
 } from './Requests';
@@ -68,12 +68,15 @@ class AddReference extends React.Component {
 
     const handleResponse = (response) => {
       const { referFrom } = this.props;
-      const found = response.data.result;
 
-      if (searchString === '') {
-        getRequest(apiUrl(referFrom._type_, referFrom.id, 'hint'), (r) => handleHintResponse(r, found), handleError);
-      } else {
-        this.setState({ found, searchString });
+      if (searchString === response.data.filter) {
+        const found = response.data.result;
+
+        if (searchString === '') {
+          getRequest(apiUrl(referFrom._type_, referFrom.id, 'hint'), (r) => handleHintResponse(r, found), handleError);
+        } else {
+          this.setState({ found, searchString });
+        }
       }
     };
 
@@ -161,7 +164,7 @@ class AddReference extends React.Component {
       }
     };
 
-    const searchObject = throttle(500, this.search);
+    const searchObject = debounce(500, this.search);
 
     const closeButtonClicked = () => {
       const { onOk } = this.props;
