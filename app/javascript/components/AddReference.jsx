@@ -232,6 +232,16 @@ class AddReference extends React.Component {
       searchObject(value.target.value);
     };
 
+    const makeIgnoredItem = (obj) => {
+      if (obj._type_ === 'EventDate') {
+        const {
+          id, created_at, updated_at, reference: ref_, ...strippedItem
+        } = obj;
+        return strippedItem;
+      }
+      return { _type_: obj._type_, id: obj.id };
+    };
+
     const { Search } = Input;
     const {
       crop, found, error, searchString, reference, referFrom, selectedItem, addType,
@@ -240,15 +250,8 @@ class AddReference extends React.Component {
     let ignoredItems = [{ _type_: referFrom._type_, id: referFrom.id }];
     if (referFrom.related != null) {
       Object.keys(referFrom.related).forEach((key) => {
-        ignoredItems = ignoredItems.concat(referFrom.related[key].map((obj) => {
-          if (obj._type_ === 'EventDate') {
-            const {
-              id, created_at, updated_at, reference: ref_, ...strippedItem
-            } = obj;
-            return strippedItem;
-          }
-          return { _type_: obj._type_, id: obj.id };
-        }));
+        ignoredItems = ignoredItems
+          .concat(referFrom.related[key].map((obj) => makeIgnoredItem(obj)));
       });
     }
 
@@ -387,6 +390,8 @@ class AddReference extends React.Component {
           return false;
         }
       }
+      ignoredItems.push(makeIgnoredItem(x));
+
       return true;
     });
     return (
