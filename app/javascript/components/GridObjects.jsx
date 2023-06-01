@@ -65,10 +65,15 @@ class GridObjects extends React.Component {
 
   render() {
     const { objects } = this.props;
+
+    if (objects == null || objects.length === 0) {
+      return null;
+    }
+
     const { divRef, height, width } = this.state;
 
     const mediumWidth = 120;
-    const mediumHeight = 120+10;
+    const mediumHeight = 120 + 10;
     const columnCount = Math.trunc(width / mediumWidth);
     const rowCount = Math.trunc((objects.length + columnCount - 1) / columnCount);
 
