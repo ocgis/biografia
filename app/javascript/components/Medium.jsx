@@ -5,7 +5,7 @@ import Base from './Base';
 import Index from './Index';
 import Show from './Show';
 import Version from './Version';
-import ListObjects from './ListObjects';
+import GridObjects from './GridObjects';
 import {
   apiUrl, setMapping, showObject, webUrl,
 } from './Mappings';
@@ -365,7 +365,7 @@ function ShowMedia(props) {
     mode, parent, objects, currentUser, reload,
   } = props;
   return (
-    <ListObjects
+    <GridObjects
       _type_="Medium"
       parent={parent}
       objects={objects}
