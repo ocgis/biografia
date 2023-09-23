@@ -62,37 +62,40 @@ class Reference < ActiveRecord::Base
 
   def self.get_references_from_object(object, options = {})
     defaults = {
-      :role  => nil,
-      :model => nil
+      role: nil,
+      model: nil
     }
     options = defaults.merge(options)
 
     if options[:role].nil?
       if options[:model].nil?
-        return Reference.where("(type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)",
-                               object.class.name, object.id,
-                               object.class.name, object.id)
+        Reference.with_associations.where('(type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)',
+                                          object.class.name, object.id,
+                                          object.class.name, object.id)
       else
-        return Reference.where("(type1 = ? AND id1 = ? AND type2 = ?) OR (type2 = ? AND id2 = ? AND type1 = ?)",
-                               object.class.name, object.id, options[:model].name,
-                               object.class.name, object.id, options[:model].name)
+        Reference.with_associations.where('(type1 = ? AND id1 = ? AND type2 = ?) OR ' \
+                                          '(type2 = ? AND id2 = ? AND type1 = ?)',
+                                          object.class.name, object.id, options[:model].name,
+                                          object.class.name, object.id, options[:model].name)
       end
     else # has role
       if options[:model].nil?
-        return Reference.where("((type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)) AND (name = ?)",
-                               object.class.name, object.id, object.class.name, object.id, options[:role])
+        Reference.with_associations.where('((type1 = ? AND id1 = ?) OR (type2 = ? AND id2 = ?)) AND (name = ?)',
+                                          object.class.name, object.id, object.class.name, object.id, options[:role])
       else
-        return Reference.where("((type1 = ? AND id1 = ? AND type2 = ?) OR (type2 = ? AND id2 = ? AND type1 = ?)) AND (name = ?)",
-                               object.class.name, object.id, options[:model].name,
-                               object.class.name, object.id, options[:model].name, options[:role])
+        Reference.with_associations.where('((type1 = ? AND id1 = ? AND type2 = ?) OR ' \
+                                          '(type2 = ? AND id2 = ? AND type1 = ?)) AND (name = ?)',
+                                          object.class.name, object.id, options[:model].name,
+                                          object.class.name, object.id, options[:model].name, options[:role])
       end
     end
   end
 
   def self.get_references_between_objects(object1, object2)
-    return Reference.where("(type1 = ? AND id1 = ? AND type2 = ? AND id2 = ?) OR (type2 = ? AND id2 = ? AND type1 = ? AND id1 = ?)",
-                           object1.class.name, object1.id, object2.class.name, object2.id,
-                           object1.class.name, object1.id, object2.class.name, object2.id)
+    Reference.with_associations.where('(type1 = ? AND id1 = ? AND type2 = ? AND id2 = ?) OR ' \
+                                      '(type2 = ? AND id2 = ? AND type1 = ? AND id1 = ?)',
+                                      object1.class.name, object1.id, object2.class.name, object2.id,
+                                      object1.class.name, object1.id, object2.class.name, object2.id)
   end
 
   def self.references_for_objects(objects)
@@ -102,7 +105,7 @@ class Reference < ActiveRecord::Base
         "(type2 = '#{object.class.name}' AND id2 = #{object.id})"
       end.join(' OR ')
 
-    Reference.where(query)
+    Reference.with_associations.where(query)
   end
 
   def self.ids_in_references(references)
@@ -116,5 +119,9 @@ class Reference < ActiveRecord::Base
 
   def all_attributes
     attributes
+  end
+
+  def self.with_associations
+    preload(:position_in_pictures)
   end
 end

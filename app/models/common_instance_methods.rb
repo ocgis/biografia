@@ -59,16 +59,26 @@ module CommonInstanceMethods
   end
 
   def positions_in_object
-    positions = []
+    positions_by_type_id = Hash.new { |h, k| h[k] = {} }
+    ids_by_type = Hash.new { |h, k| h[k] = [] }
     get_references.each do |reference|
       position = reference.position_in_pictures
 
       next if position.empty?
 
-      obj = reference.other_object(self)
-      positions.push({ object: obj,
-                       position: position[0] })
+      type_id = reference.other_object_type_and_id(self)
+      ids_by_type[type_id.type] = ids_by_type[type_id.type].append(type_id.id)
+      positions_by_type_id[type_id.type][type_id.id] = position[0]
     end
+    positions = []
+    ids_by_type.each do |type, ids|
+      objects = type.with_associations.find(ids)
+      objects.each do |object|
+        positions.push({ object:,
+                         position: positions_by_type_id[type][object.id] })
+      end
+    end
+
     positions
   end
 
