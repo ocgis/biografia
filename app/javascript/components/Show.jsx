@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import TopMenu from './TopMenu';
@@ -16,8 +16,15 @@ class Show extends React.Component {
     this.state = {
       currentUser: null,
       timerHandle: null,
+      history: { showReferences: {} },
     };
     this.state[objectName] = null;
+    if (props.location.state !== null) {
+      this.state = {
+        ...this.state,
+        ...props.location.state,
+      };
+    }
   }
 
   componentDidMount() {
@@ -25,12 +32,17 @@ class Show extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { location: { pathname, search } } = this.props;
+    const { location: { pathname, search, state } } = this.props;
     if (pathname !== prevProps.location.pathname
         || search !== prevProps.location.search) {
       const { timerHandle } = this.state;
       if (timerHandle !== null) {
         clearTimeout(timerHandle);
+      }
+      if (state !== null) {
+        this.setState(state);
+      } else {
+        this.setState({ history: {} });
       }
       this.reload();
     }
@@ -64,6 +76,15 @@ class Show extends React.Component {
   };
 
   render() {
+    const setHistory = (s) => {
+      this.setState({ history: s });
+
+      const { navigate, location } = this.props;
+      const { history } = this.state;
+      const navigateState = { state: { history: { ...history, ...s } }, replace: true };
+      const url = location.pathname + location.search;
+      navigate(url, navigateState);
+    };
     const { state } = this;
     const { _type_, noReferences } = this.props;
     const {
@@ -102,6 +123,8 @@ class Show extends React.Component {
                           object={object}
                           currentUser={currentUser}
                           reload={this.reload}
+                          state={state.history.showReferences || {}}
+                          setState={(s) => setHistory({ showReferences: s })}
                         />
                       </td>
                     </tr>
@@ -118,9 +141,12 @@ Show.propTypes = {
   noReferences: PropTypes.bool,
   params: PropTypes.shape().isRequired,
   location: PropTypes.shape({
+    key: PropTypes.string,
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
+    state: PropTypes.shape(),
   }).isRequired,
+  navigate: PropTypes.func.isRequired,
   reloadInterval: PropTypes.number,
 };
 Show.defaultProps = {
@@ -134,6 +160,7 @@ export default function wrapper(props) {
       {...props}
       params={useParams()}
       location={useLocation()}
+      navigate={useNavigate()}
     />
   );
 }

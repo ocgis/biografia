@@ -35,7 +35,7 @@ RenderElement.propTypes = {
 
 function ShowReferences(props) {
   const {
-    currentUser, object, object: { related }, reload,
+    currentUser, object, object: { related }, reload, state, setState,
   } = props;
   const tabHeader = (key) => {
     const header = {
@@ -54,10 +54,17 @@ function ShowReferences(props) {
     return header;
   };
 
+  const onChange = (key) => {
+    setState({ activeKey: key });
+  };
+
   const ShowObject = showObject(object._type_);
 
   return (
-    <Tabs>
+    <Tabs
+      onChange={onChange}
+      activeKey={state.activeKey || 'overview'}
+    >
       <TabPane tab="Översikt" key="overview">
         <ShowObject
           mode="overview"
@@ -94,6 +101,8 @@ ShowReferences.propTypes = {
    * }).isRequired, */
   reload: PropTypes.func,
   currentUser: PropTypes.shape({}).isRequired,
+  state: PropTypes.shape().isRequired,
+  setState: PropTypes.func.isRequired,
 };
 ShowReferences.defaultProps = {
   reload: () => alert('Missing reload callback'),
