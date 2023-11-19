@@ -6,6 +6,7 @@ import Index from './Index';
 import Show from './Show';
 import Version from './Version';
 import GridObjects from './GridObjects';
+import Image from './Image';
 import {
   apiUrl, setMapping, showObject, webUrl,
 } from './Mappings';
@@ -129,40 +130,10 @@ class Medium extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      naturalSize: false,
-      naturalWidth: null,
-      naturalHeight: null,
-      windowWidth: null,
-      windowHeight: null,
+      imgWidth: null,
+      imgHeight: null,
     };
   }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.updateHeights);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateHeights);
-  }
-
-  updateHeights = () => {
-    this.setState({
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-    });
-  };
-
-  onImgLoad = (event) => {
-    const {
-      naturalWidth, naturalHeight,
-    } = event.target;
-    this.setState({
-      naturalWidth,
-      naturalHeight,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-    });
-  };
 
   render() {
     const showTag = (event) => {
@@ -186,8 +157,6 @@ class Medium extends React.Component {
     const {
       currentUser, mode, parent, object: medium, reload,
     } = this.props;
-
-    const { naturalSize } = this.state;
 
     if (mode === 'overview') {
       return (
@@ -213,46 +182,14 @@ class Medium extends React.Component {
       );
     }
 
-    let modalWidth = null;
     let mediaTag = null;
 
     if (mode === 'full') {
-      const { naturalWidth, naturalHeight } = this.state;
+      const { imgWidth, imgHeight } = this.state;
+      let positionTags = [];
 
-      if (naturalWidth == null || naturalHeight == null) {
-        mediaTag = (
-          <div style={{ position: 'relative' }}>
-            <img
-              src={apiUrl('Medium', medium.id, 'image')}
-              alt={medium.file_name}
-              onLoad={this.onImgLoad}
-            />
-          </div>
-        );
-      } else {
-        modalWidth = naturalWidth;
-        let imgWidth = naturalWidth;
-        let imgHeight = naturalHeight;
-        const { windowWidth, windowHeight } = this.state;
-
-        if (!naturalSize) {
-          if (imgWidth > windowWidth) {
-            imgHeight = (imgHeight * windowWidth) / imgWidth;
-            imgWidth = windowWidth;
-            modalWidth = imgWidth;
-          }
-
-          if (imgHeight > windowHeight / 2) {
-            const targetHeight = windowHeight / 2;
-            imgWidth = (imgWidth * targetHeight) / imgHeight;
-            imgHeight = targetHeight;
-            modalWidth = imgWidth;
-          }
-        }
-        // FIXME: Decide what to do with modalWidth
-        modalWidth = null;
-
-        const positionTags = medium.positions_in_object.map((pio) => {
+      if (imgWidth != null && imgHeight != null) {
+        positionTags = medium.positions_in_object.map((pio) => {
           const x = (pio.position.x * imgWidth) / 1000;
           const y = (pio.position.y * imgHeight) / 1000;
           const width = (pio.position.width * imgWidth) / 1000;
@@ -288,27 +225,22 @@ class Medium extends React.Component {
             </span>
           );
         });
-        mediaTag = (
-          <div style={{ position: 'relative' }}>
-            <button
-              type="button"
-              onClick={() => this.setState({ naturalSize: !naturalSize })}
-              style={{
-                border: 'none',
-                padding: 0,
-              }}
-            >
-              <img
-                src={apiUrl('Medium', medium.id, 'image')}
-                alt={medium.file_name}
-                width={imgWidth}
-                height={imgHeight}
-              />
-            </button>
-            { positionTags }
-          </div>
-        );
       }
+      mediaTag = (
+        <div style={{ position: 'relative' }}>
+          <Image
+            src={apiUrl('Medium', medium.id, 'image')}
+            alt={medium.file_name}
+            onResize={(width, height) => {
+              this.setState({
+                imgWidth: width,
+                imgHeight: height,
+              });
+            }}
+          />
+          { positionTags }
+        </div>
+      );
     } else {
       mediaTag = (
         <Link to={webUrl('Medium', medium.id)}>
@@ -331,7 +263,6 @@ class Medium extends React.Component {
           showAddThing: true,
           showTagMedium: true,
         }}
-        modalWidth={modalWidth}
         currentUser={currentUser}
         reload={reload}
       />
