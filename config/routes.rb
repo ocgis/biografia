@@ -20,6 +20,7 @@ Biografia::Application.routes.draw do
       resources :media, only: %i[index show destroy] do
         collection do
           get :file_thumb
+          get :file_image
           get :search
           post :register
         end

@@ -17,30 +17,17 @@ module Api
       def search
         path = params[:path] || 'files'
 
-        old_dir = Dir.pwd
-        Dir.chdir(Biografia::Application.config.protected_path)
-        file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name')
-        paths = search_dir(path) - file_media
-        @nodes = {}
-
-        base_length = path.length + 1
-        paths.each do |p|
-          parts = p[base_length..].split('/')
-          if parts.length == 1 # File
-            @nodes[p] = nil
-          else
-            full = "#{path}/#{parts[0]}"
-            if @nodes.key?(full)
-              @nodes[full] += 1
-            else
-              @nodes[full] = 1
-            end
-          end
+        if File.directory? File.join(Biografia::Application.config.protected_path, path)
+          nodes = get_dir_nodes(path)
+          render json: { type: 'directory',
+                         nodes: }
+        else
+          info = Medium.info_for(path)
+          puts info.inspect
+          render json: { type: 'file',
+                         path:,
+                         info: }
         end
-
-        Dir.chdir(old_dir)
-
-        render json: { nodes: @nodes }
       end
 
       def register
@@ -69,6 +56,11 @@ module Api
         send_file(medium.thumbnail)
       end
 
+      def file_image
+        file_name = params.require(:file)
+        send_file(Medium.fullsize_for(file_name))
+      end
+
       def file_thumb
         file_name = params.require(:file)
         send_file(Medium.thumbnail_for(file_name))
@@ -85,6 +77,33 @@ module Api
       end
 
       private
+
+      def get_dir_nodes(path)
+        old_dir = Dir.pwd
+        Dir.chdir(Biografia::Application.config.protected_path)
+        file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name')
+        paths = search_dir(path) - file_media
+        nodes = {}
+
+        base_length = path.length + 1
+        paths.each do |p|
+          parts = p[base_length..].split('/')
+          if parts.length == 1 # File
+            nodes[p] = nil
+          else
+            full = "#{path}/#{parts[0]}"
+            if nodes.key?(full)
+              nodes[full] += 1
+            else
+              nodes[full] = 1
+            end
+          end
+        end
+
+        Dir.chdir(old_dir)
+
+        nodes
+      end
 
       def search_dir(path)
         old_dir = Dir.pwd

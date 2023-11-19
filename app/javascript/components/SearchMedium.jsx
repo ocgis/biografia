@@ -2,9 +2,64 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
+import { Descriptions, Dropdown, Menu } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import TopMenu from './TopMenu';
+import Image from './Image';
 import { apiUrl, webUrl } from './Mappings';
 import { errorText, getRequest, postRequest } from './Requests';
+
+function Info(props) {
+  const { data } = props;
+
+  const titleCase = (s) => s
+    .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
+    .replace(/[-_]+(.)/g, (_, c) => ` ${c.toUpperCase()}`);
+
+  if (data == null) {
+    return null;
+  }
+
+  const tags = [];
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+    if (value.constructor === String) {
+      tags.push((
+        <Descriptions.Item
+          key={key}
+          label={titleCase(key)}
+        >
+          {value}
+        </Descriptions.Item>
+      ));
+    } else if (value.constructor === Object) {
+      tags.push((
+        <Descriptions.Item
+          key={key}
+          label={titleCase(key)}
+        >
+          <Info data={value} />
+        </Descriptions.Item>
+      ));
+    }
+  });
+
+  return (
+    <Descriptions
+      layout="vertical"
+    >
+      {tags}
+    </Descriptions>
+  );
+}
+
+Info.propTypes = {
+  data: PropTypes.shape(),
+};
+
+Info.defaultProps = {
+  data: null,
+};
 
 class SearchMedium extends React.Component {
   constructor(props) {
@@ -111,17 +166,12 @@ class SearchMedium extends React.Component {
   renderNode = (path, number) => {
     if (number == null) {
       return (
-        <button
-          title={path}
-          key={path}
-          type="button"
-          onClick={() => this.registerImage(path)}
-        >
+        <Link to={{ search: `?path=${path}` }}>
           <img
             src={apiUrl('Medium', `file_thumb?file=${path}`)}
             alt={path}
           />
-        </button>
+        </Link>
       );
     }
     return (
@@ -134,7 +184,7 @@ class SearchMedium extends React.Component {
     );
   };
 
-  registerImage = (path) => {
+  registerImage = () => {
     const handleResponse = (response) => {
       const { data: { medium } } = response;
       const { navigate } = this.props;
@@ -154,6 +204,7 @@ class SearchMedium extends React.Component {
       this.setState({ error: errorText(error) });
     };
 
+    const { path } = this.state;
     const data = { file_name: path };
     postRequest(`${this.apiUrl}/register`, data, handleResponse, handleError);
   };
@@ -164,8 +215,17 @@ class SearchMedium extends React.Component {
     const handleResponse = (response) => {
       const newState = {
         currentUser: response.data.current_user,
+        type: response.data.type,
+        path: null,
+        nodes: null,
+        info: null,
       };
-      newState.nodes = response.data.nodes;
+      if (newState.type === 'directory') {
+        newState.nodes = response.data.nodes;
+      } else if (newState.type === 'file') {
+        newState.path = response.data.path;
+        newState.info = response.data.info;
+      }
       this.setState(newState);
     };
 
@@ -186,11 +246,69 @@ class SearchMedium extends React.Component {
   }
 
   render() {
-    const { currentUser, error, nodes } = this.state;
+    const {
+      currentUser, error, nodes, type, path, info,
+    } = this.state;
+
+    if (type === 'file') {
+      const menu = (
+        <Menu onClick={() => this.registerImage()}>
+          <Menu.Item key="add">
+            Lägg till
+          </Menu.Item>
+        </Menu>
+      );
+
+      return (
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <TopMenu currentUser={currentUser} />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Dropdown overlay={menu} trigger="click">
+                  <PlusCircleOutlined />
+                </Dropdown>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Image
+                  src={apiUrl('Medium', `file_image?file=${path}`)}
+                  alt={path}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Info data={info} />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                { error
+                  && (
+                    { error }
+                  )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+    }
 
     if (nodes == null) {
       return (
-        <TopMenu />
+        <div>
+          <TopMenu />
+          { error
+           && (
+             { error }
+           )}
+        </div>
       );
     }
     return (
