@@ -263,12 +263,12 @@ class SearchMedium extends React.Component {
         <table>
           <tbody>
             <tr>
-              <td>
+              <td aria-label="Top menu">
                 <TopMenu currentUser={currentUser} />
               </td>
             </tr>
             <tr>
-              <td>
+              <td aria-label="Options menu">
                 <Dropdown overlay={menu} trigger="click">
                   <PlusCircleOutlined />
                 </Dropdown>
@@ -283,7 +283,7 @@ class SearchMedium extends React.Component {
               </td>
             </tr>
             <tr>
-              <td>
+              <td aria-label="Information">
                 <Info data={info} />
               </td>
             </tr>
