@@ -21,6 +21,7 @@ Biografia::Application.routes.draw do
         collection do
           get :file_thumb
           get :file_image
+          get :file_raw
           get :search
           post :register
         end
@@ -28,6 +29,7 @@ Biografia::Application.routes.draw do
           get :examine
           get :image
           get :thumb
+          get :raw
           get :hint
         end
       end

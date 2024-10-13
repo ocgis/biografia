@@ -6,7 +6,7 @@ import Index from './Index';
 import Show from './Show';
 import Version from './Version';
 import GridObjects from './GridObjects';
-import Image from './Image';
+import DisplayMedium from './DisplayMedium';
 import {
   apiUrl, setMapping, showObject, webUrl,
 } from './Mappings';
@@ -228,9 +228,11 @@ class Medium extends React.Component {
       }
       mediaTag = (
         <div style={{ position: 'relative' }}>
-          <Image
+          <DisplayMedium
             src={apiUrl('Medium', medium.id, 'image')}
+            link={apiUrl('Medium', medium.id, 'raw')}
             alt={medium.file_name}
+            contentType={medium.info.content_type}
             onResize={(width, height) => {
               this.setState({
                 imgWidth: width,
@@ -276,6 +278,9 @@ Medium.propTypes = {
     id: PropTypes.number,
     file_name: PropTypes.string,
     positions_in_object: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    info: PropTypes.shape({
+      content_type: PropTypes.string.isRequired,
+    }),
   }).isRequired,
   currentUser: PropTypes.shape({}),
   reload: PropTypes.func,

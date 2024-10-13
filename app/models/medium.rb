@@ -21,12 +21,12 @@ class Medium < ActiveRecord::Base
   def self.thumbnail_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
-    if mime_type.length == 1 && mime_type[0].media_type == 'image'
+    if mime_type.length >= 1 # && mime_type[0].media_type == 'image'
       thumb_full = File.join(Biografia::Application.config.cache_path, "thumbnails#{file_name}jpg")
       if !File.exist?(thumb_full) || (File.mtime(thumb_full) < File.mtime(file_full))
         thumb_full_dir = File.dirname(thumb_full)
         FileUtils.mkdir_p(thumb_full_dir)
-        image = Magick::Image.read(file_full).first
+        image = Magick::Image.read("#{file_full}[0]").first
         image.format = 'JPG'
         image.change_geometry!('110X110') { |cols, rows| image.thumbnail! cols, rows }
         image.write(thumb_full)
@@ -44,12 +44,12 @@ class Medium < ActiveRecord::Base
   def self.fullsize_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
-    if mime_type.length == 1 && mime_type[0].sub_type != 'jpeg'
+    if mime_type.length >= 1 && mime_type[0].sub_type != 'jpeg'
       fullsize_full = File.join(Biografia::Application.config.cache_path, "fullsize#{file_name}.jpg")
       if !File.exist?(fullsize_full) || (File.mtime(fullsize_full) < File.mtime(file_full))
         fullsize_full_dir = File.dirname(fullsize_full)
         FileUtils.mkdir_p(fullsize_full_dir)
-        image = Magick::Image.read(file_full).first
+        image = Magick::Image.read("#{file_full}[0]").first
         image.format = 'JPG'
         image.write(fullsize_full)
       end
@@ -57,6 +57,14 @@ class Medium < ActiveRecord::Base
     end
 
     file_full
+  end
+
+  def raw
+    Medium.raw_for(file_name)
+  end
+
+  def self.raw_for(file_name)
+    File.join(Biografia::Application.config.protected_path, file_name)
   end
 
   def self.info_for(file_name)
@@ -253,9 +261,11 @@ class Medium < ActiveRecord::Base
       pio[:object] = pio[:object].all_attributes
       pio
     end
+    info = Medium.info_for(file_name)
     attributes.update({
                         _type_: 'Medium',
-                        positions_in_object: pio_attributes
+                        positions_in_object: pio_attributes,
+                        info:
                       }).update(extras)
   end
 

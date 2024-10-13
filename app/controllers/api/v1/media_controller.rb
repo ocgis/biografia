@@ -56,6 +56,11 @@ module Api
         send_file(medium.thumbnail)
       end
 
+      def raw
+        medium = Medium.find(params.require(:id))
+        send_file(medium.raw)
+      end
+
       def file_image
         file_name = params.require(:file)
         send_file(Medium.fullsize_for(file_name))
@@ -64,6 +69,11 @@ module Api
       def file_thumb
         file_name = params.require(:file)
         send_file(Medium.thumbnail_for(file_name))
+      end
+
+      def file_raw
+        file_name = params.require(:file)
+        send_file(Medium.raw_for(file_name))
       end
 
       protected
@@ -98,6 +108,8 @@ module Api
               nodes[full] = 1
             end
           end
+        rescue ArgumentError
+          puts "Could not handle path #{p[base_length..]}"
         end
 
         Dir.chdir(old_dir)
@@ -109,16 +121,14 @@ module Api
         old_dir = Dir.pwd
         Dir.chdir(path)
         files = []
-        Find.find('.') do |file|
-          re = /^#{Regexp.escape('./')}+/
-          file.gsub!(re, '')
+        Find.find('./') do |file|
+          file = file[2..]
           if File.symlink?(file)
             realfile = File.readlink(file)
             if File.directory?(realfile)
               old_dir2 = Dir.pwd
               Dir.chdir(realfile)
               search_dir('.').each do |sfile|
-                sfile.gsub!(re, '')
                 files.append("#{file}/#{sfile}")
               end
               Dir.chdir(old_dir2)

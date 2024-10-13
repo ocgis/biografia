@@ -5,7 +5,7 @@ import { FixedSizeGrid as Grid } from 'react-window';
 import { Descriptions, Dropdown, Menu } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import TopMenu from './TopMenu';
-import Image from './Image';
+import DisplayMedium from './DisplayMedium';
 import { apiUrl, webUrl } from './Mappings';
 import { errorText, getRequest, postRequest } from './Requests';
 
@@ -259,6 +259,9 @@ class SearchMedium extends React.Component {
         </Menu>
       );
 
+      const src = apiUrl('Medium', `file_image?file=${path}`);
+      const link = apiUrl('Medium', `file_raw?file=${path}`);
+
       return (
         <table>
           <tbody>
@@ -275,10 +278,12 @@ class SearchMedium extends React.Component {
               </td>
             </tr>
             <tr>
-              <td>
-                <Image
-                  src={apiUrl('Medium', `file_image?file=${path}`)}
+              <td aria-label="Display medium">
+                <DisplayMedium
+                  src={src}
                   alt={path}
+                  contentType={info.content_type}
+                  link={link}
                 />
               </td>
             </tr>

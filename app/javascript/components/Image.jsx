@@ -71,7 +71,7 @@ class Image extends React.Component {
   };
 
   render() {
-    const { src, alt } = this.props;
+    const { clickToResize, src, alt } = this.props;
     const { imgWidth, imgHeight } = this.state;
 
     if (imgWidth == null || imgHeight == null) {
@@ -86,22 +86,32 @@ class Image extends React.Component {
       );
     }
 
+    if (clickToResize) {
+      return (
+        <button
+          type="button"
+          onClick={this.onClick}
+          style={{
+            border: 'none',
+            padding: 0,
+          }}
+        >
+          <img
+            src={src}
+            alt={alt}
+            width={imgWidth}
+            height={imgHeight}
+          />
+        </button>
+      );
+    }
     return (
-      <button
-        type="button"
-        onClick={this.onClick}
-        style={{
-          border: 'none',
-          padding: 0,
-        }}
-      >
-        <img
-          src={src}
-          alt={alt}
-          width={imgWidth}
-          height={imgHeight}
-        />
-      </button>
+      <img
+        src={src}
+        alt={alt}
+        width={imgWidth}
+        height={imgHeight}
+      />
     );
   }
 }
@@ -109,10 +119,12 @@ class Image extends React.Component {
 Image.propTypes = {
   src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
+  clickToResize: PropTypes.bool,
   onResize: PropTypes.func,
 };
 
 Image.defaultProps = {
+  clickToResize: false,
   onResize: null,
 };
 
