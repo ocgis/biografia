@@ -118,35 +118,7 @@ module Api
       end
 
       def search_dir(path)
-        old_dir = Dir.pwd
-        Dir.chdir(path)
-        files = []
-        Find.find('./') do |file|
-          file = file[2..]
-          if File.symlink?(file)
-            realfile = File.readlink(file)
-            if File.directory?(realfile)
-              old_dir2 = Dir.pwd
-              Dir.chdir(realfile)
-              search_dir('.').each do |sfile|
-                files.append("#{file}/#{sfile}")
-              end
-              Dir.chdir(old_dir2)
-            else
-              files.append(file)
-            end
-          elsif File.file?(file)
-            files.append(file)
-          end
-        end
-        Dir.chdir(old_dir)
-
-        out_files = []
-        files.each do |file|
-          out_files.append("#{path}/#{file}")
-        end
-
-        out_files
+        `find -L '#{path}' -type f|sort`.b.split("\n")
       end
     end
   end
