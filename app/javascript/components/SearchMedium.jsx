@@ -2,12 +2,17 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
-import { Descriptions, Dropdown, Menu } from 'antd';
+import {
+  Descriptions, Dropdown, Input, Menu,
+} from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { debounce } from 'throttle-debounce';
 import TopMenu from './TopMenu';
 import DisplayMedium from './DisplayMedium';
 import { apiUrl, webUrl } from './Mappings';
 import { errorText, getRequest, postRequest } from './Requests';
+
+const { Search } = Input;
 
 function Info(props) {
   const { data } = props;
@@ -86,8 +91,10 @@ class SearchMedium extends React.Component {
     super(props);
     this.resetState();
     this.apiUrl = apiUrl('Medium');
+
     if (props.location.state !== null) {
-      this.state.scrollTop = props.location.state.scrollTop;
+      this.scrollTop = props.location.state.scrollTop;
+      this.filter = props.location.state.filter;
     }
   }
 
@@ -123,9 +130,21 @@ class SearchMedium extends React.Component {
     }
   };
 
+  saveNavigateState = () => {
+    const { location, navigate } = this.props;
+    const url = location.pathname + location.search;
+    const state = {
+      state: {
+        filter: this.filter,
+        scrollTop: this.scrollTop,
+      },
+      replace: true,
+    };
+    navigate(url, state);
+  };
+
   renderLeafs = (nodes) => {
-    const { divRef, height, scrollTop } = this.state;
-    const { navigate } = this.props;
+    const { divRef, height } = this.state;
     const leafs = Object.entries(nodes).filter(
       (item) => (item[1] == null),
     );
@@ -162,11 +181,10 @@ class SearchMedium extends React.Component {
               rowHeight={mediumHeight}
               width={window.innerWidth}
               onScroll={(p) => {
-                const { location } = this.props;
-                const url = location.pathname + location.search;
-                navigate(url, { state: { scrollTop: p.scrollTop }, replace: true });
+                this.scrollTop = p.scrollTop;
+                this.saveNavigateState();
               }}
-              initialScrollTop={scrollTop}
+              initialScrollTop={this.scrollTop}
             >
               {renderCell}
             </Grid>
@@ -230,8 +248,6 @@ class SearchMedium extends React.Component {
   };
 
   loadData() {
-    const { location: { search } } = this.props;
-
     const handleResponse = (response) => {
       const newState = {
         currentUser: response.data.current_user,
@@ -254,7 +270,9 @@ class SearchMedium extends React.Component {
       this.setState({ error: errorText(error) });
     };
 
-    getRequest(`${this.apiUrl}/search${search}`, handleResponse, handleError);
+    const { location: { search } } = this.props;
+
+    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}`, handleResponse, handleError);
   }
 
   resetState() {
@@ -262,11 +280,18 @@ class SearchMedium extends React.Component {
       currentUser: null,
       divRef: createRef(),
       error: null,
-      scrollTop: 0,
     };
+    this.filter = '';
+    this.scrollTop = 0;
   }
 
   render() {
+    const updateFilter = debounce(500, (data) => {
+      this.filter = data.target.value;
+      this.saveNavigateState();
+      this.loadData();
+    });
+
     const {
       currentUser, error, nodes, type, path, info,
     } = this.state;
@@ -289,6 +314,8 @@ class SearchMedium extends React.Component {
             <tr>
               <td aria-label="Top menu">
                 <TopMenu currentUser={currentUser} />
+                <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
+                <PathSelector path={path} />
               </td>
             </tr>
             <tr>
@@ -330,19 +357,19 @@ class SearchMedium extends React.Component {
       return (
         <div>
           <TopMenu />
+          <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
           { error
-           && (
-             { error }
-           )}
+            && (
+              { error }
+            )}
         </div>
       );
     }
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        <PathSelector
-          path={path}
-        />
+        <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
+        <PathSelector path={path} />
         <br />
         {this.renderNodes(nodes)}
         {this.renderLeafs(nodes)}
