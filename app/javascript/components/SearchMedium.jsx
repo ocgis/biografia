@@ -61,6 +61,26 @@ Info.defaultProps = {
   data: null,
 };
 
+function PathSelector(props) {
+  const { path } = props;
+
+  const dirs = path.split('/');
+  let fullPath = '';
+  const paths = dirs.map((d) => {
+    fullPath = fullPath.concat(`${d}/`);
+    return {
+      dir: d,
+      path: fullPath.slice(0, -1),
+    };
+  });
+
+  return paths.map((p) => (
+    <Link to={`?path=${p.path}`} key={p.path}>
+      {`${p.dir}/`}
+    </Link>
+  ));
+}
+
 class SearchMedium extends React.Component {
   constructor(props) {
     super(props);
@@ -221,6 +241,7 @@ class SearchMedium extends React.Component {
         info: null,
       };
       if (newState.type === 'directory') {
+        newState.path = response.data.path;
         newState.nodes = response.data.nodes;
       } else if (newState.type === 'file') {
         newState.path = response.data.path;
@@ -319,6 +340,10 @@ class SearchMedium extends React.Component {
     return (
       <div>
         <TopMenu currentUser={currentUser} />
+        <PathSelector
+          path={path}
+        />
+        <br />
         {this.renderNodes(nodes)}
         {this.renderLeafs(nodes)}
         { error

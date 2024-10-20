@@ -20,6 +20,7 @@ module Api
         if File.directory? File.join(Biografia::Application.config.protected_path, path)
           nodes = get_dir_nodes(path)
           render json: { type: 'directory',
+                         path:,
                          nodes: }
         else
           info = Medium.info_for(path)
