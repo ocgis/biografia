@@ -55,7 +55,6 @@ gem 'acts_as_list'
 # Used for xml parsing
 gem 'nokogiri'
 
-gem 'rmagick'
 
 gem 'exiftool'
 
@@ -95,3 +94,5 @@ gem 'webpacker'
 
 gem 'stringio', '= 3.0.1'
 gem 'strscan', '= 3.0.1'
+
+gem "rmagick", "~> 6.0"
