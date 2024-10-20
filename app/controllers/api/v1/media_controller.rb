@@ -96,9 +96,9 @@ module Api
         paths = search_dir(path) - file_media
         nodes = {}
 
-        base_length = path.length + 1
+        base_parts = path.split('/')
         paths.each do |p|
-          parts = p[base_length..].split('/')
+          parts = p.split('/')[base_parts.length..]
           if parts.length == 1 # File
             nodes[p] = nil
           else
