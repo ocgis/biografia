@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
-  Descriptions, Dropdown, Input, Menu,
+  Descriptions, Dropdown, Input, Menu, Select,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
@@ -95,6 +95,7 @@ class SearchMedium extends React.Component {
     if (props.location.state !== null) {
       this.scrollTop = props.location.state.scrollTop;
       this.filter = props.location.state.filter;
+      this.show = props.location.state.show;
     }
   }
 
@@ -137,6 +138,7 @@ class SearchMedium extends React.Component {
       state: {
         filter: this.filter,
         scrollTop: this.scrollTop,
+        show: this.show,
       },
       replace: true,
     };
@@ -272,7 +274,7 @@ class SearchMedium extends React.Component {
 
     const { location: { search } } = this.props;
 
-    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}`, handleResponse, handleError);
+    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}&show=${this.show}`, handleResponse, handleError);
   }
 
   resetState() {
@@ -283,6 +285,7 @@ class SearchMedium extends React.Component {
     };
     this.filter = '';
     this.scrollTop = 0;
+    this.show = 'unregistered';
   }
 
   render() {
@@ -292,10 +295,21 @@ class SearchMedium extends React.Component {
       this.loadData();
     });
 
+    const updateShow = (value) => {
+      this.show = value;
+      this.saveNavigateState();
+      this.loadData();
+    };
+
     const {
       currentUser, error, nodes, type, path, info,
     } = this.state;
 
+    const showOptions = [
+      { value: 'unregistered', label: 'Unregistered' },
+      { value: 'all', label: 'All' },
+      { value: 'registered', label: 'Registered' },
+    ];
     if (type === 'file') {
       const menu = (
         <Menu onClick={() => this.registerImage()}>
@@ -314,6 +328,7 @@ class SearchMedium extends React.Component {
             <tr>
               <td aria-label="Top menu">
                 <TopMenu currentUser={currentUser} />
+                <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
                 <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
                 <PathSelector path={path} />
               </td>
@@ -357,6 +372,7 @@ class SearchMedium extends React.Component {
       return (
         <div>
           <TopMenu />
+          <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
           <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
           { error
             && (
@@ -368,6 +384,7 @@ class SearchMedium extends React.Component {
     return (
       <div>
         <TopMenu currentUser={currentUser} />
+        <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
         <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
         <PathSelector path={path} />
         <br />

@@ -17,12 +17,14 @@ module Api
       def search
         path = params[:path] || 'files'
         filter = params[:filter] || nil
+        show = params[:show]
 
         if File.directory? File.join(Biografia::Application.config.protected_path, path)
-          nodes = get_dir_nodes(path, filter)
+          nodes = get_dir_nodes(path, filter, show)
           render json: { type: 'directory',
                          path:,
                          nodes: }
+          puts nodes.inspect
         else
           info = Medium.info_for(path)
           puts info.inspect
@@ -90,11 +92,19 @@ module Api
 
       private
 
-      def get_dir_nodes(path, filter)
+      def get_dir_nodes(path, filter, show)
         old_dir = Dir.pwd
         Dir.chdir(Biografia::Application.config.protected_path)
-        file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name')
-        paths = search_dir(path, filter) - file_media
+        file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name').map(&:b)
+        paths =
+          case show
+          when 'all'
+            search_dir(path, filter)
+          when 'registered'
+            file_media
+          else
+            search_dir(path, filter) - file_media
+          end
 
         nodes = {}
 
