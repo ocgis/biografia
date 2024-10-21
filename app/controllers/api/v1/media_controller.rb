@@ -16,18 +16,17 @@ module Api
 
       def search
         path = params[:path] || 'files'
-        filter = params[:filter] || nil
-        show = params[:show]
+        filter = params[:filter] || ''
+        show = params[:show] || 'unregistered'
+        flatten = params[:flatten] == 'true'
 
         if File.directory? File.join(Biografia::Application.config.protected_path, path)
-          nodes = get_dir_nodes(path, filter, show)
+          nodes = get_dir_nodes(path, filter, show, flatten)
           render json: { type: 'directory',
                          path:,
                          nodes: }
-          puts nodes.inspect
         else
           info = Medium.info_for(path)
-          puts info.inspect
           render json: { type: 'file',
                          path:,
                          info: }
@@ -92,7 +91,7 @@ module Api
 
       private
 
-      def get_dir_nodes(path, filter, show)
+      def get_dir_nodes(path, filter, show, flatten)
         old_dir = Dir.pwd
         Dir.chdir(Biografia::Application.config.protected_path)
         file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name').map(&:b)
@@ -110,15 +109,19 @@ module Api
 
         base_parts = path.split('/')
         paths.each do |p|
-          parts = p.split('/')[base_parts.length..]
-          if parts.length == 1 # File
+          if flatten
             nodes[p] = nil
           else
-            full = "#{path}/#{parts[0]}"
-            if nodes.key?(full)
-              nodes[full] += 1
+            parts = p.split('/')[base_parts.length..]
+            if parts.length == 1 # File
+              nodes[p] = nil
             else
-              nodes[full] = 1
+              full = "#{path}/#{parts[0]}"
+              if nodes.key?(full)
+                nodes[full] += 1
+              else
+                nodes[full] = 1
+              end
             end
           end
         rescue ArgumentError

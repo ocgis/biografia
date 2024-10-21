@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
-  Descriptions, Dropdown, Input, Menu, Select,
+  Checkbox, Descriptions, Dropdown, Input, Menu, Select,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
@@ -89,13 +89,24 @@ function PathSelector(props) {
 class SearchMedium extends React.Component {
   constructor(props) {
     super(props);
-    this.resetState();
+
+    this.state = {
+      currentUser: null,
+      divRef: createRef(),
+      error: null,
+    };
+    this.filter = '';
+    this.scrollTop = 0;
+    this.show = 'unregistered';
+    this.flatten = false;
+
     this.apiUrl = apiUrl('Medium');
 
     if (props.location.state !== null) {
       this.scrollTop = props.location.state.scrollTop;
       this.filter = props.location.state.filter;
       this.show = props.location.state.show;
+      this.flatten = props.location.state.flatten;
     }
   }
 
@@ -139,6 +150,7 @@ class SearchMedium extends React.Component {
         filter: this.filter,
         scrollTop: this.scrollTop,
         show: this.show,
+        flatten: this.flatten,
       },
       replace: true,
     };
@@ -274,18 +286,7 @@ class SearchMedium extends React.Component {
 
     const { location: { search } } = this.props;
 
-    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}&show=${this.show}`, handleResponse, handleError);
-  }
-
-  resetState() {
-    this.state = {
-      currentUser: null,
-      divRef: createRef(),
-      error: null,
-    };
-    this.filter = '';
-    this.scrollTop = 0;
-    this.show = 'unregistered';
+    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}&show=${this.show}&flatten=${this.flatten}`, handleResponse, handleError);
   }
 
   render() {
@@ -297,6 +298,12 @@ class SearchMedium extends React.Component {
 
     const updateShow = (value) => {
       this.show = value;
+      this.saveNavigateState();
+      this.loadData();
+    };
+
+    const updateFlatten = (value) => {
+      this.flatten = value.target.checked;
       this.saveNavigateState();
       this.loadData();
     };
@@ -328,8 +335,6 @@ class SearchMedium extends React.Component {
             <tr>
               <td aria-label="Top menu">
                 <TopMenu currentUser={currentUser} />
-                <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
-                <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
                 <PathSelector path={path} />
               </td>
             </tr>
@@ -368,28 +373,44 @@ class SearchMedium extends React.Component {
       );
     }
 
-    if (nodes == null) {
-      return (
-        <div>
-          <TopMenu />
-          <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
-          <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
-          { error
-            && (
-              { error }
-            )}
-        </div>
+    let nodesAndLeafs = null;
+    if (nodes != null) {
+      nodesAndLeafs = (
+        <>
+          {this.renderNodes(nodes)}
+          {this.renderLeafs(nodes)}
+        </>
       );
     }
+
     return (
       <div>
         <TopMenu currentUser={currentUser} />
-        <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
-        <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
-        <PathSelector path={path} />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <Checkbox onChange={updateFlatten} defaultChecked={this.flatten}>Flatten</Checkbox>
+              </td>
+              <td aria-label="Show">
+                <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
+              </td>
+              <td aria-label="Filter">
+                <Search placeholder="filtrera" defaultValue={this.filter} onChange={updateFilter} />
+              </td>
+            </tr>
+            {path
+            && (
+              <tr>
+                <td aria-label="Path">
+                  <PathSelector path={path} />
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
         <br />
-        {this.renderNodes(nodes)}
-        {this.renderLeafs(nodes)}
+        {nodesAndLeafs}
         { error
           && (
             { error }
