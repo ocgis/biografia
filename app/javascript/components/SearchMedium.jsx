@@ -1,16 +1,16 @@
 import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
-  Checkbox, Descriptions, Dropdown, Input, Menu, Select,
+  Button, Checkbox, Descriptions, Dropdown, Input, Menu, Select,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
 import TopMenu from './TopMenu';
 import DisplayMedium from './DisplayMedium';
 import { apiUrl, webUrl } from './Mappings';
-import { errorText, getRequest, postRequest } from './Requests';
+import { errorText, postRequest } from './Requests';
 
 const { Search } = Input;
 
@@ -67,7 +67,7 @@ Info.defaultProps = {
 };
 
 function PathSelector(props) {
-  const { path } = props;
+  const { path, updatePath } = props;
 
   const dirs = path.split('/');
   let fullPath = '';
@@ -80,9 +80,9 @@ function PathSelector(props) {
   });
 
   return paths.map((p) => (
-    <Link to={`?path=${p.path}`} key={p.path}>
+    <Button type="link" onClick={() => updatePath(p.path)} key={p.path} style={{ padding: 0 }}>
       {`${p.dir}/`}
-    </Link>
+    </Button>
   ));
 }
 
@@ -99,6 +99,7 @@ class SearchMedium extends React.Component {
     this.scrollTop = 0;
     this.show = 'unregistered';
     this.flatten = false;
+    this.path = 'files';
 
     this.apiUrl = apiUrl('Medium');
 
@@ -107,6 +108,7 @@ class SearchMedium extends React.Component {
       this.filter = props.location.state.filter;
       this.show = props.location.state.show;
       this.flatten = props.location.state.flatten;
+      this.path = props.location.state.path;
     }
   }
 
@@ -144,96 +146,18 @@ class SearchMedium extends React.Component {
 
   saveNavigateState = () => {
     const { location, navigate } = this.props;
-    const url = location.pathname + location.search;
+    const url = location.pathname;
     const state = {
       state: {
         filter: this.filter,
         scrollTop: this.scrollTop,
         show: this.show,
         flatten: this.flatten,
+        path: this.path,
       },
       replace: true,
     };
     navigate(url, state);
-  };
-
-  renderLeafs = (nodes) => {
-    const { divRef, height } = this.state;
-    const leafs = Object.entries(nodes).filter(
-      (item) => (item[1] == null),
-    );
-
-    const mediumWidth = 120;
-    const mediumHeight = 120;
-    const width = window.innerWidth;
-    const columnCount = Math.trunc(width / mediumWidth);
-    const rowCount = Math.trunc((leafs.length + columnCount - 1) / columnCount);
-
-    const renderCell = ({ columnIndex, rowIndex, style }) => {
-      const index = columnIndex + rowIndex * columnCount;
-      return (
-        <div
-          style={style}
-        >
-          {
-            index < leafs.length
-            && this.renderNode(leafs[index][0], leafs[index][1])
-          }
-        </div>
-      );
-    };
-
-    return (
-      <div ref={divRef}>
-        { height != null
-          && (
-            <Grid
-              columnCount={columnCount}
-              columnWidth={mediumWidth}
-              height={height}
-              rowCount={rowCount}
-              rowHeight={mediumHeight}
-              width={window.innerWidth}
-              onScroll={(p) => {
-                this.scrollTop = p.scrollTop;
-                this.saveNavigateState();
-              }}
-              initialScrollTop={this.scrollTop}
-            >
-              {renderCell}
-            </Grid>
-          )}
-      </div>
-    );
-  };
-
-  renderNodes = (nodes) => (
-    Object.entries(nodes).filter(
-      (item) => (item[1] != null),
-    ).map(
-      ([path, number]) => this.renderNode(path, number),
-    )
-  );
-
-  renderNode = (path, number) => {
-    if (number == null) {
-      return (
-        <Link to={{ search: `?path=${path}` }}>
-          <img
-            src={apiUrl('Medium', `file_thumb?file=${path}`)}
-            alt={path}
-          />
-        </Link>
-      );
-    }
-    return (
-      <React.Fragment key={path}>
-        <Link to={{ search: `?path=${path}` }}>
-          {`${path} (${number})`}
-        </Link>
-        <br />
-      </React.Fragment>
-    );
   };
 
   registerImage = () => {
@@ -284,9 +208,17 @@ class SearchMedium extends React.Component {
       this.setState({ error: errorText(error) });
     };
 
-    const { location: { search } } = this.props;
-
-    getRequest(`${this.apiUrl}/search${search}&filter=${this.filter}&show=${this.show}&flatten=${this.flatten}`, handleResponse, handleError);
+    postRequest(
+      `${this.apiUrl}/search`,
+      {
+        path: this.path,
+        filter: this.filter,
+        show: this.show,
+        flatten: this.flatten,
+      },
+      handleResponse,
+      handleError,
+    );
   }
 
   render() {
@@ -306,6 +238,91 @@ class SearchMedium extends React.Component {
       this.flatten = value.target.checked;
       this.saveNavigateState();
       this.loadData();
+    };
+
+    const updatePath = (path) => {
+      this.path = path;
+      this.saveNavigateState();
+      this.loadData();
+    };
+
+    const renderNode = (path, number) => {
+      if (number == null) {
+        return (
+          <Button type="link" onClick={() => updatePath(path)} key={path} style={{ padding: 0 }}>
+            <img
+              src={apiUrl('Medium', `file_thumb?file=${path}`)}
+              alt={path}
+            />
+          </Button>
+        );
+      }
+      return (
+        <React.Fragment key={path}>
+          <Button type="link" onClick={() => updatePath(path)} key={path} style={{ padding: 0 }}>
+            {`${path} (${number})`}
+          </Button>
+          <br />
+        </React.Fragment>
+      );
+    };
+
+    const renderNodes = (nodes) => (
+      Object.entries(nodes).filter(
+        (item) => (item[1] != null),
+      ).map(
+        ([path, number]) => renderNode(path, number),
+      )
+    );
+
+    const renderLeafs = (nodes) => {
+      const { divRef, height } = this.state;
+      const leafs = Object.entries(nodes).filter(
+        (item) => (item[1] == null),
+      );
+
+      const mediumWidth = 120;
+      const mediumHeight = 120;
+      const width = window.innerWidth;
+      const columnCount = Math.trunc(width / mediumWidth);
+      const rowCount = Math.trunc((leafs.length + columnCount - 1) / columnCount);
+
+      const renderCell = ({ columnIndex, rowIndex, style }) => {
+        const index = columnIndex + rowIndex * columnCount;
+        return (
+          <div
+            style={style}
+          >
+            {
+              index < leafs.length
+              && renderNode(leafs[index][0], leafs[index][1])
+            }
+          </div>
+        );
+      };
+
+      return (
+        <div ref={divRef}>
+          { height != null
+            && (
+              <Grid
+                columnCount={columnCount}
+                columnWidth={mediumWidth}
+                height={height}
+                rowCount={rowCount}
+                rowHeight={mediumHeight}
+                width={window.innerWidth}
+                onScroll={(p) => {
+                  this.scrollTop = p.scrollTop;
+                  this.saveNavigateState();
+                }}
+                initialScrollTop={this.scrollTop}
+              >
+                {renderCell}
+              </Grid>
+            )}
+        </div>
+      );
     };
 
     const {
@@ -335,7 +352,7 @@ class SearchMedium extends React.Component {
             <tr>
               <td aria-label="Top menu">
                 <TopMenu currentUser={currentUser} />
-                <PathSelector path={path} />
+                <PathSelector path={path} updatePath={updatePath} />
               </td>
             </tr>
             <tr>
@@ -362,10 +379,7 @@ class SearchMedium extends React.Component {
             </tr>
             <tr>
               <td>
-                { error
-                  && (
-                    { error }
-                  )}
+                { error && error }
               </td>
             </tr>
           </tbody>
@@ -377,8 +391,8 @@ class SearchMedium extends React.Component {
     if (nodes != null) {
       nodesAndLeafs = (
         <>
-          {this.renderNodes(nodes)}
-          {this.renderLeafs(nodes)}
+          {renderNodes(nodes)}
+          {renderLeafs(nodes)}
         </>
       );
     }
@@ -403,7 +417,7 @@ class SearchMedium extends React.Component {
             && (
               <tr>
                 <td aria-label="Path">
-                  <PathSelector path={path} />
+                  <PathSelector path={path} updatePath={updatePath} />
                 </td>
               </tr>
             )}
@@ -411,10 +425,7 @@ class SearchMedium extends React.Component {
         </table>
         <br />
         {nodesAndLeafs}
-        { error
-          && (
-            { error }
-          )}
+        { error && error }
       </div>
     );
   }

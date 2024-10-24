@@ -22,7 +22,7 @@ Biografia::Application.routes.draw do
           get :file_thumb
           get :file_image
           get :file_raw
-          get :search
+          post :search
           post :register
         end
         member do

@@ -18,7 +18,7 @@ module Api
         path = params[:path] || 'files'
         filter = params[:filter] || ''
         show = params[:show] || 'unregistered'
-        flatten = params[:flatten] == 'true'
+        flatten = params[:flatten] || false
 
         if File.directory? File.join(Biografia::Application.config.protected_path, path)
           nodes = get_dir_nodes(path, filter, show, flatten)
