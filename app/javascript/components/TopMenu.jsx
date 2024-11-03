@@ -110,6 +110,7 @@ function TopMenu(props) {
               </Menu.Item>
             </SubMenu>
             <SubMenu
+              key="events"
               title="Händelser"
               onTitleClick={() => navigate(webUrl('Event'))}
               onClick={menuClicked}
@@ -124,7 +125,7 @@ function TopMenu(props) {
               onTitleClick={() => navigate(webUrl('Medium'))}
               onClick={menuClicked}
             >
-              <Menu.Item>
+              <Menu.Item key="addMedia">
                 Lägg till
               </Menu.Item>
               <Menu.Item key="searchMediaLocally">
@@ -151,8 +152,12 @@ function TopMenu(props) {
                 Lägg till
               </Menu.Item>
             </SubMenu>
-            <SubMenu title="Överföringar" onTitleClick={() => navigate(webUrl('Transfer'))}>
-              <Menu.Item>
+            <SubMenu
+              key="transfers"
+              title="Överföringar"
+              onTitleClick={() => navigate(webUrl('Transfer'))}
+            >
+              <Menu.Item key="transferFile">
                 Överför fil
               </Menu.Item>
             </SubMenu>
@@ -166,10 +171,10 @@ function TopMenu(props) {
                 Exportera fil
               </Menu.Item>
             </SubMenu>
-            <Menu.Item>
+            <Menu.Item key="user">
               <Link to={webUrl('User')}>Användare</Link>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item key="signOut">
               <a href="/users/sign_out" data-method="delete">Logga ut</a>
             </Menu.Item>
           </Menu>
