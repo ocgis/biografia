@@ -8,8 +8,6 @@ import {
 setMapping('Reference', 'oneName', 'reference');
 setMapping('Reference', 'manyName', 'references');
 
-const { TabPane } = Tabs;
-
 function RenderElement(props) {
   const {
     currentUser, element, kind, reload,
@@ -60,37 +58,40 @@ function ShowReferences(props) {
 
   const ShowObject = showObject(object._type_);
 
+  const tabItems = [{
+    key: 'overview',
+    label: 'Översikt',
+    children: (
+      <ShowObject
+        mode="overview"
+        object={object}
+        currentUser={currentUser}
+        reload={reload}
+      />
+    ),
+  }].concat(Object.keys(related).filter((key) => related[key].length > 0).map((key) => {
+    const ShowObjects = showObjects(key);
+
+    return ({
+      key,
+      label: tabHeader(key),
+      children: (
+        <ShowObjects
+          parent={object}
+          objects={related[key]}
+          reload={reload}
+          currentUser={currentUser}
+        />
+      ),
+    });
+  }));
+
   return (
     <Tabs
       onChange={onChange}
       activeKey={state.activeKey || 'overview'}
-    >
-      <TabPane tab="Översikt" key="overview">
-        <ShowObject
-          mode="overview"
-          object={object}
-          currentUser={currentUser}
-          reload={reload}
-        />
-      </TabPane>
-      {Object.keys(related).map((key) => {
-        if (related[key].length > 0) {
-          const ShowObjects = showObjects(key);
-
-          return (
-            <TabPane tab={tabHeader(key)} key={key}>
-              <ShowObjects
-                parent={object}
-                objects={related[key]}
-                reload={reload}
-                currentUser={currentUser}
-              />
-            </TabPane>
-          );
-        }
-        return null;
-      })}
-    </Tabs>
+      items={tabItems}
+    />
   );
 }
 
