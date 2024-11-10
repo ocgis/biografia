@@ -95,21 +95,16 @@ class SearchMedium extends React.Component {
       divRef: createRef(),
       error: null,
     };
-    this.filter = '';
-    this.scrollTop = 0;
-    this.show = 'unregistered';
-    this.flatten = false;
-    this.path = 'files';
 
     this.apiUrl = apiUrl('Medium');
 
-    if (props.location.state !== null) {
-      this.scrollTop = props.location.state.scrollTop;
-      this.filter = props.location.state.filter;
-      this.show = props.location.state.show;
-      this.flatten = props.location.state.flatten;
-      this.path = props.location.state.path;
-    }
+    const locationState = props.location.state || {};
+    this.scrollTop = locationState.scrollTop || 0;
+    this.filter = locationState.filter || '';
+    this.show = locationState.show || 'unregistered';
+    this.flatten = locationState.flatten || false;
+    this.path = locationState.path || 'files';
+    this.state.selectedPaths = locationState.selectedPaths || [];
   }
 
   componentDidMount() {
@@ -146,6 +141,7 @@ class SearchMedium extends React.Component {
 
   saveNavigateState = () => {
     const { location, navigate } = this.props;
+    const { selectedPaths } = this.state;
     const url = location.pathname;
     const state = {
       state: {
@@ -154,6 +150,7 @@ class SearchMedium extends React.Component {
         show: this.show,
         flatten: this.flatten,
         path: this.path,
+        selectedPaths,
       },
       replace: true,
     };
@@ -246,15 +243,67 @@ class SearchMedium extends React.Component {
       this.loadData();
     };
 
+    const selectPath = (path) => {
+      this.setState((prevState) => ({
+        selectedPaths: prevState.selectedPaths.concat(path),
+      }));
+    };
+
+    const unselectPath = (path) => {
+      this.setState((prevState) => ({
+        selectedPaths: prevState.selectedPaths.filter((element) => element !== path),
+      }));
+    };
+
+    const renderSelectUnselect = (path) => {
+      const { selectedPaths } = this.state;
+
+      const index = selectedPaths.findIndex((element) => element === path);
+      if (index >= 0) {
+        return (
+          <button
+            type="button"
+            className="selected"
+            style={{ position: 'absolute' }}
+            onClick={() => unselectPath(path)}
+          >
+            {index + 1}
+          </button>
+        );
+      }
+      return (
+        <button
+          type="button"
+          className="unselected"
+          style={{ position: 'absolute' }}
+          onClick={() => selectPath(path)}
+        >
+          #
+        </button>
+      );
+    };
+
     const renderNode = (path, number) => {
       if (number == null) {
+        const { selectable } = this.props;
         return (
-          <Button type="link" onClick={() => updatePath(path)} key={path} style={{ padding: 0 }}>
-            <img
-              src={apiUrl('Medium', `file_thumb?file=${path}`)}
-              alt={path}
-            />
-          </Button>
+          <div>
+            <Button
+              type="link"
+              onClick={() => updatePath(path)}
+              key={path}
+              style={{
+                padding: 0,
+                position: 'absolute',
+              }}
+            >
+              <img
+                src={apiUrl('Medium', `file_thumb?file=${path}`)}
+                alt={path}
+              />
+            </Button>
+            { selectable && renderSelectUnselect(path) }
+          </div>
         );
       }
       return (
@@ -434,9 +483,13 @@ SearchMedium.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
     pathname: PropTypes.string.isRequired,
-    state: PropTypes.shape().isRequired,
+    state: PropTypes.shape(),
   }).isRequired,
   navigate: PropTypes.func.isRequired,
+  selectable: PropTypes.bool,
+};
+SearchMedium.defaultProps = {
+  selectable: false,
 };
 
 export default function wrapper() {
