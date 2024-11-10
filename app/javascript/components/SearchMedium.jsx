@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
-  Button, Checkbox, Descriptions, Dropdown, Input, Menu, Select,
+  Button, Checkbox, Descriptions, Dropdown, Input, Select,
 } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
@@ -384,13 +384,17 @@ class SearchMedium extends React.Component {
       { value: 'registered', label: 'Registered' },
     ];
     if (type === 'file') {
-      const menu = (
-        <Menu onClick={() => this.registerImage()}>
-          <Menu.Item key="add">
-            Lägg till
-          </Menu.Item>
-        </Menu>
-      );
+      const menu = {
+        items: [{
+          key: 'add',
+          label: 'Lägg till',
+        }],
+        onClick: ((element) => {
+          if (element.key === 'add') {
+            this.registerImage();
+          }
+        }),
+      };
 
       const src = apiUrl('Medium', `file_image?file=${path}`);
       const link = apiUrl('Medium', `file_raw?file=${path}`);
@@ -406,7 +410,7 @@ class SearchMedium extends React.Component {
             </tr>
             <tr>
               <td aria-label="Options menu">
-                <Dropdown overlay={menu} trigger="click">
+                <Dropdown menu={menu} trigger="click">
                   <PlusCircleOutlined />
                 </Dropdown>
               </td>

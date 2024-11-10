@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   LinkOutlined, MessageOutlined, PlusCircleOutlined, TagOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Menu, Modal } from 'antd';
+import { Dropdown, Modal } from 'antd';
 import AddReference from './AddReference';
 import Merge from './Merge';
 import TagMedium from './TagMedium';
@@ -210,14 +210,14 @@ function Modifier(props) {
     });
   };
 
-  const menu = (
-    <Menu onClick={menuItemClicked}>
-      { itemList.map((item) => (<Menu.Item key={item.key}>{item.text}</Menu.Item>)) }
-    </Menu>
-  );
+  const menu = {
+    items: itemList.map((item) => ({ key: item.key, label: item.text })),
+    onClick: menuItemClicked,
+  };
+
   return (
     <td>
-      <Dropdown overlay={menu} trigger="click">
+      <Dropdown menu={menu} trigger="click">
         <PlusCircleOutlined />
       </Dropdown>
       <LinkOutlined onClick={addReferenceClicked} />
