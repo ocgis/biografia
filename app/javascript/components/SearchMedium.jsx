@@ -86,6 +86,77 @@ function PathSelector(props) {
   ));
 }
 
+function HandleOneMedium(props) {
+  const {
+    path, updatePath, registerImage, currentUser, info, error,
+  } = props;
+  const menu = {
+    items: [{
+      key: 'add',
+      label: 'Lägg till',
+    }],
+    onClick: ((element) => {
+      if (element.key === 'add') {
+        registerImage();
+      }
+    }),
+  };
+
+  const src = apiUrl('Medium', `file_image?file=${path}`);
+  const link = apiUrl('Medium', `file_raw?file=${path}`);
+
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td aria-label="Top menu">
+            <TopMenu currentUser={currentUser} />
+            <PathSelector path={path} updatePath={updatePath} />
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="Options menu">
+            <Dropdown menu={menu} trigger="click">
+              <PlusCircleOutlined />
+            </Dropdown>
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="Display medium">
+            <DisplayMedium
+              src={src}
+              alt={path}
+              contentType={info.content_type}
+              link={link}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="Information">
+            <Info data={info} />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            { error && error }
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
+HandleOneMedium.propTypes = {
+  path: PropTypes.string.isRequired,
+  info: PropTypes.shape().isRequired,
+  updatePath: PropTypes.func.isRequired,
+  registerImage: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape().isRequired,
+  error: PropTypes.string,
+};
+HandleOneMedium.defaultProps = {
+  error: null,
+};
+
 class SearchMedium extends React.Component {
   constructor(props) {
     super(props);
@@ -384,59 +455,15 @@ class SearchMedium extends React.Component {
       { value: 'registered', label: 'Registered' },
     ];
     if (type === 'file') {
-      const menu = {
-        items: [{
-          key: 'add',
-          label: 'Lägg till',
-        }],
-        onClick: ((element) => {
-          if (element.key === 'add') {
-            this.registerImage();
-          }
-        }),
-      };
-
-      const src = apiUrl('Medium', `file_image?file=${path}`);
-      const link = apiUrl('Medium', `file_raw?file=${path}`);
-
       return (
-        <table>
-          <tbody>
-            <tr>
-              <td aria-label="Top menu">
-                <TopMenu currentUser={currentUser} />
-                <PathSelector path={path} updatePath={updatePath} />
-              </td>
-            </tr>
-            <tr>
-              <td aria-label="Options menu">
-                <Dropdown menu={menu} trigger="click">
-                  <PlusCircleOutlined />
-                </Dropdown>
-              </td>
-            </tr>
-            <tr>
-              <td aria-label="Display medium">
-                <DisplayMedium
-                  src={src}
-                  alt={path}
-                  contentType={info.content_type}
-                  link={link}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td aria-label="Information">
-                <Info data={info} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                { error && error }
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <HandleOneMedium
+          path={path}
+          info={info}
+          registerImage={this.registerImage}
+          currentUser={currentUser}
+          updatePath={updatePath}
+          error={error}
+        />
       );
     }
 
