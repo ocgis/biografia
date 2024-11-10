@@ -61,7 +61,7 @@ function TopMenu(props) {
     return (
       <Modal
         title={modal.title}
-        visible
+        open
         closable={false}
         footer={null}
       >

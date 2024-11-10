@@ -192,7 +192,7 @@ function Modifier(props) {
         return (
           <Modal
             title={title}
-            visible
+            open
             closable={false}
             footer={null}
             key={item.key}
