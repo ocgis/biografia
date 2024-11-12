@@ -88,7 +88,7 @@ function PathSelector(props) {
 
 function HandleOneMedium(props) {
   const {
-    path, updatePath, registerImage, currentUser, info, error,
+    path, updatePath, registerImage, info, error,
   } = props;
   const menu = {
     items: [{
@@ -110,7 +110,7 @@ function HandleOneMedium(props) {
       <tbody>
         <tr>
           <td aria-label="Top menu">
-            <TopMenu currentUser={currentUser} />
+            <TopMenu />
             <PathSelector path={path} updatePath={updatePath} />
           </td>
         </tr>
@@ -150,7 +150,6 @@ HandleOneMedium.propTypes = {
   info: PropTypes.shape().isRequired,
   updatePath: PropTypes.func.isRequired,
   registerImage: PropTypes.func.isRequired,
-  currentUser: PropTypes.shape().isRequired,
   error: PropTypes.string,
 };
 HandleOneMedium.defaultProps = {
@@ -162,7 +161,6 @@ class SearchMedium extends React.Component {
     super(props);
 
     this.state = {
-      currentUser: null,
       divRef: createRef(),
       error: null,
     };
@@ -256,7 +254,6 @@ class SearchMedium extends React.Component {
   loadData() {
     const handleResponse = (response) => {
       const newState = {
-        currentUser: response.data.current_user,
         type: response.data.type,
         path: null,
         nodes: null,
@@ -446,7 +443,7 @@ class SearchMedium extends React.Component {
     };
 
     const {
-      currentUser, error, nodes, type, path, info,
+      error, nodes, type, path, info,
     } = this.state;
 
     const showOptions = [
@@ -460,7 +457,6 @@ class SearchMedium extends React.Component {
           path={path}
           info={info}
           registerImage={this.registerImage}
-          currentUser={currentUser}
           updatePath={updatePath}
           error={error}
         />
@@ -479,7 +475,7 @@ class SearchMedium extends React.Component {
 
     return (
       <div>
-        <TopMenu currentUser={currentUser} />
+        <TopMenu />
         <table>
           <tbody>
             <tr>

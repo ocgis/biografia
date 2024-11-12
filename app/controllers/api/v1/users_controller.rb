@@ -17,6 +17,11 @@ module Api
                        current_user: @current_user_hash }
       end
 
+      def current
+        render json: { currentUser: { name: current_user.name,
+                                      roles: current_user.roles } }
+      end
+
       protected
 
       def find_object

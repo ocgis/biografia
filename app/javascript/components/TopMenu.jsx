@@ -8,7 +8,10 @@ import {
   Modal,
   Row,
 } from 'antd';
-import { editObject, oneName, webUrl } from './Mappings';
+import {
+  apiUrl, editObject, oneName, webUrl,
+} from './Mappings';
+import { errorText, getRequest } from './Requests';
 
 const { SubMenu } = Menu;
 
@@ -196,4 +199,49 @@ TopMenu.defaultProps = {
   currentUser: { name: '' },
 };
 
-export default TopMenu;
+class TopMenuComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentUser: {
+        name: '',
+      },
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
+    const handleResponse = (response) => {
+      const newState = {
+        currentUser: response.data.currentUser,
+      };
+      this.setState(newState);
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+
+    getRequest(
+      apiUrl('users', 'current'),
+      handleResponse,
+      handleError,
+    );
+  }
+
+  render() {
+    const { currentUser, error } = this.state;
+    return (
+      <>
+        <TopMenu currentUser={currentUser} />
+        {error && error}
+      </>
+    );
+  }
+}
+
+export default TopMenuComponent;

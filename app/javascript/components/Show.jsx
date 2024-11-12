@@ -96,7 +96,7 @@ class Show extends React.Component {
 
     return (
       <div>
-        <TopMenu currentUser={currentUser} />
+        <TopMenu />
         { error != null
           && (
             <Alert message={error} type="error" showIcon />
@@ -106,7 +106,7 @@ class Show extends React.Component {
             <table>
               <tbody>
                 <tr>
-                  <td>
+                  <td aria-label="object">
                     <ShowObject
                       object={object}
                       currentUser={currentUser}
@@ -118,7 +118,7 @@ class Show extends React.Component {
                 { !noReferences
                   && (
                     <tr>
-                      <td>
+                      <td aria-label="references">
                         <ShowReferences
                           object={object}
                           currentUser={currentUser}

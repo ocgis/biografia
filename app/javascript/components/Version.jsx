@@ -40,9 +40,9 @@ class Version extends React.Component {
   url = () => {
     const { params: { id }, _type_ } = this.props;
     return apiUrl(_type_, id, 'examine');
-  }
+  };
 
-  render = () => {
+  render() {
     const { state } = this;
     const { _type_ } = this.props;
     const {
@@ -53,7 +53,7 @@ class Version extends React.Component {
 
     return (
       <div>
-        <TopMenu currentUser={currentUser} />
+        <TopMenu />
         { error != null
           && (
             <Alert message={error} type="error" showIcon />
@@ -64,7 +64,7 @@ class Version extends React.Component {
               <tbody>
                 { versions.map((version) => (
                   <tr key={version.version.id}>
-                    <td>
+                    <td aria-label="object">
                       <ShowObject
                         object={version}
                         currentUser={currentUser}

@@ -63,7 +63,7 @@ class Index extends React.Component {
 
     return (
       <div>
-        <TopMenu currentUser={currentUser} />
+        <TopMenu />
         <Search placeholder="filtrera" onChange={updateFilter} />
         { error != null
           && (

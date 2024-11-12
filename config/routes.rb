@@ -69,7 +69,11 @@ Biografia::Application.routes.draw do
           get :file
         end
       end
-      resources :users, only: %i[index show]
+      resources :users, only: %i[index show] do
+        collection do
+          get :current
+        end
+      end
       resources :references, only: %i[create update destroy] do
         collection do
           get :list
