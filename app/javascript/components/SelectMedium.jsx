@@ -1,4 +1,5 @@
 import React, { createRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
@@ -509,10 +510,24 @@ SelectMedium.propTypes = {
     state: PropTypes.shape(),
   }).isRequired,
   navigate: PropTypes.func.isRequired,
+  selectable: PropTypes.bool.isRequired,
+};
+
+function SelectMediumWrapper(props) {
+  const { selectable } = props;
+  return (
+    <SelectMedium
+      location={useLocation()}
+      navigate={useNavigate()}
+      selectable={selectable}
+    />
+  );
+}
+SelectMediumWrapper.propTypes = {
   selectable: PropTypes.bool,
 };
-SelectMedium.defaultProps = {
+SelectMediumWrapper.defaultProps = {
   selectable: false,
 };
 
-export default SelectMedium;
+export default SelectMediumWrapper;
