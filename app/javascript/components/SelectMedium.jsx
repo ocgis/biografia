@@ -194,12 +194,13 @@ class SelectMedium extends React.Component {
   }
 
   updateHeights = () => {
+    const { bottomMargin } = this.props;
     const { divRef } = this.state;
     if (divRef != null && divRef.current != null) {
       const { top } = divRef.current.getBoundingClientRect();
       const { height: oldHeight } = this.state;
 
-      const height = window.innerHeight - top;
+      const height = window.innerHeight - top - bottomMargin;
       if (height !== oldHeight) {
         this.setState({ height });
       }
@@ -511,6 +512,10 @@ SelectMedium.propTypes = {
   }).isRequired,
   navigate: PropTypes.func.isRequired,
   selectable: PropTypes.bool.isRequired,
+  bottomMargin: PropTypes.number,
+};
+SelectMedium.defaultProps = {
+  bottomMargin: 0,
 };
 
 function SelectMediumWrapper(props) {

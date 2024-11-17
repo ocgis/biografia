@@ -5,7 +5,7 @@ import { Modifier, VersionInfo } from './Common';
 function Base(props) {
   const {
     currentUser, object, parent, reload, children, appendElements,
-    editTitle, modifierProps, modalWidth,
+    editTitle, modifierProps,
   } = props;
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -24,9 +24,8 @@ function Base(props) {
               editTitle={editTitle}
               reload={reload}
               {...modifierProps}
-              modalWidth={modalWidth}
             />
-            <td>
+            <td aria-label="Version info">
               <VersionInfo object={object} />
             </td>
           </tr>
@@ -44,7 +43,6 @@ Base.propTypes = {
   parent: PropTypes.shape(),
   editTitle: PropTypes.string,
   modifierProps: PropTypes.shape(),
-  modalWidth: PropTypes.number,
   currentUser: PropTypes.shape(),
   reload: PropTypes.func,
 };
@@ -55,7 +53,6 @@ Base.defaultProps = {
   appendElements: null,
   editTitle: null,
   modifierProps: {},
-  modalWidth: null,
   currentUser: null,
   reload: null,
 };

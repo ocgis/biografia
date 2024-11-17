@@ -21,7 +21,7 @@ function Modifier(props) {
   const {
     mainObject, parent, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, showMergeWith, editTitle, modalWidth,
+    showTagMedium, showMergeWith, editTitle,
   } = props;
 
   const itemList = [];
@@ -196,7 +196,6 @@ function Modifier(props) {
             closable={false}
             footer={null}
             key={item.key}
-            width={modalWidth}
           >
             <Component
               {...item.props}
@@ -256,7 +255,6 @@ Modifier.propTypes = {
   showTagMedium: PropTypes.bool,
   showMergeWith: PropTypes.bool,
   editTitle: PropTypes.string,
-  modalWidth: PropTypes.number,
 };
 Modifier.defaultProps = {
   parent: null,
@@ -270,7 +268,6 @@ Modifier.defaultProps = {
   showTagMedium: false,
   showMergeWith: false,
   editTitle: null,
-  modalWidth: null,
 };
 
 function VersionInfo(props) {
