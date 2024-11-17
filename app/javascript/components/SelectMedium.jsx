@@ -512,27 +512,29 @@ SelectMedium.propTypes = {
   }).isRequired,
   navigate: PropTypes.func.isRequired,
   selectable: PropTypes.bool.isRequired,
-  bottomMargin: PropTypes.number,
+  bottomMargin: PropTypes.number.isRequired,
 };
 SelectMedium.defaultProps = {
-  bottomMargin: 0,
 };
 
 function SelectMediumWrapper(props) {
-  const { selectable } = props;
+  const { selectable, bottomMargin } = props;
   return (
     <SelectMedium
       location={useLocation()}
       navigate={useNavigate()}
       selectable={selectable}
+      bottomMargin={bottomMargin}
     />
   );
 }
 SelectMediumWrapper.propTypes = {
   selectable: PropTypes.bool,
+  bottomMargin: PropTypes.number,
 };
 SelectMediumWrapper.defaultProps = {
   selectable: false,
+  bottomMargin: 0,
 };
 
 export default SelectMediumWrapper;
