@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Button, Input, List } from 'antd';
@@ -35,6 +35,9 @@ class AddReference extends React.Component {
       crop: {
         unit: '%',
       },
+      mainRef: createRef(),
+      mainHeight: 0,
+      bottomRef: createRef(),
     };
 
     this.clickTimer = null;
@@ -53,7 +56,35 @@ class AddReference extends React.Component {
     if (referFrom.related == null) {
       loadData(apiUrl(referFrom._type_, referFrom.id), oneName(referFrom._type_), onLoaded, false);
     }
+
+    window.addEventListener('resize', this.updateHeights);
   }
+
+  componentDidUpdate(_prevProps) {
+    this.updateHeights();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateHeights);
+  }
+
+  updateHeights = () => {
+    const { mainRef, bottomRef } = this.state;
+    let bottomHeight = 0;
+    if (bottomRef != null && bottomRef.current != null) {
+      const { height } = bottomRef.current.getBoundingClientRect();
+      bottomHeight = height;
+    }
+    if (mainRef != null && mainRef.current != null) {
+      const { top } = mainRef.current.getBoundingClientRect();
+      const { mainHeight: oldHeight } = this.state;
+      const extraMargin = 8;
+      const mainHeight = window.innerHeight - top - bottomHeight - extraMargin;
+      if (mainHeight !== oldHeight) {
+        this.setState({ mainHeight });
+      }
+    }
+  };
 
   search = (searchString) => {
     const handleError = (error) => {
@@ -143,7 +174,7 @@ class AddReference extends React.Component {
 
       const saveNewItem = (item) => {
         const {
-          id, created_at, updated_at, _type_, ...newItem
+          _id, _created_at, _updated_at, _type_, ...newItem
         } = item;
         const saveValue = {};
         if (item._type_ === 'EventDate') {
@@ -235,7 +266,7 @@ class AddReference extends React.Component {
     const makeIgnoredItem = (obj) => {
       if (obj._type_ === 'EventDate') {
         const {
-          id, created_at, updated_at, reference: ref_, ...strippedItem
+          _id, _created_at, _updated_at, reference: _ref_, ...strippedItem
         } = obj;
         return strippedItem;
       }
@@ -244,7 +275,8 @@ class AddReference extends React.Component {
 
     const { Search } = Input;
     const {
-      crop, found, error, searchString, reference, referFrom, selectedItem, addType,
+      crop, found, error, searchString, reference, referFrom,
+      selectedItem, addType, mainRef, mainHeight, bottomRef,
     } = this.state;
 
     let ignoredItems = [{ _type_: referFrom._type_, id: referFrom.id }];
@@ -264,7 +296,7 @@ class AddReference extends React.Component {
           <table>
             <tbody>
               <tr>
-                <td>
+                <td aria-label="Edit date">
                   <EditObject
                     object={editItem}
                     extraData={{ referFrom }}
@@ -307,7 +339,7 @@ class AddReference extends React.Component {
               <td>
                 Roll:
               </td>
-              <td>
+              <td aria-label="Input role">
                 <Input
                   defaultValue={reference.name}
                   onChange={(event) => this.setState((prevState) => ({
@@ -320,7 +352,7 @@ class AddReference extends React.Component {
               </td>
             </tr>
             <tr>
-              <td>
+              <td aria-label="Show full object">
                 <ShowSelectedObject
                   object={selectedItem}
                   mode="full"
@@ -347,7 +379,7 @@ class AddReference extends React.Component {
         <table>
           <tbody>
             <tr>
-              <td>
+              <td aria-label="Edit object">
                 <EditObject
                   extraData={{ reference }}
                   onOk={handleResult}
@@ -395,130 +427,148 @@ class AddReference extends React.Component {
       return true;
     });
     return (
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Person',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Person',
-                  },
-                }))}
-              >
-                Ny person
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Event',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Event',
-                  },
-                }))}
-              >
-                Ny händelse
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'EventDate',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Date',
-                  },
-                }))}
-              >
-                Nytt datum
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Address',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Address',
-                  },
-                }))}
-              >
-                Ny adress
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Thing',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Thing',
-                  },
-                }))}
-              >
-                Ny sak
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Note',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Note',
-                  },
-                }))}
-              >
-                Ny kommentar
-              </Button>
-              <Button
-                onClick={() => this.setState((prevState) => ({
-                  addType: 'Relationship',
-                  reference: {
-                    ...prevState.reference,
-                    name: 'Relationship',
-                  },
-                }))}
-              >
-                Nytt förhållande
-              </Button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Search
-                defaultValue={searchString}
-                onChange={onChange}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <List
-                bordered
-                size="small"
-                dataSource={filtered}
-                renderItem={renderItem}
-                style={{
-                  overflow: 'auto',
-                  height: '300px',
-                  width: '500px',
-                }}
-              />
-            </td>
-            { referFrom._type_ === 'Medium'
-              && (
-                <td>
-                  <ReactCrop
-                    src={apiUrl('Medium', referFrom.id, 'image')}
-                    crop={crop}
-                    onChange={onCropChange}
-                  />
-                </td>
-              )}
-          </tr>
-          <tr>
-            <td>
-              <CloseOutlined onClick={closeButtonClicked} />
-              { error }
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Person',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Person',
+                    },
+                  }))}
+                >
+                  Ny person
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Event',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Event',
+                    },
+                  }))}
+                >
+                  Ny händelse
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'EventDate',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Date',
+                    },
+                  }))}
+                >
+                  Nytt datum
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Address',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Address',
+                    },
+                  }))}
+                >
+                  Ny adress
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Thing',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Thing',
+                    },
+                  }))}
+                >
+                  Ny sak
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Note',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Note',
+                    },
+                  }))}
+                >
+                  Ny kommentar
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Relationship',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Relationship',
+                    },
+                  }))}
+                >
+                  Nytt förhållande
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
+                    addType: 'Medium',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Medium',
+                    },
+                  }))}
+                >
+                  Nytt medium
+                </Button>
+              </td>
+            </tr>
+            <tr>
+              <td aria-label="Search">
+                <Search
+                  defaultValue={searchString}
+                  onChange={onChange}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table ref={mainRef}>
+          <tbody>
+            <tr>
+              <td aria-label="Reference candidates">
+                <List
+                  bordered
+                  size="small"
+                  dataSource={filtered}
+                  renderItem={renderItem}
+                  style={{
+                    overflow: 'auto',
+                    height: mainHeight,
+                    width: '500px',
+                  }}
+                />
+              </td>
+              { referFrom._type_ === 'Medium'
+                && (
+                  <td aria-label="Crop image">
+                    <ReactCrop
+                      src={apiUrl('Medium', referFrom.id, 'image')}
+                      crop={crop}
+                      onChange={onCropChange}
+                      imageStyle={{ maxHeight: mainHeight }}
+                    />
+                  </td>
+                )}
+            </tr>
+            <tr ref={bottomRef}>
+              <td>
+                <CloseOutlined onClick={closeButtonClicked} />
+                { error }
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </>
     );
   }
 }
