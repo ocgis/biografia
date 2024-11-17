@@ -249,12 +249,14 @@ class AddReference extends React.Component {
       const ShowObject = showObject(item._type_);
       return (
         <List.Item onClick={(event) => onClick(event, item)}>
-          <ShowObject
-            object={item}
-            mode="oneLine"
-            currentUser={currentUser}
-            reload={() => {}}
-          />
+          <span>
+            <ShowObject
+              object={item}
+              mode="oneLine"
+              currentUser={currentUser}
+              reload={() => {}}
+            />
+          </span>
         </List.Item>
       );
     };
