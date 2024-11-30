@@ -24,7 +24,7 @@ class TagMedium extends React.Component {
         id1: referFrom.id,
         type2: null,
         id2: null,
-        position_in_pictures: null,
+        position_in_pictures: [],
       },
       referFrom,
       selected: [],
@@ -91,7 +91,7 @@ class TagMedium extends React.Component {
             id1: referFrom.id,
             type2: null,
             id2: null,
-            position_in_pictures: null,
+            position_in_pictures: [],
           },
           crop: {
             unit: '%',
@@ -123,7 +123,7 @@ class TagMedium extends React.Component {
           height: newCrop.height * 10.0,
         }];
       } else {
-        reference.position_in_pictures = null;
+        reference.position_in_pictures = [];
       }
       this.setState({
         reference,
@@ -175,7 +175,7 @@ class TagMedium extends React.Component {
               />
             </td>
           </tr>
-          { reference.position_in_pictures != null
+          { reference.position_in_pictures !== []
             && (
               <tr>
                 <td>

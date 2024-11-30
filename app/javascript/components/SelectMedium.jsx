@@ -1,15 +1,16 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
   Button, Checkbox, Descriptions, Dropdown, Input, Select,
 } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, RollbackOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
 import DisplayMedium from './DisplayMedium';
-import { apiUrl, webUrl } from './Mappings';
-import { errorText, postRequest } from './Requests';
+import { apiUrl, oneName, showObject } from './Mappings';
+import { errorText, postRequest, loadData } from './Requests';
+import { ShowReferences } from './Reference';
 
 const { Search } = Input;
 
@@ -85,9 +86,9 @@ function PathSelector(props) {
   ));
 }
 
-function HandleOneMedium(props) {
+function PresentUnregisteredMedium(props) {
   const {
-    path, updatePath, registerImage, info, error,
+    medium, goBack, registerImage, error,
   } = props;
   const menu = {
     items: [{
@@ -96,24 +97,20 @@ function HandleOneMedium(props) {
     }],
     onClick: ((element) => {
       if (element.key === 'add') {
-        registerImage();
+        registerImage(medium.file_name);
       }
     }),
   };
 
-  const src = apiUrl('Medium', `file_image?file=${path}`);
-  const link = apiUrl('Medium', `file_raw?file=${path}`);
+  const src = apiUrl('Medium', `file_image?file=${medium.file_name}`);
+  const link = apiUrl('Medium', `file_raw?file=${medium.file_name}`);
 
   return (
     <table>
       <tbody>
         <tr>
-          <td aria-label="Path selector">
-            <PathSelector path={path} updatePath={updatePath} />
-          </td>
-        </tr>
-        <tr>
-          <td aria-label="Options menu">
+          <td aria-label="Options">
+            <RollbackOutlined onClick={goBack} />
             <Dropdown menu={menu} trigger="click">
               <PlusCircleOutlined />
             </Dropdown>
@@ -123,15 +120,15 @@ function HandleOneMedium(props) {
           <td aria-label="Display medium">
             <DisplayMedium
               src={src}
-              alt={path}
-              contentType={info.content_type}
+              alt={medium.file_name}
+              contentType={medium.info.content_type}
               link={link}
             />
           </td>
         </tr>
         <tr>
           <td aria-label="Information">
-            <Info data={info} />
+            <Info data={medium.info} />
           </td>
         </tr>
         <tr>
@@ -143,14 +140,76 @@ function HandleOneMedium(props) {
     </table>
   );
 }
-HandleOneMedium.propTypes = {
-  path: PropTypes.string.isRequired,
-  info: PropTypes.shape().isRequired,
-  updatePath: PropTypes.func.isRequired,
+PresentUnregisteredMedium.propTypes = {
+  medium: PropTypes.shape({
+    file_name: PropTypes.string.isRequired,
+    info: PropTypes.shape().isRequired,
+  }).isRequired,
+  goBack: PropTypes.func.isRequired,
   registerImage: PropTypes.func.isRequired,
   error: PropTypes.string,
 };
-HandleOneMedium.defaultProps = {
+PresentUnregisteredMedium.defaultProps = {
+  error: null,
+};
+
+function PresentRegisteredMedium(props) {
+  const {
+    medium, goBack, error, currentUser, reload,
+  } = props;
+  const ShowMedium = showObject(medium._type_);
+  const [refTabState, setRefTabState] = useState({});
+
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <td aria-label="Options">
+            <RollbackOutlined onClick={goBack} />
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="object">
+            <ShowMedium
+              object={medium}
+              currentUser={currentUser}
+              mode="full"
+              reload={reload}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="references">
+            <ShowReferences
+              object={medium}
+              currentUser={currentUser}
+              reload={reload}
+              state={refTabState}
+              setState={setRefTabState}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            { error && error }
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
+PresentRegisteredMedium.propTypes = {
+  medium: PropTypes.shape({
+    _type_: PropTypes.string.isRequired,
+    file_name: PropTypes.string.isRequired,
+    info: PropTypes.shape().isRequired,
+  }).isRequired,
+  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape().isRequired,
+  goBack: PropTypes.func.isRequired,
+  error: PropTypes.string,
+};
+PresentRegisteredMedium.defaultProps = {
   error: null,
 };
 
@@ -159,8 +218,10 @@ class SelectMedium extends React.Component {
     super(props);
 
     this.state = {
+      currentUser: null,
       divRef: createRef(),
       error: null,
+      selectedMedia: [],
     };
 
     this.apiUrl = apiUrl('Medium');
@@ -171,12 +232,26 @@ class SelectMedium extends React.Component {
     this.show = locationState.show || 'unregistered';
     this.flatten = locationState.flatten || false;
     this.path = locationState.path || 'files';
-    this.state.selectedPaths = locationState.selectedPaths || [];
+    this.state.presentedMedium = locationState.presentedMedium || null;
+
+    const currentUserUrl = apiUrl('users', 'current');
+    const currentUserLoaded = (data) => {
+      if (data.error !== null) {
+        this.setState({ error: errorText(data.error) });
+      } else {
+        const { currentUser } = data;
+        this.setState({ currentUser });
+      }
+    };
+    loadData(currentUserUrl, 'currentUser', currentUserLoaded, false);
   }
 
   componentDidMount() {
     this.loadData();
     window.addEventListener('resize', this.updateHeights);
+    const { onChange } = this.props;
+    const { selectedMedia } = this.state;
+    onChange(selectedMedia);
   }
 
   componentDidUpdate(prevProps) {
@@ -209,7 +284,7 @@ class SelectMedium extends React.Component {
 
   saveNavigateState = () => {
     const { location, navigate } = this.props;
-    const { selectedPaths } = this.state;
+    const { selectedMedia } = this.state;
     const url = location.pathname;
     const state = {
       state: {
@@ -218,36 +293,10 @@ class SelectMedium extends React.Component {
         show: this.show,
         flatten: this.flatten,
         path: this.path,
-        selectedPaths,
       },
       replace: true,
     };
     navigate(url, state);
-  };
-
-  registerImage = () => {
-    const handleResponse = (response) => {
-      const { data: { medium } } = response;
-      const { navigate } = this.props;
-
-      if (medium != null) {
-        navigate(webUrl('Medium', medium.id));
-      } else {
-        let { data: { error } } = response;
-        if (error == null) {
-          error = 'Missing medium in response';
-        }
-        this.setState({ error });
-      }
-    };
-
-    const handleError = (error) => {
-      this.setState({ error: errorText(error) });
-    };
-
-    const { path } = this.state;
-    const data = { file_name: path };
-    postRequest(`${this.apiUrl}/register`, data, handleResponse, handleError);
   };
 
   loadData() {
@@ -285,6 +334,43 @@ class SelectMedium extends React.Component {
     );
   }
 
+  loadMediumInfo(path) {
+    const handleResponse = (response) => {
+      const { info } = response.data;
+      const presentedMedium = { file_name: path, info };
+      this.setState({ presentedMedium });
+    };
+
+    const handleError = (error) => {
+      this.setState({ error: errorText(error) });
+    };
+
+    postRequest(
+      `${this.apiUrl}/info`,
+      {
+        path,
+      },
+      handleResponse,
+      handleError,
+    );
+  }
+
+  loadMedium(id) {
+    const onLoaded = (data) => {
+      if (data.error !== null) {
+        this.setState({ error: errorText(data.error) });
+      } else {
+        const { medium: presentedMedium } = data;
+        this.setState({ presentedMedium });
+      }
+    };
+
+    const objectName = oneName('Medium');
+    const url = apiUrl('Medium', id);
+
+    loadData(url, objectName, onLoaded, false);
+  }
+
   render() {
     const updateFilter = debounce(500, (data) => {
       this.filter = data.target.value;
@@ -304,35 +390,66 @@ class SelectMedium extends React.Component {
       this.loadData();
     };
 
+    const registerImage = (path) => {
+      const handleResponse = (response) => {
+        const { data: { medium } } = response;
+
+        if (medium != null) {
+          this.loadMedium(medium.id);
+          this.loadData();
+        } else {
+          let { data: { error } } = response;
+          if (error == null) {
+            error = 'Missing medium in response';
+          }
+          this.setState({ error });
+        }
+      };
+
+      const handleError = (error) => {
+        this.setState({ error: errorText(error) });
+      };
+
+      const data = { file_name: path };
+      postRequest(`${this.apiUrl}/register`, data, handleResponse, handleError);
+    };
+
     const updatePath = (path) => {
       this.path = path;
       this.saveNavigateState();
       this.loadData();
     };
 
-    const selectPath = (path) => {
-      this.setState((prevState) => ({
-        selectedPaths: prevState.selectedPaths.concat(path),
-      }));
+    const selectMedium = (medium) => {
+      this.setState((prevState) => {
+        const selectedMedia = prevState.selectedMedia.concat(medium);
+        const { onChange } = this.props;
+        onChange(selectedMedia);
+        return ({ selectedMedia });
+      });
     };
 
-    const unselectPath = (path) => {
-      this.setState((prevState) => ({
-        selectedPaths: prevState.selectedPaths.filter((element) => element !== path),
-      }));
+    const unselectMedium = (medium) => {
+      this.setState((prevState) => {
+        const selectedMedia = prevState.selectedMedia.filter((element) => element.file_name
+          !== medium.file_name);
+        const { onChange } = this.props;
+        onChange(selectedMedia);
+        return ({ selectedMedia });
+      });
     };
 
-    const renderSelectUnselect = (path) => {
-      const { selectedPaths } = this.state;
+    const renderSelectUnselect = (medium) => {
+      const { selectedMedia } = this.state;
 
-      const index = selectedPaths.findIndex((element) => element === path);
+      const index = selectedMedia.findIndex((element) => element.file_name === medium.file_name);
       if (index >= 0) {
         return (
           <button
             type="button"
             className="selected"
             style={{ position: 'absolute' }}
-            onClick={() => unselectPath(path)}
+            onClick={() => unselectMedium(medium)}
           >
             {index + 1}
           </button>
@@ -343,21 +460,33 @@ class SelectMedium extends React.Component {
           type="button"
           className="unselected"
           style={{ position: 'absolute' }}
-          onClick={() => selectPath(path)}
+          onClick={() => selectMedium(medium)}
         >
           #
         </button>
       );
     };
 
-    const renderNode = (path, number) => {
-      if (number == null) {
-        const { selectable } = this.props;
+    const renderNode = (path, attributes) => {
+      if (attributes.children > 0) {
+        return (
+          <React.Fragment key={path}>
+            <Button type="link" onClick={() => updatePath(path)} key={path} style={{ padding: 0 }}>
+              {`${path} (${attributes.children})`}
+            </Button>
+            <br />
+          </React.Fragment>
+        );
+      }
+
+      const { selectable } = this.props;
+
+      if ('id' in attributes) {
         return (
           <div>
             <Button
               type="link"
-              onClick={() => updatePath(path)}
+              onClick={() => this.loadMedium(attributes.id)}
               key={path}
               style={{
                 padding: 0,
@@ -365,38 +494,49 @@ class SelectMedium extends React.Component {
               }}
             >
               <img
-                src={apiUrl('Medium', `file_thumb?file=${path}`)}
+                src={apiUrl('Medium', attributes.id, 'thumb')}
                 alt={path}
               />
             </Button>
-            { selectable && renderSelectUnselect(path) }
+            { selectable && renderSelectUnselect({ file_name: path, id: attributes.id }) }
           </div>
         );
       }
+
       return (
-        <React.Fragment key={path}>
-          <Button type="link" onClick={() => updatePath(path)} key={path} style={{ padding: 0 }}>
-            {`${path} (${number})`}
+        <div>
+          <Button
+            type="link"
+            onClick={() => this.loadMediumInfo(path)}
+            key={path}
+            style={{
+              padding: 0,
+              position: 'absolute',
+            }}
+          >
+            <img
+              src={apiUrl('Medium', `file_thumb?file=${path}`)}
+              alt={path}
+            />
           </Button>
-          <br />
-        </React.Fragment>
+          { selectable && renderSelectUnselect({ file_name: path }) }
+        </div>
       );
     };
 
     const renderNodes = (nodes) => (
       Object.entries(nodes).filter(
-        (item) => (item[1] != null),
+        (item) => (item[1].children > 0),
       ).map(
-        ([path, number]) => renderNode(path, number),
+        ([path, attributes]) => renderNode(path, attributes),
       )
     );
 
     const renderLeafs = (nodes) => {
       const { divRef, height } = this.state;
       const leafs = Object.entries(nodes).filter(
-        (item) => (item[1] == null),
+        (item) => (item[1].children === 0),
       );
-
       const mediumWidth = 120;
       const mediumHeight = 120;
       const width = window.innerWidth;
@@ -442,7 +582,7 @@ class SelectMedium extends React.Component {
     };
 
     const {
-      error, nodes, type, path, info,
+      error, nodes, path, presentedMedium,
     } = this.state;
 
     const showOptions = [
@@ -450,13 +590,30 @@ class SelectMedium extends React.Component {
       { value: 'all', label: 'All' },
       { value: 'registered', label: 'Registered' },
     ];
-    if (type === 'file') {
+
+    if (presentedMedium !== null) {
+      if ('id' in presentedMedium) {
+        const { currentUser } = this.state;
+        return (
+          <PresentRegisteredMedium
+            medium={presentedMedium}
+            reload={() => this.loadMedium(presentedMedium.id)}
+            currentUser={currentUser}
+            goBack={() => {
+              this.setState({ presentedMedium: null });
+            }}
+            error={error}
+          />
+        );
+      }
+
       return (
-        <HandleOneMedium
-          path={path}
-          info={info}
-          registerImage={this.registerImage}
-          updatePath={updatePath}
+        <PresentUnregisteredMedium
+          medium={presentedMedium}
+          registerImage={registerImage}
+          goBack={() => {
+            this.setState({ presentedMedium: null });
+          }}
           error={error}
         />
       );
@@ -513,28 +670,32 @@ SelectMedium.propTypes = {
   navigate: PropTypes.func.isRequired,
   selectable: PropTypes.bool.isRequired,
   bottomMargin: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 SelectMedium.defaultProps = {
 };
 
 function SelectMediumWrapper(props) {
-  const { selectable, bottomMargin } = props;
+  const { selectable, bottomMargin, onChange } = props;
   return (
     <SelectMedium
       location={useLocation()}
       navigate={useNavigate()}
       selectable={selectable}
       bottomMargin={bottomMargin}
+      onChange={onChange}
     />
   );
 }
 SelectMediumWrapper.propTypes = {
   selectable: PropTypes.bool,
   bottomMargin: PropTypes.number,
+  onChange: PropTypes.func,
 };
 SelectMediumWrapper.defaultProps = {
   selectable: false,
   bottomMargin: 0,
+  onChange: (selectedMedia) => { console.log(selectedMedia); },
 };
 
 export default SelectMediumWrapper;

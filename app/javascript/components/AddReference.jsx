@@ -29,7 +29,7 @@ class AddReference extends React.Component {
         id1: referFrom.id,
         type2: null,
         id2: null,
-        position_in_pictures: null,
+        position_in_pictures: [],
       },
       addType: null,
       crop: {
@@ -129,7 +129,7 @@ class AddReference extends React.Component {
               name: '',
               type2: null,
               id2: null,
-              position_in_pictures: null,
+              position_in_pictures: [],
             },
             crop: {
               unit: '%',
@@ -235,7 +235,7 @@ class AddReference extends React.Component {
           height: newCrop.height * 10.0,
         }];
       } else {
-        reference.position_in_pictures = null;
+        reference.position_in_pictures = [];
       }
       this.setState({
         reference,
@@ -311,7 +311,7 @@ class AddReference extends React.Component {
                         name: '',
                         type2: null,
                         id2: null,
-                        position_in_pictures: null,
+                        position_in_pictures: [],
                       },
                       crop: {
                         unit: '%',
@@ -393,7 +393,7 @@ class AddReference extends React.Component {
                       name: '',
                       type2: null,
                       id2: null,
-                      position_in_pictures: null,
+                      position_in_pictures: [],
                     },
                     crop: {
                       unit: '%',
@@ -520,7 +520,7 @@ class AddReference extends React.Component {
                     },
                   }))}
                 >
-                  Nytt medium
+                  Media
                 </Button>
               </td>
             </tr>

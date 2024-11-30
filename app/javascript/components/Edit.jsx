@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { saveData } from './Requests';
-import { oneName, showObject } from './Mappings';
+import { oneName, manyName, showObject } from './Mappings';
 
 class Edit extends React.Component {
   constructor(props) {
@@ -42,9 +42,19 @@ class Edit extends React.Component {
         const { reference } = this.state;
         if (reference != null) {
           const { _type_ } = this.props;
-          reference.id2 = result[oneName(_type_)].id;
-          reference.type2 = _type_;
-          saveData('Reference', this.state, handleReferenceSaveResult);
+          if (oneName(_type_) in result) {
+            reference.id2 = result[oneName(_type_)].id;
+            reference.type2 = _type_;
+            saveData('Reference', this.state, handleReferenceSaveResult);
+          } else {
+            const objects = result[manyName(_type_)];
+            const references = objects.map((object) => ({
+              ...reference,
+              id2: object.id,
+              type2: _type_,
+            }));
+            saveData('Reference', { references }, handleReferenceSaveResult);
+          }
         } else {
           const { onOk } = this.props;
           onOk(result);

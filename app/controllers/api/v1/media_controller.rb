@@ -14,6 +14,17 @@ module Api
         super(Medium)
       end
 
+      def create
+        media = params.permit(media: %i[file_name id]).require(:media)
+        file_names = media.map { |medium| medium[:file_name] }
+        existing = Medium.where(file_name: file_names).group_by(&:file_name)
+        missing = file_names.reject { |file_name| existing.keys.include? file_name }
+        new = Medium.create!(missing.map { |file_name| { file_name: } }).group_by(&:file_name)
+        all_d = existing.merge(new)
+        all = media.map { |medium| all_d[medium[:file_name]].first }
+        render json: { media: all }
+      end
+
       def search
         path = params[:path] || 'files'
         filter = params[:filter] || ''
@@ -31,6 +42,14 @@ module Api
                          path:,
                          info: }
         end
+      end
+
+      def info
+        path = params[:path]
+
+        info = Medium.info_for(path)
+        render json: { path:,
+                       info: }
       end
 
       def register
@@ -94,15 +113,16 @@ module Api
       def get_dir_nodes(path, filter, show, flatten)
         old_dir = Dir.pwd
         Dir.chdir(Biografia::Application.config.protected_path)
-        file_media = Medium.where("file_name LIKE \"#{path}/%\"").pluck('file_name').map(&:b)
+        registered_media = Medium.where("file_name LIKE \"#{path}/%\"")
+        registered_media_paths = registered_media.pluck('file_name').map(&:b)
         paths =
           case show
           when 'all'
             search_dir(path, filter)
           when 'registered'
-            file_media
+            registered_media_paths
           else
-            search_dir(path, filter) - file_media
+            search_dir(path, filter) - registered_media_paths
           end
 
         nodes = {}
@@ -110,22 +130,26 @@ module Api
         base_parts = path.split('/')
         paths.each do |p|
           if flatten
-            nodes[p] = nil
+            nodes[p] = { children: 0 }
           else
             parts = p.split('/')[base_parts.length..]
             if parts.length == 1 # File
-              nodes[p] = nil
+              nodes[p] = { children: 0 }
             else
               full = "#{path}/#{parts[0]}"
               if nodes.key?(full)
-                nodes[full] += 1
+                nodes[full][:children] += 1
               else
-                nodes[full] = 1
+                nodes[full] = { children: 1 }
               end
             end
           end
         rescue ArgumentError
           puts "Could not handle path #{p[base_length..]}"
+        end
+
+        registered_media.each do |registered_medium|
+          nodes[registered_medium.file_name][:id] = registered_medium.id if nodes.key? registered_medium.file_name
         end
 
         Dir.chdir(old_dir)

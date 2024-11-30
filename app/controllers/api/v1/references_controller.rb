@@ -40,6 +40,19 @@ module Api
         render json: { result: objects, filter: }
       end
 
+      def create
+        if reference_params.present?
+          super
+        elsif references_params.present?
+          puts references_params.inspect
+          references_objects = Reference.create(references_params)
+          references = references_objects.map(&:all_attributes)
+          render json: { references: }
+        else
+          render json: { error: 'Object could not be created' }
+        end
+      end
+
       def destroy
         reference = Reference.find(params[:id])
         reference.position_in_pictures.destroy_all
@@ -63,13 +76,25 @@ module Api
       private
 
       def reference_params
-        params.require(:reference).permit(:name,
-                                          :type1,
-                                          :id1,
-                                          :type2,
-                                          :id2,
-                                          position_in_pictures_attributes:
-                                            %i[x y width height])
+        params.fetch(:reference, nil).permit(:name,
+                                             :type1,
+                                             :id1,
+                                             :type2,
+                                             :id2,
+                                             position_in_pictures_attributes:
+                                               %i[x y width height])
+      end
+
+      def references_params
+        params.fetch(:references, []).map do |param|
+          param.permit(:name,
+                       :type1,
+                       :id1,
+                       :type2,
+                       :id2,
+                       { position_in_pictures_attributes:
+                           %i[x y width height] })
+        end
       end
 
       def latest_referenced(search_models)

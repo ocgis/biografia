@@ -5,6 +5,7 @@ import Base from './Base';
 import Index from './Index';
 import Show from './Show';
 import Version from './Version';
+import EditMedium from './EditMedium';
 import GridObjects from './GridObjects';
 import DisplayMedium from './DisplayMedium';
 import {
@@ -295,6 +296,7 @@ Medium.defaultProps = {
 };
 
 setMapping('Medium', 'showObject', Medium);
+setMapping('Medium', 'editObject', EditMedium);
 
 function ShowMedia(props) {
   const {

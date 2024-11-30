@@ -15,7 +15,7 @@ class Ability
       can %i[create delete destroy connection_choose connection_add update], Reference
       can %i[create new], Transfer
       can %i[new create hint], [Address, Event, EventDate, Note, Person, Relationship, Thing]
-      can %i[new create delete destroy tag search show_file register file_image file_thumb file_raw examine hint],
+      can %i[new create delete destroy tag search info show_file register file_image file_thumb file_raw examine hint],
           Medium
       can %i[create index new show status file], Export
       can %i[new show status], Import

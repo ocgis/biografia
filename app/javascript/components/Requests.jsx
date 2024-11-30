@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiUrl, oneName } from './Mappings';
+import { apiUrl, oneName, manyName } from './Mappings';
 
 const sendRequest = (requestFunction, url, data, handleResponse, handleError) => {
   const csrfToken = document.querySelector('[name=csrf-token]').content;
@@ -65,11 +65,15 @@ const loadData = (url, objectName, onLoaded, loadMany, state) => {
 
 const saveData = (_type_, data, handleResult) => {
   const railsify = (indata) => {
+    if (Array.isArray(indata)) {
+      return indata.map((element) => railsify(element));
+    }
+
     const {
-      created_at,
-      updated_at,
-      version,
-      related,
+      _created_at,
+      _updated_at,
+      _version,
+      _related,
       __type__,
       ...outdata
     } = indata;
@@ -84,7 +88,10 @@ const saveData = (_type_, data, handleResult) => {
     return outdata;
   };
 
-  const name = oneName(_type_);
+  let name = oneName(_type_);
+  if (!(name in data)) {
+    name = manyName(_type_);
+  }
   const sendData = {};
 
   Object.keys(data).forEach((key) => {

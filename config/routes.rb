@@ -17,12 +17,13 @@ Biografia::Application.routes.draw do
           get :hint
         end
       end
-      resources :media, only: %i[index show destroy] do
+      resources :media, only: %i[index show create destroy] do
         collection do
           get :file_thumb
           get :file_image
           get :file_raw
           post :search
+          post :info
           post :register
         end
         member do
