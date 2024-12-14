@@ -1,11 +1,16 @@
 import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link, useLocation, useNavigate, useParams,
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import TopMenu from './TopMenu';
 import { loadData } from './Requests';
 import { ShowReferences } from './Reference';
-import { apiUrl, oneName, showObject } from './Mappings';
+import {
+  apiUrl, webUrl, oneName, showObject,
+} from './Mappings';
 
 class Show extends React.Component {
   constructor(props) {
@@ -16,7 +21,13 @@ class Show extends React.Component {
     this.state = {
       currentUser: null,
       timerHandle: null,
-      history: { showReferences: {} },
+      history: {
+        showReferences: {},
+      },
+      context: {
+        collection: null,
+        collectionIndex: 0,
+      },
     };
     this.state[objectName] = null;
     if (props.location.state !== null) {
@@ -75,16 +86,70 @@ class Show extends React.Component {
     return apiUrl(_type_, id);
   };
 
+  setNavigateState = (newState) => {
+    const {
+      navigate,
+      location: {
+        state: oldState,
+        pathname,
+        search,
+      },
+    } = this.props;
+
+    const navigateState = {
+      state: {
+        ...oldState,
+        ...newState,
+      },
+      replace: true,
+    };
+    const url = pathname + search;
+    navigate(url, navigateState);
+  };
+
   render() {
     const setHistory = (s) => {
       this.setState({ history: s });
-
-      const { navigate, location } = this.props;
-      const { history } = this.state;
-      const navigateState = { state: { history: { ...history, ...s } }, replace: true };
-      const url = location.pathname + location.search;
-      navigate(url, navigateState);
+      this.setNavigateState({ history: s });
     };
+
+    const navigateContext = () => {
+      const { context: { collection, collectionIndex } } = this.state;
+      if (collection != null) {
+        const collectionSize = collection.length;
+        let prevNavigate = null;
+        if (collectionIndex > 0) {
+          const prevCollectionIndex = collectionIndex - 1;
+          const prevObject = collection[prevCollectionIndex];
+          const context = { collection, collectionIndex: prevCollectionIndex };
+          prevNavigate = (
+            <Link to={webUrl(prevObject._type_, prevObject.id)} state={{ context }} replace>
+              <LeftOutlined />
+            </Link>
+          );
+        }
+        let nextNavigate = null;
+        if (collectionIndex < collectionSize - 1) {
+          const nextCollectionIndex = collectionIndex + 1;
+          const nextObject = collection[nextCollectionIndex];
+          const context = { collection, collectionIndex: nextCollectionIndex };
+          nextNavigate = (
+            <Link to={webUrl(nextObject._type_, nextObject.id)} state={{ context }} replace>
+              <RightOutlined />
+            </Link>
+          );
+        }
+        return (
+          <>
+            { prevNavigate }
+            { `${collectionIndex + 1} av ${collectionSize}` }
+            { nextNavigate }
+          </>
+        );
+      }
+      return null;
+    };
+
     const { state } = this;
     const { _type_, noReferences } = this.props;
     const {
@@ -103,34 +168,38 @@ class Show extends React.Component {
           )}
         { object != null
           && (
-            <table>
-              <tbody>
-                <tr>
-                  <td aria-label="object">
-                    <ShowObject
-                      object={object}
-                      currentUser={currentUser}
-                      mode="full"
-                      reload={this.reload}
-                    />
-                  </td>
-                </tr>
-                { !noReferences
-                  && (
-                    <tr>
-                      <td aria-label="references">
-                        <ShowReferences
-                          object={object}
-                          currentUser={currentUser}
-                          reload={this.reload}
-                          state={state.history.showReferences || {}}
-                          setState={(s) => setHistory({ showReferences: s })}
-                        />
-                      </td>
-                    </tr>
-                  )}
-              </tbody>
-            </table>
+            <>
+              { navigateContext() }
+              <table>
+                <tbody>
+                  <tr>
+                    <td aria-label="object">
+                      <ShowObject
+                        key={`${object._type_}_${object.id}`}
+                        object={object}
+                        currentUser={currentUser}
+                        mode="full"
+                        reload={this.reload}
+                      />
+                    </td>
+                  </tr>
+                  { !noReferences
+                    && (
+                      <tr>
+                        <td aria-label="references">
+                          <ShowReferences
+                            object={object}
+                            currentUser={currentUser}
+                            reload={this.reload}
+                            state={state.history.showReferences || {}}
+                            setState={(s) => setHistory({ showReferences: s })}
+                          />
+                        </td>
+                      </tr>
+                    )}
+                </tbody>
+              </table>
+            </>
           )}
       </div>
     );

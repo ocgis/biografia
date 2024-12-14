@@ -176,8 +176,9 @@ class Medium extends React.Component {
     }
 
     if (mode === 'oneLineLinked') {
+      const { context } = this.props;
       return (
-        <Link to={webUrl('Medium', medium.id)}>
+        <Link to={webUrl('Medium', medium.id)} state={{ context }}>
           <OneLine object={medium} />
         </Link>
       );
@@ -245,8 +246,9 @@ class Medium extends React.Component {
         </div>
       );
     } else {
+      const { context } = this.props;
       mediaTag = (
-        <Link to={webUrl('Medium', medium.id)}>
+        <Link to={webUrl('Medium', medium.id)} state={{ context }}>
           <OneLine object={medium} />
         </Link>
       );
@@ -283,6 +285,7 @@ Medium.propTypes = {
       content_type: PropTypes.string.isRequired,
     }),
   }).isRequired,
+  context: PropTypes.shape(),
   currentUser: PropTypes.shape({}),
   reload: PropTypes.func,
   mode: PropTypes.string,
@@ -290,6 +293,7 @@ Medium.propTypes = {
 
 Medium.defaultProps = {
   parent: null,
+  context: null,
   currentUser: null,
   mode: '',
   reload: null,
