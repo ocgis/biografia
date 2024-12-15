@@ -19,8 +19,9 @@ module Api
         file_names = media.map { |medium| medium[:file_name] }
         existing = Medium.where(file_name: file_names).group_by(&:file_name)
         missing = file_names.reject { |file_name| existing.keys.include? file_name }
-        new = Medium.create!(missing.map { |file_name| { file_name: } }).group_by(&:file_name)
-        all_d = existing.merge(new)
+        created = Medium.create!(missing.map { |file_name| { file_name: } })
+        created.each(&:handle_extra_info)
+        all_d = existing.merge(created.group_by(&:file_name))
         all = media.map { |medium| all_d[medium[:file_name]].first }
         render json: { media: all }
       end
