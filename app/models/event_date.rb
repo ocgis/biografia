@@ -84,8 +84,12 @@ class EventDate < ActiveRecord::Base
     raise StandardError, "Could not set date #{dstr}"
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'EventDate' })
+  end
+
   def all_attributes
-    attributes.update({ _type_: 'EventDate' }).update(extras)
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

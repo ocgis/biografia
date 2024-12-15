@@ -68,11 +68,15 @@ class Address < ActiveRecord::Base
     addresses.order(:street, :town, :zipcode, :parish, :country)
   end
 
-  def all_attributes
+  def limited_attributes
     attributes.update({
                         _type_: 'Address',
-                        maps_address: maps_address
-                      }).update(extras)
+                        maps_address:
+                      })
+  end
+
+  def all_attributes
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

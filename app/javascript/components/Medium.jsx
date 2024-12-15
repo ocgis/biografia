@@ -40,7 +40,8 @@ OneLine.propTypes = {
 };
 
 function Overview({ object: medium, currentUser, reload }) {
-  const objectsInPicture = medium.positions_in_object.sort(
+  const positionsInObject = medium.positions_in_object || [];
+  const objectsInPicture = positionsInObject.sort(
     (a, b) => a.position.x - b.position.x,
   ).map(({ object }) => {
     const ShowObject = showObject(object._type_);
@@ -280,7 +281,7 @@ Medium.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
     file_name: PropTypes.string,
-    positions_in_object: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    positions_in_object: PropTypes.arrayOf(PropTypes.shape()),
     info: PropTypes.shape({
       content_type: PropTypes.string.isRequired,
     }),

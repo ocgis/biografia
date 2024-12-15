@@ -263,17 +263,18 @@ class Medium < ActiveRecord::Base
     exif_handle_lens(extra_info)
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'Medium' })
+  end
+
   def all_attributes
     pio_attributes = positions_in_object.map do |pio|
       pio[:object] = pio[:object].all_attributes
       pio
     end
     info = Medium.info_for(file_name)
-    attributes.update({
-                        _type_: 'Medium',
-                        positions_in_object: pio_attributes,
-                        info:
-                      }).update(extras)
+    limited_attributes.update({ positions_in_object: pio_attributes,
+                                info: }).update(extras)
   end
 
   def self.with_associations

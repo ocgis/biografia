@@ -18,8 +18,12 @@ class Note < ActiveRecord::Base
     note.split("\n")[0]
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'Note' })
+  end
+
   def all_attributes
-    attributes.update({ _type_: 'Note' }).update(extras)
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

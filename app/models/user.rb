@@ -40,7 +40,11 @@ class User < ActiveRecord::Base
     map
   end
 
-  def all_attributes
+  def limited_attributes
     attributes.update({ roles: roles_map })
+  end
+
+  def all_attributes
+    limited_attributes
   end
 end

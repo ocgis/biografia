@@ -16,7 +16,15 @@ module Related
 
     objects = {}
     grouped_ids.each_key do |local_type|
-      local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:all_attributes).each do |object|
+      local_type_objects = local_type.constantize.with_associations.find(ids(grouped_ids[local_type]))
+      local_type_object_attributes = local_type_objects.map do |object|
+        if main_ids.include?({ _type_: local_type, id: object.id })
+          object.all_attributes
+        else
+          object.limited_attributes
+        end
+      end
+      local_type_object_attributes.each do |object|
         objects[{ _type_: object[:_type_], id: object['id'] }] = object
       end
     end

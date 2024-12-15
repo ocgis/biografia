@@ -51,8 +51,12 @@ class Relationship < ActiveRecord::Base
     found
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'Relationship' })
+  end
+
   def all_attributes
-    attributes.update({ _type_: 'Relationship' }).update(extras)
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

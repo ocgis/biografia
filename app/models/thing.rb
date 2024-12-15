@@ -38,8 +38,12 @@ class Thing < ActiveRecord::Base
     things.first(100)
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'Thing' })
+  end
+
   def all_attributes
-    attributes.update({ _type_: 'Thing' }).update(extras)
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

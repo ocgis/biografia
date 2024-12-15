@@ -18,7 +18,11 @@ class Transfer < ActiveRecord::Base
     file_name
   end
 
-  def all_attributes
+  def limited_attributes
     attributes
+  end
+
+  def all_attributes
+    limited_attributes
   end
 end

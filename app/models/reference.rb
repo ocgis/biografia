@@ -117,8 +117,12 @@ class Reference < ActiveRecord::Base
     end.flatten
   end
 
-  def all_attributes
+  def limited_attributes
     attributes
+  end
+
+  def all_attributes
+    limited_attributes
   end
 
   def self.with_associations

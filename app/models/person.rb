@@ -162,12 +162,16 @@ class Person < ActiveRecord::Base
     people = people.distinct.first(100)
   end
 
-  def all_attributes
+  def limited_attributes
     person_names_attr = person_names.map(&:attributes)
 
     attributes.update({ _type_: 'Person',
                         person_names: person_names_attr,
-                        name: name }).update(extras)
+                        name: })
+  end
+
+  def all_attributes
+    limited_attributes.update(extras)
   end
 
   def self.with_associations

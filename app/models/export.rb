@@ -40,7 +40,11 @@ class Export < ActiveRecord::Base
     "#{file_name} (#{content_type})"
   end
 
-  def all_attributes
+  def limited_attributes
     attributes
+  end
+
+  def all_attributes
+    limited_attributes
   end
 end

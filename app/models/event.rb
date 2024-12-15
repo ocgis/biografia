@@ -26,8 +26,12 @@ class Event < ActiveRecord::Base
     events.first(100)
   end
 
+  def limited_attributes
+    attributes.update({ _type_: 'Event' })
+  end
+
   def all_attributes
-    attributes.update({ _type_: 'Event' }).update(extras)
+    limited_attributes.update(extras)
   end
 
   def self.with_associations
