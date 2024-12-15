@@ -268,6 +268,7 @@ class Medium extends React.Component {
           showAddPerson: true,
           showAddThing: true,
           showTagMedium: true,
+          showImportExif: true,
         }}
         currentUser={currentUser}
         reload={reload}

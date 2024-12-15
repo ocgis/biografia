@@ -32,6 +32,7 @@ Biografia::Application.routes.draw do
           get :thumb
           get :raw
           get :hint
+          post :import_exif
         end
       end
       resources :events, only: %i[index show create update destroy] do

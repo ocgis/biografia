@@ -69,6 +69,12 @@ module Api
         end
       end
 
+      def import_exif
+        medium = find_object
+        medium.handle_extra_info
+        render json: { medium: medium.all_attributes }
+      end
+
       def image
         medium = Medium.find(params.require(:id))
         send_file(medium.fullsize)

@@ -8,6 +8,7 @@ import { Dropdown, Modal } from 'antd';
 import AddReference from './AddReference';
 import Merge from './Merge';
 import TagMedium from './TagMedium';
+import ImportExif from './ImportExif';
 import RemoveReference from './RemoveReference';
 import RemoveObject from './RemoveObject';
 import { editObject, webUrl } from './Mappings';
@@ -21,7 +22,7 @@ function Modifier(props) {
   const {
     mainObject, parent, reload, showAddAddress, showAddPerson, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, showMergeWith, editTitle,
+    showTagMedium, showImportExif, showMergeWith, editTitle,
   } = props;
 
   const itemList = [];
@@ -130,6 +131,15 @@ function Modifier(props) {
       key: 'tagMedium',
       text: 'tagga',
       component: TagMedium,
+      props: { referFrom: mainObject },
+    });
+  }
+
+  if (showImportExif) {
+    itemList.push({
+      key: 'importExif',
+      text: 'importera EXIF',
+      component: ImportExif,
       props: { referFrom: mainObject },
     });
   }
@@ -253,6 +263,7 @@ Modifier.propTypes = {
   showAddRelationship: PropTypes.bool,
   showAddThing: PropTypes.bool,
   showTagMedium: PropTypes.bool,
+  showImportExif: PropTypes.bool,
   showMergeWith: PropTypes.bool,
   editTitle: PropTypes.string,
 };
@@ -266,6 +277,7 @@ Modifier.defaultProps = {
   showAddRelationship: false,
   showAddThing: false,
   showTagMedium: false,
+  showImportExif: false,
   showMergeWith: false,
   editTitle: null,
 };
