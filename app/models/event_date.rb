@@ -81,6 +81,13 @@ class EventDate < ActiveRecord::Base
       return true
     end
 
+    m = dstr.match(/^(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)([+-]\d\d:\d\d)$/)
+    unless m.nil?
+      self.date = DateTime.new(m[1].to_i, m[2].to_i, m[3].to_i, m[4].to_i, m[5].to_i, m[6].to_i, m[7])
+      self.mask = 'YYYY-MM-DD hh:mm:ss'
+      return true
+    end
+
     raise StandardError, "Could not set date #{dstr}"
   end
 

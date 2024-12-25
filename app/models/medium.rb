@@ -333,6 +333,7 @@ class Medium < ActiveRecord::Base
     date_time = extra_info[:date_time_original]
     date_time[4] = '-'
     date_time[7] = '-'
+    extra_info[:offset_time_original].present? && date_time += extra_info[:offset_time_original]
     event_date = EventDate.new
     event_date.set_date(date_time)
 
