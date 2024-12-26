@@ -13,9 +13,41 @@ setMapping('EventDate', 'oneName', 'event_date');
 setMapping('EventDate', 'manyName', 'event_dates');
 
 const OneLine = (props) => {
+  const doubleDigit = (i) => {
+    if (i < 10) {
+      return `0${i}`;
+    }
+    return `${i}`;
+  };
+
   const { object: eventDate } = props;
 
-  return moment(eventDate.date).utc().format(eventDate.mask);
+  let tzOffset = 0;
+  let tzSuffix = '';
+  if (eventDate.timezone_offset != null) {
+    tzOffset = eventDate.timezone_offset;
+    const absOffset = Math.abs(tzOffset);
+    const hours = doubleDigit(absOffset / 60);
+    const minutes = doubleDigit(absOffset % 60);
+
+    if (eventDate.timezone_offset < 0) {
+      tzSuffix = ` -${hours}:${minutes}`;
+    } else {
+      tzSuffix = ` +${hours}:${minutes}`;
+    }
+  }
+
+  const maskToFormat = {
+    YYYY: 'YYYY',
+    'YYYY-MM': 'YYYY-MM',
+    'YYYY-MM-DD': 'YYYY-MM-DD',
+    'YYYY-MM-DD hh:mm': 'YYYY-MM-DD HH:mm',
+    'YYYY-MM-DD hh:mm:ss': 'YYYY-MM-DD HH:mm:ss',
+  };
+
+  const dateStr = moment(eventDate.date).add(tzOffset, 'm').utc().format(maskToFormat[eventDate.mask]);
+
+  return `${dateStr}${tzSuffix}`;
 };
 
 function EventDate(props) {

@@ -327,15 +327,39 @@ class Medium < ActiveRecord::Base
     add_reference(note)
   end
 
-  def exif_handle_date(extra_info)
+  def extract_date(extra_info)
     return if extra_info[:date_time_original].blank?
 
     date_time = extra_info[:date_time_original]
     date_time[4] = '-'
     date_time[7] = '-'
     extra_info[:offset_time_original].present? && date_time += extra_info[:offset_time_original]
+    date_time
+  end
+
+  def extract_timezone_offset(extra_info)
+    return if extra_info[:offset_time_original].blank?
+
+    m = extra_info[:offset_time_original].match(/^([+-])(\d\d):(\d\d)$/)
+    raise StandardError, "Unknown timezone format: #{extra_info[:offset_time_original]}" if m.nil?
+
+    offset = m[2].to_i * 60 + m[3].to_i
+
+    if m[1] == '+'
+      offset
+    else
+      -offset
+    end
+  end
+
+  def exif_handle_date(extra_info)
+    date_time = extract_date(extra_info)
+    return if date_time.blank?
+
     event_date = EventDate.new
     event_date.set_date(date_time)
+    timezone_offset = extract_timezone_offset(extra_info)
+    event_date.update_attribute(:timezone_offset, timezone_offset) unless timezone_offset.blank?
 
     raise StandardError, "Could not save EventDate with date #{event_date}" unless event_date.save
 

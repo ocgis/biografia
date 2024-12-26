@@ -34,6 +34,62 @@ class MediumTest < ActiveSupport::TestCase
                   expected: 'EventDate object' })
     test_assert({ got: referenced_objects[0].get_date,
                   expected: '2015-06-16 10:42:02' })
+    test_assert({ got: referenced_objects[0].timezone_offset,
+                  expected: nil })
+  end
+
+  test 'medium handle_extra_info date_time_tz_zero' do
+    medium = Medium.create_save(file_name: 'medium_date_time_tz_zero.jpeg')
+
+    medium.handle_extra_info
+
+    references = medium.get_references
+    referenced_objects = references.collect { |reference| reference.other_object(medium) }
+
+    test_assert({ got: "#{referenced_objects.length} referenced object",
+                  expected: '1 referenced object' })
+    test_assert({ got: "#{referenced_objects[0].class.name} object",
+                  expected: 'EventDate object' })
+    test_assert({ got: referenced_objects[0].get_date,
+                  expected: '2015-06-16 10:42:02' })
+    test_assert({ got: referenced_objects[0].timezone_offset,
+                  expected: 0 })
+  end
+
+  test 'medium handle_extra_info date_time_tz_positive' do
+    medium = Medium.create_save(file_name: 'medium_date_time_tz_positive.jpeg')
+
+    medium.handle_extra_info
+
+    references = medium.get_references
+    referenced_objects = references.collect { |reference| reference.other_object(medium) }
+
+    test_assert({ got: "#{referenced_objects.length} referenced object",
+                  expected: '1 referenced object' })
+    test_assert({ got: "#{referenced_objects[0].class.name} object",
+                  expected: 'EventDate object' })
+    test_assert({ got: referenced_objects[0].get_date,
+                  expected: '2015-06-16 09:19:02' })
+    test_assert({ got: referenced_objects[0].timezone_offset,
+                  expected: 83 })
+  end
+
+  test 'medium handle_extra_info date_time_tz_negative' do
+    medium = Medium.create_save(file_name: 'medium_date_time_tz_negative.jpeg')
+
+    medium.handle_extra_info
+
+    references = medium.get_references
+    referenced_objects = references.collect { |reference| reference.other_object(medium) }
+
+    test_assert({ got: "#{referenced_objects.length} referenced object",
+                  expected: '1 referenced object' })
+    test_assert({ got: "#{referenced_objects[0].class.name} object",
+                  expected: 'EventDate object' })
+    test_assert({ got: referenced_objects[0].get_date,
+                  expected: '2015-06-16 13:13:02' })
+    test_assert({ got: referenced_objects[0].timezone_offset,
+                  expected: -151 })
   end
 
   test 'medium handle_extra_info position' do
