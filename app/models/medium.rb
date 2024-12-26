@@ -304,8 +304,8 @@ class Medium < ActiveRecord::Base
   def self.exif_read_info(file_name)
     extra_info = {}
     full_file_name = File.join(Biografia::Application.config.protected_path, file_name)
-    file_type = MIME::Types.type_for(full_file_name).first.content_type
-    if (file_type == 'image/jpeg') || (file_type == 'image/tiff')
+    mime_types = MIME::Types.type_for(full_file_name).map(&:content_type)
+    if mime_types.any? { |mime_type| mime_type.start_with?('image/') || mime_type.start_with?('video/') }
       e = Exiftool.new(full_file_name)
       extra_info = extra_info.merge(e.to_hash)
     end
@@ -328,9 +328,11 @@ class Medium < ActiveRecord::Base
   end
 
   def extract_date(extra_info)
-    return if extra_info[:date_time_original].blank?
-
     date_time = extra_info[:date_time_original]
+    date_time = extra_info[:create_date] if date_time.blank?
+
+    return if date_time.blank?
+
     date_time[4] = '-'
     date_time[7] = '-'
     extra_info[:offset_time_original].present? && date_time += extra_info[:offset_time_original]
@@ -368,9 +370,7 @@ class Medium < ActiveRecord::Base
 
   def exif_handle_location(extra_info)
     unless extra_info[:gps_latitude].blank? ||
-           extra_info[:gps_latitude_ref].blank? ||
-           extra_info[:gps_longitude].blank? ||
-           extra_info[:gps_longitude_ref].blank?
+           extra_info[:gps_longitude].blank?
       address = Address.create_save(latitude: extra_info[:gps_latitude].to_f,
                                     longitude: extra_info[:gps_longitude].to_f)
       add_reference(address, role: 'Position')
@@ -379,8 +379,12 @@ class Medium < ActiveRecord::Base
 
   def exif_handle_camera(extra_info)
     device_attrs = {}
-    device_attrs[:make] = extra_info[:make] unless extra_info[:make].blank?
-    device_attrs[:model] = extra_info[:model] unless extra_info[:model].blank?
+    make = extra_info[:make]
+    make = extra_info[:android_manufacturer] if make.blank?
+    device_attrs[:make] = make unless make.blank?
+    model = extra_info[:model]
+    model = extra_info[:android_model] if model.blank?
+    device_attrs[:model] = model unless model.blank?
     device_attrs[:serial] = extra_info[:internal_serial_number] unless extra_info[:internal_serial_number].blank?
     if extra_info[:file_source] == 'Digital Camera'
       device_attrs[:kind] = 'Camera'
