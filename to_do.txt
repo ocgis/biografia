@@ -1,0 +1,10 @@
+- Update handling of hints for add reference, in particular for dates
+- Set size of objects when switching tab in show references
+- Add streaming of video media
+- Export PDF for media collections
+- Show version history
+- Add organization objects
+- Add place name to addresses
+- Find place name from GPS coordinates
+- Add GPS coordinates through map
+- Speed up media index
