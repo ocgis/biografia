@@ -1,4 +1,3 @@
-- Update handling of hints for add reference, for addresses
 - Set size of objects when switching tab in show references
 - Add streaming of video media
 - Export PDF for media collections
@@ -7,3 +6,4 @@
 - Add place name to addresses
 - Find place name from GPS coordinates
 - Add GPS coordinates through map
+- Move hint filtering / truncating of addresses and events into respective module

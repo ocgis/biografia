@@ -442,6 +442,10 @@ class AddReference extends React.Component {
         return true;
       };
 
+      if ((x._type_ === 'Address') && (x.street == null) && (x.town == null) && (x.zipcode == null) && (x.parish == null) && (x.country == null)) {
+        return false;
+      }
+
       for (let i = 0; i < ignoredItems.length; i += 1) {
         if (itemMatches(ignoredItems[i], x)) {
           return false;
