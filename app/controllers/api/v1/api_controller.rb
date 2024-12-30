@@ -35,7 +35,7 @@ module Api
         objects = objects.limit(params[:limit]) unless params[:limit].nil?
 
         r = {}
-        r[objects_name] = objects.map(&:all_attributes)
+        r[objects_name] = objects.map(&:limited_attributes)
         r[:current_user] = @current_user_hash
 
         render json: r
