@@ -295,7 +295,7 @@ class Medium < ActiveRecord::Base
 
     objects = []
     grouped_ids.each_key do |local_type|
-      objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:all_attributes)
+      objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:limited_attributes)
     end
 
     objects

@@ -107,7 +107,7 @@ module Api
             next if (!search_models.include? type) || (sids.include? sid)
 
             sids.append(sid)
-            objects.append(type.constantize.find(id).all_attributes)
+            objects.append(type.constantize.find(id).limited_attributes)
           end
         end
         objects

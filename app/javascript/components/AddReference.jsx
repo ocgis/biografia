@@ -174,7 +174,7 @@ class AddReference extends React.Component {
 
       const saveNewItem = (item) => {
         const {
-          _id, _created_at, _updated_at, _type_, ...newItem
+          id: _id, created_at: _created_at, updated_at: _updated_at, _type_, ...newItem
         } = item;
         const saveValue = {};
         if (item._type_ === 'EventDate') {
@@ -265,14 +265,36 @@ class AddReference extends React.Component {
       searchObject(value.target.value);
     };
 
-    const makeIgnoredItem = (obj) => {
-      if (obj._type_ === 'EventDate') {
-        const {
-          _id, _created_at, _updated_at, reference: _ref_, ...strippedItem
-        } = obj;
-        return strippedItem;
+    const truncateDate = (obj) => {
+      const {
+        id: _id, created_at: _created_at, updated_at: _updated_at, reference: _ref_,
+        ...strippedItem
+      } = obj;
+      if (strippedItem.mask.startsWith('YYYY-MM-DD')) {
+        if (strippedItem.timezone_offset != null) {
+          strippedItem.date = moment.utc(strippedItem.date).add(strippedItem.timezone_offset, 'm').toISOString();
+          strippedItem.timezone_offset = null;
+        }
+        strippedItem.mask = 'YYYY-MM-DD';
+        strippedItem.date = moment.utc(strippedItem.date).startOf('day').toISOString();
       }
-      return { _type_: obj._type_, id: obj.id };
+      return strippedItem;
+    };
+
+    const truncateObject = (obj) => {
+      if (obj._type_ === 'EventDate') {
+        return truncateDate(obj);
+      }
+      return obj;
+    };
+
+    const makeIgnoredItem = (obj) => {
+      const truncated = truncateObject(obj);
+
+      if ('id' in truncated) {
+        return { _type_: truncated._type_, id: truncated.id };
+      }
+      return truncated;
     };
 
     const { Search } = Input;
@@ -407,7 +429,8 @@ class AddReference extends React.Component {
       );
     }
 
-    const filtered = found.filter((x) => {
+    const truncated = found.map((x) => truncateObject(x));
+    const filtered = truncated.filter((x) => {
       const itemMatches = (i1, i2) => {
         const keys1 = Object.keys(i1);
         for (let i = 0; i < keys1.length; i += 1) {
