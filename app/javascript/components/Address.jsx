@@ -7,6 +7,7 @@ import Show from './Show';
 import Version from './Version';
 import EditAddress from './EditAddress';
 import EmbeddedMap from './EmbeddedMap';
+import AddressFromPosition from './AddressFromPosition';
 import ListObjects from './ListObjects';
 import { setMapping, webUrl } from './Mappings';
 
@@ -14,7 +15,7 @@ setMapping('Address', 'oneName', 'address');
 setMapping('Address', 'manyName', 'addresses');
 setMapping('Address', 'filterFields', ['street', 'town', 'zipcode', 'parish', 'country']);
 
-const OneLine = (props) => {
+function OneLine(props) {
   const { object: address } = props;
 
   const parts = [];
@@ -40,13 +41,28 @@ const OneLine = (props) => {
   }
 
   if (parts.length === 0 && address.latitude && address.longitude) {
-    parts.push(`${address.latitude},${address.longitude}`);
+    return (
+      <AddressFromPosition latitude={address.latitude} longitude={address.longitude} />
+    );
   }
   if (parts.length === 0) {
     return 'Empty address';
   }
 
   return parts.join(', ');
+}
+OneLine.propTypes = {
+  object: PropTypes.shape({
+    id: PropTypes.number,
+    street: PropTypes.string,
+    town: PropTypes.string,
+    zipcode: PropTypes.string,
+    parish: PropTypes.string,
+    country: PropTypes.string,
+    latitude: PropTypes.string,
+    longitude: PropTypes.string,
+    maps_address: PropTypes.string,
+  }).isRequired,
 };
 
 function Address(props) {
