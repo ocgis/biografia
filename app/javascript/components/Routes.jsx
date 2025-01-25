@@ -9,6 +9,7 @@ import { IndexMedium, ShowMedium, VersionMedium } from './Medium';
 import { IndexEvent, ShowEvent, VersionEvent } from './Event';
 import { ShowEventDate, VersionEventDate } from './EventDate';
 import { IndexAddress, ShowAddress, VersionAddress } from './Address';
+import { IndexEstablishment, ShowEstablishment, VersionEstablishment } from './Establishment';
 import { IndexThing, ShowThing, VersionThing } from './Thing';
 import { ShowRelationship, VersionRelationship } from './Relationship';
 import { IndexTransfer, ShowTransfer } from './Transfer';
@@ -115,6 +116,21 @@ export default (
         path={webUrl('Address')}
         exact
         element={<IndexAddress />}
+      />
+      <Route
+        path={webUrl('Establishment', ':id', 'examine')}
+        exact
+        element={<VersionEstablishment />}
+      />
+      <Route
+        path={webUrl('Establishment', ':id')}
+        exact
+        element={<ShowEstablishment />}
+      />
+      <Route
+        path={webUrl('Establishment')}
+        exact
+        element={<IndexEstablishment />}
       />
       <Route
         path={webUrl('Thing', ':id', 'examine')}

@@ -37,6 +37,11 @@ function TopMenu(props) {
         component: editObject('Address'),
         _type_: 'Address',
       },
+      addEstablishment: {
+        title: 'Lägg till ställe',
+        component: editObject('Establishment'),
+        _type_: 'Establishment',
+      },
       addThing: {
         title: 'Lägg till sak',
         component: editObject('Thing'),
@@ -142,6 +147,16 @@ function TopMenu(props) {
               onClick={menuClicked}
             >
               <Menu.Item key="addAddress">
+                Lägg till
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="establishments"
+              title="Ställen"
+              onTitleClick={() => navigate(webUrl('Establishment'))}
+              onClick={menuClicked}
+            >
+              <Menu.Item key="addEstablishment">
                 Lägg till
               </Menu.Item>
             </SubMenu>

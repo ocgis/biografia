@@ -38,6 +38,7 @@ function ShowReferences(props) {
   const tabHeader = (key) => {
     const header = {
       people: 'Personer',
+      establishments: 'Ställen',
       events: 'Händelser',
       event_dates: 'Datum',
       notes: 'Kommentarer',

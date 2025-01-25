@@ -11,10 +11,10 @@ class Ability
 
     if user.has_role? :editor
       can %i[delete destroy newp createp edit update selmerge edmerge domerge examine],
-          [Address, Event, EventDate, Note, Person, Relationship, Thing]
+          [Address, Establishment, Event, EventDate, Note, Person, Relationship, Thing]
       can %i[create delete destroy connection_choose connection_add update], Reference
       can %i[create new], Transfer
-      can %i[new create hint], [Address, Event, EventDate, Note, Person, Relationship, Thing]
+      can %i[new create hint], [Address, Establishment, Event, EventDate, Note, Person, Relationship, Thing]
       can %i[new create delete destroy tag search info show_file
              register import_exif file_image file_thumb file_raw examine hint],
           Medium
@@ -25,7 +25,7 @@ class Ability
     return unless user.has_role? :watcher
 
     can %i[index show],
-        [Address, Event, EventDate, Note, Person, Relationship, Thing]
+        [Address, Establishment, Event, EventDate, Note, Person, Relationship, Thing]
     can %i[index show], Transfer
     can :ancestry, Person
     can %i[index show image thumb raw], Medium

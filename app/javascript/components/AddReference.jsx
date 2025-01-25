@@ -507,6 +507,17 @@ class AddReference extends React.Component {
                 </Button>
                 <Button
                   onClick={() => this.setState((prevState) => ({
+                    addType: 'Establishment',
+                    reference: {
+                      ...prevState.reference,
+                      name: 'Establishment',
+                    },
+                  }))}
+                >
+                  Nytt ställe
+                </Button>
+                <Button
+                  onClick={() => this.setState((prevState) => ({
                     addType: 'Thing',
                     reference: {
                       ...prevState.reference,

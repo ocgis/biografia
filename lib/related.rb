@@ -72,6 +72,7 @@ module Related
     main_objects.each do |main_object|
       main_object[:related] = {
         addresses: [],
+        establishments: [],
         event_dates: [],
         events: [],
         media: [],

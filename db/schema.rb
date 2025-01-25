@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_25_065911) do
+ActiveRecord::Schema[7.0].define(version: 2025_01_25_112632) do
   create_table "addresses", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "street", limit: 80
     t.string "town", limit: 80
@@ -22,6 +22,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_25_065911) do
     t.datetime "updated_at", precision: nil
     t.decimal "latitude", precision: 13, scale: 9
     t.decimal "longitude", precision: 13, scale: 9
+  end
+
+  create_table "establishments", charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "event_dates", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|

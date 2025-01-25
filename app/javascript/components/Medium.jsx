@@ -71,6 +71,20 @@ function Overview({ object: medium, currentUser, reload }) {
     )));
   }
 
+  if (medium.related.establishments.length > 0) {
+    if (objectsInPicture.length > 0) {
+      objectsInPicture.push(', ');
+    }
+    const ShowObject = showObject('Establishment');
+    objectsInPicture.push(...medium.related.establishments.map((establishment) => (
+      <ShowObject
+        key={`${establishment._type_}_${establishment.id}`}
+        object={establishment}
+        mode="oneLineLinked"
+      />
+    )));
+  }
+
   if (medium.related.addresses.length > 0) {
     if (objectsInPicture.length > 0) {
       objectsInPicture.push(', ');
@@ -262,6 +276,7 @@ class Medium extends React.Component {
         appendElements={mediaTag}
         modifierProps={{
           showAddAddress: true,
+          showAddEstablishment: true,
           showAddEvent: true,
           showAddEventDate: true,
           showAddNote: true,

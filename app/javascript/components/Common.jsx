@@ -20,7 +20,7 @@ function Modifier(props) {
   }
 
   const {
-    mainObject, parent, reload, showAddAddress, showAddPerson, showAddEvent,
+    mainObject, parent, reload, showAddAddress, showAddPerson, showAddEstablishment, showAddEvent,
     showAddNote, showAddEventDate, showAddRelationship, showAddThing,
     showTagMedium, showImportExif, showMergeWith, editTitle,
   } = props;
@@ -58,6 +58,15 @@ function Modifier(props) {
       key: 'address',
       text: 'lägg till adress',
       component: editObject('Address'),
+      props: { extraData: { referFrom: mainObject } },
+    });
+  }
+
+  if (showAddEstablishment) {
+    itemList.push({
+      key: 'establishment',
+      text: 'lägg till ställe',
+      component: editObject('Establishment'),
       props: { extraData: { referFrom: mainObject } },
     });
   }
@@ -257,6 +266,7 @@ Modifier.propTypes = {
   }).isRequired,
   showAddAddress: PropTypes.bool,
   showAddPerson: PropTypes.bool,
+  showAddEstablishment: PropTypes.bool,
   showAddEvent: PropTypes.bool,
   showAddEventDate: PropTypes.bool,
   showAddNote: PropTypes.bool,
@@ -271,6 +281,7 @@ Modifier.defaultProps = {
   parent: null,
   showAddAddress: false,
   showAddPerson: false,
+  showAddEstablishment: false,
   showAddEvent: false,
   showAddEventDate: false,
   showAddNote: false,
