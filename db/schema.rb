@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_01_25_112632) do
+ActiveRecord::Schema[7.0].define(version: 2025_11_09_105331) do
   create_table "addresses", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "street", limit: 80
     t.string "town", limit: 80
@@ -152,7 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_25_112632) do
     t.string "provider"
     t.string "uid"
     t.string "name"
-    t.string "oauth_token"
+    t.text "oauth_token"
     t.datetime "oauth_expires_at", precision: nil
     t.integer "roles_mask", default: 0
     t.datetime "created_at", precision: nil
