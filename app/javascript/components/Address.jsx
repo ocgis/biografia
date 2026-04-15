@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { ReloadOutlined } from '@ant-design/icons';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
@@ -16,7 +17,8 @@ setMapping('Address', 'manyName', 'addresses');
 setMapping('Address', 'filterFields', ['street', 'town', 'zipcode', 'parish', 'country']);
 
 function OneLine(props) {
-  const { object: address } = props;
+  const { linked, object: address } = props;
+  const [lookupGeocode, setLookupGeocode] = useState(false);
 
   const parts = [];
 
@@ -40,17 +42,55 @@ function OneLine(props) {
     parts.push(`${address.country}`);
   }
 
+  let oneLine = 'Empty address';
+
   if (parts.length === 0 && address.latitude && address.longitude) {
-    return (
-      <AddressFromPosition latitude={address.latitude} longitude={address.longitude} />
-    );
-  }
-  if (parts.length === 0) {
-    return 'Empty address';
+    if (lookupGeocode) {
+      oneLine = (
+        <AddressFromPosition latitude={address.latitude} longitude={address.longitude} />
+      );
+      if (linked) {
+        oneLine = (
+          <Link to={webUrl('Address', address.id)}>
+            { oneLine }
+          </Link>
+        );
+      }
+    } else {
+      let position = `${address.latitude}; ${address.longitude}`;
+      if (linked) {
+        position = (
+          <Link to={webUrl('Address', address.id)}>
+            { position }
+          </Link>
+        );
+      }
+      oneLine = (
+        <>
+          { position }
+          <ReloadOutlined
+            onClick={() => setLookupGeocode(true)}
+          />
+        </>
+      );
+    }
+  } else {
+    if (parts.length > 0) {
+      oneLine = parts.join(', ');
+    }
+
+    if (linked) {
+      oneLine = (
+        <Link to={webUrl('Address', address.id)}>
+          { oneLine }
+        </Link>
+      );
+    }
   }
 
-  return parts.join(', ');
+  return oneLine;
 }
+
 OneLine.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
@@ -63,6 +103,10 @@ OneLine.propTypes = {
     longitude: PropTypes.string,
     maps_address: PropTypes.string,
   }).isRequired,
+  linked: PropTypes.bool,
+};
+OneLine.defaultProps = {
+  linked: false,
 };
 
 function Address(props) {
@@ -78,9 +122,7 @@ function Address(props) {
 
   if (mode === 'oneLineLinked') {
     return (
-      <Link to={webUrl('Address', address.id)}>
-        <OneLine object={address} />
-      </Link>
+      <OneLine object={address} linked />
     );
   }
 
