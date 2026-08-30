@@ -405,7 +405,7 @@ class AddReference extends React.Component {
             <tr>
               <td aria-label="Edit object">
                 <EditObject
-                  extraData={{ reference }}
+                  extraData={{ reference, referFrom }}
                   onOk={handleResult}
                   onCancel={() => this.setState((prevState) => ({
                     addType: null,

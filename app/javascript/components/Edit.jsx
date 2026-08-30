@@ -40,8 +40,8 @@ class Edit extends React.Component {
     const handleObjectSaveResult = (result) => {
       if (result.error == null) {
         const { reference } = this.state;
-        if (reference != null) {
-          const { _type_ } = this.props;
+        const { _type_ } = this.props;
+        if ((reference != null) && (_type_ !== 'Establishment')) {
           if (oneName(_type_) in result) {
             reference.id2 = result[oneName(_type_)].id;
             reference.type2 = _type_;
@@ -118,7 +118,7 @@ class Edit extends React.Component {
     return (
       <div>
         { referenceElement }
-        <FormObject object={object} onChange={onChange} />
+        <FormObject object={object} onChange={onChange} referFrom={referFrom} />
         <CheckOutlined onClick={okButtonClicked} />
         <CloseOutlined onClick={closeButtonClicked} />
         { error }

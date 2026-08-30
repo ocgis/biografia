@@ -149,6 +149,38 @@ module Api
         @current_user_hash = { name: current_user.name,
                                roles: current_user.roles }
       end
+
+      def create_object_by_class(cls, params, reference_attrs)
+        object_attrs = params.permit(cls.attribute_names)
+        object = cls.new(object_attrs)
+        object.save # FIXME: handle failure
+
+        create_related(object, params['related']) if params.key? 'related'
+
+        unless reference_attrs.nil?
+          reference_attrs[:type2] = object.class.name
+          reference_attrs[:id2] = object.id
+          reference = Reference.new(reference_attrs)
+          reference.save # FIXME: handle failure
+        end
+
+        object
+      end
+
+      def create_related(parent_object, params)
+        params.each_key do |key|
+          key_class = key.singularize.camelize.constantize
+
+          params[key].each do |object_params|
+            reference_attrs = {
+              name: key_class.name,
+              type1: parent_object.class.name,
+              id1: parent_object.id
+            }
+            create_object_by_class(key_class, object_params, reference_attrs)
+          end
+        end
+      end
     end
   end
 end

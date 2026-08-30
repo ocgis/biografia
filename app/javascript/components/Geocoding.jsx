@@ -2,6 +2,8 @@ import {
   setKey, setRegion, setLanguage, fromLatLng,
 } from 'react-geocode';
 import Config from './Config';
+import { apiUrl } from './Mappings';
+import { postRequest } from './Requests';
 
 const geocodingFromPosition = (latitude, longitude, callback) => {
   const { publicApiKey } = Config.google;
@@ -24,10 +26,22 @@ const addressFromPosition = (latitude, longitude, callback) => {
 };
 
 const placesFromPosition = (latitude, longitude, callback) => {
-  geocodingFromPosition(latitude, longitude, (results) => {
-    const places = results.filter((entry) => entry.types.includes('establishment'));
-    callback(places);
-  });
+  const baseUrl = apiUrl('Establishment');
+  const url = `${baseUrl}/by_position`;
+
+  const data = {
+    latitude,
+    longitude,
+  };
+  const handleResponse = (response) => {
+    if ('places' in response.data) {
+      callback(response.data.places);
+    } else {
+      callback([]);
+    }
+  };
+  const handleError = (error) => console.error('Geocoding: placesFromPosition: TODO: Handle error', error);
+  postRequest(url, data, handleResponse, handleError);
 };
 
 export { addressFromPosition, placesFromPosition };
