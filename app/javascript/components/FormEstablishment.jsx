@@ -3,59 +3,23 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import FormAddress from './FormAddress';
-import { placesFromPosition } from './Geocoding';
-
-const typeOfPlace = (place) => {
-  if (!place.primaryTypeDisplayName) {
-    return undefined;
-  }
-  return place.primaryTypeDisplayName.text;
-};
-
-const addressOfPlace = (place) => place.formattedAddress;
-
-const placeToAddress = (place) => {
-  const address = {};
-
-  address.latitude = place.location.latitude;
-  address.longitude = place.location.longitude;
-  place.addressComponents.forEach((c) => {
-    if (c.types.includes('country')) {
-      address.country = c.longText;
-    }
-    if (c.types.includes('route')) {
-      if (address.street) {
-        address.street = `${c.longText} ${address.street}`;
-      } else {
-        address.street = c.longText;
-      }
-    }
-    if (c.types.includes('street_number')) {
-      if (address.street) {
-        address.street = `${address.street} ${c.longText}`;
-      } else {
-        address.street = c.longText;
-      }
-    }
-    if (c.types.includes('postal_town')) {
-      address.town = c.longText;
-    }
-    if (c.types.includes('postal_code')) {
-      address.zipcode = c.longText;
-    }
-  });
-
-  return address;
-};
+import {
+  placesFromPosition,
+  placeResultToAddressObject,
+  placeResultName,
+  placeResultType,
+  placeResultFormattedAddress,
+  placeResultKey,
+} from './Geocoding';
 
 function PresentHint(props) {
   const { place, onSelect } = props;
-  let hintText = place.displayName.text;
-  const typeText = typeOfPlace(place);
+  let hintText = placeResultName(place);
+  const typeText = placeResultType(place);
   if (typeText) {
     hintText += ` (${typeText})`;
   }
-  hintText += `, ${addressOfPlace(place)}`;
+  hintText += `, ${placeResultFormattedAddress(place)}`;
   return (
     <div>
       { hintText }
@@ -71,7 +35,7 @@ PresentHint.propTypes = {
 function PresentHints(props) {
   const { places, onSelect } = props;
   const hints = places.map((place) => (
-    <PresentHint key={place.name} place={place} onSelect={onSelect} />
+    <PresentHint key={placeResultKey(place)} place={place} onSelect={onSelect} />
   ));
   return hints;
 }
@@ -217,11 +181,11 @@ class FormEstablishment extends React.Component {
                 onSelect={(object) => {
                   const newEstablishment = {
                     ...establishment,
-                    name: object.displayName.text,
-                    kind: typeOfPlace(object),
+                    name: placeResultName(object),
+                    kind: placeResultType(object),
                     related: {
                       addresses: [
-                        placeToAddress(object),
+                        placeResultToAddressObject(object),
                       ],
                     },
                   };
