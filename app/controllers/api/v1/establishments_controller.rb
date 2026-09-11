@@ -16,6 +16,7 @@ module Api
         puts 'by_position called'
         latitude = params['latitude']
         longitude = params['longitude']
+        included_types = params['includedTypes']
 
         new_todo = {
           "maxResultCount": 20,
@@ -31,6 +32,7 @@ module Api
           },
           "languageCode": 'sv'
         }
+        new_todo['includedTypes'] = included_types unless included_types.nil?
         uri = URI('https://places.googleapis.com/v1/places:searchNearby')
         https = Net::HTTP.new(uri.host, uri.port)
         https.use_ssl = true

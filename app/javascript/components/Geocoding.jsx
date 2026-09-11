@@ -68,13 +68,14 @@ const addressResultToAddressObject = (result) => {
   return address;
 };
 
-const placesFromPosition = (latitude, longitude, callback) => {
+const placesFromPosition = (latitude, longitude, includedTypes, callback) => {
   const baseUrl = apiUrl('Establishment');
   const url = `${baseUrl}/by_position`;
 
   const data = {
     latitude,
     longitude,
+    includedTypes,
   };
   const handleResponse = (response) => {
     if ('places' in response.data) {

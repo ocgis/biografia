@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+import { Input, Select } from 'antd';
 import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import FormAddress from './FormAddress';
 import {
@@ -32,6 +32,32 @@ PresentHint.propTypes = {
   onSelect: PropTypes.func.isRequired,
 };
 
+function IncludeTypes(props) {
+  const onTypeSelectChange = (value) => {
+    const { onChange } = props;
+    onChange(value);
+  };
+
+  const options = [
+    { label: 'Flygplatser', value: 'airport' },
+    { label: 'Hotell', value: 'hotel' },
+  ];
+
+  return (
+    <Select
+      mode="multiple"
+      allowClear
+      style={{ width: '20em' }}
+      options={options}
+      onChange={onTypeSelectChange}
+      placeholder="Filtrera på typ"
+    />
+  );
+}
+IncludeTypes.propTypes = {
+  onChange: PropTypes.func.isRequired,
+};
+
 function PresentHints(props) {
   const { places, onSelect } = props;
   const hints = places.map((place) => (
@@ -45,38 +71,31 @@ PresentHints.propTypes = {
 };
 
 function EstablishmentHints(props) {
-  let initHintsFetched = true;
   const { onSelect, referFrom } = props;
-  if (referFrom != null) {
-    if (referFrom.related != null) {
-      if (referFrom.related.addresses.length > 0) {
-        initHintsFetched = false;
-      }
-    }
-  }
-
-  const [hintsFetched, setHintsFetched] = useState(initHintsFetched);
   const [places, setPlaces] = useState([]);
+  const [includeTypes, setIncludeTypes] = useState([]);
 
   const loadHints = () => {
     referFrom.related.addresses.forEach((address) => {
       if ((address.latitude != null) && (address.longitude != null)) {
-        placesFromPosition(address.latitude, address.longitude, (p) => setPlaces(places.concat(p)));
+        placesFromPosition(
+          address.latitude,
+          address.longitude,
+          includeTypes,
+          (p) => setPlaces(p),
+        );
       }
     });
-    setHintsFetched(true);
   };
 
-  if (!hintsFetched) {
-    return (
+  return (
+    <>
       <ReloadOutlined
         onClick={() => loadHints()}
       />
-    );
-  }
-
-  return (
-    <PresentHints places={places} onSelect={onSelect} />
+      <IncludeTypes onChange={setIncludeTypes} />
+      <PresentHints places={places} onSelect={onSelect} />
+    </>
   );
 }
 EstablishmentHints.propTypes = {
