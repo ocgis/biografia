@@ -19,12 +19,12 @@
     "moment": "^2.29.4",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
+    "react_ujs": "^2.6.2",
     "react-dom": "^18.2.0",
     "react-geocode": "^1.0.0-alpha.1",
     "react-image-crop": "^9.0.5",
     "react-router-dom": "^6.3.0",
     "react-window": "^1.8.7",
-    "react_ujs": "^2.6.2",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.54.3",
     "sass-loader": "^13.0.2",
@@ -43,6 +43,11 @@
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "typescript": "^4.7.4",
+    "webpack": "^5.110.3",
+    "webpack-cli": "^7.2.3",
     "webpack-dev-server": "^4.9.3"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
   }
 }
