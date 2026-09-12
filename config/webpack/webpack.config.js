@@ -11,7 +11,7 @@ module.exports = {
     filename: "[name].js",
     sourceMapFilename: "[file].map",
     chunkFormat: "module",
-    path: path.resolve(__dirname, "app/assets/builds"),
+    path: path.resolve(__dirname, '..', '..', 'app/assets/builds'),
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
