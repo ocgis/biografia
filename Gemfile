@@ -90,6 +90,7 @@ gem 'pry-doc'
 # Export db data
 gem 'yaml_db'
 
+gem 'jsbundling-rails'
 gem 'webpacker'
 
 gem 'stringio', '= 3.0.1'
