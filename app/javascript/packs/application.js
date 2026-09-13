@@ -7,8 +7,8 @@
 // layout file, like app/views/layouts/application.html.erb
 
 import 'stylesheets/application';
-import 'src/dropdownmenu';
-import 'src/global';
+//import 'src/dropdownmenu';
+//import 'src/global';
 import Rails from '@rails/ujs';
 
 // Copy all static images under ../images to the output folder and reference
