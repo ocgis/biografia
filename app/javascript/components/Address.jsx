@@ -99,8 +99,8 @@ OneLine.propTypes = {
     zipcode: PropTypes.string,
     parish: PropTypes.string,
     country: PropTypes.string,
-    latitude: PropTypes.string,
-    longitude: PropTypes.string,
+    latitude: PropTypes.number,
+    longitude: PropTypes.number,
     maps_address: PropTypes.string,
   }).isRequired,
   linked: PropTypes.bool,
@@ -137,7 +137,11 @@ function Address(props) {
         <div>
           <OneLine object={address} />
           <br />
-          <EmbeddedMap location={address.maps_address} />
+          <EmbeddedMap
+            location={address.maps_address}
+            latitude={address.latitude}
+            longitude={address.longitude}
+          />
         </div>
       );
     }
@@ -169,6 +173,8 @@ Address.propTypes = {
   object: PropTypes.shape({
     id: PropTypes.number,
     maps_address: PropTypes.string,
+    latitude: PropTypes.string,
+    longitude: PropTypes.string,
   }).isRequired,
   currentUser: PropTypes.shape({}),
   reload: PropTypes.func,

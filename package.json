@@ -19,12 +19,14 @@
     "jquery": "^3.5.1",
     "jquery-jcrop": "^0.9.15",
     "jquery-ui-dist": "^1.13.1",
+    "leaflet": "^1.9.4",
     "moment": "^2.29.4",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-geocode": "^1.0.0-alpha.1",
     "react-image-crop": "^9.0.5",
+    "react-leaflet": "4",
     "react-router-dom": "^6.3.0",
     "react-window": "^1.8.7",
     "react_ujs": "^2.6.2",
@@ -54,9 +56,9 @@
   },
   "babel": {
     "presets": [
-        "@babel/preset-env",
-        "@babel/preset-react",
-        "@babel/preset-typescript"
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "@babel/preset-typescript"
     ]
   }
 }
