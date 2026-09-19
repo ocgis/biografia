@@ -1,16 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  MapContainer, TileLayer, Marker, Popup,
+  MapContainer, TileLayer, Marker, Tooltip,
 } from 'react-leaflet';
 import Config from './Config';
 
 function EmbeddedMap(props) {
-  const { latitude, longitude } = props;
+  const { latitude, longitude, description } = props;
   const { publicApiKey: apiKey } = Config.google;
 
   if ((latitude != null) && (longitude != null)) {
     const position = [latitude, longitude];
+    let tooltip = null;
+    if (description != null) {
+      tooltip = (
+        <Tooltip>
+          {description}
+        </Tooltip>
+      );
+    }
     return (
       <div style={{ height: '450px', width: '600px' }}>
         <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
@@ -19,11 +27,7 @@ function EmbeddedMap(props) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup.
-              <br />
-              Easily customizable.
-            </Popup>
+            {tooltip}
           </Marker>
         </MapContainer>
       </div>
@@ -50,12 +54,14 @@ EmbeddedMap.propTypes = {
   location: PropTypes.string,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
+  description: PropTypes.element,
 };
 
 EmbeddedMap.defaultProps = {
   location: null,
   latitude: null,
   longitude: null,
+  description: null,
 };
 
 export default EmbeddedMap;

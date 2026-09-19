@@ -141,6 +141,7 @@ function Address(props) {
             location={address.maps_address}
             latitude={address.latitude}
             longitude={address.longitude}
+            description={<OneLine object={address} />}
           />
         </div>
       );
