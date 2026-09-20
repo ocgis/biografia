@@ -41,6 +41,9 @@ function IncludeTypes(props) {
   const options = [
     { label: 'Flygplatser', value: 'airport' },
     { label: 'Hotell', value: 'hotel' },
+    { label: 'Nöjesparker', value: 'amusement_park' },
+    { label: 'Parker', value: 'park' },
+    { label: 'Turistattraktioner', value: 'tourist_attraction' },
   ];
 
   return (

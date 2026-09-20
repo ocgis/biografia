@@ -27,7 +27,7 @@ module Api
                 "latitude": latitude,
                 "longitude": longitude
               },
-              "radius": 500.0
+              "radius": 2000.0
             }
           },
           "languageCode": 'sv'
