@@ -5,11 +5,12 @@ import { Button, Input, List } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactCrop from 'react-image-crop';
 import { debounce } from 'throttle-debounce';
+import EmbeddedMap from './EmbeddedMap';
 import {
   errorText, getRequest, loadData, saveData,
 } from './Requests';
 import {
-  apiUrl, editObject, oneName, showObject,
+  apiUrl, editObject, oneName, manyName, showObject,
 } from './Mappings';
 
 class AddReference extends React.Component {
@@ -91,8 +92,45 @@ class AddReference extends React.Component {
       this.setState({ error: errorText(error) });
     };
 
+    const objectAttachRelatedObject = (object, relatedObject) => {
+      const relatedObjectManyName = manyName(relatedObject._type_);
+      const related = {};
+      related[relatedObjectManyName] = [{
+        ...relatedObject,
+        reference: object.reference,
+      }];
+      const newObject = {
+        ...object,
+        related,
+      };
+      return newObject;
+    };
+
+    const extractRelatedFromObject = (object) => {
+      const relatedObjects = [];
+
+      if ('related' in object) {
+        Object.keys(object.related).forEach((key) => {
+          object.related[key].forEach((relatedObject) => {
+            // Swap places for main and related
+            relatedObjects.push(objectAttachRelatedObject(relatedObject, object));
+          });
+        });
+      }
+      return relatedObjects;
+    };
+
+    const extractRelatedFromObjects = (objects) => {
+      const relatedObjects = [];
+      objects.forEach((object) => {
+        relatedObjects.push(...extractRelatedFromObject(object));
+      });
+      return relatedObjects;
+    };
+
     const handleHintResponse = (response, prevFound) => {
-      const found = [...response.data.hint, ...prevFound];
+      const extractRelated = extractRelatedFromObjects(response.data.hint);
+      const found = [...extractRelated, ...response.data.hint, ...prevFound];
 
       this.setState({ found, searchString });
     };
@@ -455,6 +493,44 @@ class AddReference extends React.Component {
 
       return true;
     });
+    const getPrimaryPosition = (object) => {
+      let primaryPosition = null;
+      if (object._type_ === 'Address') {
+        if ((object.latitude != null)
+            && (object.longitude != null)) {
+          primaryPosition = object;
+        }
+      } else if ('related' in object && 'addresses' in object.related) {
+        object.related.addresses.forEach((address) => {
+          if ((address.latitude != null)
+              && (address.longitude != null)) {
+            primaryPosition = address;
+          }
+        });
+      }
+      return primaryPosition;
+    };
+    const markers = [];
+    const referFromPosition = getPrimaryPosition(referFrom);
+    if (referFromPosition != null) {
+      const ShowReferFrom = showObject(referFrom._type_);
+      markers.push({
+        latitude: referFromPosition.latitude,
+        longitude: referFromPosition.longitude,
+        description: <ShowReferFrom object={referFrom} mode="oneLine" />,
+      });
+    }
+    const withPosition = filtered.filter((object) => getPrimaryPosition(object) != null);
+    markers.push(...withPosition.map((object) => {
+      // console.log('markers', object);
+      const position = getPrimaryPosition(object);
+      const ShowObject = showObject(object._type_);
+      return {
+        latitude: position.latitude,
+        longitude: position.longitude,
+        description: <ShowObject object={object} mode="oneLine" />,
+      };
+    }));
     return (
       <>
         <table>
@@ -586,6 +662,11 @@ class AddReference extends React.Component {
                     height: mainHeight,
                     width: '500px',
                   }}
+                />
+              </td>
+              <td>
+                <EmbeddedMap
+                  markers={markers}
                 />
               </td>
               { referFrom._type_ === 'Medium'

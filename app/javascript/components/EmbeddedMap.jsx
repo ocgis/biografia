@@ -6,7 +6,9 @@ import {
 import Config from './Config';
 
 function EmbeddedMap(props) {
-  const { latitude, longitude, description } = props;
+  const {
+    markers, latitude, longitude, description,
+  } = props;
   const { publicApiKey: apiKey } = Config.google;
 
   if ((latitude != null) && (longitude != null)) {
@@ -34,6 +36,39 @@ function EmbeddedMap(props) {
     );
   }
 
+  if ((markers != null) && (markers.length > 0)) {
+    const position = [markers[0].latitude, markers[0].longitude];
+    const markerElements = markers.map((marker) => {
+      let tooltip = null;
+      if (marker.description != null) {
+        tooltip = (
+          <Tooltip>
+            {marker.description}
+          </Tooltip>
+        );
+      }
+      return (
+        <Marker position={[marker.latitude, marker.longitude]}>
+          {tooltip}
+        </Marker>
+      );
+    });
+    return (
+      <>
+        {`${position[0]}, ${position[1]}`}
+        <div style={{ height: '450px', width: '600px' }}>
+          <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {markerElements}
+          </MapContainer>
+        </div>
+      </>
+    );
+  }
+
   const { location } = props;
   const { attributionUrl } = Config.google;
   const src = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${location}&attribution_source=Google+Maps+Embed+API&attribution_web_url=${attributionUrl}&attribution_ios_deep_link_id=comgooglemaps://?daddr=#{location}`;
@@ -51,6 +86,7 @@ function EmbeddedMap(props) {
 }
 
 EmbeddedMap.propTypes = {
+  markers: PropTypes.arrayOf(PropTypes.shape()),
   location: PropTypes.string,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
@@ -58,6 +94,7 @@ EmbeddedMap.propTypes = {
 };
 
 EmbeddedMap.defaultProps = {
+  markers: null,
   location: null,
   latitude: null,
   longitude: null,

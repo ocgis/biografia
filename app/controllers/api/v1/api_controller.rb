@@ -44,7 +44,8 @@ module Api
       def show
         r = {}
         r[:current_user] = @current_user_hash
-        r[controller_name.singularize] = related(controller_name.singularize.camelize, params[:id].to_i)
+        r[controller_name.singularize] = related([{ _type_: controller_name.singularize.camelize,
+                                                    id: params[:id].to_i }])[0]
 
         render json: r
       end

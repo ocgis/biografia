@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Fetch an object with related objects from the database
+# Fetch objects with related objects from the database
+# Parameter main_ids is a list of hashes: { _type_: <type>, id: <id> }
 module Related
-  def related(_type_, id)
-    main_ids = [{ _type_:, id: }]
+  def related(main_ids)
     references_level1 = matching(main_ids)
     ids_level1 = others(main_ids[0], references_level1)
 
@@ -39,7 +39,7 @@ module Related
     # TODO: Set version info for main object, like this:
     # @object_attributes[:version] = @object.version_info if @object.respond_to?(:version_info)
 
-    main_objects[0]
+    main_objects
   end
 
   private
