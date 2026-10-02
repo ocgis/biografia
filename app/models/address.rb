@@ -1,12 +1,15 @@
 # coding: utf-8
 # frozen_string_literal: true
 
+require 'related'
+
 # This is the address model
 class Address < ActiveRecord::Base
   has_paper_trail
 
   extend CommonClassMethods
   include CommonInstanceMethods
+  include Related
 
   def controller
     'addresses'
@@ -81,5 +84,33 @@ class Address < ActiveRecord::Base
 
   def self.with_associations
     self
+  end
+
+  def hint
+    hint_by_position
+  end
+
+  def hint_by_position
+    objects = []
+    unless latitude.nil? || longitude.nil?
+      distance_m = 2000.0
+      latitude_delta = distance_m / 111_132
+      longitude_delta = distance_m / (111_132 * Math.cos(latitude * Math::PI / 360))
+
+      addresses = Address.where(
+        'latitude > :min AND latitude < :max',
+        min: latitude - latitude_delta,
+        max: latitude + latitude_delta
+      ).where(
+        'longitude > :min AND longitude < :max',
+        min: longitude - longitude_delta,
+        max: longitude + longitude_delta
+      )
+
+      address_ids = addresses.map { |a| { _type_: 'Address', id: a.id } }
+      objects.concat(related(address_ids))
+    end
+
+    objects
   end
 end
