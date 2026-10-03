@@ -510,18 +510,18 @@ class AddReference extends React.Component {
       }
       return primaryPosition;
     };
-    const markers = [];
     const referFromPosition = getPrimaryPosition(referFrom);
+    let latitude = null;
+    let longitude = null;
+    let tooltip = null;
     if (referFromPosition != null) {
       const ShowReferFrom = showObject(referFrom._type_);
-      markers.push({
-        latitude: referFromPosition.latitude,
-        longitude: referFromPosition.longitude,
-        tooltip: <ShowReferFrom object={referFrom} mode="oneLine" />,
-      });
+      latitude = referFromPosition.latitude;
+      longitude = referFromPosition.longitude;
+      tooltip = <ShowReferFrom object={referFrom} mode="oneLine" />;
     }
     const withPosition = filtered.filter((object) => getPrimaryPosition(object) != null);
-    markers.push(...withPosition.map((object) => {
+    const markers = withPosition.map((object) => {
       const position = getPrimaryPosition(object);
       const ShowObject = showObject(object._type_);
       return {
@@ -529,7 +529,7 @@ class AddReference extends React.Component {
         longitude: position.longitude,
         tooltip: <ShowObject object={object} mode="oneLine" />,
       };
-    }));
+    });
     return (
       <>
         <table>
@@ -665,6 +665,9 @@ class AddReference extends React.Component {
               </td>
               <td>
                 <EmbeddedMap
+                  latitude={latitude}
+                  longitude={longitude}
+                  tooltip={tooltip}
                   markers={markers}
                 />
               </td>

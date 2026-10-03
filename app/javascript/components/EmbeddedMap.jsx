@@ -11,8 +11,11 @@ function EmbeddedMap(props) {
   } = props;
   const { publicApiKey: apiKey } = Config.google;
 
+  let mainMarkerElement = null;
+  let position = null;
+
   if ((latitude != null) && (longitude != null)) {
-    const position = [latitude, longitude];
+    position = [latitude, longitude];
     let tooltipElement = null;
     if (tooltip != null) {
       tooltipElement = (
@@ -21,24 +24,19 @@ function EmbeddedMap(props) {
         </Tooltip>
       );
     }
-    return (
-      <div style={{ height: '450px', width: '600px' }}>
-        <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <CircleMarker center={position} radius="10">
-            {tooltipElement}
-          </CircleMarker>
-        </MapContainer>
-      </div>
+    mainMarkerElement = (
+      <CircleMarker center={position} radius="10">
+        {tooltipElement}
+      </CircleMarker>
     );
   }
 
+  let markerElements = null;
   if ((markers != null) && (markers.length > 0)) {
-    const position = [markers[0].latitude, markers[0].longitude];
-    const markerElements = markers.map((marker) => {
+    if (position == null) {
+      position = [markers[0].latitude, markers[0].longitude];
+    }
+    markerElements = markers.map((marker) => {
       let tooltipElement = null;
       if (marker.tooltip != null) {
         tooltipElement = (
@@ -53,6 +51,9 @@ function EmbeddedMap(props) {
         </Marker>
       );
     });
+  }
+
+  if ((mainMarkerElement != null) || (markerElements != null)) {
     return (
       <>
         {`${position[0]}, ${position[1]}`}
@@ -62,6 +63,7 @@ function EmbeddedMap(props) {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            {mainMarkerElement}
             {markerElements}
           </MapContainer>
         </div>
