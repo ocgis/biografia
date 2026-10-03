@@ -7,17 +7,17 @@ import Config from './Config';
 
 function EmbeddedMap(props) {
   const {
-    markers, latitude, longitude, description,
+    markers, latitude, longitude, tooltip,
   } = props;
   const { publicApiKey: apiKey } = Config.google;
 
   if ((latitude != null) && (longitude != null)) {
     const position = [latitude, longitude];
-    let tooltip = null;
-    if (description != null) {
-      tooltip = (
+    let tooltipElement = null;
+    if (tooltip != null) {
+      tooltipElement = (
         <Tooltip>
-          {description}
+          {tooltip}
         </Tooltip>
       );
     }
@@ -29,7 +29,7 @@ function EmbeddedMap(props) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Marker position={position}>
-            {tooltip}
+            {tooltipElement}
           </Marker>
         </MapContainer>
       </div>
@@ -39,17 +39,17 @@ function EmbeddedMap(props) {
   if ((markers != null) && (markers.length > 0)) {
     const position = [markers[0].latitude, markers[0].longitude];
     const markerElements = markers.map((marker) => {
-      let tooltip = null;
-      if (marker.description != null) {
-        tooltip = (
+      let tooltipElement = null;
+      if (marker.tooltip != null) {
+        tooltipElement = (
           <Tooltip>
-            {marker.description}
+            {marker.tooltip}
           </Tooltip>
         );
       }
       return (
         <Marker position={[marker.latitude, marker.longitude]}>
-          {tooltip}
+          {tooltipElement}
         </Marker>
       );
     });
@@ -90,7 +90,7 @@ EmbeddedMap.propTypes = {
   location: PropTypes.string,
   latitude: PropTypes.number,
   longitude: PropTypes.number,
-  description: PropTypes.element,
+  tooltip: PropTypes.element,
 };
 
 EmbeddedMap.defaultProps = {
@@ -98,7 +98,7 @@ EmbeddedMap.defaultProps = {
   location: null,
   latitude: null,
   longitude: null,
-  description: null,
+  tooltip: null,
 };
 
 export default EmbeddedMap;

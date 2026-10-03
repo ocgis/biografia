@@ -517,18 +517,17 @@ class AddReference extends React.Component {
       markers.push({
         latitude: referFromPosition.latitude,
         longitude: referFromPosition.longitude,
-        description: <ShowReferFrom object={referFrom} mode="oneLine" />,
+        tooltip: <ShowReferFrom object={referFrom} mode="oneLine" />,
       });
     }
     const withPosition = filtered.filter((object) => getPrimaryPosition(object) != null);
     markers.push(...withPosition.map((object) => {
-      // console.log('markers', object);
       const position = getPrimaryPosition(object);
       const ShowObject = showObject(object._type_);
       return {
         latitude: position.latitude,
         longitude: position.longitude,
-        description: <ShowObject object={object} mode="oneLine" />,
+        tooltip: <ShowObject object={object} mode="oneLine" />,
       };
     }));
     return (
