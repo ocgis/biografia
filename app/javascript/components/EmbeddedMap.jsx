@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  MapContainer, TileLayer, Marker, Tooltip,
+  MapContainer, TileLayer, Marker, Tooltip, CircleMarker,
 } from 'react-leaflet';
 import Config from './Config';
 
@@ -28,9 +28,9 @@ function EmbeddedMap(props) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={position}>
+          <CircleMarker center={position} radius="10">
             {tooltipElement}
-          </Marker>
+          </CircleMarker>
         </MapContainer>
       </div>
     );
