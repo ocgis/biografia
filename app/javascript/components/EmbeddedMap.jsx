@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  MapContainer, TileLayer, Marker, Tooltip, CircleMarker,
+  MapContainer, TileLayer, Marker, Tooltip, CircleMarker, Popup,
 } from 'react-leaflet';
 import Config from './Config';
 
@@ -45,9 +45,18 @@ function EmbeddedMap(props) {
           </Tooltip>
         );
       }
+      let popupElement = null;
+      if (marker.popup != null) {
+        popupElement = (
+          <Popup>
+            {marker.popup}
+          </Popup>
+        );
+      }
       return (
-        <Marker position={[marker.latitude, marker.longitude]}>
+        <Marker position={[marker.latitude, marker.longitude]} key={marker.key}>
           {tooltipElement}
+          {popupElement}
         </Marker>
       );
     });

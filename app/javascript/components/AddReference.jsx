@@ -525,9 +525,15 @@ class AddReference extends React.Component {
       const position = getPrimaryPosition(object);
       const ShowObject = showObject(object._type_);
       return {
+        key: `${object._type_}_${object.id}`,
         latitude: position.latitude,
         longitude: position.longitude,
         tooltip: <ShowObject object={object} mode="oneLine" />,
+        popup: (
+          <Button onClick={() => onDoubleClick(object)}>
+            Länka
+          </Button>
+        ),
       };
     });
     return (
