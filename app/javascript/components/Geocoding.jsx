@@ -105,28 +105,32 @@ const placeResultToAddressObject = (place) => {
   address.latitude = place.location.latitude;
   address.longitude = place.location.longitude;
   place.addressComponents.forEach((c) => {
-    if (c.types.includes('country')) {
-      address.country = c.longText;
-    }
-    if (c.types.includes('route')) {
-      if (address.street) {
-        address.street = `${c.longText} ${address.street}`;
-      } else {
-        address.street = c.longText;
+    if ('types' in c) {
+      if (c.types.includes('country')) {
+        address.country = c.longText;
       }
-    }
-    if (c.types.includes('street_number')) {
-      if (address.street) {
-        address.street = `${address.street} ${c.longText}`;
-      } else {
-        address.street = c.longText;
+      if (c.types.includes('route')) {
+        if (address.street) {
+          address.street = `${c.longText} ${address.street}`;
+        } else {
+          address.street = c.longText;
+        }
       }
-    }
-    if (c.types.includes('postal_town')) {
-      address.town = c.longText;
-    }
-    if (c.types.includes('postal_code')) {
-      address.zipcode = c.longText;
+      if (c.types.includes('street_number')) {
+        if (address.street) {
+          address.street = `${address.street} ${c.longText}`;
+        } else {
+          address.street = c.longText;
+        }
+      }
+      if (c.types.includes('postal_town')) {
+        address.town = c.longText;
+      }
+      if (c.types.includes('postal_code')) {
+        address.zipcode = c.longText;
+      }
+    } else {
+      console.log('Geocoding: placeResultToAddressObject: could not parse address component', c);
     }
   });
 
