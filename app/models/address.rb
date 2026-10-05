@@ -93,7 +93,7 @@ class Address < ActiveRecord::Base
   def hint_by_position
     objects = []
     unless latitude.nil? || longitude.nil?
-      distance_m = 2000.0
+      distance_m = 20_000.0
       latitude_delta = distance_m / 111_132
       longitude_delta = distance_m / (111_132 * Math.cos(latitude * Math::PI / 360))
 

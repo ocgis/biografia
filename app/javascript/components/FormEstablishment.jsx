@@ -39,10 +39,13 @@ function IncludeTypes(props) {
   };
 
   const options = [
+    { label: 'Arenor', value: 'arena' },
     { label: 'Flygplatser', value: 'airport' },
     { label: 'Hotell', value: 'hotel' },
     { label: 'Nöjesparker', value: 'amusement_park' },
     { label: 'Parker', value: 'park' },
+    { label: 'Restauranger', value: 'restaurant' },
+    { label: 'Skidorter', value: 'ski_resort' },
     { label: 'Turistattraktioner', value: 'tourist_attraction' },
   ];
 
