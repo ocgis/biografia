@@ -511,11 +511,11 @@ class AddReference extends React.Component {
       return primaryPosition;
     };
     const referFromPosition = getPrimaryPosition(referFrom);
+    const ShowReferFrom = showObject(referFrom._type_);
     let latitude = null;
     let longitude = null;
     let tooltip = null;
     if (referFromPosition != null) {
-      const ShowReferFrom = showObject(referFrom._type_);
       latitude = referFromPosition.latitude;
       longitude = referFromPosition.longitude;
       tooltip = <ShowReferFrom object={referFrom} mode="oneLine" />;
@@ -538,6 +538,7 @@ class AddReference extends React.Component {
     });
     return (
       <>
+        <ShowReferFrom object={referFrom} mode="oneLine" />
         <table>
           <tbody>
             <tr>
