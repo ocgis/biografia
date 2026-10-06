@@ -678,7 +678,7 @@ class AddReference extends React.Component {
                   markers={markers}
                 />
               </td>
-              { referFrom._type_ === 'Medium'
+              { (referFrom._type_ === 'Medium' && referFrom.info.content_type.startsWith('image/'))
                 && (
                   <td aria-label="Crop image">
                     <ReactCrop
