@@ -1,7 +1,9 @@
 import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Input, List } from 'antd';
+import {
+  Button, Input, List, Tabs,
+} from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactCrop from 'react-image-crop';
 import { debounce } from 'throttle-debounce';
@@ -536,6 +538,39 @@ class AddReference extends React.Component {
         ),
       };
     });
+    const selectionTabs = [
+      {
+        key: 'List',
+        label: 'Lista',
+        children: (
+          <div ref={mainRef}>
+            <List
+              bordered
+              size="small"
+              dataSource={filtered}
+              renderItem={renderItem}
+              style={{
+                overflow: 'auto',
+                height: mainHeight,
+                width: '500px',
+              }}
+            />
+          </div>
+        ),
+      },
+      {
+        key: 'Map',
+        label: 'Karta',
+        children: (
+          <EmbeddedMap
+            latitude={latitude}
+            longitude={longitude}
+            tooltip={tooltip}
+            markers={markers}
+          />
+        ),
+      },
+    ];
     return (
       <>
         <ShowReferFrom object={referFrom} mode="oneLine" />
@@ -654,29 +689,11 @@ class AddReference extends React.Component {
             </tr>
           </tbody>
         </table>
-        <table ref={mainRef}>
+        <table>
           <tbody>
             <tr>
               <td aria-label="Reference candidates">
-                <List
-                  bordered
-                  size="small"
-                  dataSource={filtered}
-                  renderItem={renderItem}
-                  style={{
-                    overflow: 'auto',
-                    height: mainHeight,
-                    width: '500px',
-                  }}
-                />
-              </td>
-              <td>
-                <EmbeddedMap
-                  latitude={latitude}
-                  longitude={longitude}
-                  tooltip={tooltip}
-                  markers={markers}
-                />
+                <Tabs defaultActiveKey="List" items={selectionTabs} />
               </td>
               { (referFrom._type_ === 'Medium' && referFrom.info.content_type.startsWith('image/'))
                 && (
