@@ -282,6 +282,11 @@ class Medium < ActiveRecord::Base
   end
 
   def hint
+    objects = []
+    related_objects[:addresses].each do |address|
+      objects.concat(address.hint_by_position)
+    end
+
     path_name = file_name.split('/')[0..-2].join('/')
     media = Medium.where('file_name LIKE ?', "#{path_name}%").order(:file_name)
     self_index = media.index.with_index { |element, _| file_name == element.file_name }
@@ -293,7 +298,6 @@ class Medium < ActiveRecord::Base
     grouped_ids = ids.group_by { |id| id[:_type_] }
     grouped_ids.delete('Medium')
 
-    objects = []
     grouped_ids.each_key do |local_type|
       objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:limited_attributes)
     end

@@ -30,6 +30,7 @@ module CommonInstanceMethods
                events: [],
                addresses: [],
                notes: [],
+               establishments: [],
                event_dates: [],
                relationships: [],
                media: [],
