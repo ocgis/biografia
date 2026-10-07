@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select } from 'antd';
+import { Input, Select, Tabs } from 'antd';
 import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import FormAddress from './FormAddress';
 import {
@@ -10,7 +10,11 @@ import {
   placeResultType,
   placeResultFormattedAddress,
   placeResultKey,
+  placeResultPosition,
 } from './Geocoding';
+import { getPrimaryPosition } from './Position';
+import EmbeddedMap from './EmbeddedMap';
+import { showObject } from './Mappings';
 
 function PresentHint(props) {
   const { place, onSelect } = props;
@@ -76,31 +80,88 @@ PresentHints.propTypes = {
   onSelect: PropTypes.func.isRequired,
 };
 
+function placeToMarker(place, onSelect) {
+  const position = placeResultPosition(place);
+  let placeName = placeResultName(place);
+  const typeText = placeResultType(place);
+  if (typeText) {
+    placeName += ` (${typeText})`;
+  }
+  const address = placeResultFormattedAddress(place);
+  return {
+    latitude: position.latitude,
+    longitude: position.longitude,
+    tooltip: (
+      <>
+        {placeName}
+        <br />
+        {address}
+      </>
+    ),
+    popup: <EnterOutlined onClick={() => onSelect(place)} />,
+  };
+}
+
+function MapHints(props) {
+  const {
+    referFrom, places, onSelect,
+  } = props;
+  const ShowReferFromObject = showObject(referFrom._type_);
+  const tooltip = <ShowReferFromObject object={referFrom} mode="oneLine" />;
+  const markers = places.map((place) => placeToMarker(place, onSelect));
+  const referFromPosition = getPrimaryPosition(referFrom);
+  return (
+    <EmbeddedMap
+      latitude={referFromPosition.latitude}
+      longitude={referFromPosition.longitude}
+      tooltip={tooltip}
+      markers={markers}
+    />
+  );
+}
+MapHints.propTypes = {
+  referFrom: PropTypes.shape().isRequired,
+  places: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  onSelect: PropTypes.func.isRequired,
+};
+
 function EstablishmentHints(props) {
   const { onSelect, referFrom } = props;
   const [places, setPlaces] = useState([]);
   const [includeTypes, setIncludeTypes] = useState([]);
 
   const loadHints = () => {
-    referFrom.related.addresses.forEach((address) => {
-      if ((address.latitude != null) && (address.longitude != null)) {
-        placesFromPosition(
-          address.latitude,
-          address.longitude,
-          includeTypes,
-          (p) => setPlaces(p),
-        );
-      }
-    });
+    const referFromPosition = getPrimaryPosition(referFrom);
+
+    if (referFromPosition != null) {
+      placesFromPosition(
+        referFromPosition.latitude,
+        referFromPosition.longitude,
+        includeTypes,
+        (p) => setPlaces(p),
+      );
+    }
   };
 
+  const tabItems = [
+    {
+      key: 'List',
+      label: 'Lista',
+      children: <PresentHints places={places} onSelect={onSelect} />,
+    },
+    {
+      key: 'Map',
+      label: 'Karta',
+      children: <MapHints referFrom={referFrom} places={places} onSelect={onSelect} />,
+    },
+  ];
   return (
     <>
       <ReloadOutlined
         onClick={() => loadHints()}
       />
       <IncludeTypes onChange={setIncludeTypes} />
-      <PresentHints places={places} onSelect={onSelect} />
+      <Tabs defaultActiveKey={tabItems[0].key} items={tabItems} />
     </>
   );
 }

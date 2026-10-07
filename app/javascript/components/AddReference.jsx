@@ -14,6 +14,7 @@ import {
 import {
   apiUrl, editObject, oneName, manyName, showObject,
 } from './Mappings';
+import { getPrimaryPosition } from './Position';
 
 class AddReference extends React.Component {
   constructor(props) {
@@ -495,23 +496,6 @@ class AddReference extends React.Component {
 
       return true;
     });
-    const getPrimaryPosition = (object) => {
-      let primaryPosition = null;
-      if (object._type_ === 'Address') {
-        if ((object.latitude != null)
-            && (object.longitude != null)) {
-          primaryPosition = object;
-        }
-      } else if ('related' in object && 'addresses' in object.related) {
-        object.related.addresses.forEach((address) => {
-          if ((address.latitude != null)
-              && (address.longitude != null)) {
-            primaryPosition = address;
-          }
-        });
-      }
-      return primaryPosition;
-    };
     const referFromPosition = getPrimaryPosition(referFrom);
     const ShowReferFrom = showObject(referFrom._type_);
     let latitude = null;

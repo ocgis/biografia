@@ -99,6 +99,11 @@ const placeResultType = (place) => {
   return place.primaryTypeDisplayName.text;
 };
 
+const placeResultPosition = (place) => ({
+  latitude: place.location.latitude,
+  longitude: place.location.longitude,
+});
+
 const placeResultToAddressObject = (place) => {
   const address = {};
 
@@ -149,4 +154,5 @@ export {
   placeResultKey,
   placeResultFormattedAddress,
   placeResultToAddressObject,
+  placeResultPosition,
 };
