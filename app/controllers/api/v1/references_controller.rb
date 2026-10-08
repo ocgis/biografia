@@ -37,7 +37,11 @@ module Api
         else
           objects = latest_referenced(search_models.map(&:name))
         end
-        render json: { result: objects, filter: }
+
+        object_ids = objects.map { |o| { _type_: o[:_type_], id: o['id'] } }
+        result = related(object_ids)
+
+        render json: { result:, filter: }
       end
 
       def create
