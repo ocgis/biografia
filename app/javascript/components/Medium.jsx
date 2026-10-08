@@ -11,6 +11,8 @@ import DisplayMedium from './DisplayMedium';
 import {
   apiUrl, setMapping, showObject, webUrl,
 } from './Mappings';
+import EmbeddedMap from './EmbeddedMap';
+import { getPrimaryPosition } from './Position';
 
 setMapping('Medium', 'oneName', 'medium');
 setMapping('Medium', 'manyName', 'media');
@@ -128,6 +130,23 @@ function Overview({ object: medium, currentUser, reload }) {
         reload={reload}
       />
     )));
+  }
+
+  const position = getPrimaryPosition(medium);
+  if (position != null) {
+    const ShowObject = showObject('Medium');
+    const tooltip = <ShowObject object={medium} mode="oneLine" />;
+    const map = (
+      <>
+        <br />
+        <EmbeddedMap
+          latitude={position.latitude}
+          longitude={position.longitude}
+          tooltip={tooltip}
+        />
+      </>
+    );
+    objectsInPicture.push(map);
   }
 
   return objectsInPicture;
