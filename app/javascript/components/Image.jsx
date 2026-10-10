@@ -5,7 +5,7 @@ class Image extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      naturalSize: false,
+      largeSize: false,
       naturalWidth: null,
       naturalHeight: null,
       imgWidth: null,
@@ -22,36 +22,36 @@ class Image extends React.Component {
   }
 
   onResize = () => {
-    const { naturalSize, naturalWidth, naturalHeight } = this.state;
-    this.updateHeights(naturalSize, naturalWidth, naturalHeight);
+    const { largeSize, naturalWidth, naturalHeight } = this.state;
+    this.updateHeights(largeSize, naturalWidth, naturalHeight);
   };
 
   onClick = () => {
-    const { naturalSize, naturalWidth, naturalHeight } = this.state;
-    this.updateHeights(!naturalSize, naturalWidth, naturalHeight);
+    const { largeSize, naturalWidth, naturalHeight } = this.state;
+    this.updateHeights(!largeSize, naturalWidth, naturalHeight);
   };
 
-  updateHeights = (naturalSize, naturalWidth, naturalHeight) => {
+  updateHeights = (largeSize, naturalWidth, naturalHeight) => {
     const { onResize } = this.props;
     let imgWidth = naturalWidth;
     let imgHeight = naturalHeight;
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
+    const maxFactor = largeSize ? 1 : 0.5;
 
-    if (!naturalSize) {
-      if (imgWidth > windowWidth) {
-        imgHeight = (imgHeight * windowWidth) / imgWidth;
-        imgWidth = windowWidth;
-      }
-
-      if (imgHeight > windowHeight / 2) {
-        const targetHeight = windowHeight / 2;
-        imgWidth = (imgWidth * targetHeight) / imgHeight;
-        imgHeight = targetHeight;
-      }
+    if (imgWidth > windowWidth) {
+      imgHeight = (imgHeight * windowWidth) / imgWidth;
+      imgWidth = windowWidth;
     }
+
+    if (imgHeight > windowHeight * maxFactor) {
+      const targetHeight = windowHeight * maxFactor;
+      imgWidth = (imgWidth * targetHeight) / imgHeight;
+      imgHeight = targetHeight;
+    }
+
     this.setState({
-      naturalSize,
+      largeSize,
       naturalWidth,
       naturalHeight,
       imgWidth,
@@ -66,8 +66,8 @@ class Image extends React.Component {
     const {
       naturalWidth, naturalHeight,
     } = event.target;
-    const { naturalSize } = this.state;
-    this.updateHeights(naturalSize, naturalWidth, naturalHeight);
+    const { largeSize } = this.state;
+    this.updateHeights(largeSize, naturalWidth, naturalHeight);
   };
 
   render() {
