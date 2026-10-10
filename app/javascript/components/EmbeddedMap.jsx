@@ -7,7 +7,7 @@ import Config from './Config';
 
 function EmbeddedMap(props) {
   const {
-    markers, latitude, longitude, tooltip,
+    markers, latitude, longitude, tooltip, width, height,
   } = props;
   const { publicApiKey: apiKey } = Config.google;
 
@@ -66,7 +66,7 @@ function EmbeddedMap(props) {
     return (
       <>
         {`${position[0]}, ${position[1]}`}
-        <div style={{ height: '450px', width: '600px' }}>
+        <div style={{ height, width }}>
           <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -87,8 +87,8 @@ function EmbeddedMap(props) {
   return (
     <iframe
       title={location}
-      width="600"
-      height="450"
+      width={width}
+      height={height}
       frameBorder="0"
       style={{ border: 0 }}
       src={src}
@@ -102,6 +102,8 @@ EmbeddedMap.propTypes = {
   latitude: PropTypes.number,
   longitude: PropTypes.number,
   tooltip: PropTypes.element,
+  width: PropTypes.string,
+  height: PropTypes.string,
 };
 
 EmbeddedMap.defaultProps = {
@@ -110,6 +112,8 @@ EmbeddedMap.defaultProps = {
   latitude: null,
   longitude: null,
   tooltip: null,
+  width: '600px',
+  height: '450px',
 };
 
 export default EmbeddedMap;
