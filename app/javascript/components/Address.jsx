@@ -16,10 +16,7 @@ setMapping('Address', 'oneName', 'address');
 setMapping('Address', 'manyName', 'addresses');
 setMapping('Address', 'filterFields', ['street', 'town', 'zipcode', 'parish', 'country']);
 
-function OneLine(props) {
-  const { linked, object: address } = props;
-  const [lookupGeocode, setLookupGeocode] = useState(false);
-
+const collectParts = (address) => {
   const parts = [];
 
   if (address.street) {
@@ -41,6 +38,17 @@ function OneLine(props) {
   if (address.country) {
     parts.push(`${address.country}`);
   }
+
+  return parts;
+};
+const addressHasText = (address) => collectParts(address).length > 0;
+const addressHasPosition = (address) => address.latitude != null && address.longitude != null;
+
+function OneLine(props) {
+  const { linked, object: address } = props;
+  const [lookupGeocode, setLookupGeocode] = useState(false);
+
+  const parts = collectParts(address);
 
   let oneLine = 'Empty address';
 
@@ -249,4 +257,6 @@ function VersionAddress() {
   );
 }
 
-export { IndexAddress, ShowAddress, VersionAddress };
+export {
+  IndexAddress, ShowAddress, VersionAddress, addressHasText, addressHasPosition,
+};

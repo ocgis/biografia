@@ -13,6 +13,7 @@ import {
 } from './Mappings';
 import EmbeddedMap from './EmbeddedMap';
 import { getPrimaryPosition } from './Position';
+import { addressHasText } from './Address';
 
 setMapping('Medium', 'oneName', 'medium');
 setMapping('Medium', 'manyName', 'media');
@@ -88,19 +89,22 @@ function Overview({ object: medium, currentUser, reload }) {
   }
 
   if (medium.related.addresses.length > 0) {
-    if (objectsInPicture.length > 0) {
-      objectsInPicture.push(', ');
-    }
     const ShowObject = showObject('Address');
-    objectsInPicture.push(...medium.related.addresses.map((address) => (
-      <ShowObject
-        key={`${address._type_}_${address.id}`}
-        object={address}
-        mode="oneLineLinked"
-      />
-    )));
+    medium.related.addresses.forEach((address) => {
+      if (addressHasText(address)) {
+        if (objectsInPicture.length > 0) {
+          objectsInPicture.push(
+            ', ',
+            <ShowObject
+              key={`${address._type_}_${address.id}`}
+              object={address}
+              mode="oneLineLinked"
+            />,
+          );
+        }
+      }
+    });
   }
-
   if (medium.related.event_dates.length > 0) {
     if (objectsInPicture.length > 0) {
       objectsInPicture.push(', ');
