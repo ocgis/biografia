@@ -65,7 +65,6 @@ function EmbeddedMap(props) {
   if ((mainMarkerElement != null) || (markerElements != null)) {
     return (
       <>
-        {`${position[0]}, ${position[1]}`}
         <div style={{ height, width }}>
           <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
             <TileLayer
