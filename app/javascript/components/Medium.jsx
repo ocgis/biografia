@@ -143,6 +143,8 @@ function Overview({ object: medium, currentUser, reload }) {
           latitude={position.latitude}
           longitude={position.longitude}
           tooltip={tooltip}
+          width="400px"
+          height="300px"
         />
       </>
     );
