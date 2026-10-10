@@ -75,17 +75,19 @@ function Overview({ object: medium, currentUser, reload }) {
   }
 
   if (medium.related.establishments.length > 0) {
-    if (objectsInPicture.length > 0) {
-      objectsInPicture.push(', ');
-    }
     const ShowObject = showObject('Establishment');
-    objectsInPicture.push(...medium.related.establishments.map((establishment) => (
-      <ShowObject
-        key={`${establishment._type_}_${establishment.id}`}
-        object={establishment}
-        mode="oneLineLinked"
-      />
-    )));
+    medium.related.establishments.forEach((establishment) => {
+      if (objectsInPicture.length > 0) {
+        objectsInPicture.push(', ');
+      }
+      objectsInPicture.push(
+        <ShowObject
+          key={`${establishment._type_}_${establishment.id}`}
+          object={establishment}
+          mode="oneLineLinked"
+        />,
+      );
+    });
   }
 
   if (medium.related.addresses.length > 0) {
@@ -93,15 +95,15 @@ function Overview({ object: medium, currentUser, reload }) {
     medium.related.addresses.forEach((address) => {
       if (addressHasText(address)) {
         if (objectsInPicture.length > 0) {
-          objectsInPicture.push(
-            ', ',
-            <ShowObject
-              key={`${address._type_}_${address.id}`}
-              object={address}
-              mode="oneLineLinked"
-            />,
-          );
+          objectsInPicture.push(', ');
         }
+        objectsInPicture.push(
+          <ShowObject
+            key={`${address._type_}_${address.id}`}
+            object={address}
+            mode="oneLineLinked"
+          />,
+        );
       }
     });
   }
