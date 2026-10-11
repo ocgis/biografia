@@ -1,13 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  MapContainer, TileLayer, Marker, Tooltip, CircleMarker, Popup,
+  MapContainer, TileLayer, Marker, Tooltip, CircleMarker, Popup, useMapEvents,
 } from 'react-leaflet';
 import Config from './Config';
 
+function EventHandler(props) {
+  const { onMapMove } = props;
+  const map = useMapEvents({
+    moveend(_event) {
+      if (onMapMove != null) {
+        const center = map.getCenter();
+        onMapMove({ latitude: center.lat, longitude: center.lng });
+      }
+    },
+  });
+  return null;
+}
+
+EventHandler.propTypes = {
+  onMapMove: PropTypes.func,
+};
+
+EventHandler.defaultProps = {
+  onMapMove: null,
+};
+
 function EmbeddedMap(props) {
   const {
-    markers, latitude, longitude, tooltip, width, height,
+    markers, latitude, longitude, tooltip, width, height, onMapMove,
   } = props;
   const { publicApiKey: apiKey } = Config.google;
 
@@ -64,18 +85,17 @@ function EmbeddedMap(props) {
 
   if ((mainMarkerElement != null) || (markerElements != null)) {
     return (
-      <>
-        <div style={{ height, width }}>
-          <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {mainMarkerElement}
-            {markerElements}
-          </MapContainer>
-        </div>
-      </>
+      <div style={{ height, width }}>
+        <MapContainer center={position} zoom={20} scrollWheelZoom={false}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {mainMarkerElement}
+          {markerElements}
+          <EventHandler onMapMove={onMapMove} />
+        </MapContainer>
+      </div>
     );
   }
 
@@ -103,6 +123,7 @@ EmbeddedMap.propTypes = {
   tooltip: PropTypes.element,
   width: PropTypes.string,
   height: PropTypes.string,
+  onMapMove: PropTypes.func,
 };
 
 EmbeddedMap.defaultProps = {
@@ -113,6 +134,7 @@ EmbeddedMap.defaultProps = {
   tooltip: null,
   width: '600px',
   height: '450px',
+  onMapMove: null,
 };
 
 export default EmbeddedMap;

@@ -102,20 +102,36 @@ function placeToMarker(place, onSelect) {
   };
 }
 
+const getInitialCenter = (referFrom) => {
+  if (referFrom != null) {
+    const referFromPosition = getPrimaryPosition(referFrom);
+    if (referFromPosition != null) {
+      return { latitude: referFromPosition.latitude, longitude: referFromPosition.longitude };
+    }
+  }
+  return { latitude: 57.7, longitude: 12 };
+};
+
 function MapHints(props) {
   const {
-    referFrom, places, onSelect,
+    referFrom, places, onSelect, onMapMove,
   } = props;
-  const ShowReferFromObject = showObject(referFrom._type_);
-  const tooltip = <ShowReferFromObject object={referFrom} mode="oneLine" />;
-  const markers = places.map((place) => placeToMarker(place, onSelect));
-  const referFromPosition = getPrimaryPosition(referFrom);
+
+  const position = getInitialCenter(referFrom);
+  let tooltip = null;
+  let markers = null;
+  if (referFrom != null) {
+    const ShowReferFromObject = showObject(referFrom._type_);
+    tooltip = <ShowReferFromObject object={referFrom} mode="oneLine" />;
+  }
+  markers = places.map((place) => placeToMarker(place, onSelect));
   return (
     <EmbeddedMap
-      latitude={referFromPosition.latitude}
-      longitude={referFromPosition.longitude}
+      latitude={position.latitude}
+      longitude={position.longitude}
       tooltip={tooltip}
       markers={markers}
+      onMapMove={onMapMove}
     />
   );
 }
@@ -123,24 +139,25 @@ MapHints.propTypes = {
   referFrom: PropTypes.shape().isRequired,
   places: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onSelect: PropTypes.func.isRequired,
+  onMapMove: PropTypes.func,
+};
+MapHints.defaultProps = {
+  onMapMove: null,
 };
 
 function EstablishmentHints(props) {
   const { onSelect, referFrom } = props;
   const [places, setPlaces] = useState([]);
   const [includeTypes, setIncludeTypes] = useState([]);
+  const [currentCenter, setCurrentCenter] = useState(getInitialCenter());
 
   const loadHints = () => {
-    const referFromPosition = getPrimaryPosition(referFrom);
-
-    if (referFromPosition != null) {
-      placesFromPosition(
-        referFromPosition.latitude,
-        referFromPosition.longitude,
-        includeTypes,
-        (p) => setPlaces(p),
-      );
-    }
+    placesFromPosition(
+      currentCenter.latitude,
+      currentCenter.longitude,
+      includeTypes,
+      (p) => setPlaces(p),
+    );
   };
 
   const tabItems = [
@@ -152,7 +169,14 @@ function EstablishmentHints(props) {
     {
       key: 'Map',
       label: 'Karta',
-      children: <MapHints referFrom={referFrom} places={places} onSelect={onSelect} />,
+      children: (
+        <MapHints
+          referFrom={referFrom}
+          places={places}
+          onSelect={onSelect}
+          onMapMove={setCurrentCenter}
+        />
+      ),
     },
   ];
   return (
