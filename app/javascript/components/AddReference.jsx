@@ -16,6 +16,24 @@ import {
 } from './Mappings';
 import { getPrimaryPosition } from './Position';
 
+const sortPriorityDict = {
+  Medium: {
+    Person: 1,
+    Thing: 2,
+    Establishment: 3,
+    Address: 4,
+  },
+};
+
+const sortPriority = (_type_, object) => {
+  if (_type_ in sortPriorityDict) {
+    if (object._type_ in sortPriorityDict[_type_]) {
+      return sortPriorityDict[_type_][object._type_];
+    }
+  }
+  return 99;
+};
+
 class AddReference extends React.Component {
   constructor(props) {
     super(props);
@@ -506,6 +524,10 @@ class AddReference extends React.Component {
       longitude = referFromPosition.longitude;
       tooltip = <ShowReferFrom object={referFrom} mode="oneLine" />;
     }
+    filtered.sort((a, b) => {
+      const sortValue = sortPriority(referFrom._type_, a) - sortPriority(referFrom._type_, b);
+      return sortValue;
+    });
     const withPosition = filtered.filter((object) => getPrimaryPosition(object) != null);
     const markers = withPosition.map((object) => {
       const position = getPrimaryPosition(object);
