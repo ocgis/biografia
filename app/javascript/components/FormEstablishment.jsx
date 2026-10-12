@@ -149,7 +149,7 @@ function EstablishmentHints(props) {
   const { onSelect, referFrom } = props;
   const [places, setPlaces] = useState([]);
   const [includeTypes, setIncludeTypes] = useState([]);
-  const [currentCenter, setCurrentCenter] = useState(getInitialCenter());
+  const [currentCenter, setCurrentCenter] = useState(getInitialCenter(referFrom));
 
   const loadHints = () => {
     placesFromPosition(
