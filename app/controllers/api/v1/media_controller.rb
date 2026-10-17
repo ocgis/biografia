@@ -78,11 +78,15 @@ module Api
       def image
         medium = Medium.find(params.require(:id))
         send_file(medium.fullsize)
+      rescue StandardError
+        render status: :internal_server_error
       end
 
       def thumb
         medium = Medium.find(params.require(:id))
         send_file(medium.thumbnail)
+      rescue StandardError
+        render status: :internal_server_error
       end
 
       def raw
