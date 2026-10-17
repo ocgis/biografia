@@ -79,14 +79,14 @@ module Api
         medium = Medium.find(params.require(:id))
         send_file(medium.fullsize)
       rescue StandardError
-        render status: :internal_server_error
+        render json: { error: 'Could not generate preview: Please check logs' }, status: :internal_server_error
       end
 
       def thumb
         medium = Medium.find(params.require(:id))
         send_file(medium.thumbnail)
       rescue StandardError
-        render status: :internal_server_error
+        render json: { error: 'Could not generate thumbnail: Please check logs' }, status: :internal_server_error
       end
 
       def raw
