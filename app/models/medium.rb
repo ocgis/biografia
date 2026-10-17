@@ -33,6 +33,8 @@ class Medium < ActiveRecord::Base
         thumb_full_dir = File.dirname(thumb_full)
         FileUtils.mkdir_p(thumb_full_dir)
         image = Magick::Image.read("#{file_full}[0]").first
+        raise StandardError, "Could not convert #{file_full} to #{thumb_full}" if image.nil?
+
         image.format = 'JPG'
         image.change_geometry!('110X110') { |cols, rows| image.thumbnail! cols, rows }
         image.write(thumb_full)
@@ -56,6 +58,8 @@ class Medium < ActiveRecord::Base
         fullsize_full_dir = File.dirname(fullsize_full)
         FileUtils.mkdir_p(fullsize_full_dir)
         image = Magick::Image.read("#{file_full}[0]").first
+        raise StandardError, "Could not convert #{file_full} to #{fullsize_full}" if image.nil?
+
         image.format = 'JPG'
         image.write(fullsize_full)
       end
