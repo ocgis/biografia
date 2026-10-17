@@ -29,17 +29,8 @@ class Medium < ActiveRecord::Base
           '.jpg'
         end
       thumb_full = File.join(Biografia::Application.config.cache_path, 'thumbnails', "#{file_name}#{extension}")
-      if !File.exist?(thumb_full) || (File.mtime(thumb_full) < File.mtime(file_full))
-        thumb_full_dir = File.dirname(thumb_full)
-        FileUtils.mkdir_p(thumb_full_dir)
-        image = Magick::Image.read("#{file_full}[0]").first
-        raise StandardError, "Could not convert #{file_full} to #{thumb_full}" if image.nil?
 
-        image.format = 'JPG'
-        image.change_geometry!('110X110') { |cols, rows| image.thumbnail! cols, rows }
-        image.write(thumb_full)
-      end
-      return thumb_full
+      return get_preview(file_full, thumb_full, '110x110')
     end
 
     File.join(Biografia::Application.config.public_path, 'images', 'unknown.gif') # FIXME: public_path not found
@@ -52,21 +43,45 @@ class Medium < ActiveRecord::Base
   def self.fullsize_for(file_name)
     file_full = File.join(Biografia::Application.config.protected_path, file_name)
     mime_type = MIME::Types.type_for(file_full.to_s)
+
     if mime_type.length >= 1 && mime_type[0].sub_type != 'jpeg'
       fullsize_full = File.join(Biografia::Application.config.cache_path, 'fullsize', "#{file_name}.jpg")
-      if !File.exist?(fullsize_full) || (File.mtime(fullsize_full) < File.mtime(file_full))
-        fullsize_full_dir = File.dirname(fullsize_full)
-        FileUtils.mkdir_p(fullsize_full_dir)
-        image = Magick::Image.read("#{file_full}[0]").first
-        raise StandardError, "Could not convert #{file_full} to #{fullsize_full}" if image.nil?
-
-        image.format = 'JPG'
-        image.write(fullsize_full)
-      end
-      return fullsize_full
+      return get_preview(file_full, fullsize_full)
     end
 
     file_full
+  end
+
+  def self.get_preview(orig_path, preview_path, geometry = nil)
+    return preview_path unless !File.exist?(preview_path) || (File.mtime(preview_path) < File.mtime(orig_path))
+
+    generate_preview(orig_path, preview_path, geometry)
+  end
+
+  def self.generate_preview(orig_path, preview_path, geometry = nil)
+    try_generate_preview(orig_path, preview_path, geometry)
+  rescue StandardError
+    # Failed with original file: try with tempfile
+    temp_file = Tempfile.new('biografia')
+    orig_file = File.open(orig_path)
+    temp_file.write(orig_file.read)
+    orig_file.close
+    temp_file.close
+    preview_path = try_generate_preview(temp_file.path, preview_path, geometry)
+    temp_file.unlink
+    preview_path
+  end
+
+  def self.try_generate_preview(orig_path, preview_path, geometry = nil)
+    preview_dir = File.dirname(preview_path)
+    FileUtils.mkdir_p(preview_dir)
+    image = Magick::Image.read("#{orig_path}[0]").first
+    raise StandardError, "Could not convert #{orig_path} to #{preview_path}" if image.nil?
+
+    image.format = 'JPG'
+    image.change_geometry!(geometry) { |cols, rows| image.thumbnail! cols, rows } unless geometry.nil?
+    image.write(preview_path)
+    preview_path
   end
 
   def raw
