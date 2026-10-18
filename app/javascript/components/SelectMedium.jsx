@@ -231,6 +231,7 @@ class SelectMedium extends React.Component {
     this.filter = locationState.filter || '';
     this.show = locationState.show || 'unregistered';
     this.flatten = locationState.flatten || false;
+    this.selectAll = locationState.selectAll || false;
     this.path = locationState.path || 'files';
     this.state.presentedMedium = locationState.presentedMedium || null;
 
@@ -284,7 +285,6 @@ class SelectMedium extends React.Component {
 
   saveNavigateState = () => {
     const { location, navigate } = this.props;
-    const { selectedMedia } = this.state;
     const url = location.pathname;
     const state = {
       state: {
@@ -292,6 +292,7 @@ class SelectMedium extends React.Component {
         scrollTop: this.scrollTop,
         show: this.show,
         flatten: this.flatten,
+        selectAll: this.selectAll,
         path: this.path,
       },
       replace: true,
@@ -388,6 +389,27 @@ class SelectMedium extends React.Component {
       this.flatten = value.target.checked;
       this.saveNavigateState();
       this.loadData();
+    };
+
+    const updateSelectAll = (value) => {
+      const { onChange } = this.props;
+      const { nodes } = this.state;
+      this.selectAll = value.target.checked;
+      const selectedMedia = [];
+      if (this.selectAll) {
+        Object.keys(nodes).forEach((key) => {
+          if (nodes[key].children === 0) {
+            const selectMedium = { file_name: key };
+            if ('id' in nodes[key]) {
+              selectMedium.id = nodes[key].id;
+            }
+            selectedMedia.push(selectMedium);
+          }
+        });
+      }
+      onChange(selectedMedia);
+      this.setState({ selectedMedia });
+      this.saveNavigateState();
     };
 
     const registerImage = (path) => {
@@ -586,9 +608,9 @@ class SelectMedium extends React.Component {
     } = this.state;
 
     const showOptions = [
-      { value: 'unregistered', label: 'Unregistered' },
-      { value: 'all', label: 'All' },
-      { value: 'registered', label: 'Registered' },
+      { value: 'unregistered', label: 'Oregistrerade' },
+      { value: 'all', label: 'Alla' },
+      { value: 'registered', label: 'Registrerade' },
     ];
 
     if (presentedMedium !== null) {
@@ -635,7 +657,14 @@ class SelectMedium extends React.Component {
           <tbody>
             <tr>
               <td>
-                <Checkbox onChange={updateFlatten} defaultChecked={this.flatten}>Flatten</Checkbox>
+                <Checkbox onChange={updateFlatten} defaultChecked={this.flatten}>
+                  Platta ut
+                </Checkbox>
+              </td>
+              <td>
+                <Checkbox onChange={updateSelectAll} defaultChecked={this.selectAll}>
+                  Välj alla
+                </Checkbox>
               </td>
               <td aria-label="Show">
                 <Select defaultValue={this.show} onChange={updateShow} options={showOptions} />
@@ -695,7 +724,7 @@ SelectMediumWrapper.propTypes = {
 SelectMediumWrapper.defaultProps = {
   selectable: false,
   bottomMargin: 0,
-  onChange: (selectedMedia) => { console.log(selectedMedia); },
+  onChange: () => { },
 };
 
 export default SelectMediumWrapper;
