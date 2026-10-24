@@ -88,6 +88,24 @@ const placesFromPosition = (latitude, longitude, includedTypes, callback) => {
   postRequest(url, data, handleResponse, handleError);
 };
 
+const placesFromText = (query, callback) => {
+  const baseUrl = apiUrl('Establishment');
+  const url = `${baseUrl}/by_text`;
+
+  const data = {
+    query,
+  };
+  const handleResponse = (response) => {
+    if ('places' in response.data) {
+      callback(response.data.places);
+    } else {
+      callback([]);
+    }
+  };
+  const handleError = (error) => console.error('Geocoding: placesFromText: TODO: Handle error', error);
+  postRequest(url, data, handleResponse, handleError);
+};
+
 const placeResultName = (place) => place.displayName.text;
 const placeResultFormattedAddress = (place) => place.formattedAddress;
 const placeResultKey = (place) => place.id;
@@ -149,6 +167,7 @@ export {
   addressResultKey,
   addressResultToAddressObject,
   placesFromPosition,
+  placesFromText,
   placeResultName,
   placeResultType,
   placeResultKey,

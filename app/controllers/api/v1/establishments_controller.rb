@@ -49,6 +49,29 @@ module Api
         render json: response.body
       end
 
+      def by_text
+        text_query = params['query']
+
+        new_todo = {
+          "textQuery": text_query,
+          "languageCode": 'sv'
+        }
+        uri = URI('https://places.googleapis.com/v1/places:searchText')
+        https = Net::HTTP.new(uri.host, uri.port)
+        https.use_ssl = true
+        headers = {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': Biografia::Application.config.google_public_api_key,
+          'X-Goog-FieldMask': '*'
+        }
+        request = Net::HTTP::Post.new(uri.path, headers)
+        request.body = new_todo.to_json
+
+        response = https.request(request)
+
+        render json: response.body
+      end
+
       protected
 
       def create_object

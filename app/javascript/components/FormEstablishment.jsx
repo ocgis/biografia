@@ -5,6 +5,7 @@ import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import FormAddress from './FormAddress';
 import {
   placesFromPosition,
+  placesFromText,
   placeResultToAddressObject,
   placeResultName,
   placeResultType,
@@ -151,11 +152,18 @@ function EstablishmentHints(props) {
   const [includeTypes, setIncludeTypes] = useState([]);
   const [currentCenter, setCurrentCenter] = useState(getInitialCenter(referFrom));
 
-  const loadHints = () => {
+  const loadHintsByPosition = () => {
     placesFromPosition(
       currentCenter.latitude,
       currentCenter.longitude,
       includeTypes,
+      (p) => setPlaces(p),
+    );
+  };
+
+  const loadHintsByText = (query) => {
+    placesFromText(
+      query,
       (p) => setPlaces(p),
     );
   };
@@ -182,9 +190,10 @@ function EstablishmentHints(props) {
   return (
     <>
       <ReloadOutlined
-        onClick={() => loadHints()}
+        onClick={() => loadHintsByPosition()}
       />
       <IncludeTypes onChange={setIncludeTypes} />
+      <Input.Search placeholder="fritext" onSearch={(query) => loadHintsByText(query)} />
       <Tabs defaultActiveKey={tabItems[0].key} items={tabItems} />
     </>
   );

@@ -60,6 +60,7 @@ Biografia::Application.routes.draw do
         end
         collection do
           post :by_position
+          post :by_text
         end
       end
       resources :things, only: %i[index show create update destroy] do

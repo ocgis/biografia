@@ -30,6 +30,6 @@ class Ability
     can :ancestry, Person
     can %i[index show image thumb raw], Medium
     can %i[connection_list list], Reference
-    can %i[by_position], Establishment
+    can %i[by_position by_text], Establishment
   end
 end
