@@ -80,7 +80,7 @@ function HintTabs(props) {
     {
       key: 'List',
       label: 'Lista',
-      children: <ListHints hints={listHints} onSelect={(listHint) => onSelect(listHint.place)} />,
+      children: <ListHints hints={listHints} onSelect={(listHint) => onSelect(listHint.hint)} />,
     },
     {
       key: 'Map',

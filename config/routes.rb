@@ -52,6 +52,10 @@ Biografia::Application.routes.draw do
           get :examine
           get :hint
         end
+        collection do
+          post :by_position
+          post :by_text
+        end
       end
       resources :establishments, only: %i[index show create update destroy] do
         member do

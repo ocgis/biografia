@@ -102,7 +102,7 @@ function EstablishmentHints(props) {
   };
 
   const listHints = places.map((place) => ({
-    place,
+    hint: place,
     key: placeResultKey(place),
     text: placeHintText(place),
   }));
@@ -218,6 +218,7 @@ class FormEstablishment extends React.Component {
                   this.setState({ establishment });
                 }}
                 object={address}
+                noHints
               />
             </td>
             <td aria-label="hints" valign="top">

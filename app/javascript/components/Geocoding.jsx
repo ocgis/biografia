@@ -1,22 +1,27 @@
-import {
-  setKey, setRegion, setLanguage, fromLatLng,
-} from 'react-geocode';
-import Config from './Config';
 import { apiUrl } from './Mappings';
 import { postRequest } from './Requests';
 
-const geocodingFromPosition = (latitude, longitude, callback) => {
-  const { publicApiKey } = Config.google;
-  setKey(publicApiKey);
-  setRegion('se');
-  setLanguage('sv');
-  fromLatLng(latitude, longitude)
-    .then(({ results }) => callback(results))
-    .catch(console.log('ERROR: fromLatLng failed!')); // eslint-disable-line no-console
+const addressesFromPosition = (latitude, longitude, callback) => {
+  const baseUrl = apiUrl('Address');
+  const url = `${baseUrl}/by_position`;
+
+  const data = {
+    latitude,
+    longitude,
+  };
+  const handleResponse = (response) => {
+    if ('results' in response.data) {
+      callback(response.data.results);
+    } else {
+      callback([]);
+    }
+  };
+  const handleError = (error) => console.error('Geocoding: addressesFromPosition: TODO: Handle error', error);
+  postRequest(url, data, handleResponse, handleError);
 };
 
 const addressFromPosition = (latitude, longitude, callback) => {
-  geocodingFromPosition(latitude, longitude, (results) => {
+  addressesFromPosition(latitude, longitude, (results) => {
     const postalTownArray = results.filter((entry) => entry.types.includes('postal_town'));
     if (postalTownArray.length > 0) {
       const address = postalTownArray[0].formatted_address;
@@ -25,10 +30,22 @@ const addressFromPosition = (latitude, longitude, callback) => {
   });
 };
 
-const addressesFromPosition = (latitude, longitude, callback) => {
-  geocodingFromPosition(latitude, longitude, (results) => {
-    callback(results);
-  });
+const addressesFromText = (query, callback) => {
+  const baseUrl = apiUrl('Address');
+  const url = `${baseUrl}/by_text`;
+
+  const data = {
+    query,
+  };
+  const handleResponse = (response) => {
+    if ('results' in response.data) {
+      callback(response.data.results);
+    } else {
+      callback([]);
+    }
+  };
+  const handleError = (error) => console.error('Geocoding: addressesFromText: TODO: Handle error', error);
+  postRequest(url, data, handleResponse, handleError);
 };
 
 const addressResultName = (address) => address.formatted_address;
@@ -163,6 +180,7 @@ const placeResultToAddressObject = (place) => {
 export {
   addressFromPosition,
   addressesFromPosition,
+  addressesFromText,
   addressResultName,
   addressResultKey,
   addressResultToAddressObject,

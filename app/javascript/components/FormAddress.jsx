@@ -3,73 +3,72 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
-  addressesFromPosition, addressResultName, addressResultKey, addressResultToAddressObject,
+  addressesFromPosition,
+  addressesFromText,
+  addressResultName,
+  addressResultKey,
+  addressResultToAddressObject,
 } from './Geocoding';
+import { HintTabs, getInitialCenter } from './GeoHints';
 
-function PresentHint(props) {
-  const { address, onSelect } = props;
-  const hintText = addressResultName(address);
-  return (
-    <div>
-      { hintText }
-      <EnterOutlined onClick={() => onSelect(address)} />
-    </div>
-  );
+function addressToMarker(address, onSelect) {
+  const addressObject = addressResultToAddressObject(address);
+  return {
+    latitude: addressObject.latitude,
+    longitude: addressObject.longitude,
+    tooltip: (
+      <>
+        {addressResultName(address)}
+      </>
+    ),
+    popup: <EnterOutlined onClick={() => onSelect(address)} />,
+  };
 }
-PresentHint.propTypes = {
-  address: PropTypes.shape().isRequired,
-  onSelect: PropTypes.func.isRequired,
-};
-
-function PresentHints(props) {
-  const { addresses, onSelect } = props;
-  const hints = addresses.map((address) => (
-    <PresentHint key={addressResultKey(address)} address={address} onSelect={onSelect} />
-  ));
-  return hints;
-}
-PresentHints.propTypes = {
-  addresses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  onSelect: PropTypes.func.isRequired,
-};
 
 function AddressHints(props) {
-  let initHintsFetched = true;
   const { onSelect, referFrom } = props;
-  if (referFrom != null) {
-    if (referFrom.related != null) {
-      if (referFrom.related.addresses.length > 0) {
-        initHintsFetched = false;
-      }
-    }
-  }
-
-  const [hintsFetched, setHintsFetched] = useState(initHintsFetched);
+  const [currentCenter, setCurrentCenter] = useState(getInitialCenter(referFrom));
   const [addresses, setAddresses] = useState([]);
 
-  const loadHints = () => {
+  const loadHintsByPosition = () => {
     referFrom.related.addresses.forEach((address) => {
       if ((address.latitude != null) && (address.longitude != null)) {
         addressesFromPosition(
-          address.latitude,
-          address.longitude,
-          (a) => setAddresses(addresses.concat(a)),
+          currentCenter.latitude,
+          currentCenter.longitude,
+          (a) => setAddresses(a),
         );
       }
     });
-    setHintsFetched(true);
   };
 
-  if (!hintsFetched) {
-    return (
-      <ReloadOutlined
-        onClick={() => loadHints()}
-      />
+  const loadHintsByText = (query) => {
+    addressesFromText(
+      query,
+      (a) => setAddresses(a),
     );
-  }
+  };
 
+  const listHints = addresses.map((address) => ({
+    hint: address,
+    key: addressResultKey(address),
+    text: addressResultName(address),
+  }));
+  const mapHints = addresses.map((address) => addressToMarker(address, onSelect));
   return (
-    <PresentHints addresses={addresses} onSelect={onSelect} />
+    <>
+      <ReloadOutlined
+        onClick={() => loadHintsByPosition()}
+      />
+      <Input.Search placeholder="fritext" onSearch={(query) => loadHintsByText(query)} />
+      <HintTabs
+        onSelect={onSelect}
+        referFrom={referFrom}
+        setCurrentCenter={setCurrentCenter}
+        listHints={listHints}
+        mapHints={mapHints}
+      />
+    </>
   );
 }
 AddressHints.propTypes = {
@@ -234,7 +233,7 @@ class FormAddress extends React.Component {
   }
 
   render() {
-    const { onChange, referFrom } = this.props;
+    const { onChange, referFrom, noHints } = this.props;
     const { address } = this.state;
 
     return (
@@ -247,20 +246,23 @@ class FormAddress extends React.Component {
                 object={address}
               />
             </td>
-            <td aria-label="hints" valign="top">
-              <AddressHints
-                referFrom={referFrom}
-                onSelect={(object) => {
-                  const addressObject = addressResultToAddressObject(object);
-                  onChange({
-                    address: addressObject,
-                  });
-                  this.setState({
-                    address: addressObject,
-                  });
-                }}
-              />
-            </td>
+            { !noHints
+              && (
+                <td aria-label="hints" valign="top">
+                  <AddressHints
+                    referFrom={referFrom}
+                    onSelect={(object) => {
+                      const addressObject = addressResultToAddressObject(object);
+                      onChange({
+                        address: addressObject,
+                      });
+                      this.setState({
+                        address: addressObject,
+                      });
+                    }}
+                  />
+                </td>
+              )}
           </tr>
         </tbody>
       </table>
@@ -271,6 +273,7 @@ FormAddress.propTypes = {
   onChange: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   referFrom: PropTypes.shape(),
+  noHints: PropTypes.bool,
 };
 FormAddress.defaultProps = {
   object: {
@@ -284,6 +287,7 @@ FormAddress.defaultProps = {
     source: null,
   },
   referFrom: null,
+  noHints: false,
 };
 
 export default FormAddress;

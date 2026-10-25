@@ -12,6 +12,32 @@ module Api
         super(Address)
       end
 
+      def by_position
+        latitude = params['latitude']
+        longitude = params['longitude']
+        latlng = "#{latitude},#{longitude}"
+        api_key = Biografia::Application.config.google_public_api_key
+        url = "https://maps.googleapis.com/maps/api/geocode/json?key=#{api_key}&region=se&language=sv&latlng=#{latlng}"
+        uri = URI(url)
+        https = Net::HTTP.new(uri.host, uri.port)
+        https.use_ssl = true
+        request = Net::HTTP::Get.new(uri)
+        response = https.request(request)
+        render json: response.body
+      end
+
+      def by_text
+        text_query = CGI.escape(params['query'])
+        api_key = Biografia::Application.config.google_public_api_key
+        url = "https://maps.googleapis.com/maps/api/geocode/json?key=#{api_key}&region=se&language=sv&address=#{text_query}"
+        uri = URI(url)
+        https = Net::HTTP.new(uri.host, uri.port)
+        https.use_ssl = true
+        request = Net::HTTP::Get.new(uri)
+        response = https.request(request)
+        render json: response.body
+      end
+
       protected
 
       def create_object
