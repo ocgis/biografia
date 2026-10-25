@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Tabs } from 'antd';
+import { Input, Select } from 'antd';
 import { EnterOutlined, ReloadOutlined } from '@ant-design/icons';
 import FormAddress from './FormAddress';
 import {
@@ -13,29 +13,7 @@ import {
   placeResultKey,
   placeResultPosition,
 } from './Geocoding';
-import { getPrimaryPosition } from './Position';
-import EmbeddedMap from './EmbeddedMap';
-import { showObject } from './Mappings';
-
-function PresentHint(props) {
-  const { place, onSelect } = props;
-  let hintText = placeResultName(place);
-  const typeText = placeResultType(place);
-  if (typeText) {
-    hintText += ` (${typeText})`;
-  }
-  hintText += `, ${placeResultFormattedAddress(place)}`;
-  return (
-    <div>
-      { hintText }
-      <EnterOutlined onClick={() => onSelect(place)} />
-    </div>
-  );
-}
-PresentHint.propTypes = {
-  place: PropTypes.shape().isRequired,
-  onSelect: PropTypes.func.isRequired,
-};
+import { HintTabs, getInitialCenter } from './GeoHints';
 
 function IncludeTypes(props) {
   const onTypeSelectChange = (value) => {
@@ -69,18 +47,6 @@ IncludeTypes.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-function PresentHints(props) {
-  const { places, onSelect } = props;
-  const hints = places.map((place) => (
-    <PresentHint key={placeResultKey(place)} place={place} onSelect={onSelect} />
-  ));
-  return hints;
-}
-PresentHints.propTypes = {
-  places: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  onSelect: PropTypes.func.isRequired,
-};
-
 function placeToMarker(place, onSelect) {
   const position = placeResultPosition(place);
   let placeName = placeResultName(place);
@@ -103,47 +69,14 @@ function placeToMarker(place, onSelect) {
   };
 }
 
-const getInitialCenter = (referFrom) => {
-  if (referFrom != null) {
-    const referFromPosition = getPrimaryPosition(referFrom);
-    if (referFromPosition != null) {
-      return { latitude: referFromPosition.latitude, longitude: referFromPosition.longitude };
-    }
+const placeHintText = (place) => {
+  let hintText = placeResultName(place);
+  const typeText = placeResultType(place);
+  if (typeText) {
+    hintText += ` (${typeText})`;
   }
-  return { latitude: 57.7, longitude: 12 };
-};
-
-function MapHints(props) {
-  const {
-    referFrom, places, onSelect, onMapMove,
-  } = props;
-
-  const position = getInitialCenter(referFrom);
-  let tooltip = null;
-  let markers = null;
-  if (referFrom != null) {
-    const ShowReferFromObject = showObject(referFrom._type_);
-    tooltip = <ShowReferFromObject object={referFrom} mode="oneLine" />;
-  }
-  markers = places.map((place) => placeToMarker(place, onSelect));
-  return (
-    <EmbeddedMap
-      latitude={position.latitude}
-      longitude={position.longitude}
-      tooltip={tooltip}
-      markers={markers}
-      onMapMove={onMapMove}
-    />
-  );
-}
-MapHints.propTypes = {
-  referFrom: PropTypes.shape().isRequired,
-  places: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  onSelect: PropTypes.func.isRequired,
-  onMapMove: PropTypes.func,
-};
-MapHints.defaultProps = {
-  onMapMove: null,
+  hintText += `, ${placeResultFormattedAddress(place)}`;
+  return hintText;
 };
 
 function EstablishmentHints(props) {
@@ -168,25 +101,12 @@ function EstablishmentHints(props) {
     );
   };
 
-  const tabItems = [
-    {
-      key: 'List',
-      label: 'Lista',
-      children: <PresentHints places={places} onSelect={onSelect} />,
-    },
-    {
-      key: 'Map',
-      label: 'Karta',
-      children: (
-        <MapHints
-          referFrom={referFrom}
-          places={places}
-          onSelect={onSelect}
-          onMapMove={setCurrentCenter}
-        />
-      ),
-    },
-  ];
+  const listHints = places.map((place) => ({
+    place,
+    key: placeResultKey(place),
+    text: placeHintText(place),
+  }));
+  const mapHints = places.map((place) => placeToMarker(place, onSelect));
   return (
     <>
       <ReloadOutlined
@@ -194,7 +114,13 @@ function EstablishmentHints(props) {
       />
       <IncludeTypes onChange={setIncludeTypes} />
       <Input.Search placeholder="fritext" onSearch={(query) => loadHintsByText(query)} />
-      <Tabs defaultActiveKey={tabItems[0].key} items={tabItems} />
+      <HintTabs
+        onSelect={onSelect}
+        referFrom={referFrom}
+        setCurrentCenter={setCurrentCenter}
+        listHints={listHints}
+        mapHints={mapHints}
+      />
     </>
   );
 }
