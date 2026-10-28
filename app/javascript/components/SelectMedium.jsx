@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FixedSizeGrid as Grid } from 'react-window';
 import {
-  Button, Checkbox, Descriptions, Dropdown, Input, Select,
+  Button, Checkbox, Descriptions, Dropdown, Input, Select, Tooltip,
 } from 'antd';
 import { PlusCircleOutlined, RollbackOutlined } from '@ant-design/icons';
 import { debounce } from 'throttle-debounce';
@@ -124,6 +124,11 @@ function PresentUnregisteredMedium(props) {
               contentType={medium.info.content_type}
               link={link}
             />
+          </td>
+        </tr>
+        <tr>
+          <td aria-label="Filnamn">
+            <Info data={{ Filnamn: medium.file_name }} />
           </td>
         </tr>
         <tr>
@@ -515,10 +520,12 @@ class SelectMedium extends React.Component {
                 position: 'absolute',
               }}
             >
-              <img
-                src={apiUrl('Medium', attributes.id, 'thumb')}
-                alt={path}
-              />
+              <Tooltip title={path}>
+                <img
+                  src={apiUrl('Medium', attributes.id, 'thumb')}
+                  alt={path}
+                />
+              </Tooltip>
             </Button>
             { selectable && renderSelectUnselect({ file_name: path, id: attributes.id }) }
           </div>
@@ -536,10 +543,12 @@ class SelectMedium extends React.Component {
               position: 'absolute',
             }}
           >
-            <img
-              src={apiUrl('Medium', `file_thumb?file=${path}`)}
-              alt={path}
-            />
+            <Tooltip title={path}>
+              <img
+                src={apiUrl('Medium', `file_thumb?file=${path}`)}
+                alt={path}
+              />
+            </Tooltip>
           </Button>
           { selectable && renderSelectUnselect({ file_name: path }) }
         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Tooltip } from 'antd';
 import Base from './Base';
 import Index from './Index';
 import Show from './Show';
@@ -22,17 +23,19 @@ function OneLine(props) {
   const { object: medium } = props;
 
   return (
-    <div
-      style={{
-        width: '110px',
-        height: '110px',
-      }}
-    >
-      <img
-        src={apiUrl('Medium', medium.id, 'thumb')}
-        alt={medium.file_name}
-      />
-    </div>
+    <Tooltip title={medium.file_name}>
+      <div
+        style={{
+          width: '110px',
+          height: '110px',
+        }}
+      >
+        <img
+          src={apiUrl('Medium', medium.id, 'thumb')}
+          alt={medium.file_name}
+        />
+      </div>
+    </Tooltip>
   );
 }
 OneLine.propTypes = {
