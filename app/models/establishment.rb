@@ -21,14 +21,15 @@ class Establishment < ActiveRecord::Base
     parts.join(', ')
   end
 
-  def self.filtered_search(filters)
-    establishments = Establishment.all
-
-    filters.each do |filter|
+  def self.filtered_search(filters, match_all: true)
+    filter_queries = filters.map do |filter|
       fields = %w[name]
-      query = fields.collect { |field| "#{field} LIKE \"%#{filter}%\"" }.join(' OR ')
-      establishments = establishments.where(query)
+      field_queries = fields.collect { |field| "#{field} LIKE \"%#{filter}%\"" }.join(' OR ')
+      "(#{field_queries})"
     end
+    separator = match_all ? ' AND ' : ' OR '
+    query = filter_queries.join(separator)
+    establishments = Establishment.where(query)
     establishments.first(100)
   end
 

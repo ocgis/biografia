@@ -449,7 +449,9 @@ class Medium < ActiveRecord::Base
 
   def hint_by_pathname_components
     components = file_name.split(%r{[\s_/.]})
-    components.map { |component| hint_by_date(component) }.reject(&:blank?)
+    objects = Establishment.filtered_search(components, match_all: false).map(&:limited_attributes)
+    objects += components.map { |component| hint_by_date(component) }.reject(&:blank?)
+    objects
   end
 
   def hint_by_date(str)
