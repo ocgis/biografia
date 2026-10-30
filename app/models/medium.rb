@@ -305,22 +305,8 @@ class Medium < ActiveRecord::Base
     related_objects[:addresses].each do |address|
       objects.concat(address.hint_by_position)
     end
-
-    path_name = file_name.split('/')[0..-2].join('/')
-    media = Medium.where('file_name LIKE ?', "#{path_name}%").order(:file_name)
-    self_index = media.index.with_index { |element, _| file_name == element.file_name }
-    start_index = (self_index - 5).clamp(0, media.length)
-    end_index = (self_index + 1 + 5).clamp(0, media.length)
-
-    references = Reference.references_for_objects(media[start_index..end_index])
-    ids = Reference.ids_in_references(references)
-    grouped_ids = ids.group_by { |id| id[:_type_] }
-    grouped_ids.delete('Medium')
-
-    grouped_ids.each_key do |local_type|
-      objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:limited_attributes)
-    end
-
+    objects += hint_by_pathname_components
+    objects += hint_by_similar_pathname
     objects
   end
 
@@ -439,5 +425,38 @@ class Medium < ActiveRecord::Base
       raise StandardError, "Found several matching things: #{things.pretty_inspect}"
     end
     add_reference(thing, role:)
+  end
+
+  def hint_by_similar_pathname
+    objects = []
+    path_name = file_name.split('/')[0..-2].join('/')
+    media = Medium.where('file_name LIKE ?', "#{path_name}%").order(:file_name)
+    self_index = media.index.with_index { |element, _| file_name == element.file_name }
+    start_index = (self_index - 5).clamp(0, media.length)
+    end_index = (self_index + 1 + 5).clamp(0, media.length)
+
+    references = Reference.references_for_objects(media[start_index..end_index])
+    ids = Reference.ids_in_references(references)
+    grouped_ids = ids.group_by { |id| id[:_type_] }
+    grouped_ids.delete('Medium')
+
+    grouped_ids.each_key do |local_type|
+      objects += local_type.constantize.with_associations.find(ids(grouped_ids[local_type])).map(&:limited_attributes)
+    end
+
+    objects
+  end
+
+  def hint_by_pathname_components
+    components = file_name.split(%r{[\s_/.]})
+    components.map { |component| hint_by_date(component) }.reject(&:blank?)
+  end
+
+  def hint_by_date(str)
+    date = EventDate.new
+    date.set_date(str)
+    date.limited_attributes
+  rescue StandardError
+    nil
   end
 end

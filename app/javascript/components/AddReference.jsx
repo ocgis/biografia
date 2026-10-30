@@ -326,7 +326,11 @@ class AddReference extends React.Component {
 
     const truncateDate = (obj) => {
       const {
-        id: _id, created_at: _created_at, updated_at: _updated_at, reference: _ref_,
+        id: _id,
+        created_at: _created_at,
+        updated_at: _updated_at,
+        reference: _ref_,
+        related: _related,
         ...strippedItem
       } = obj;
       if (strippedItem.mask.startsWith('YYYY-MM-DD')) {
