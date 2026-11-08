@@ -45,9 +45,16 @@ module Related
   private
 
   def matching(list)
-    string_list = list.map { |item| "#{item[:_type_]}_#{item[:id]}" }
-    Reference.where('(CONCAT(type1, \'_\', id1) in (?)) OR (CONCAT(type2, \'_\', id2) in (?))',
-                    string_list, string_list)
+    return [] if list.empty?
+
+    dict = list.group_by { |e| e[:_type_] }.transform_values { |e| e.map { |v| v[:id] } }
+    list_by_type = dict.to_a
+    query_parts = list_by_type.map do |type, ids|
+      ids_str = ids.join(',')
+      "((type1 = \"#{type}\" AND id1 IN (#{ids_str})) OR (type2 = \"#{type}\" AND id2 IN (#{ids_str})))"
+    end
+    query = query_parts.join(' OR ')
+    Reference.where(query)
   end
 
   def others(object, references)
