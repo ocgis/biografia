@@ -102,19 +102,26 @@ module Api
       end
 
       def latest_referenced(search_models)
-        sids = []
-        objects = []
+        found = {}
         references = Reference.order(updated_at: :desc).limit(200)
         references.each do |reference|
           [[reference.type1, reference.id1], [reference.type2, reference.id2]].each do |type, id|
-            sid = "#{type}_#{id}"
-            next if (!search_models.include? type) || (sids.include? sid)
+            next unless search_models.include? type
 
-            sids.append(sid)
-            objects.append(type.constantize.find(id).limited_attributes)
+            if found.key?(type)
+              next if found[type].include? id
+
+              found[type] = found[type].append(id)
+            else
+              found[type] = [id]
+            end
           end
         end
-        objects
+        raw_objects = []
+        found.each do |type, ids|
+          raw_objects += type.constantize.find(ids)
+        end
+        raw_objects.map(&:limited_attributes)
       end
     end
   end
