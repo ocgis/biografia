@@ -38,14 +38,14 @@ class GridObjects extends React.Component {
 
   renderObject = (objects, index) => {
     const {
-      parent, currentUser, mode, reload, _type_,
+      parent, currentUser, mode, reload,
     } = this.props;
     const object = objects[index];
     const context = {
       collection: objects,
       collectionIndex: index,
     };
-    const ShowObject = showObject(_type_);
+    const ShowObject = showObject(object._type_);
     return (
       <ShowObject
         key={object.id}
@@ -118,7 +118,6 @@ class GridObjects extends React.Component {
 }
 GridObjects.propTypes = {
   currentUser: PropTypes.shape(),
-  _type_: PropTypes.string.isRequired,
   mode: PropTypes.string,
   parent: PropTypes.shape(),
   objects: PropTypes.arrayOf(PropTypes.shape()),

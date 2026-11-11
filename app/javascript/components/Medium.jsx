@@ -355,7 +355,6 @@ function ShowMedia(props) {
   } = props;
   return (
     <GridObjects
-      _type_="Medium"
       parent={parent}
       objects={objects}
       mode={mode}
