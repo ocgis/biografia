@@ -144,7 +144,6 @@ function ShowEvents(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Event"
       parent={parent}
       objects={objects}
       mode={mode}

@@ -263,7 +263,6 @@ function ShowPeople(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Person"
       parent={parent}
       objects={objects}
       mode={mode}

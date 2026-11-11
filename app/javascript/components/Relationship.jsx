@@ -194,7 +194,6 @@ function ShowRelationships(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Relationship"
       parent={parent}
       objects={objects}
       mode={mode}

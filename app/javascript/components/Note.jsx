@@ -89,7 +89,6 @@ function ShowNotes(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Note"
       parent={parent}
       objects={objects}
       mode={mode}

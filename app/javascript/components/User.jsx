@@ -107,7 +107,7 @@ setMapping('User', 'showObject', User);
 function ShowUsers(props) {
   const { objects } = props;
   return (
-    <ListObjects _type_="User" objects={objects} />
+    <ListObjects objects={objects} />
   );
 }
 

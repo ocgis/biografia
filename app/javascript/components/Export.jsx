@@ -94,7 +94,6 @@ function ShowExports(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Export"
       objects={objects}
       mode={mode}
       currentUser={currentUser}

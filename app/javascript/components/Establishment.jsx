@@ -113,7 +113,6 @@ function ShowEstablishments(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Establishment"
       parent={parent}
       objects={objects}
       mode={mode}

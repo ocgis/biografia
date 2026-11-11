@@ -41,7 +41,7 @@ class Export < ActiveRecord::Base
   end
 
   def limited_attributes
-    attributes
+    attributes.update({ _type_: 'Export' })
   end
 
   def all_attributes

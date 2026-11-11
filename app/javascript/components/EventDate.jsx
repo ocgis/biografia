@@ -121,7 +121,6 @@ function ShowEventDates(props) {
   } = props;
   return (
     <ListObjects
-      _type_="EventDate"
       parent={parent}
       objects={objects}
       mode={mode}

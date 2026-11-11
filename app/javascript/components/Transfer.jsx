@@ -105,7 +105,6 @@ function ShowTransfers(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Transfer"
       objects={objects}
       mode={mode}
       currentUser={currentUser}

@@ -205,7 +205,6 @@ function ShowAddresses(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Address"
       parent={parent}
       objects={objects}
       mode={mode}

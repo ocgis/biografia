@@ -138,7 +138,6 @@ function ShowThings(props) {
   } = props;
   return (
     <ListObjects
-      _type_="Thing"
       parent={parent}
       objects={objects}
       mode={mode}
