@@ -13,7 +13,7 @@ const getInitialCenter = (referFrom) => {
       return { latitude: referFromPosition.latitude, longitude: referFromPosition.longitude };
     }
   }
-  return { latitude: 57.7, longitude: 12 };
+  return { latitude: '57.7', longitude: '12' };
 };
 
 function MapHints({
