@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormPerson from './FormPerson';
 
-const EditPerson = (props) => {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditPerson({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Person"
@@ -18,16 +16,12 @@ const EditPerson = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditPerson.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditPerson.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditPerson;

@@ -50,11 +50,9 @@ const OneLine = (props) => {
   return `${dateStr}${tzSuffix}`;
 };
 
-function EventDate(props) {
-  const {
-    currentUser, mode, parent, object: eventDate, reload,
-  } = props;
-
+function EventDate({
+  currentUser = null, mode = '', parent = null, object: eventDate, reload = null,
+}) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={eventDate} />
@@ -106,19 +104,11 @@ EventDate.propTypes = {
   mode: PropTypes.string,
 };
 
-EventDate.defaultProps = {
-  parent: null,
-  currentUser: null,
-  mode: '',
-  reload: null,
-};
-
 setMapping('EventDate', 'showObject', EventDate);
 
-function ShowEventDates(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowEventDates({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -136,12 +126,6 @@ ShowEventDates.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowEventDates.defaultProps = {
-  mode: '',
-  parent: null,
-  objects: [],
 };
 
 setMapping('EventDate', 'showObjects', ShowEventDates);

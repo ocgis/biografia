@@ -112,7 +112,8 @@ class Merge extends React.Component {
       const { object } = this.props;
       const { descriptionOptions, selected } = this.state;
       const {
-        id, created_at, updated_at, reference: ref_, _type_, related, source, ...strippedItem
+        id: _id, created_at: _ca, updated_at: _ua, reference: _ref, _type_, related: _rel,
+        source: _source, ...strippedItem
       } = object;
       const newSelected = [...selected];
 

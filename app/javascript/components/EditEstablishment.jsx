@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormEstablishment from './FormEstablishment';
 
-function EditEstablishment(props) {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditEstablishment({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Establishment"
@@ -24,10 +22,6 @@ EditEstablishment.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditEstablishment.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditEstablishment;

@@ -17,10 +17,7 @@ const OneLine = (props) => {
   return `${object.file_name} (${object.content_type})`;
 };
 
-function Export(props) {
-  const { object } = props;
-  const { mode } = props;
-
+function Export({ object, mode = '' }) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={object} />
@@ -82,16 +79,11 @@ Export.propTypes = {
   mode: PropTypes.string,
 };
 
-Export.defaultProps = {
-  mode: '',
-};
-
 setMapping('Export', 'showObject', Export);
 
-function ShowExports(props) {
-  const {
-    mode, objects, currentUser, reload,
-  } = props;
+function ShowExports({
+  mode = '', objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       objects={objects}
@@ -109,18 +101,11 @@ ShowExports.propTypes = {
   reload: PropTypes.func.isRequired,
 };
 
-ShowExports.defaultProps = {
-  mode: '',
-  objects: [],
-};
-
 setMapping('Export', 'showObjects', ShowExports);
 
-function EditExport(props) {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditExport({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Export"
@@ -137,10 +122,6 @@ EditExport.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditExport.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 setMapping('Export', 'editObject', EditExport);

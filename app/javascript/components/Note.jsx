@@ -12,11 +12,9 @@ setMapping('Note', 'oneName', 'note');
 setMapping('Note', 'manyName', 'notes');
 setMapping('Note', 'filterFields', ['category', 'title', 'note']);
 
-function Note(props) {
-  const {
-    currentUser, mode, parent, object: note, reload,
-  } = props;
-
+function Note({
+  currentUser = null, mode = '', parent = null, object: note, reload = null,
+}) {
   if (mode === 'oneLine') {
     if (note.title == null) {
       return 'Utan rubrik';
@@ -74,19 +72,11 @@ Note.propTypes = {
   mode: PropTypes.string,
 };
 
-Note.defaultProps = {
-  parent: null,
-  currentUser: null,
-  mode: '',
-  reload: null,
-};
-
 setMapping('Note', 'showObject', Note);
 
-function ShowNotes(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowNotes({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -104,12 +94,6 @@ ShowNotes.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowNotes.defaultProps = {
-  mode: '',
-  parent: null,
-  objects: [],
 };
 
 setMapping('Note', 'showObjects', ShowNotes);

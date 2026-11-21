@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modifier, VersionInfo } from './Common';
 
-function Base(props) {
-  const {
-    currentUser, object, parent, reload, children, appendElements,
-    editTitle, modifierProps,
-  } = props;
-
+function Base({
+  currentUser = null, object, parent = null, reload = null, children = null, appendElements = null,
+  editTitle = null, modifierProps = {},
+}) {
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <div>
@@ -45,16 +43,6 @@ Base.propTypes = {
   modifierProps: PropTypes.shape(),
   currentUser: PropTypes.shape(),
   reload: PropTypes.func,
-};
-
-Base.defaultProps = {
-  parent: null,
-  children: null,
-  appendElements: null,
-  editTitle: null,
-  modifierProps: {},
-  currentUser: null,
-  reload: null,
 };
 
 export default Base;

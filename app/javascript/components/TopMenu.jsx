@@ -15,8 +15,7 @@ import { errorText, getRequest } from './Requests';
 
 const { SubMenu } = Menu;
 
-function TopMenu(props) {
-  const { currentUser } = props;
+function TopMenu({ currentUser = { name: '' } }) {
   const navigate = useNavigate();
   const [modalKey, setModalKey] = useState(null);
 
@@ -209,9 +208,6 @@ function TopMenu(props) {
 }
 TopMenu.propTypes = {
   currentUser: PropTypes.shape({ name: PropTypes.string.isRequired }),
-};
-TopMenu.defaultProps = {
-  currentUser: { name: '' },
 };
 
 class TopMenuComponent extends React.Component {

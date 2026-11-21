@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormMedium from './FormMedium';
 
-function EditMedium(props) {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditMedium({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Medium"
@@ -24,10 +22,6 @@ EditMedium.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditMedium.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditMedium;

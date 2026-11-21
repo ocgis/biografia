@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormRelationship from './FormRelationship';
 
-const EditRelationship = (props) => {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditRelationship({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Relationship"
@@ -18,16 +16,12 @@ const EditRelationship = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditRelationship.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditRelationship.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditRelationship;

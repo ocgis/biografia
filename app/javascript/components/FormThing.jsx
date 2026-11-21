@@ -10,7 +10,7 @@ class FormThing extends React.Component {
     this.state = { thing: JSON.parse(JSON.stringify(thing)) };
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { thing } = this.state;
 

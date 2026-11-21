@@ -31,10 +31,10 @@ RenderElement.propTypes = {
   reload: PropTypes.func.isRequired,
 };
 
-function ShowReferences(props) {
-  const {
-    currentUser, object, object: { related }, reload, state, setState,
-  } = props;
+function ShowReferences({
+  currentUser, object, reload = () => alert('Missing reload callback'), state, setState,
+}) {
+  const { related } = object;
   const tabHeader = (key) => {
     const header = {
       people: 'Personer',
@@ -105,9 +105,6 @@ ShowReferences.propTypes = {
   currentUser: PropTypes.shape({}).isRequired,
   state: PropTypes.shape().isRequired,
   setState: PropTypes.func.isRequired,
-};
-ShowReferences.defaultProps = {
-  reload: () => alert('Missing reload callback'),
 };
 
 /* eslint-disable import/prefer-default-export */

@@ -16,11 +16,9 @@ const getInitialCenter = (referFrom) => {
   return { latitude: 57.7, longitude: 12 };
 };
 
-function MapHints(props) {
-  const {
-    referFrom, markers, onMapMove,
-  } = props;
-
+function MapHints({
+  referFrom, markers, onMapMove = null,
+}) {
   const position = getInitialCenter(referFrom);
   let tooltip = null;
   if (referFrom != null) {
@@ -41,9 +39,6 @@ MapHints.propTypes = {
   referFrom: PropTypes.shape().isRequired,
   markers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   onMapMove: PropTypes.func,
-};
-MapHints.defaultProps = {
-  onMapMove: null,
 };
 
 function ListHint(props) {
@@ -72,10 +67,9 @@ ListHints.propTypes = {
   onSelect: PropTypes.func.isRequired,
 };
 
-function HintTabs(props) {
-  const {
-    onSelect, referFrom, setCurrentCenter, listHints, mapHints,
-  } = props;
+function HintTabs({
+  onSelect, referFrom = null, setCurrentCenter, listHints, mapHints,
+}) {
   const tabItems = [
     {
       key: 'List',
@@ -102,9 +96,6 @@ HintTabs.propTypes = {
   setCurrentCenter: PropTypes.func.isRequired,
   listHints: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   mapHints: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-};
-HintTabs.defaultProps = {
-  referFrom: null,
 };
 
 export {

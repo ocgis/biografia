@@ -107,10 +107,8 @@ const FamilyRole = (familyRefName, personRefName, personSex) => {
   return 'Okänd roll';
 };
 
-function Overview(props) {
-  const {
-    object, object: { related: { relationships } }, currentUser,
-  } = props;
+function Overview({ object, currentUser = null }) {
+  const { related: { relationships } } = object;
   const rows = [];
   const ShowObject = showObject('Person');
   relationships.forEach((relationship) => {
@@ -154,19 +152,13 @@ Overview.propTypes = {
   currentUser: PropTypes.shape({}),
 };
 
-Overview.defaultProps = {
-  currentUser: null,
-};
-
-function Person(props) {
-  const {
-    parent,
-    object: person,
-    currentUser,
-    mode,
-    reload,
-  } = props;
-
+function Person({
+  parent = null,
+  object: person,
+  currentUser = null,
+  mode = '',
+  reload = null,
+}) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={person} />
@@ -248,19 +240,11 @@ Person.propTypes = {
   reload: PropTypes.func,
 };
 
-Person.defaultProps = {
-  parent: null,
-  currentUser: null,
-  mode: '',
-  reload: null,
-};
-
 setMapping('Person', 'showObject', Person);
 
-function ShowPeople(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowPeople({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -278,12 +262,6 @@ ShowPeople.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowPeople.defaultProps = {
-  parent: null,
-  mode: '',
-  objects: [],
 };
 
 setMapping('Person', 'showObjects', ShowPeople);

@@ -41,10 +41,7 @@ ShowRoles.propTypes = {
   roles: PropTypes.shape({}).isRequired,
 };
 
-function User(props) {
-  const { object } = props;
-  const { mode } = props;
-
+function User({ object, mode = '' }) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={object} />
@@ -98,24 +95,17 @@ User.propTypes = {
   mode: PropTypes.string,
 };
 
-User.defaultProps = {
-  mode: '',
-};
-
 setMapping('User', 'showObject', User);
 
-function ShowUsers(props) {
-  const { objects } = props;
+function ShowUsers({ objects = [], reload }) {
   return (
-    <ListObjects objects={objects} />
+    <ListObjects objects={objects} reload={reload} />
   );
 }
 
 ShowUsers.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
-};
-ShowUsers.defaultProps = {
-  objects: [],
+  reload: PropTypes.func.isRequired,
 };
 
 setMapping('User', 'showObjects', ShowUsers);

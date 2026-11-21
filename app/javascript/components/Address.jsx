@@ -44,8 +44,7 @@ const collectParts = (address) => {
 const addressHasText = (address) => collectParts(address).length > 0;
 const addressHasPosition = (address) => address.latitude != null && address.longitude != null;
 
-function OneLine(props) {
-  const { linked, object: address } = props;
+function OneLine({ linked = false, object: address }) {
   const [lookupGeocode, setLookupGeocode] = useState(false);
 
   const parts = collectParts(address);
@@ -107,21 +106,16 @@ OneLine.propTypes = {
     zipcode: PropTypes.string,
     parish: PropTypes.string,
     country: PropTypes.string,
-    latitude: PropTypes.number,
-    longitude: PropTypes.number,
+    latitude: PropTypes.string,
+    longitude: PropTypes.string,
     maps_address: PropTypes.string,
   }).isRequired,
   linked: PropTypes.bool,
 };
-OneLine.defaultProps = {
-  linked: false,
-};
 
-function Address(props) {
-  const {
-    parent, currentUser, mode, object: address, reload,
-  } = props;
-
+function Address({
+  parent = null, currentUser = null, mode = '', object: address, reload = null,
+}) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={address} />
@@ -190,19 +184,11 @@ Address.propTypes = {
   mode: PropTypes.string,
 };
 
-Address.defaultProps = {
-  parent: null,
-  currentUser: null,
-  mode: '',
-  reload: null,
-};
-
 setMapping('Address', 'showObject', Address);
 
-function ShowAddresses(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowAddresses({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -220,12 +206,6 @@ ShowAddresses.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowAddresses.defaultProps = {
-  parent: null,
-  mode: '',
-  objects: [],
 };
 
 setMapping('Address', 'showObjects', ShowAddresses);

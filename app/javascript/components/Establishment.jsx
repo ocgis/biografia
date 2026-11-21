@@ -29,11 +29,9 @@ const OneLine = (props) => {
   return parts.join(', ');
 };
 
-function Establishment(props) {
-  const {
-    currentUser, mode, parent, object: establishment, reload,
-  } = props;
-
+function Establishment({
+  currentUser = null, mode = '', parent = null, object: establishment, reload = null,
+}) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={establishment} />
@@ -95,22 +93,16 @@ Establishment.propTypes = {
     name: PropTypes.string,
     kind: PropTypes.string,
   }).isRequired,
-  currentUser: PropTypes.shape({}).isRequired,
-  reload: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({}),
+  reload: PropTypes.func,
   mode: PropTypes.string,
-};
-
-Establishment.defaultProps = {
-  parent: null,
-  mode: '',
 };
 
 setMapping('Establishment', 'showObject', Establishment);
 
-function ShowEstablishments(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowEstablishments({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -128,12 +120,6 @@ ShowEstablishments.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowEstablishments.defaultProps = {
-  mode: '',
-  parent: null,
-  objects: [],
 };
 
 setMapping('Establishment', 'showObjects', ShowEstablishments);

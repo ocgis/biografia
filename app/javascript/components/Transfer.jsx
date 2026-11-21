@@ -15,10 +15,7 @@ const OneLine = (props) => {
   return transfer.file_name;
 };
 
-function Transfer(props) {
-  const { object: transfer } = props;
-  const { mode } = props;
-
+function Transfer({ object: transfer, mode = '' }) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={transfer} />
@@ -93,16 +90,11 @@ Transfer.propTypes = {
   mode: PropTypes.string,
 };
 
-Transfer.defaultProps = {
-  mode: '',
-};
-
 setMapping('Transfer', 'showObject', Transfer);
 
-function ShowTransfers(props) {
-  const {
-    mode, objects, currentUser, reload,
-  } = props;
+function ShowTransfers({
+  mode = '', objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       objects={objects}
@@ -118,11 +110,6 @@ ShowTransfers.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowTransfers.defaultProps = {
-  mode: '',
-  objects: [],
 };
 
 setMapping('Transfer', 'showObjects', ShowTransfers);

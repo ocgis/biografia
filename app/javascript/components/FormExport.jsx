@@ -16,7 +16,7 @@ class FormExport extends React.Component {
     onChange({ export: object });
   }
 
-  render = () => {
+  render() {
     const { onChange } = this.props;
     const { object } = this.state;
 

@@ -36,11 +36,9 @@ const OneLine = (props) => {
   return parts.join(', ');
 };
 
-function Thing(props) {
-  const {
-    currentUser, mode, parent, object: thing, reload,
-  } = props;
-
+function Thing({
+  currentUser, mode = '', parent = null, object: thing, reload,
+}) {
   if (mode === 'oneLine') {
     return (
       <OneLine object={thing} />
@@ -125,17 +123,11 @@ Thing.propTypes = {
   mode: PropTypes.string,
 };
 
-Thing.defaultProps = {
-  parent: null,
-  mode: '',
-};
-
 setMapping('Thing', 'showObject', Thing);
 
-function ShowThings(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowThings({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -153,12 +145,6 @@ ShowThings.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowThings.defaultProps = {
-  mode: '',
-  parent: null,
-  objects: [],
 };
 
 setMapping('Thing', 'showObjects', ShowThings);

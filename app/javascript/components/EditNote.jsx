@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormNote from './FormNote';
 
-const EditNote = (props) => {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditNote({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Note"
@@ -18,16 +16,12 @@ const EditNote = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditNote.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditNote.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditNote;

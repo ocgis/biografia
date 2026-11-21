@@ -349,10 +349,9 @@ Medium.defaultProps = {
 setMapping('Medium', 'showObject', Medium);
 setMapping('Medium', 'editObject', EditMedium);
 
-function ShowMedia(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowMedia({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <GridObjects
       parent={parent}
@@ -370,12 +369,6 @@ ShowMedia.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowMedia.defaultProps = {
-  mode: '',
-  parent: null,
-  objects: [],
 };
 
 setMapping('Medium', 'showObjects', ShowMedia);

@@ -12,7 +12,7 @@ class RemoveObject extends React.Component {
     this.state[oneName(_type_)] = props.object;
   }
 
-  render = () => {
+  render() {
     const handleResult = (result) => {
       const { onOk } = this.props;
       if (result.error == null) {

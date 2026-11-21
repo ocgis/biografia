@@ -13,17 +13,15 @@ import RemoveReference from './RemoveReference';
 import RemoveObject from './RemoveObject';
 import { editObject, webUrl } from './Mappings';
 
-function Modifier(props) {
-  const { currentUser } = props;
+function Modifier({
+  currentUser, mainObject, parent = null, reload, showAddAddress = false, showAddPerson = false,
+  showAddEstablishment = false, showAddEvent = false, showAddNote = false, showAddEventDate = false,
+  showAddRelationship = false, showAddThing = false, showTagMedium = false, showImportExif = false,
+  showMergeWith = false, editTitle = null,
+}) {
   if (!currentUser.roles.includes('editor')) {
     return null;
   }
-
-  const {
-    mainObject, parent, reload, showAddAddress, showAddPerson, showAddEstablishment, showAddEvent,
-    showAddNote, showAddEventDate, showAddRelationship, showAddThing,
-    showTagMedium, showImportExif, showMergeWith, editTitle,
-  } = props;
 
   const itemList = [];
   if (showAddEvent) {
@@ -276,21 +274,6 @@ Modifier.propTypes = {
   showImportExif: PropTypes.bool,
   showMergeWith: PropTypes.bool,
   editTitle: PropTypes.string,
-};
-Modifier.defaultProps = {
-  parent: null,
-  showAddAddress: false,
-  showAddPerson: false,
-  showAddEstablishment: false,
-  showAddEvent: false,
-  showAddEventDate: false,
-  showAddNote: false,
-  showAddRelationship: false,
-  showAddThing: false,
-  showTagMedium: false,
-  showImportExif: false,
-  showMergeWith: false,
-  editTitle: null,
 };
 
 function VersionInfo(props) {

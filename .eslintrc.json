@@ -33,6 +33,13 @@
                 "varsIgnorePattern": "^_",
                 "caughtErrorsIgnorePattern": "^_"
             }
+        ],
+        "react/require-default-props": [
+            "warn",
+            {
+                "functions": "defaultArguments",
+                "classes": "defaultProps"
+            }
         ]
     }
 }

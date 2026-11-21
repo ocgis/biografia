@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormAddress from './FormAddress';
 
-const EditAddress = (props) => {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditAddress({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="Address"
@@ -18,16 +16,12 @@ const EditAddress = (props) => {
       extraData={extraData}
     />
   );
-};
+}
 EditAddress.propTypes = {
   onOk: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditAddress.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditAddress;

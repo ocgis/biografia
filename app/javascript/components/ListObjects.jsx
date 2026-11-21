@@ -36,7 +36,7 @@ class ListObjects extends React.Component {
 
   updateListHeight = (element) => {
     if (element != null) {
-      const { top, height } = element.getBoundingClientRect();
+      const { top, _height } = element.getBoundingClientRect();
 
       const { listHeight: oldListHeight } = this.state;
 
@@ -83,7 +83,7 @@ class ListObjects extends React.Component {
 
     const setItemSize = (index, element) => {
       if (element != null) {
-        const { top, height } = element.getBoundingClientRect();
+        const { _top, height } = element.getBoundingClientRect();
 
         if (height !== this.itemSizes[index]) {
           if (this.itemSizes[index] !== undefined) {

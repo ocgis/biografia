@@ -16,11 +16,9 @@ const isPdf = (contentType) => {
   return false;
 };
 
-function DisplayMedium(props) {
-  const {
-    alt, src, contentType, link, onResize,
-  } = props;
-
+function DisplayMedium({
+  alt, src, contentType, link, onResize = null,
+}) {
   if (isImage(contentType)) {
     return (
       <Image
@@ -65,10 +63,6 @@ DisplayMedium.propTypes = {
   link: PropTypes.string.isRequired,
   contentType: PropTypes.string.isRequired,
   onResize: PropTypes.func,
-};
-
-DisplayMedium.defaultProps = {
-  onResize: null,
 };
 
 export default DisplayMedium;

@@ -5,8 +5,7 @@ import {
 } from 'react-leaflet';
 import Config from './Config';
 
-function EventHandler(props) {
-  const { onMapMove } = props;
+function EventHandler({ onMapMove = null }) {
   const map = useMapEvents({
     moveend(_event) {
       if (onMapMove != null) {
@@ -22,14 +21,9 @@ EventHandler.propTypes = {
   onMapMove: PropTypes.func,
 };
 
-EventHandler.defaultProps = {
-  onMapMove: null,
-};
-
-function EmbeddedMap(props) {
-  const {
-    markers, latitude, longitude, tooltip, width, height, onMapMove,
-  } = props;
+function EmbeddedMap({
+  markers = null, location = null, latitude = null, longitude = null, tooltip = null, width = '600px', height = '450px', onMapMove = null,
+}) {
   const { publicApiKey: apiKey } = Config.google;
 
   let mainMarkerElement = null;
@@ -99,7 +93,6 @@ function EmbeddedMap(props) {
     );
   }
 
-  const { location } = props;
   const { attributionUrl } = Config.google;
   const src = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${location}&attribution_source=Google+Maps+Embed+API&attribution_web_url=${attributionUrl}&attribution_ios_deep_link_id=comgooglemaps://?daddr=#{location}`;
 
@@ -118,23 +111,12 @@ function EmbeddedMap(props) {
 EmbeddedMap.propTypes = {
   markers: PropTypes.arrayOf(PropTypes.shape()),
   location: PropTypes.string,
-  latitude: PropTypes.number,
-  longitude: PropTypes.number,
+  latitude: PropTypes.string,
+  longitude: PropTypes.string,
   tooltip: PropTypes.element,
   width: PropTypes.string,
   height: PropTypes.string,
   onMapMove: PropTypes.func,
-};
-
-EmbeddedMap.defaultProps = {
-  markers: null,
-  location: null,
-  latitude: null,
-  longitude: null,
-  tooltip: null,
-  width: '600px',
-  height: '450px',
-  onMapMove: null,
 };
 
 export default EmbeddedMap;

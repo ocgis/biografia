@@ -15,17 +15,14 @@ setMapping('Event', 'oneName', 'event');
 setMapping('Event', 'manyName', 'events');
 setMapping('Event', 'filterFields', ['name']);
 
-function ListRelated(props) {
-  const { object } = props;
-
+function ListRelated({
+  object, relatedType, prefix = null, currentUser,
+}) {
   if (object.related == null) {
     return null;
   }
 
-  const { relatedType } = props;
-  const { prefix } = props;
   const ShowObject = showObject(relatedType);
-  const { currentUser } = props;
   const relObjs = object.related[manyName(relatedType)];
 
   if (relObjs.length === 0) {
@@ -59,15 +56,9 @@ ListRelated.propTypes = {
   prefix: PropTypes.string,
 };
 
-ListRelated.defaultProps = {
-  prefix: null,
-};
-
-function Event(props) {
-  const {
-    currentUser, mode, parent, object: event, reload,
-  } = props;
-
+function Event({
+  currentUser = null, mode = '', parent = null, object: event, reload = null,
+}) {
   if (mode === 'oneLine') {
     return event.name;
   }
@@ -129,19 +120,11 @@ Event.propTypes = {
   mode: PropTypes.string,
 };
 
-Event.defaultProps = {
-  parent: null,
-  currentUser: null,
-  mode: '',
-  reload: null,
-};
-
 setMapping('Event', 'showObject', Event);
 
-function ShowEvents(props) {
-  const {
-    mode, parent, objects, currentUser, reload,
-  } = props;
+function ShowEvents({
+  mode = '', parent = null, objects = [], currentUser, reload,
+}) {
   return (
     <ListObjects
       parent={parent}
@@ -159,12 +142,6 @@ ShowEvents.propTypes = {
   objects: PropTypes.arrayOf(PropTypes.shape()),
   currentUser: PropTypes.shape().isRequired,
   reload: PropTypes.func.isRequired,
-};
-
-ShowEvents.defaultProps = {
-  parent: null,
-  mode: '',
-  objects: [],
 };
 
 setMapping('Event', 'showObjects', ShowEvents);

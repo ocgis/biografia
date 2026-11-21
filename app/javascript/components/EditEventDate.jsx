@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Edit from './Edit';
 import FormEventDate from './FormEventDate';
 
-function EditEventDate(props) {
-  const {
-    object, extraData, onOk, onCancel,
-  } = props;
-
+function EditEventDate({
+  object = undefined, extraData = undefined, onOk, onCancel,
+}) {
   return (
     <Edit
       _type_="EventDate"
@@ -24,10 +22,6 @@ EditEventDate.propTypes = {
   onCancel: PropTypes.func.isRequired,
   object: PropTypes.shape(),
   extraData: PropTypes.shape(),
-};
-EditEventDate.defaultProps = {
-  object: undefined,
-  extraData: undefined,
 };
 
 export default EditEventDate;

@@ -14,9 +14,7 @@ import { ShowReferences } from './Reference';
 
 const { Search } = Input;
 
-function Info(props) {
-  const { data } = props;
-
+function Info({ data = null }) {
   const titleCase = (s) => s
     .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
     .replace(/[-_]+(.)/g, (_, c) => ` ${c.toUpperCase()}`);
@@ -62,10 +60,6 @@ Info.propTypes = {
   data: PropTypes.shape(),
 };
 
-Info.defaultProps = {
-  data: null,
-};
-
 function PathSelector(props) {
   const { path, updatePath } = props;
 
@@ -86,10 +80,9 @@ function PathSelector(props) {
   ));
 }
 
-function PresentUnregisteredMedium(props) {
-  const {
-    medium, goBack, registerImage, error,
-  } = props;
+function PresentUnregisteredMedium({
+  medium, goBack, registerImage, error = null,
+}) {
   const menu = {
     items: [{
       key: 'add',
@@ -154,14 +147,10 @@ PresentUnregisteredMedium.propTypes = {
   registerImage: PropTypes.func.isRequired,
   error: PropTypes.string,
 };
-PresentUnregisteredMedium.defaultProps = {
-  error: null,
-};
 
-function PresentRegisteredMedium(props) {
-  const {
-    medium, goBack, error, currentUser, reload,
-  } = props;
+function PresentRegisteredMedium({
+  medium, goBack, error = null, currentUser, reload,
+}) {
   const ShowMedium = showObject(medium._type_);
   const [refTabState, setRefTabState] = useState({});
 
@@ -213,9 +202,6 @@ PresentRegisteredMedium.propTypes = {
   currentUser: PropTypes.shape().isRequired,
   goBack: PropTypes.func.isRequired,
   error: PropTypes.string,
-};
-PresentRegisteredMedium.defaultProps = {
-  error: null,
 };
 
 class SelectMedium extends React.Component {
@@ -713,8 +699,7 @@ SelectMedium.propTypes = {
 SelectMedium.defaultProps = {
 };
 
-function SelectMediumWrapper(props) {
-  const { selectable, bottomMargin, onChange } = props;
+function SelectMediumWrapper({ selectable = false, bottomMargin = 0, onChange = () => {} }) {
   return (
     <SelectMedium
       location={useLocation()}
@@ -729,11 +714,6 @@ SelectMediumWrapper.propTypes = {
   selectable: PropTypes.bool,
   bottomMargin: PropTypes.number,
   onChange: PropTypes.func,
-};
-SelectMediumWrapper.defaultProps = {
-  selectable: false,
-  bottomMargin: 0,
-  onChange: () => { },
 };
 
 export default SelectMediumWrapper;

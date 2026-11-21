@@ -25,8 +25,7 @@ function addressToMarker(address, onSelect) {
   };
 }
 
-function AddressHints(props) {
-  const { onSelect, referFrom } = props;
+function AddressHints({ onSelect, referFrom = null }) {
   const [currentCenter, setCurrentCenter] = useState(getInitialCenter(referFrom));
   const [addresses, setAddresses] = useState([]);
 
@@ -75,13 +74,20 @@ AddressHints.propTypes = {
   referFrom: PropTypes.shape(),
   onSelect: PropTypes.func.isRequired,
 };
-AddressHints.defaultProps = {
-  referFrom: null,
-};
 
-function AddressFields(props) {
-  const { onChange, object: address } = props;
-
+function AddressFields({
+  onChange,
+  object: address = {
+    street: null,
+    town: null,
+    zipcode: null,
+    parish: null,
+    country: null,
+    latitude: null,
+    longitude: null,
+    source: null,
+  },
+}) {
   return (
     <table>
       <tbody>
@@ -93,8 +99,11 @@ function AddressFields(props) {
             <Input
               value={address.street}
               onChange={(event) => {
-                address.street = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  street: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -107,8 +116,11 @@ function AddressFields(props) {
             <Input
               value={address.town}
               onChange={(event) => {
-                address.town = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  town: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -121,8 +133,11 @@ function AddressFields(props) {
             <Input
               value={address.zipcode}
               onChange={(event) => {
-                address.zipcode = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  zipcode: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -135,8 +150,11 @@ function AddressFields(props) {
             <Input
               value={address.parish}
               onChange={(event) => {
-                address.parish = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  parish: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -149,8 +167,11 @@ function AddressFields(props) {
             <Input
               value={address.country}
               onChange={(event) => {
-                address.country = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  country: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -163,8 +184,11 @@ function AddressFields(props) {
             <Input
               value={address.latitude}
               onChange={(event) => {
-                address.latitude = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  latitude: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -177,8 +201,11 @@ function AddressFields(props) {
             <Input
               value={address.longitude}
               onChange={(event) => {
-                address.longitude = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  longitude: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -191,8 +218,11 @@ function AddressFields(props) {
             <Input
               value={address.source}
               onChange={(event) => {
-                address.source = event.target.value;
-                onChange({ address });
+                const newAddress = {
+                  ...address,
+                  source: event.target.value,
+                };
+                onChange({ address: newAddress });
               }}
             />
           </td>
@@ -204,18 +234,6 @@ function AddressFields(props) {
 AddressFields.propTypes = {
   onChange: PropTypes.func.isRequired,
   object: PropTypes.shape(),
-};
-AddressFields.defaultProps = {
-  object: {
-    street: null,
-    town: null,
-    zipcode: null,
-    parish: null,
-    country: null,
-    latitude: null,
-    longitude: null,
-    source: null,
-  },
 };
 
 class FormAddress extends React.Component {

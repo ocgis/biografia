@@ -79,8 +79,7 @@ const placeHintText = (place) => {
   return hintText;
 };
 
-function EstablishmentHints(props) {
-  const { onSelect, referFrom } = props;
+function EstablishmentHints({ onSelect, referFrom = null }) {
   const [places, setPlaces] = useState([]);
   const [includeTypes, setIncludeTypes] = useState([]);
   const [currentCenter, setCurrentCenter] = useState(getInitialCenter(referFrom));
@@ -127,9 +126,6 @@ function EstablishmentHints(props) {
 EstablishmentHints.propTypes = {
   referFrom: PropTypes.shape(),
   onSelect: PropTypes.func.isRequired,
-};
-EstablishmentHints.defaultProps = {
-  referFrom: null,
 };
 
 function EstablishmentFields(props) {
