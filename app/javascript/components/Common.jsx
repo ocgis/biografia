@@ -117,7 +117,7 @@ function Modifier({
     text: 'referera till',
     component: AddReference,
     props: {
-      referFrom: mainObject,
+      referFrom: [mainObject],
       currentUser,
     },
   });

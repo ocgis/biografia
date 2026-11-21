@@ -47,8 +47,8 @@ class AddReference extends React.Component {
       referFrom,
       reference: {
         name: '',
-        type1: referFrom._type_,
-        id1: referFrom.id,
+        type1: referFrom[0]._type_,
+        id1: referFrom[0].id,
         type2: null,
         id2: null,
         position_in_pictures: [],
@@ -68,15 +68,20 @@ class AddReference extends React.Component {
   componentDidMount() {
     const onLoaded = (data) => {
       const { referFrom } = this.state;
-      this.setState({ referFrom: data[oneName(referFrom._type_)] });
+      this.setState({ referFrom: data[oneName(referFrom[0]._type_)] });
     };
 
     const { referFrom, searchString } = this.state;
 
     this.search(searchString);
 
-    if (referFrom.related == null) {
-      loadData(apiUrl(referFrom._type_, referFrom.id), oneName(referFrom._type_), onLoaded, false);
+    if (referFrom[0].related == null) {
+      loadData(
+        apiUrl(referFrom[0]._type_, referFrom[0].id),
+        oneName(referFrom[0]._type_),
+        onLoaded,
+        false,
+      );
     }
 
     window.addEventListener('resize', this.updateHeights);
@@ -163,7 +168,7 @@ class AddReference extends React.Component {
         const found = response.data.result;
 
         if (searchString === '') {
-          getRequest(apiUrl(referFrom._type_, referFrom.id, 'hint'), (r) => handleHintResponse(r, found), handleError);
+          getRequest(apiUrl(referFrom[0]._type_, referFrom[0].id, 'hint'), (r) => handleHintResponse(r, found), handleError);
         } else {
           this.setState({ found, searchString });
         }
@@ -180,7 +185,7 @@ class AddReference extends React.Component {
         const onLoaded = (data) => {
           const { referFrom } = this.state;
           this.setState((prevState) => ({
-            referFrom: data[oneName(referFrom._type_)],
+            referFrom: [data[oneName(referFrom[0]._type_)]],
             selectedItem: null,
             addType: null,
             reference: {
@@ -199,8 +204,8 @@ class AddReference extends React.Component {
         const { referFrom } = this.state;
 
         loadData(
-          apiUrl(referFrom._type_, referFrom.id),
-          oneName(referFrom._type_),
+          apiUrl(referFrom[0]._type_, referFrom[0].id),
+          oneName(referFrom[0]._type_),
           onLoaded,
           false,
         );
@@ -366,11 +371,11 @@ class AddReference extends React.Component {
       selectedItem, addType, mainRef, mainHeight, bottomRef,
     } = this.state;
 
-    let ignoredItems = [{ _type_: referFrom._type_, id: referFrom.id }];
-    if (referFrom.related != null) {
-      Object.keys(referFrom.related).forEach((key) => {
+    let ignoredItems = [{ _type_: referFrom[0]._type_, id: referFrom[0].id }];
+    if (referFrom[0].related != null) {
+      Object.keys(referFrom[0].related).forEach((key) => {
         ignoredItems = ignoredItems
-          .concat(referFrom.related[key].map((obj) => makeIgnoredItem(obj)));
+          .concat(referFrom[0].related[key].map((obj) => makeIgnoredItem(obj)));
       });
     }
 
@@ -386,7 +391,7 @@ class AddReference extends React.Component {
                 <td aria-label="Edit date">
                   <EditObject
                     object={editItem}
-                    extraData={{ referFrom }}
+                    extraData={{ referFrom: referFrom[0] }}
                     onOk={handleResult}
                     onCancel={() => this.setState((prevState) => ({
                       addType: null,
@@ -411,7 +416,7 @@ class AddReference extends React.Component {
       }
 
       const { currentUser } = this.props;
-      const ShowReferredObject = showObject(referFrom._type_);
+      const ShowReferredObject = showObject(referFrom[0]._type_);
       const ShowSelectedObject = showObject(selectedItem._type_);
       return (
         <table>
@@ -419,7 +424,7 @@ class AddReference extends React.Component {
             <tr>
               <td>
                 { 'Refererar till ' }
-                <ShowReferredObject object={referFrom} mode="oneLine" />
+                <ShowReferredObject object={referFrom[0]} mode="oneLine" />
               </td>
             </tr>
             <tr>
@@ -468,7 +473,7 @@ class AddReference extends React.Component {
             <tr>
               <td aria-label="Edit object">
                 <EditObject
-                  extraData={{ reference, referFrom }}
+                  extraData={{ reference, referFrom: referFrom[0] }}
                   onOk={handleResult}
                   onCancel={() => this.setState((prevState) => ({
                     addType: null,
@@ -518,18 +523,18 @@ class AddReference extends React.Component {
 
       return true;
     });
-    const referFromPosition = getPrimaryPosition(referFrom);
-    const ShowReferFrom = showObject(referFrom._type_);
+    const referFromPosition = getPrimaryPosition(referFrom[0]);
+    const ShowReferFrom = showObject(referFrom[0]._type_);
     let latitude = null;
     let longitude = null;
     let tooltip = null;
     if (referFromPosition != null) {
       latitude = referFromPosition.latitude;
       longitude = referFromPosition.longitude;
-      tooltip = <ShowReferFrom object={referFrom} mode="oneLine" />;
+      tooltip = <ShowReferFrom object={referFrom[0]} mode="oneLine" />;
     }
     filtered.sort((a, b) => {
-      const sortValue = sortPriority(referFrom._type_, a) - sortPriority(referFrom._type_, b);
+      const sortValue = sortPriority(referFrom[0]._type_, a) - sortPriority(referFrom[0]._type_, b);
       return sortValue;
     });
     const withPosition = filtered.filter((object) => getPrimaryPosition(object) != null);
@@ -583,7 +588,7 @@ class AddReference extends React.Component {
     ];
     return (
       <>
-        <ShowReferFrom object={referFrom} mode="oneLine" />
+        <ShowReferFrom object={referFrom[0]} mode="oneLine" />
         <table>
           <tbody>
             <tr>
@@ -705,11 +710,11 @@ class AddReference extends React.Component {
               <td aria-label="Reference candidates">
                 <Tabs defaultActiveKey="List" items={selectionTabs} />
               </td>
-              { (referFrom._type_ === 'Medium' && referFrom.info.content_type.startsWith('image/'))
+              { (referFrom[0]._type_ === 'Medium' && referFrom[0].info.content_type.startsWith('image/'))
                 && (
                   <td aria-label="Crop image">
                     <ReactCrop
-                      src={apiUrl('Medium', referFrom.id, 'image')}
+                      src={apiUrl('Medium', referFrom[0].id, 'image')}
                       crop={crop}
                       onChange={onCropChange}
                       imageStyle={{ maxHeight: mainHeight }}
@@ -731,11 +736,11 @@ class AddReference extends React.Component {
 }
 AddReference.propTypes = {
   onOk: PropTypes.func.isRequired,
-  referFrom: PropTypes.shape({
+  referFrom: PropTypes.arrayOf(PropTypes.shape({
     _type_: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     related: PropTypes.shape(),
-  }).isRequired,
+  })).isRequired,
   currentUser: PropTypes.shape({}).isRequired,
 };
 AddReference.defaultProps = {
