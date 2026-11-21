@@ -68,7 +68,7 @@ class AddReference extends React.Component {
   componentDidMount() {
     const onLoaded = (data) => {
       const { referFrom } = this.state;
-      this.setState({ referFrom: data[oneName(referFrom[0]._type_)] });
+      this.setState({ referFrom: [data[oneName(referFrom[0]._type_)]] });
     };
 
     const { referFrom, searchString } = this.state;
@@ -586,6 +586,7 @@ class AddReference extends React.Component {
         ),
       },
     ];
+    const referFromSingleImage = referFrom.length === 1 && referFrom[0]._type_ === 'Medium' && referFrom[0].info.content_type.startsWith('image/');
     return (
       <>
         <ShowReferFrom object={referFrom[0]} mode="oneLine" />
@@ -710,7 +711,7 @@ class AddReference extends React.Component {
               <td aria-label="Reference candidates">
                 <Tabs defaultActiveKey="List" items={selectionTabs} />
               </td>
-              { (referFrom[0]._type_ === 'Medium' && referFrom[0].info.content_type.startsWith('image/'))
+              { referFromSingleImage
                 && (
                   <td aria-label="Crop image">
                     <ReactCrop
